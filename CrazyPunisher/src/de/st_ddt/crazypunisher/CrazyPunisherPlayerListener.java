@@ -148,7 +148,7 @@ public class CrazyPunisherPlayerListener implements Listener
 		if (!(event.getEntity() instanceof Player))
 			return;
 		Player player = (Player) event.getEntity();
-		if (plugin.isJailed(player))
+		if (!plugin.isJailed(player))
 			return;
 		Location location = player.getBedSpawnLocation();
 		if (location == null)
