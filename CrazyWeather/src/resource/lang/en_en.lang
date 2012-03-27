@@ -1,0 +1,7 @@
+CRAZYWEATHER.COMMAND.WEATHER.ERROR=World mistake (maybe not loaded)
+CRAZYWEATHER.COMMAND.WEATHER.SUCCESS=Weather changed succesfully
+CRAZYWEATHER.WEATHER.SUN=$0$ has now &Esunny &Fweather!
+CRAZYWEATHER.WEATHER.RAIN=$0$ has now &9rainy &Fweather!
+CRAZYWEATHER.WEATHER.STORM=$0$ has now &8stormy &Fweather!
+CRAZYWEATHER.THUNDERTOOL.GET=Thundertool = &D$0$ ($1$)
+CRAZYWEATHER.THUNDERTOOL.SET=Thundertool changed to &D$0$ ($1$)
