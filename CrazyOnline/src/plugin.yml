@@ -1,0 +1,48 @@
+name: CrazyOnline
+main: de.st_ddt.crazyonline.CrazyOnline
+author: ST-DDT
+#C*=needed core version
+version: C3_2
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore]
+commands:
+  pinfo:
+    description: Show information about player
+    usage: /<command> <Player>
+  ponlines:
+    description: Show information about online player
+    usage: /<command>
+  psince:
+    description: Shows players who logged in since Date (yyyy.MM.dd HH:mm:ss)
+    usage: /<command> [Date [Time]]
+  pbefore:
+    description: Shows players who did not logged in since Date (yyyy.MM.dd HH:mm:ss)
+    usage: /<command> [Date [Time]]
+permissions:
+  crazyonline.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazyonline.info: true
+      crazyonline.online: true
+      crazyonline.since: true
+      crazyonline.since.auto: true
+      crazyonline.till: true
+  crazyonline.info.self:
+    description: Show information about yourself
+    default: true
+  crazyonline.info.other:
+    description: Show information about player
+    default: op
+  crazyonline.online:
+    description: Show information about online player
+    default: op
+  crazyonline.since:
+    description: Shows which players has been online
+    default: op
+  crazyonline.since.auto:
+    description: Shows which players has been online on login
+    default: op
+  crazyonline.before:
+    description: Shows which players has not been online
+    default: op
