@@ -1,0 +1,89 @@
+name: CrazyPunisher
+main: de.st_ddt.crazypunisher.CrazyPunisher
+author: ST-DDT
+#C*=needed core version
+version: C3_2
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore]
+commands:
+  kick:
+    description: Kick players
+    usage: /<command> <Player>
+  ban:
+    description: Ban player.
+    usage: /<command> <Player>
+  hardban:
+    description: Ban player forever and deletes all his permissions.
+    usage: /<command> <Player>
+  unban:
+    description: Unban player
+    usage: /<command> <Player>
+    aliases: [pardon]
+  jail:
+    description: Jail player
+    usage: /<command> <Player> [Duration [TimeUnit]]
+  unjail:
+    description: Unjail player
+    usage: /<command> <Player>
+    aliases: [free]
+  jailtp:
+    description: Teleport to jail
+    usage: /<command> [Player]
+    aliases: [tpjail]
+  crazypunisher:
+    description: Plugin Mainmenu
+    usage: /<command> [...]
+    aliases: [cpunisher]
+permissions:
+  crazypunisher.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazypunisher.admin: true
+      crazypunisher.hardban: true
+      crazypunisher.ban: true
+      crazypunisher.kick: true
+      crazypunisher.kick.all: true
+      crazypunisher.jail: true
+      crazypunisher.pardon: true
+      crazypunisher.unjail: true
+      crazypunisher.jailtp: true
+  crazypunisher.admin:
+    description: Access to all admin commands
+    default: op
+    children:
+      crazypunisher.admin.jail: true
+      crazypunisher.admin.jailrange: true
+  crazypunisher.hardban:
+    description: Ban a player ultimately!
+    default: false
+    children:
+      crazypunisher.ban: true
+      crazypunisher.kick: true
+  crazypunisher.ban:
+    description: Ban a player
+    default: op
+  crazypunisher.kick:
+    description: Kick a player
+    default: op
+  crazypunisher.kick.all:
+    description: Kick all players
+    default: op
+  crazypunisher.jail:
+    description: Jail a player
+    default: op
+  crazypunisher.pardon:
+    description: Unban a player
+    default: op
+  crazypunisher.unjail:
+    description: Unjail a player
+    default: op
+  crazypunisher.jailtp:
+    description: Teleport to jail
+    default: op
+  crazypunisher.admin.jail:
+    description: Show/set jail location
+    default: op
+  crazypunisher.admin.jailrange:
+    description: Show/set jail range!
+    default: op
