@@ -1,0 +1,29 @@
+name: CrazySpawner
+main: de.st_ddt.crazyspawner.CrazySpawner
+author: ST-DDT
+#C*=needed core version
+version: C3_1
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore]
+commands:
+  crazyspawn:
+    description: Spawn Monster and Animals
+    usage: /<command> <Monstername> [Amount]
+    aliases: [crazymobs, cms]
+  crazykill:
+    description: Kill monsters (and animals if true)
+    usage: /<command> [Range] <killanimals>
+    aliases: [cmk,butcher,killall]
+permissions:
+  crazyspawner.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazyspawner.spawn: true
+      crazyspawner.kill: true
+  crazyspawner.spawn:
+    description: Allow spawning of Creatures
+    default: op
+  crazyspawner.kill:
+    description: Allow killing of Creatures
+    default: op
