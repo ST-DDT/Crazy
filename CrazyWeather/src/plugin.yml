@@ -43,7 +43,7 @@ permissions:
       crazyweather.change.rain: true
       crazyweather.change.thunder: true
   crazyweather.set.*:
-    description: Access to all commands for changing weather permanently
+    description: Access to all commands for freezing weather
     default: op
     children:
       crazyweather.change.*: true
