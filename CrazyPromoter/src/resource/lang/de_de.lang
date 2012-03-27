@@ -1,0 +1,2 @@
+CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ wurde befördert (Rang: $1$)
+CRAZYPROMOTER.COMMAND.CHECK.FAIL=Keine Beförderungen anwendbar.

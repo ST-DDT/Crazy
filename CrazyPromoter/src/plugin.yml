@@ -1,0 +1,26 @@
+name: CrazyPromoter
+main: de.st_ddt.crazypromoter.CrazyPromoter
+author: ST-DDT
+#C*=needed core version
+version: C3_1
+depend: [CrazyCore,CrazyOnline,PermissionsBukkit]
+commands:
+  promotioncheck:
+    description: Check promotion status
+    usage: /<command> [Player]
+  crazypromoter:
+    descrition: Plugin Main Menu
+    usage: /<command> ...
+permissions:
+  crazypromote.check:
+    description: Check promotions status
+    default: op
+    children: 
+      crazypromote.check.self: true
+      crazypromote.check.other: true
+  crazypromote.check.self:
+    description: Check your promotion status
+    default: true
+  crazypromote.check.other:
+    description: Check players promotion status
+    default: op
