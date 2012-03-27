@@ -60,17 +60,17 @@ permissions:
     description: Allow changing the current weather to thunderstorm
     default: op
   crazyweather.set.sun: 
-    description: Allow changing the weather to sunny
+    description: Allow freezing the weather to sunny
     default: op
     children:
       crazyweather.change.sun: true
   crazyweather.set.rain: 
-    description: Allow changing the weather to rain
+    description: Allow freezing the weather to rain
     default: op
     children:
       crazyweather.change.rain: true
   crazyweather.set.thunder: 
-    description: Allow changing the weather to thunderstorm
+    description: Allow freezing the weather to thunderstorm
     default: op
     children:
       crazyweather.change.thunder: true
