@@ -30,7 +30,7 @@ public abstract class CrazyPlugin extends JavaPlugin
 
 	private String ChatHeader = null;
 	protected CrazyLocale locale = null;
-	private static PairList<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	private static final PairList<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
 
 	public final String getChatHeader()
 	{
