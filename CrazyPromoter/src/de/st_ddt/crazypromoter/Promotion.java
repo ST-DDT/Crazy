@@ -21,14 +21,13 @@ public class Promotion
 	protected List<String> removeGroups;
 	protected final PermissionsPlugin permissionsPlugin = ((PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit"));
 
-	@SuppressWarnings("unchecked")
 	public Promotion(ConfigurationSection config)
 	{
 		super();
 		name = config.getString("name");
 		removeGroups = config.getStringList("removeGroups");
 		newGroup = config.getString("newGroup");
-		condition = (Condition<Player>) Condition.load(config.getConfigurationSection("condition"));
+		condition = Condition.load(config.getConfigurationSection("condition"));
 	}
 
 	public Promotion(String name)

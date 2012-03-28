@@ -9,7 +9,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 public abstract class Condition<T>
 {
 
-	public static Condition<?> load(ConfigurationSection config)
+	@SuppressWarnings("unchecked")
+	public static <T> Condition<T> load(ConfigurationSection config)
 	{
 		if (config == null)
 			return null;
@@ -41,10 +42,10 @@ public abstract class Condition<T>
 		// System.out.println("Invalid ConditionType " + clazz.toString().substring(6));
 		// return null;
 		// }
-		Condition<?> condition = null;
+		Condition<T> condition = null;
 		try
 		{
-			condition = (Condition<?>) clazz.getConstructor(ConfigurationSection.class).newInstance(config);
+			condition = (Condition<T>) clazz.getConstructor(ConfigurationSection.class).newInstance(config);
 		}
 		catch (Exception e)
 		{
