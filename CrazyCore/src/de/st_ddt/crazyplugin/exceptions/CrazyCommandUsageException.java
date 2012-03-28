@@ -17,7 +17,6 @@ public class CrazyCommandUsageException extends CrazyCommandException
 	@Override
 	public String getLangPath()
 	{
-		// TODO Auto-generated method stub
 		return super.getLangPath() + ".USAGE";
 	}
 
