@@ -9,6 +9,10 @@ CRAZYPUNISHER.BROADCAST.UNBAN=&5$0$ wurde entbannt!
 CRAZYPUNISHER.BROADCAST.JAIL=&5$0$ wurde inhaftiert!
 CRAZYPUNISHER.BROADCAST.UNJAIL=&5$0$ wurde aus dem Gefaengnis entlassen!
 CRAZYPUNISHER.BROADCAST.KICK=&5$0$ wurde vom Server geworfen!
+CRAZYPUNISHER.COMMAND.SHOW=Du bist jetzt sichtbar!
+CRAZYPUNISHER.COMMAND.SHOW.DONE=Sichtbarkeit erfolgreich ge‰ndert!
+CRAZYPUNISHER.COMMAND.HIDDEN=Du bist jetzt unsichtbar!
+CRAZYPUNISHER.COMMAND.HIDDEN.DONE=Sichtbarkeit erfolgreich ge‰ndert!
 CRAZYPUNISHER.JAILLOCATION=Gefaengnisposition: $0$ $1$ $2$ $3$
 CRAZYPUNISHER.JAILLOCATION.CHANGED=Gefaengnisposition geaendert
 CRAZYPUNISHER.JAILRANGE=Gefaengnisgroeﬂe = $0$

@@ -6,6 +6,13 @@ version: C3_2
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
+  show:
+    description: Unhide a player
+    usage: /<command> [Player]
+    aliases: [unhide]
+  hide:
+    description: Hide a player
+    usage: /<command> [Player]
   kick:
     description: Kick players
     usage: /<command> <Player>

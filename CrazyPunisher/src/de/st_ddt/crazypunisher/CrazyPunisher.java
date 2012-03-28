@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
-
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -35,9 +34,10 @@ public class CrazyPunisher extends CrazyPlugin
 {
 
 	private static CrazyPunisher plugin;
-	private static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-	private ArrayList<OfflinePlayer> banned = new ArrayList<OfflinePlayer>();
-	private PairList<OfflinePlayer, Date> jailed = new PairList<OfflinePlayer, Date>();
+	private final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	private final ArrayList<OfflinePlayer> banned = new ArrayList<OfflinePlayer>();
+	private final PairList<OfflinePlayer, Date> jailed = new PairList<OfflinePlayer, Date>();
+	private final ArrayList<String> hidden = new ArrayList<String>();
 	private CrazyPunisherPlayerListener playerListener = null;
 	public Sphere jailsphere = null;
 	public Location jailcenter = null;
@@ -174,6 +174,16 @@ public class CrazyPunisher extends CrazyPlugin
 		else if (commandLabel.equalsIgnoreCase("kick"))
 		{
 			CommandKick(sender, args);
+			return true;
+		}
+		else if (commandLabel.equalsIgnoreCase("show"))
+		{
+			CommandShow(sender, args);
+			return true;
+		}
+		else if (commandLabel.equalsIgnoreCase("hide"))
+		{
+			CommandHide(sender, args);
 			return true;
 		}
 		return false;
@@ -499,6 +509,68 @@ public class CrazyPunisher extends CrazyPlugin
 		broadcastLocaleMessage("BROADCAST.KICK", player.getName());
 	}
 
+	private void CommandShow(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazypunisher.show"))
+			throw new CrazyCommandPermissionException();
+		ArrayList<Player> players = new ArrayList<Player>();
+		if (args.length == 0)
+		{
+			if (sender instanceof ConsoleCommandSender)
+				throw new CrazyCommandUsageException("/show <Player>");
+			players.add((Player) sender);
+		}
+		for (String name : args)
+		{
+			Player player = getServer().getPlayer(name);
+			if (player == null)
+				throw new CrazyCommandNoSuchException("Player", name);
+			players.add(player);
+		}
+		for (Player player : players)
+		{
+			hidden.remove(player.getName());
+			for (Player plr : getServer().getOnlinePlayers())
+				plr.showPlayer(player);
+			sendLocaleMessage("COMMAND.SHOW", player);
+		}
+		sendLocaleMessage("COMMAND.SHOW.DONE", sender);
+	}
+
+	private void CommandHide(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazypunisher.show"))
+			throw new CrazyCommandPermissionException();
+		ArrayList<Player> players = new ArrayList<Player>();
+		if (args.length == 0)
+		{
+			if (sender instanceof ConsoleCommandSender)
+				throw new CrazyCommandUsageException("/show <Player>");
+			players.add((Player) sender);
+		}
+		for (String name : args)
+		{
+			Player player = getServer().getPlayer(name);
+			if (player == null)
+				throw new CrazyCommandNoSuchException("Player", name);
+			players.add(player);
+		}
+		for (Player player : players)
+		{
+			hidden.add(player.getName());
+			for (Player plr : getServer().getOnlinePlayers())
+				if (plr.hasPermission("crazypunisher.showall") || isHidden(plr))
+				{
+					player.showPlayer(plr);
+					plr.showPlayer(player);
+				}
+				else
+					plr.hidePlayer(player);
+			sendLocaleMessage("COMMAND.HIDE", player);
+		}
+		sendLocaleMessage("COMMAND.HIDE.DONE", sender);
+	}
+
 	@Override
 	public boolean CommandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
 	{
@@ -630,6 +702,11 @@ public class CrazyPunisher extends CrazyPlugin
 		if (time == null)
 			return false;
 		return time.after(new Date());
+	}
+
+	public boolean isHidden(Player player)
+	{
+		return hidden.contains(player.toString());
 	}
 
 	public String getJailTime(Player player)

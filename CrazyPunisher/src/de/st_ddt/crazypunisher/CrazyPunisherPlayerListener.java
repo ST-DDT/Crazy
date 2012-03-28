@@ -69,7 +69,22 @@ public class CrazyPunisherPlayerListener implements Listener
 	public void PlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		if (!plugin.isJailed(event.getPlayer()))
+		boolean hidden = plugin.isHidden(player);
+		for (Player plr : plugin.getServer().getOnlinePlayers())
+			if (player.hasPermission("crazypunisher.showall") || !plugin.isHidden(plr) || hidden)
+			{
+				player.showPlayer(plr);
+				if (!plr.hasPermission("crazypunisher.showall") && !plugin.isHidden(plr) && hidden)
+					plr.hidePlayer(player);
+				else
+					plr.showPlayer(player);
+			}
+			else
+			{
+				player.hidePlayer(plr);
+				plr.showPlayer(player);
+			}
+		if (!plugin.isJailed(player))
 		{
 			if (plugin.isInsideJail(player.getLocation()))
 			{
@@ -113,9 +128,10 @@ public class CrazyPunisherPlayerListener implements Listener
 	@EventHandler
 	public void PlayerLogin(PlayerLoginEvent event)
 	{
-		if (!plugin.isBanned(event.getPlayer()))
+		Player player = event.getPlayer();
+		if (!plugin.isBanned(player))
 			return;
-		event.getPlayer().setBanned(true);
+		player.setBanned(true);
 		event.setKickMessage("You are banned!");
 		event.setResult(Result.KICK_BANNED);
 	}
