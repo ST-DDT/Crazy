@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class Promotion
 
 	protected String name;
 	protected Condition<Player> condition;
-	protected String newGroup;
+	protected List<String> commands;
 	protected List<String> removeGroups;
 	protected final PermissionsPlugin permissionsPlugin = ((PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit"));
 
@@ -26,7 +27,7 @@ public class Promotion
 		super();
 		name = config.getString("name");
 		removeGroups = config.getStringList("removeGroups");
-		newGroup = config.getString("newGroup");
+		commands = config.getStringList("commands");
 		condition = Condition.load(config.getConfigurationSection("condition"));
 	}
 
@@ -35,7 +36,8 @@ public class Promotion
 		super();
 		this.name = name;
 		this.removeGroups = new ArrayList<String>();
-		this.newGroup = "default";
+		this.commands = new ArrayList<String>();
+		this.commands.add("say Please edit Promotion");
 	}
 
 	public boolean isApplyable(Player player)
@@ -47,7 +49,9 @@ public class Promotion
 	{
 		for (String group : removeGroups)
 			permissionsPlugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), "permissions player removegroup " + player.getName() + " " + group);
-		permissionsPlugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), "permissions player addgroup " + player.getName() + " " + newGroup);
+		CommandSender sender = Bukkit.getConsoleSender();
+		for (String command : commands)
+			permissionsPlugin.getServer().dispatchCommand(sender, command);
 	}
 
 	public String getName()
@@ -59,7 +63,7 @@ public class Promotion
 	{
 		config.set(path + "name", name);
 		config.set(path + "removeGroups", removeGroups);
-		config.set(path + "newGroup", newGroup);
+		config.set(path + "commands", commands);
 		condition.save(config, path + "condition.");
 	}
 

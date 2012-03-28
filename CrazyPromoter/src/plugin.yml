@@ -3,7 +3,7 @@ main: de.st_ddt.crazypromoter.CrazyPromoter
 author: ST-DDT
 #C*=needed core version
 version: C3_1
-depend: [CrazyCore,CrazyOnline,PermissionsBukkit]
+depend: [CrazyCore,CrazyOnline]
 commands:
   promotioncheck:
     description: Check promotion status
