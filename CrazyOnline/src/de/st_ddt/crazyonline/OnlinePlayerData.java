@@ -109,7 +109,11 @@ public class OnlinePlayerData
 
 	public int getTimeLast()
 	{
-		long past = lastLogout.getTime() - lastLogin.getTime();
+		long past;
+		if (lastLogin.after(lastLogout))
+			past = new Date().getTime() - lastLogin.getTime();
+		else
+			past = lastLogout.getTime() - lastLogin.getTime();
 		return (int) past / 1000 / 60;
 	}
 
