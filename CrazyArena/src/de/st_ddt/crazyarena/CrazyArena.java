@@ -32,8 +32,8 @@ public class CrazyArena extends CrazyPlugin
 	private CrazyArenaPlayerListener playerListener = null;
 	private CrazyArenaBlockListener blocklistener = null;
 	private ArenaList arenas = null;
-	private PairList<Player, Arena> invitations = null;
-	private PairList<Player, Arena> selection = null;
+	private final PairList<Player, Arena> invitations = new PairList<Player, Arena>();
+	private final  PairList<Player, Arena> selection = new PairList<Player, Arena>();
 	private static PairList<String, Class<? extends Arena>> arenaTypes = new PairList<String, Class<? extends Arena>>();
 
 	public static CrazyArena getPlugin()
@@ -50,9 +50,7 @@ public class CrazyArena extends CrazyPlugin
 	public void onEnable()
 	{
 		plugin = this;
-		this.playerListener = new CrazyArenaPlayerListener();
-		this.invitations = new PairList<Player, Arena>();
-		this.selection = new PairList<Player, Arena>();
+		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
 		this.arenas = new ArenaList(getConfig());
 		registerHooks();
 		super.onEnable();
