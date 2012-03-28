@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyplugin.exceptions.CrazyNotImplementedException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
@@ -30,6 +31,7 @@ public class CrazyCore extends CrazyPlugin
 	public void onEnable()
 	{
 		plugin = this;
+		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
 		super.onEnable();
 	}
 
@@ -92,6 +94,7 @@ public class CrazyCore extends CrazyPlugin
 			case 0:
 				String list = ChatHelper.listToString(CrazyLocale.getLoadedLanguages());
 				sendLocaleMessage("COMMAND.LANGUAGE.CURRENT", sender, CrazyLocale.getUserLanguage(sender));
+				sendLocaleMessage("COMMAND.LANGUAGE.LIST.DEFAULT", sender);
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.HEADER", sender);
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.ENTRY", sender, list);
 				return;
@@ -100,8 +103,44 @@ public class CrazyCore extends CrazyPlugin
 				save();
 				sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, args[0]);
 				return;
+			case 2:
+				if (!sender.hasPermission("crazycore.language.advanced"))
+					throw new CrazyCommandPermissionException();
+				if (args[0].equalsIgnoreCase("setdefault"))
+				{
+					defaultLanguage = args[1];
+					CrazyLocale.loadLanguage(defaultLanguage);
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.SET", sender, defaultLanguage);
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("adddefault"))
+				{
+					defaultLanguages.add(args[1]);
+					CrazyLocale.loadLanguage(args[1]);
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.ADD", sender, args[1]);
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("removedefault"))
+				{
+					defaultLanguages.remove(args[1]);
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.REMOVE", sender, args[1]);
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("download"))
+				{
+					throw new CrazyCommandErrorException(new CrazyNotImplementedException());
+					// return;
+				}
+				else if (args[0].equalsIgnoreCase("reload"))
+				{
+					CrazyLocale.loadLanguage(args[1], true);
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.REMOVE", sender, args[1]);
+					return;
+				}
+				else
+					throw new CrazyCommandUsageException("/crazylanguage setdefault <Language>", "/crazylanguage adddefault <Language>", "/crazylanguage removedefault <Language>", "/crazylanguage download <Landuage>", "/crazylanguage reload <Landuage>");
 			default:
-				throw new CrazyCommandUsageException("/" + getDescription().getName().toLowerCase() + " language [Language]");
+				throw new CrazyCommandUsageException("/crazylanguage [Language]");
 		}
 	}
 

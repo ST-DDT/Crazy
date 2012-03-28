@@ -158,9 +158,15 @@ public abstract class CrazyPlugin extends JavaPlugin
 	}
 
 	@Override
-	public void onEnable()
+	public void onLoad()
 	{
 		plugins.setDataVia1(this.getClass(), this);
+		super.onLoad();
+	}
+
+	@Override
+	public void onEnable()
+	{
 		getDataFolder().mkdir();
 		new File(getDataFolder().getPath() + "/lang").mkdirs();
 		for (String language : CrazyLocale.getLoadedLanguages())

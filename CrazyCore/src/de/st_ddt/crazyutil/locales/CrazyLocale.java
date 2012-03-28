@@ -214,12 +214,18 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 
 	public static void loadLanguage(String language)
 	{
-		if (!languages.contains(language))
+		loadLanguage(language, false);
+	}
+
+	public static void loadLanguage(String language, boolean force)
+	{
+		if (!languages.contains(language) || force)
 		{
 			for (CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 				plugin.loadLanguage(language);
-			languages.add(language);
 		}
+		if (!languages.contains(language))
+			languages.add(language);
 	}
 
 	public static ArrayList<String> getLoadedLanguages()

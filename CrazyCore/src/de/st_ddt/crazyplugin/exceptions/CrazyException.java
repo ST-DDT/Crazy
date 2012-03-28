@@ -8,7 +8,7 @@ public class CrazyException extends Exception
 {
 
 	private static final long serialVersionUID = -1585496766103859503L;
-	private boolean printStackTrace;
+	protected boolean printStackTrace = false;
 	protected CrazyLocale locale;
 
 	public CrazyException()

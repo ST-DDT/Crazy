@@ -2,7 +2,7 @@ name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
 #C*=needed core version
-version: C3
+version: C3_2
 softdepend: [PermissionsBukkit]
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
@@ -15,6 +15,18 @@ commands:
     usage: /<command> [Language]
     aliases: [language]
 permissions:
+  crazy*.*:
+    description: Access to all crazyplugin commands
+    default: false 
+  crazycore.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazycore.list: true
+      crazycore.language.advanced: true
   crazycore.list:
     description: Allow showing all enabled CrazyPlugins
+    default: op
+  crazycore.language.advanced:
+    description: Allow changing default languages or language reloads.
     default: op

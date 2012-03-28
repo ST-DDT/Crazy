@@ -32,7 +32,8 @@ public class CrazyCommandErrorException extends CrazyCommandException
 		if (exception != null)
 		{
 			sender.sendMessage(header + exception.getMessage());
-			exception.printStackTrace();
+			if (printStackTrace)
+				exception.printStackTrace();
 		}
 	}
 }
