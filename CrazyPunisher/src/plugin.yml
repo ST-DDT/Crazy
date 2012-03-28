@@ -88,6 +88,12 @@ permissions:
   crazypunisher.jailtp:
     description: Teleport to jail
     default: op
+  crazypunisher.showall:
+    description: Show all players (hidden too)
+    default: op
+  crazypunisher.show:
+    description: Allow hideing/unhideing
+    default: op
   crazypunisher.admin.jail:
     description: Show/set jail location
     default: op
