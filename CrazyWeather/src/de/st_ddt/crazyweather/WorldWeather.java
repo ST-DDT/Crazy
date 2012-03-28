@@ -2,6 +2,7 @@ package de.st_ddt.crazyweather;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class WorldWeather
@@ -31,10 +32,12 @@ public class WorldWeather
 		return onLoad;
 	}
 
-	public void load(FileConfiguration config, String worldData)
+	public void load(ConfigurationSection config)
 	{
-		staticWeather = config.getString(worldData + ".static", "none");
-		onLoad = config.getBoolean(worldData + ".onLoad", false);
+		if (config == null)
+			return;
+		staticWeather = config.getString("static", "none");
+		onLoad = config.getBoolean("onLoad", false);
 		if (onLoad)
 		{
 			setWeather(staticWeather, true, true);

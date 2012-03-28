@@ -59,7 +59,7 @@ public class CrazyWeather extends CrazyPlugin
 		for (World world : getServer().getWorlds())
 		{
 			WorldWeather weather = new WorldWeather(world);
-			weather.load(config, "worlds." + world.getName());
+			weather.load(config.getConfigurationSection("worlds." + world.getName()));
 			worldWeather.add(weather);
 		}
 		tool = config.getInt("tool", 280);
