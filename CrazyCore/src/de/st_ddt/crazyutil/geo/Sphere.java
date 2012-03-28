@@ -2,7 +2,10 @@ package de.st_ddt.crazyutil.geo;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class Sphere extends Geo
 {
@@ -17,11 +20,11 @@ public class Sphere extends Geo
 		this.radius = radius;
 	}
 
-	public Sphere(FileConfiguration config, String path, World world)
+	public Sphere(ConfigurationSection config, World world)
 	{
-		super(config, path, world);
-		center = (Location) config.get(path + "center.");
-		radius = config.getInt(path + "radius.", 1);
+		super(config, world);
+		center = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("center"), world);
+		radius = config.getInt("radius.", 1);
 	}
 
 	public Location getCenter()
@@ -54,8 +57,9 @@ public class Sphere extends Geo
 	}
 
 	@Override
-	public void save(FileConfiguration config, String path, boolean includeType)
+	public void save(FileConfiguration config, String path)
 	{
-		// TODO Auto-generated method stub
+		ObjectSaveLoadHelper.saveLocation(config, path + "center.", center, false);
+		config.set(path + "range", radius);
 	}
 }

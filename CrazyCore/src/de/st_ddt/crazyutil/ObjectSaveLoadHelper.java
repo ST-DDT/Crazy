@@ -3,16 +3,19 @@ package de.st_ddt.crazyutil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ObjectSaveLoadHelper
 {
 
-	public static Location loadLocation(FileConfiguration config, String path, World world)
+	public static Location loadLocation(ConfigurationSection config, World world)
 	{
+		if (config == null)
+			return null;
 		if (world == null)
-			world = Bukkit.getWorld(config.getString(path + "world"));
-		return new Location(world, config.getDouble(path + "x"), config.getDouble(path + "y"), config.getDouble(path + "z"), (float) config.getDouble(path + "yaw", 0d), (float) config.getDouble(path + "pitch", 0d));
+			world = Bukkit.getWorld(config.getString("world"));
+		return new Location(world, config.getDouble("x"), config.getDouble("y"), config.getDouble("z"), (float) config.getDouble("yaw", 0d), (float) config.getDouble("pitch", 0d));
 	}
 
 	public static void saveLocation(FileConfiguration config, String path, Location location)

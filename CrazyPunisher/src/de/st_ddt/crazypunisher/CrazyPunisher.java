@@ -73,7 +73,7 @@ public class CrazyPunisher extends CrazyPlugin
 			ConsoleLog(ChatColor.RED + "Error getting jailworld, using default");
 			jailworld = getServer().getWorlds().get(0);
 		}
-		jailcenter = ObjectSaveLoadHelper.loadLocation(config, "jail.", jailworld);
+		jailcenter = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("jail"), jailworld);
 		if (jailcenter == null)
 			jailcenter = jailworld.getSpawnLocation();
 		jailrange = config.getInt("jail.range", 5);

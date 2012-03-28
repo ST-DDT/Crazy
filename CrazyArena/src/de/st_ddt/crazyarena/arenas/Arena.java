@@ -127,7 +127,7 @@ public abstract class Arena
 	public void load()
 	{
 		this.enabled = config.getBoolean("enabled", false);
-		this.region = Geo.load(config, "area.", world);
+		this.region = Geo.load(config.getConfigurationSection("area"), world);
 	}
 
 	public void save()
