@@ -4,12 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
+
+import de.st_ddt.crazyonline.databases.CrazyOnlineConfigurationDatabase;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -18,6 +20,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyutil.PairList;
+import de.st_ddt.crazyutil.databases.Database;
 
 public class CrazyOnline extends CrazyPlugin
 {
@@ -26,7 +29,8 @@ public class CrazyOnline extends CrazyPlugin
 	protected PairList<String, OnlinePlayerData> datas = new PairList<String, OnlinePlayerData>();
 	private CrazyOnlinePlayerListener playerListener = null;
 	public static final SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-	private String saveType;
+	protected String saveType;
+	protected Database<OnlinePlayerData, ?> database;
 
 	public static CrazyOnline getPlugin()
 	{
@@ -49,8 +53,9 @@ public class CrazyOnline extends CrazyPlugin
 		saveType = config.getString("saveType", "flat").toLowerCase();
 		if (saveType.equals("flat"))
 		{
-			for (String name : config.getConfigurationSection("players").getKeys(false))
-				datas.setDataVia1(name, new OnlinePlayerData(name, config.getConfigurationSection("players." + name)));
+			database = new CrazyOnlineConfigurationDatabase("players", config);
+			for (OnlinePlayerData data : database.getAllEntries())
+				datas.setDataVia1(data.getName().toLowerCase(), data);
 		}
 	}
 
@@ -61,8 +66,7 @@ public class CrazyOnline extends CrazyPlugin
 		config.set("saveType", saveType);
 		if (saveType.equals("flat"))
 		{
-			for (OnlinePlayerData data : datas.getData2List())
-				data.save(config, "players." + data.getName() + ".");
+			database.saveAll(datas.getData2List());
 		}
 		super.save();
 	}

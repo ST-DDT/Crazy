@@ -7,10 +7,11 @@ import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class OnlinePlayerData
+import de.st_ddt.crazyutil.databases.Saveable;
+
+public class OnlinePlayerData implements Saveable
 {
 
 	protected final String name;
@@ -35,18 +36,19 @@ public class OnlinePlayerData
 		this(player.getName());
 	}
 
-	public OnlinePlayerData(String name, ConfigurationSection config)
+	public OnlinePlayerData(ConfigurationSection config)
 	{
 		super();
-		this.name = name.toLowerCase();
+		this.name = config.getString("name");
 		this.firstLogin = StringToDate(config.getString("LoginFirst"), new Date());
 		this.lastLogin = StringToDate(config.getString("LoginLast"), new Date());
 		this.lastLogout = StringToDate(config.getString("LogoutLast"), new Date());
 		this.onlineTime = config.getInt("TimeTotal", 0);
 	}
 
-	public void save(FileConfiguration config, String path)
+	public void save(ConfigurationSection config, String path)
 	{
+		config.set(path + "name", name);
 		config.set(path + "LoginFirst", DateFormat.format(firstLogin));
 		config.set(path + "LoginLast", DateFormat.format(lastLogin));
 		config.set(path + "LogoutLast", DateFormat.format(lastLogout));
