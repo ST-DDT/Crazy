@@ -2,8 +2,9 @@ name: CrazyPromoter
 main: de.st_ddt.crazypromoter.CrazyPromoter
 author: ST-DDT
 #C*=needed core version
-version: C4_2
-depend: [CrazyCore,CrazyOnline]
+version: C4_2.1
+depend: [CrazyCore]
+softdepend: [CrazyOnline]
 commands:
   promotioncheck:
     description: Check promotion status
