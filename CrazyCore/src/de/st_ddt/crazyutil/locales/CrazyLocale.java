@@ -165,20 +165,20 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		}
 	}
 
-	public static void printAll(CommandSender sender)
-	{
-		printAll(getUserLanguage(sender), sender);
-	}
-
-	public static void printAll(String language)
-	{
-		printAll(getUserLanguage(Bukkit.getConsoleSender()), Bukkit.getConsoleSender());
-	}
-
 	public static void printAll(String language, CommandSender sender)
 	{
 		sender.sendMessage("Complete Language Print!");
 		getLocaleHead().print(language, sender);
+	}
+
+	public static void printAll(String language)
+	{
+		printAll(Bukkit.getConsoleSender());
+	}
+
+	public static void printAll(CommandSender sender)
+	{
+		printAll(getUserLanguage(sender), sender);
 	}
 
 	public void print(String language, CommandSender sender)
@@ -186,6 +186,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		sender.sendMessage(getPath() + ":" + getLanguageText(language));
 		for (Pair<String, CrazyLocale> pair : this)
 			pair.getData2().print(language, sender);
+	}
+
+	public void print(CommandSender sender)
+	{
+		print(getUserLanguage(sender), sender);
 	}
 
 	public static String getUserLanguage(CommandSender sender)

@@ -106,7 +106,17 @@ public class CrazyCore extends CrazyPlugin
 			case 2:
 				if (!sender.hasPermission("crazycore.language.advanced"))
 					throw new CrazyCommandPermissionException();
-				if (args[0].equalsIgnoreCase("setdefault"))
+				if (args[0].equalsIgnoreCase("print"))
+				{
+					if (args[1].equalsIgnoreCase("*"))
+					{
+						CrazyLocale.printAll(sender);
+						return;
+					}
+					CrazyLocale.getLocaleHead().getLanguageEntry(args[1]).print(sender);
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("setdefault"))
 				{
 					defaultLanguage = args[1];
 					CrazyLocale.loadLanguage(defaultLanguage);
@@ -129,12 +139,13 @@ public class CrazyCore extends CrazyPlugin
 				else if (args[0].equalsIgnoreCase("download"))
 				{
 					throw new CrazyCommandErrorException(new CrazyNotImplementedException());
+					// TODO da fehlt was!
 					// return;
 				}
 				else if (args[0].equalsIgnoreCase("reload"))
 				{
 					CrazyLocale.loadLanguage(args[1], true);
-					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.REMOVE", sender, args[1]);
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOAD", sender, args[1]);
 					return;
 				}
 				else
