@@ -1,7 +1,5 @@
 package de.st_ddt.crazyonline;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,9 +7,7 @@ import java.util.Date;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -28,9 +24,9 @@ public class CrazyOnline extends CrazyPlugin
 
 	private static CrazyOnline plugin;
 	protected PairList<String, OnlinePlayerData> datas = new PairList<String, OnlinePlayerData>();
-	protected FileConfiguration config;
 	private CrazyOnlinePlayerListener playerListener = null;
 	public static final SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	private String saveType;
 
 	public static CrazyOnline getPlugin()
 	{
@@ -49,40 +45,24 @@ public class CrazyOnline extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		config = new YamlConfiguration();
-		try
+		FileConfiguration config = getConfig();
+		saveType = config.getString("saveType", "flat").toLowerCase();
+		if (saveType.equals("flat"))
 		{
-			config.load(getDataFolder().getPath() + "/data.yml");
+			for (String name : config.getConfigurationSection("players").getKeys(false))
+				datas.setDataVia1(name, new OnlinePlayerData(name, config.getConfigurationSection("players." + name)));
 		}
-		catch (FileNotFoundException e)
-		{
-			ConsoleLog("Data File not found");
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InvalidConfigurationException e)
-		{
-			ConsoleLog("Corrupted config file data.yml");
-			e.printStackTrace();
-		}
-		for (String name : config.getKeys(false))
-			datas.setDataVia1(name, new OnlinePlayerData(name, config.getConfigurationSection(name)));
 	}
 
 	@Override
 	public void save()
 	{
-		for (OnlinePlayerData data : datas.getData2List())
-			data.save(config, data.getName() + ".");
-		try
+		FileConfiguration config = getConfig();
+		config.set("saveType", saveType);
+		if (saveType.equals("flat"))
 		{
-			config.save(getDataFolder().getPath() + "/data.yml");
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+			for (OnlinePlayerData data : datas.getData2List())
+				data.save(config, "players." + data.getName() + ".");
 		}
 		super.save();
 	}
