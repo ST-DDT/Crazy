@@ -195,8 +195,26 @@ public class CrazyOnline extends CrazyPlugin
 		sendLocaleMessage("MESSAGE.INFO.LOGIN.FIRST", sender, data.getFirstLoginString());
 		sendLocaleMessage("MESSAGE.INFO.LOGIN.LAST", sender, data.getLastLoginString());
 		sendLocaleMessage("MESSAGE.INFO.LOGOUT.LAST", sender, data.getLastLogoutString());
-		sendLocaleMessage("MESSAGE.INFO.TIME.LAST", sender, String.valueOf(data.getTimeLast()));
-		sendLocaleMessage("MESSAGE.INFO.TIME.TOTAL", sender, String.valueOf(data.getTimeTotal()));
+		sendLocaleMessage("MESSAGE.INFO.TIME.LAST", sender, timeOutputConverter(data.getTimeLast(), sender));
+		sendLocaleMessage("MESSAGE.INFO.TIME.TOTAL", sender, timeOutputConverter(data.getTimeTotal(), sender));
+	}
+
+	public String timeOutputConverter(long time, CommandSender sender)
+	{
+		if (time > 2880)
+		{
+			long days = time / 60 / 24;
+			long hours = time / 60 % 24;
+			return days + " " + locale.getLocaleMessage(sender, "TIME.UNIT.DAYS") + " " + hours + " " + locale.getLocaleMessage(sender, "TIME.UNIT.HOURS");
+		}
+		else if (time > 120)
+		{
+			long hours = time / 60;
+			long minutes = time % 60;
+			return hours + " " + locale.getLocaleMessage(sender, "TIME.UNIT.HOURS") + " " + minutes + " " + locale.getLocaleMessage(sender, "TIME.UNIT.MINUTES");
+		}
+		else
+			return time + " " + locale.getLocaleMessage(sender, "TIME.UNIT.MINUTES");
 	}
 
 	public void CommandSince(Player player) throws CrazyCommandException
