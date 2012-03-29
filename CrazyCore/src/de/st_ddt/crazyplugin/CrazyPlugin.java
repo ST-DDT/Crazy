@@ -279,11 +279,12 @@ public abstract class CrazyPlugin extends JavaPlugin
 	{
 		try
 		{
+			InputStream stream = null;
 			InputStream in = null;
 			OutputStream out = null;
 			try
 			{
-				InputStream stream = getClass().getResourceAsStream("/resource/lang/" + language + ".lang");
+				stream = getClass().getResourceAsStream("/resource/lang/" + language + ".lang");
 				if (stream == null)
 					return;
 				in = new BufferedInputStream(stream);
@@ -298,6 +299,8 @@ public abstract class CrazyPlugin extends JavaPlugin
 			{
 				if (out != null)
 					out.close();
+				if (stream != null)
+					stream.close();
 				if (in != null)
 					in.close();
 			}
@@ -318,11 +321,15 @@ public abstract class CrazyPlugin extends JavaPlugin
 	{
 		try
 		{
+			InputStream stream = null;
 			BufferedInputStream in = null;
 			FileOutputStream out = null;
 			try
 			{
-				in = new BufferedInputStream(new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream());
+				stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
+				if (stream == null)
+					return;
+				in = new BufferedInputStream(stream);
 				out = new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang");
 				byte data[] = new byte[1024];
 				int count;
@@ -334,6 +341,8 @@ public abstract class CrazyPlugin extends JavaPlugin
 			{
 				if (in != null)
 					in.close();
+				if (stream != null)
+					stream.close();
 				if (out != null)
 					out.close();
 			}
