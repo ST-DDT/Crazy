@@ -161,14 +161,14 @@ public abstract class CrazyPlugin extends JavaPlugin
 	public void onLoad()
 	{
 		plugins.setDataVia1(this.getClass(), this);
+		getDataFolder().mkdir();
+		new File(getDataFolder().getPath() + "/lang").mkdirs();
 		super.onLoad();
 	}
 
 	@Override
 	public void onEnable()
 	{
-		getDataFolder().mkdir();
-		new File(getDataFolder().getPath() + "/lang").mkdirs();
 		for (String language : CrazyLocale.getLoadedLanguages())
 			loadLanguage(language);
 		load();
@@ -341,6 +341,7 @@ public abstract class CrazyPlugin extends JavaPlugin
 		catch (IOException e)
 		{
 			System.err.println("Error downloading " + language + " language file");
+			// System.err.println("from: "+getMainDownloadLocation() + "/lang/" + language + ".lang");
 			// e.printStackTrace();
 		}
 	}
