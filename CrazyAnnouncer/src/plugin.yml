@@ -1,0 +1,30 @@
+name: CrazyLogin
+main: de.st_ddt.crazylogin.CrazyLogin
+author: ST-DDT
+#C*=needed core version
+version: C4_2.1
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore]
+commands:
+  crazyannouncer:
+    description: Create/show delete an announcement
+    usage: /<command> <Player>
+    aliases: [announcer,announce,crazyannounce]
+permissions:
+  crazyannouncer.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazyannouncer.create: true
+      crazyannouncer.list: true
+      crazyannouncer.delete: true
+  crazyannouncer.create:
+    description: Allow creating an new announcement
+    default: op
+  crazyannouncer.list:
+    description: Allow listing all announcements
+    default: op
+  crazyannouncer.delete:
+    description: Allow deleting announcements
+    default: op
+    
