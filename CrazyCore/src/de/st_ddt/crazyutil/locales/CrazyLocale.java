@@ -33,6 +33,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return locale;
 	}
 
+	public final static CrazyLocale getLocaleMissing()
+	{
+		return missing;
+	}
+
 	public CrazyLocale(CrazyLocale parent, String name)
 	{
 		super();
