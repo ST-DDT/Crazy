@@ -35,7 +35,7 @@ public class Promotion
 		super();
 		this.name = name;
 		this.commands = new ArrayList<String>();
-		this.commands.add("say Please edit Promotion");
+		this.commands.add("say Please edit Promotion because $0$ wants to promote!");
 	}
 
 	public boolean isApplyable(Player player)
