@@ -14,12 +14,13 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.databases.Saveable;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public abstract class Announcement implements Saveable, Runnable
+public abstract class Announcement<T> implements Saveable, Runnable
 {
 
 	protected ArrayList<CrazyLocale> localeMessages = new ArrayList<CrazyLocale>();
 	protected ArrayList<String> messages = new ArrayList<String>();
 	protected ArrayList<String> commands = new ArrayList<String>();
+	protected ArrayList<T> triggers = new ArrayList<T>();
 	protected final String name;
 	protected final CrazyAnnouncer plugin;
 	protected boolean opOnly;
@@ -54,9 +55,30 @@ public abstract class Announcement implements Saveable, Runnable
 
 	public abstract void addTrigger(String... strings);
 
-	public abstract void removeTrigger(String... strings);
+	public void addTrigger(T trigger)
+	{
+		if (!triggers.contains(trigger))
+			triggers.add(trigger);
+	}
 
-	public abstract List<String> listTriggers();
+	public void removeTrigger(T trigger)
+	{
+		triggers.remove(trigger);
+	}
+
+	public void removeTrigger(int index) throws IndexOutOfBoundsException
+	{
+		triggers.remove(index);
+	}
+
+	public abstract List<String> listTriggerNames();
+
+	public List<T> listTriggers()
+	{
+		List<T> list = new ArrayList<T>();
+		list.addAll(triggers);
+		return list;
+	}
 
 	public void addMessage(String message) throws CrazyCommandException
 	{
