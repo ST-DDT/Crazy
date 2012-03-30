@@ -1,8 +1,8 @@
-name: CrazyLogin
-main: de.st_ddt.crazylogin.CrazyLogin
+name: CrazyAnnouncer
+main: de.st_ddt.crazyannouncer.CrazyAnnouncer
 author: ST-DDT
 #C*=needed core version
-version: C4_2.1
+version: C4_1
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
