@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -36,6 +35,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	public final static CrazyLocale getLocaleMissing()
 	{
 		return missing;
+	}
+
+	public static boolean isValid(CrazyLocale locale)
+	{
+		return locale != null && locale != getLocaleHead() && locale != getLocaleMissing();
 	}
 
 	public CrazyLocale(CrazyLocale parent, String name)
@@ -107,6 +111,28 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	public void setLanguageText(String language, String text)
 	{
 		this.localeTexts.setDataVia1(language, text);
+	}
+
+	public void sendMessage(CommandSender target)
+	{
+		target.sendMessage(getLanguageText(target));
+	}
+
+	public void sendMessage(CommandSender... targets)
+	{
+		for (CommandSender target : targets)
+			sendMessage(target);
+	}
+
+	public void sendMessage(CommandSender target, String... args)
+	{
+		target.sendMessage(ChatHelper.putArgs(getLanguageText(target), args));
+	}
+
+	public void sendMessage(CommandSender[] targets, String... args)
+	{
+		for (CommandSender target : targets)
+			sendMessage(target, args);
 	}
 
 	public CrazyLocale getLanguageEntry(String path)
@@ -243,7 +269,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return languages;
 	}
 
-	public static void save(FileConfiguration config, String path)
+	public static void save(ConfigurationSection config, String path)
 	{
 		for (Pair<String, String> user : userLanguages)
 			config.set(path + user.getData1(), user.getData2());
