@@ -55,16 +55,10 @@ public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S
 	public List<S> getAllEntries()
 	{
 		List<S> list = new ArrayList<S>();
-		System.out.println("Get");
 		if (config.getConfigurationSection(path) == null)
 			return list;
-		System.out.println("notnull");
 		for (String key : config.getConfigurationSection(path).getKeys(false))
-		{
-			System.out.println(path + "." + key);
 			list.add(getEntry(key));
-		}
-		System.out.println("return");
 		return list;
 	}
 
