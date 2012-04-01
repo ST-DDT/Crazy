@@ -3,6 +3,7 @@ package de.st_ddt.crazyonline;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -229,6 +230,7 @@ public class CrazyOnline extends CrazyPlugin
 		for (OnlinePlayerData data : datas.getData2List())
 			if (data.getLastLogin().after(date))
 				list.add(data);
+		Collections.sort(list, new OnlinePlayerDataLoginComperator());
 		sendLocaleMessage("MESSAGE.SINCE.HEADER", sender, DateFormat.format(date));
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
 		for (OnlinePlayerData data : list)
@@ -260,6 +262,7 @@ public class CrazyOnline extends CrazyPlugin
 		for (OnlinePlayerData data : datas.getData2List())
 			if (data.getLastLogin().after(date))
 				list.add(data);
+		Collections.sort(list, new OnlinePlayerDataLoginComperator());
 		sendLocaleMessage("MESSAGE.BEFORE.HEADER", sender, DateFormat.format(date));
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
 		for (OnlinePlayerData data : list)
