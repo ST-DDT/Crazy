@@ -38,7 +38,7 @@ public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S
 		}
 		catch (Exception e)
 		{
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return null;
 	}
@@ -55,12 +55,16 @@ public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S
 	public List<S> getAllEntries()
 	{
 		List<S> list = new ArrayList<S>();
+		System.out.println("Get");
 		if (config.getConfigurationSection(path) == null)
 			return list;
+		System.out.println("notnull");
 		for (String key : config.getConfigurationSection(path).getKeys(false))
 		{
+			System.out.println(path + "." + key);
 			list.add(getEntry(key));
 		}
+		System.out.println("return");
 		return list;
 	}
 
@@ -73,6 +77,6 @@ public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S
 	@Override
 	public void save(S entry)
 	{
-		entry.save(config, path + "." + entry.getName());
+		entry.save(config, path + "." + entry.getName() + ".");
 	}
 }
