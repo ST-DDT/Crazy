@@ -2,17 +2,14 @@ package de.st_ddt.crazycore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import de.st_ddt.crazyplugin.CrazyPlugin;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyplugin.exceptions.CrazyNotImplementedException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
@@ -94,11 +91,11 @@ public class CrazyCore extends CrazyPlugin
 		switch (args.length)
 		{
 			case 0:
-				String list = ChatHelper.listToString(CrazyLocale.getLoadedLanguages());
+				String languages = ChatHelper.listToString(CrazyLocale.getLoadedLanguages());
 				sendLocaleMessage("COMMAND.LANGUAGE.CURRENT", sender, CrazyLocale.getUserLanguage(sender));
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.DEFAULT", sender);
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.HEADER", sender);
-				sendLocaleMessage("COMMAND.LANGUAGE.LIST.ENTRY", sender, list);
+				sendLocaleMessage("COMMAND.LANGUAGE.LIST.ENTRY", sender, languages);
 				return;
 			case 1:
 				CrazyLocale.setUserLanguage(sender, args[0]);
@@ -140,9 +137,38 @@ public class CrazyCore extends CrazyPlugin
 				}
 				else if (args[0].equalsIgnoreCase("download"))
 				{
-					throw new CrazyCommandErrorException(new CrazyNotImplementedException());
-					// TODO da fehlt was!
-					// return;
+					String download = args[1];
+					if (download.equalsIgnoreCase("*"))
+					{
+						for (String language : CrazyLocale.getLoadedLanguages())
+						{
+							for (CrazyPlugin plugin : getCrazyPlugins())
+							{
+								plugin.downloadLanguage(language);
+								plugin.loadLanguage(language, sender);
+							}
+							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED", sender, language);
+						}
+						return;
+					}
+					CrazyPlugin plugin = CrazyPlugin.getPlugin(download);
+					if (plugin != null)
+					{
+						for (String language : CrazyLocale.getLoadedLanguages())
+						{
+							plugin.downloadLanguage(language);
+							plugin.loadLanguage(language, sender);
+							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED.PLUGIN", sender, language, plugin.getName());
+						}
+						return;
+					}
+					for (CrazyPlugin plugin2 : getCrazyPlugins())
+					{
+						plugin2.downloadLanguage(download);
+						plugin2.loadLanguage(download, sender);
+					}
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.DOWNLOADED", sender, download);
+					return;
 				}
 				else if (args[0].equalsIgnoreCase("reload"))
 				{
@@ -151,12 +177,15 @@ public class CrazyCore extends CrazyPlugin
 					{
 						for (String language : CrazyLocale.getLoadedLanguages())
 						{
-							CrazyLocale.loadLanguage(language, true);
+							for (CrazyPlugin plugin : getCrazyPlugins())
+							{
+								plugin.loadLanguage(language, sender);
+							}
 							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED", sender, language);
 						}
 						return;
 					}
-					CrazyPlugin plugin = CrazyPlugin.getPlugin(reload);
+					CrazyPlugin plugin = getPlugin(reload);
 					if (plugin != null)
 					{
 						for (String language : CrazyLocale.getLoadedLanguages())
@@ -166,7 +195,10 @@ public class CrazyCore extends CrazyPlugin
 						}
 						return;
 					}
-					CrazyLocale.loadLanguage(reload, true);
+					for (CrazyPlugin plugin2 : getCrazyPlugins())
+					{
+						plugin2.loadLanguage(reload, sender);
+					}
 					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED", sender, reload);
 					return;
 				}
