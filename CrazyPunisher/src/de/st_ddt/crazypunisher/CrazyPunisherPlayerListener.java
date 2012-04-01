@@ -71,17 +71,18 @@ public class CrazyPunisherPlayerListener implements Listener
 		Player player = event.getPlayer();
 		boolean hidden = plugin.isHidden(player);
 		for (Player plr : plugin.getServer().getOnlinePlayers())
-			if (player.hasPermission("crazypunisher.showall") || !plugin.isHidden(plr) || hidden)
+			if ((plr.hasPermission("crazypunisher.showall") || plugin.isHidden(plr)) && hidden)
 			{
 				player.showPlayer(plr);
-				if (!plr.hasPermission("crazypunisher.showall") && !plugin.isHidden(plr) && hidden)
-					plr.hidePlayer(player);
-				else
-					plr.showPlayer(player);
+				plr.showPlayer(player);
+			}
+			else if (hidden)
+			{
+				player.showPlayer(plr);
+				plr.hidePlayer(player);
 			}
 			else
 			{
-				player.hidePlayer(plr);
 				plr.showPlayer(player);
 			}
 		if (!plugin.isJailed(player))
