@@ -49,6 +49,14 @@ public abstract class CrazyPlugin extends JavaPlugin
 		return plugins.findDataVia1(plugin);
 	}
 
+	public final static CrazyPlugin getPlugin(String name)
+	{
+		for (CrazyPlugin plugin : plugins.getData2List())
+			if (plugin.getName().equalsIgnoreCase(name))
+				return plugin;
+		return null;
+	}
+
 	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
 	{

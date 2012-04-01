@@ -146,8 +146,8 @@ public class CrazyCore extends CrazyPlugin
 				}
 				else if (args[0].equalsIgnoreCase("reload"))
 				{
-					// TODO reload only one plugins languages
-					if (args[1].equalsIgnoreCase("*"))
+					String reload = args[1];
+					if (reload.equalsIgnoreCase("*"))
 					{
 						for (String language : CrazyLocale.getLoadedLanguages())
 						{
@@ -156,8 +156,18 @@ public class CrazyCore extends CrazyPlugin
 						}
 						return;
 					}
-					CrazyLocale.loadLanguage(args[1], true);
-					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED", sender, args[1]);
+					CrazyPlugin plugin = CrazyPlugin.getPlugin(reload);
+					if (plugin != null)
+					{
+						for (String language : CrazyLocale.getLoadedLanguages())
+						{
+							plugin.loadLanguage(language, sender);
+							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED.PLUGIN", sender, language, plugin.getName());
+						}
+						return;
+					}
+					CrazyLocale.loadLanguage(reload, true);
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED", sender, reload);
 					return;
 				}
 				else
