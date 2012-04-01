@@ -56,9 +56,10 @@ public class CrazyOnline extends CrazyPlugin
 		if (saveType.equals("flat"))
 		{
 			database = new CrazyOnlineConfigurationDatabase("players", config);
+		}
+		if (database != null)
 			for (OnlinePlayerData data : database.getAllEntries())
 				datas.setDataVia1(data.getName().toLowerCase(), data);
-		}
 	}
 
 	@Override
@@ -66,10 +67,8 @@ public class CrazyOnline extends CrazyPlugin
 	{
 		FileConfiguration config = getConfig();
 		config.set("saveType", saveType);
-		if (saveType.equals("flat"))
-		{
+		if (database != null)
 			database.saveAll(datas.getData2List());
-		}
 		super.save();
 	}
 
