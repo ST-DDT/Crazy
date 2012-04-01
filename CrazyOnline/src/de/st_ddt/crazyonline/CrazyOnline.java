@@ -21,6 +21,8 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.databases.Database;
 
@@ -266,6 +268,49 @@ public class CrazyOnline extends CrazyPlugin
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
 		for (OnlinePlayerData data : list)
 			sendLocaleMessage("MESSAGE.LIST", sender, data.getName(), data.getLastLoginString());
+	}
+
+	@Override
+	public boolean CommandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	{
+		String[] newArgs = ChatHelper.shiftArray(args, 1);
+		if (commandLabel.equalsIgnoreCase("mode"))
+		{
+			CommandMainMode(sender, newArgs);
+			return true;
+		}
+		return false;
+	}
+
+	private void CommandMainMode(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazyonline.mode"))
+			throw new CrazyCommandPermissionException();
+		switch (args.length)
+		{
+			case 2:
+				if (args[0].equalsIgnoreCase("saveType"))
+				{
+					String newValue = args[1];
+					if (newValue.equalsIgnoreCase("flat"))
+						saveType = newValue;
+					else
+						throw new CrazyCommandNoSuchException("SaveType", newValue);
+					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
+					save();
+					return;
+				}
+				throw new CrazyCommandNoSuchException("Mode", args[0]);
+			case 1:
+				if (args[0].equalsIgnoreCase("alwaysNeedPassword"))
+				{
+					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
+					return;
+				}
+				throw new CrazyCommandNoSuchException("Mode", args[0]);
+			default:
+				throw new CrazyCommandUsageException("/crazyonline mode <Mode> <Value>");
+		}
 	}
 
 	public OnlinePlayerData getPlayerData(OfflinePlayer player)
