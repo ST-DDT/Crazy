@@ -2,8 +2,8 @@ name: CrazyPunisher
 main: de.st_ddt.crazypunisher.CrazyPunisher
 author: ST-DDT
 #C*=needed core version
-version: C4_3
-softdepend: [PermissionsBukkit]
+version: C4_3.1
+softdepend: [PermissionsBukkit,dynmap]
 depend: [CrazyCore]
 commands:
   show:

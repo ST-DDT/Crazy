@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,6 +19,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.dynmap.DynmapAPI;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -43,6 +46,8 @@ public class CrazyPunisher extends CrazyPlugin
 	public Location jailcenter = null;
 	private World jailworld = null;
 	private int jailrange = 1;
+	private DynmapAPI dynmap = null;
+	private boolean dynmapEnabled;
 
 	public static CrazyPunisher getPlugin()
 	{
@@ -78,6 +83,9 @@ public class CrazyPunisher extends CrazyPlugin
 			jailcenter = jailworld.getSpawnLocation();
 		jailrange = config.getInt("jail.range", 5);
 		jailsphere = new Sphere(jailcenter, jailrange);
+		dynmapEnabled = config.getBoolean("dynmapEnabled", true);
+		if (dynmapEnabled)
+			dynmap = (DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap");
 		Set<String> list = null;
 		if (config.getConfigurationSection("player.banned") != null)
 			list = config.getConfigurationSection("player.banned").getKeys(false);
@@ -118,12 +126,15 @@ public class CrazyPunisher extends CrazyPlugin
 			}
 	}
 
+	@Override
 	public void save()
 	{
 		YamlConfiguration config = (YamlConfiguration) getConfig();
 		config.set("player.banned", null);
 		ObjectSaveLoadHelper.saveLocation(config, "jail.", jailcenter);
 		config.set("jail.range", jailrange);
+		if (dynmap != null)
+			config.set("dynmapEnabled", dynmapEnabled);
 		for (OfflinePlayer player : banned)
 			config.set("player.banned." + player.getName(), true);
 		for (Pair<OfflinePlayer, Date> pair : jailed)
@@ -530,6 +541,8 @@ public class CrazyPunisher extends CrazyPlugin
 		for (Player player : players)
 		{
 			hidden.remove(player.getName());
+			if (dynmap != null)
+				dynmap.setPlayerVisiblity(player, true);
 			for (Player plr : getServer().getOnlinePlayers())
 				plr.showPlayer(player);
 			sendLocaleMessage("COMMAND.SHOW", player);
@@ -558,6 +571,8 @@ public class CrazyPunisher extends CrazyPlugin
 		for (Player player : players)
 		{
 			hidden.add(player.getName());
+			if (dynmap != null)
+				dynmap.setPlayerVisiblity(player, false);
 			for (Player plr : getServer().getOnlinePlayers())
 				if (plr.hasPermission("crazypunisher.showall") || isHidden(plr))
 				{
