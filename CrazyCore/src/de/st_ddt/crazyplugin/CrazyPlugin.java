@@ -180,7 +180,7 @@ public abstract class CrazyPlugin extends JavaPlugin
 		for (String language : CrazyLocale.getLoadedLanguages())
 			loadLanguage(language);
 		load();
-		locale = CrazyLocale.getLocaleHead().getLanguageEntry(getDescription().getName());
+		checkLocale();
 		ConsoleLog("Version " + getDescription().getVersion() + " enabled");
 	}
 
@@ -198,6 +198,11 @@ public abstract class CrazyPlugin extends JavaPlugin
 
 	public void load()
 	{
+	}
+
+	public void checkLocale()
+	{
+		locale = CrazyLocale.getLocaleHead().getLanguageEntry(getDescription().getName());
 	}
 
 	public final void ConsoleLog(String message)
