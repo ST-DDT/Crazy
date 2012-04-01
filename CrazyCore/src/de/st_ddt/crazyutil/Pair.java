@@ -1,11 +1,11 @@
 package de.st_ddt.crazyutil;
 
-public class Pair<S,T>
+public class Pair<S, T>
 {
-	
-	private S data1;
-	private T data2;
-	
+
+	protected S data1;
+	protected T data2;
+
 	public Pair(S data1, T data2)
 	{
 		super();
@@ -32,7 +32,4 @@ public class Pair<S,T>
 	{
 		this.data2 = data2;
 	}
-	
-	
-
 }
