@@ -29,7 +29,7 @@ public abstract class Condition<T>
 		{
 			try
 			{
-				clazz = Class.forName("de.st_ddt.crazyarena.arenas." + type);
+				clazz = Class.forName("de.st_ddt.crazyutil.conditions." + type);
 			}
 			catch (ClassNotFoundException e2)
 			{
