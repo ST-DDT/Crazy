@@ -22,12 +22,13 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public abstract class CrazyPlugin extends JavaPlugin
+public abstract class CrazyPlugin extends JavaPlugin implements Named
 {
-
+	
 	private String ChatHeader = null;
 	protected CrazyLocale locale = null;
 	private static final PairList<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
