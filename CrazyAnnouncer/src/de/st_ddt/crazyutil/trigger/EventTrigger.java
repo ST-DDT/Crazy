@@ -60,4 +60,9 @@ public class EventTrigger extends Trigger
 	{
 		listener.removeTrigger(this);
 	}
+
+	public List<Class<Event>> getEventList()
+	{
+		return events;
+	}
 }

@@ -4,14 +4,16 @@ import java.util.ArrayList;
 
 import org.bukkit.event.EventHandler;
 
-import org.bukkit.event.Listener;
 import org.bukkit.event.Event;
 
-public class CrazyAnnouncerEventListener implements Listener
+import de.st_ddt.crazyutil.trigger.EventTrigger;
+import de.st_ddt.crazyutil.trigger.TriggerEventListener;
+
+public class CrazyAnnouncerEventListener implements TriggerEventListener
 {
 
 	private final CrazyAnnouncer plugin;
-	private final ArrayList<EventAnnouncement> announcements = new ArrayList<EventAnnouncement>();
+	private final ArrayList<EventTrigger> triggers = new ArrayList<EventTrigger>();
 
 	public CrazyAnnouncerEventListener(CrazyAnnouncer plugin)
 	{
@@ -19,27 +21,15 @@ public class CrazyAnnouncerEventListener implements Listener
 		this.plugin = plugin;
 	}
 
-	public final void addEventAnnouncement(EventAnnouncement announcement)
-	{
-		if (announcements.contains(announcement))
-			announcements.add(announcement);
-	}
-
-	public final void removeEventAnnouncement(EventAnnouncement announcement)
-	{
-		announcements.remove(announcement);
-	}
-
 	@EventHandler
 	public void Event(Event event)
 	{
-		for (EventAnnouncement announcement : announcements)
-			for (Class<? extends Event> trigger : announcement.listTriggers())
-				if (trigger.isAssignableFrom(event.getClass()))
-				{
-					announcement.run();
-					return;
-				}
+		for (EventTrigger trigger : triggers)
+			if (trigger.getEventList().contains(event.getClass()))
+			{
+				trigger.run();
+				return;
+			}
 	}
 
 	public CrazyAnnouncer getPlugin()
@@ -47,8 +37,16 @@ public class CrazyAnnouncerEventListener implements Listener
 		return plugin;
 	}
 
-	public ArrayList<EventAnnouncement> getAnnouncements()
+	@Override
+	public void removeTrigger(EventTrigger eventTrigger)
 	{
-		return announcements;
+		triggers.add(eventTrigger);
+	}
+
+	@Override
+	public void addTrigger(EventTrigger eventTrigger)
+	{
+		if (!triggers.contains(eventTrigger))
+			triggers.add(eventTrigger);
 	}
 }
