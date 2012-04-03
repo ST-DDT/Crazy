@@ -28,7 +28,7 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public abstract class CrazyPlugin extends JavaPlugin implements Named
 {
-	
+
 	private String ChatHeader = null;
 	protected CrazyLocale locale = null;
 	private static final PairList<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
@@ -326,9 +326,9 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		}
 	}
 
-	protected String getMainDownloadLocation()
+	public String getMainDownloadLocation()
 	{
-		return "http://dl.dropbox.com/u/16999313/Bukkit/" + getDescription().getName();
+		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src";
 	}
 
 	public void downloadLanguage(String language)
@@ -340,7 +340,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 			FileOutputStream out = null;
 			try
 			{
-				stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
+				stream = new URL(getMainDownloadLocation() + "/resource/lang/" + language + ".lang").openStream();
 				if (stream == null)
 					return;
 				in = new BufferedInputStream(stream);
@@ -364,7 +364,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		catch (IOException e)
 		{
 			System.err.println("Error downloading " + language + " language file");
-			// System.err.println("from: "+getMainDownloadLocation() + "/lang/" + language + ".lang");
+			// System.err.println("from: "+getMainDownloadLocation() + "/resource/lang/" + language + ".lang");
 			// e.printStackTrace();
 		}
 	}
