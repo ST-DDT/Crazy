@@ -328,7 +328,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 
 	public String getMainDownloadLocation()
 	{
-		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src";
+		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src/resource";
 	}
 
 	public void downloadLanguage(String language)
@@ -340,7 +340,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 			FileOutputStream out = null;
 			try
 			{
-				stream = new URL(getMainDownloadLocation() + "/resource/lang/" + language + ".lang").openStream();
+				stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
 				if (stream == null)
 					return;
 				in = new BufferedInputStream(stream);
