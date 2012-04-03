@@ -13,14 +13,14 @@ public class EventTrigger extends Trigger
 {
 
 	TriggerEventListener listener;
-	List<Class<Event>> events;
+	List<Class<? extends Event>> events;
 
 	@SuppressWarnings("unchecked")
 	public EventTrigger(ConfigurationSection config, List<NamedRunnable> actionlist, JavaPlugin plugin, TriggerEventListener listener)
 	{
 		super(config, actionlist, plugin);
 		this.listener = listener;
-		this.events = new ArrayList<Class<Event>>();
+		this.events = new ArrayList<Class<? extends Event>>();
 		for (String clazz : config.getStringList("events"))
 			try
 			{
@@ -36,7 +36,7 @@ public class EventTrigger extends Trigger
 			}
 	}
 
-	public EventTrigger(String name, List<NamedRunnable> actionlist, JavaPlugin plugin, List<Class<Event>> events, TriggerEventListener listener)
+	public EventTrigger(String name, List<NamedRunnable> actionlist, JavaPlugin plugin, List<Class<? extends Event>> events, TriggerEventListener listener)
 	{
 		super(name, actionlist, plugin);
 		this.listener = listener;
@@ -61,7 +61,7 @@ public class EventTrigger extends Trigger
 		listener.removeTrigger(this);
 	}
 
-	public List<Class<Event>> getEventList()
+	public List<Class<? extends Event>> getEventList()
 	{
 		return events;
 	}

@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -18,10 +19,25 @@ public class Action_MESSAGE extends Action
 		messages = config.getStringList("messages");
 	}
 
+	public Action_MESSAGE(String name, String... messages)
+	{
+		super(name);
+		this.messages = new ArrayList<String>();
+		for (String message : messages)
+			this.messages.add(message);
+	}
+
 	@Override
 	public void run()
 	{
 		for (String message : messages)
 			Bukkit.broadcastMessage(ChatHelper.colorise(message));
+	}
+
+	@Override
+	public void save(ConfigurationSection config, String path)
+	{
+		super.save(config, path);
+		config.set("messages", messages);
 	}
 }

@@ -17,6 +17,51 @@ public abstract class Trigger implements Saveable, Runnable
 	public boolean enabled;
 	protected final JavaPlugin plugin;
 
+	public static Trigger load(ConfigurationSection config, List<? extends NamedRunnable> actionlist, JavaPlugin plugin)
+	{
+		if (config == null)
+			return null;
+		String type = config.getString("type", "-1");
+		if (type == "-1")
+		{
+			System.out.println("Invalid Trigger Type!");
+			return null;
+		}
+		Class<?> clazz = null;
+		try
+		{
+			clazz = Class.forName(type);
+		}
+		catch (ClassNotFoundException e)
+		{
+			try
+			{
+				clazz = Class.forName("de.st_ddt.crazyutil.trigger." + type);
+			}
+			catch (ClassNotFoundException e2)
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+		if (Trigger.class.isAssignableFrom(clazz))
+		{
+			System.out.println("Invalid TriggerType " + clazz.toString().substring(6));
+			return null;
+		}
+		Trigger trigger = null;
+		try
+		{
+			trigger = (Trigger) clazz.getConstructor(ConfigurationSection.class, List.class, JavaPlugin.class).newInstance(config, actionlist, plugin);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		return trigger;
+	}
+
 	public Trigger(String name, List<NamedRunnable> actionlist, JavaPlugin plugin)
 	{
 		super();

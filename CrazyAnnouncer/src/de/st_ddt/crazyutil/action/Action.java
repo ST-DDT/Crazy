@@ -59,6 +59,11 @@ public abstract class Action implements NamedRunnable, Saveable
 		name = config.getName();
 	}
 
+	public Action(String name)
+	{
+		this.name = name;
+	}
+
 	@Override
 	public abstract void run();
 
