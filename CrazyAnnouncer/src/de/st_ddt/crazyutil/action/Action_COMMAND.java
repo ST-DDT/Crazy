@@ -10,12 +10,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyutil.ChatHelper;
 
-public class ActionCommand extends Action
+public class Action_COMMAND extends Action
 {
 
 	List<String> commands;
 
-	public ActionCommand(ConfigurationSection config)
+	public Action_COMMAND(ConfigurationSection config)
 	{
 		super(config);
 		commands = config.getStringList("commands");

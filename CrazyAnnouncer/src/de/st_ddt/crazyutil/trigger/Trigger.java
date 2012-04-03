@@ -42,6 +42,7 @@ public abstract class Trigger implements Saveable, Runnable
 	public void save(ConfigurationSection config, String path)
 	{
 		List<String> actionnames = new ArrayList<String>();
+		config.set(path + "typ", this.getClass().getName().substring(6));
 		for (NamedRunnable action : actions)
 			actionnames.add(action.getName());
 		config.set(path + "actions", actionnames);
