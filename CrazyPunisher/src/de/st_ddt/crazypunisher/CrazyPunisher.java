@@ -28,6 +28,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazypunisher.events.CrazyPunisherHardbanEvent;
+import de.st_ddt.crazypunisher.events.CrazyPunisherJailEvent;
+import de.st_ddt.crazypunisher.events.CrazyPunisherUnjailEvent;
+import de.st_ddt.crazypunisher.events.CrazyPunisherVisibilityChangeEvent;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.Pair;
 import de.st_ddt.crazyutil.PairList;
@@ -247,6 +251,7 @@ public class CrazyPunisher extends CrazyPlugin
 			Kick(p, locale.getLocaleMessage(p, "MESSAGE.HARDBAN"));
 		}
 		broadcastLocaleMessage("BROADCAST.HARDBAN", player.getName());
+		getServer().getPluginManager().callEvent(new CrazyPunisherHardbanEvent(player));
 	}
 
 	private void CommandBan(CommandSender sender, String[] args) throws CrazyCommandException
@@ -393,6 +398,7 @@ public class CrazyPunisher extends CrazyPlugin
 		if (player instanceof Player)
 			keepJailed((Player) player);
 		broadcastLocaleMessage("BROADCAST.JAIL", player.getName());
+		getServer().getPluginManager().callEvent(new CrazyPunisherJailEvent(player, time));
 	}
 
 	private void CommandUnjail(CommandSender sender, String[] args) throws CrazyCommandException
@@ -438,6 +444,7 @@ public class CrazyPunisher extends CrazyPlugin
 				p.teleport(target, TeleportCause.PLUGIN);
 		}
 		broadcastLocaleMessage("BROADCAST.UNJAIL", player.getName());
+		getServer().getPluginManager().callEvent(new CrazyPunisherUnjailEvent(player));
 	}
 
 	private void CommandJailTeleport(CommandSender sender, String[] args) throws CrazyCommandException
@@ -540,6 +547,10 @@ public class CrazyPunisher extends CrazyPlugin
 		}
 		for (Player player : players)
 		{
+			CrazyPunisherVisibilityChangeEvent event = new CrazyPunisherVisibilityChangeEvent(player, true);
+			getServer().getPluginManager().callEvent(event);
+			if (event.isCancelled())
+				continue;
 			hidden.remove(player.getName());
 			if (dynmap != null)
 				dynmap.setPlayerVisiblity(player, true);
@@ -570,6 +581,10 @@ public class CrazyPunisher extends CrazyPlugin
 		}
 		for (Player player : players)
 		{
+			CrazyPunisherVisibilityChangeEvent event = new CrazyPunisherVisibilityChangeEvent(player, false);
+			getServer().getPluginManager().callEvent(event);
+			if (event.isCancelled())
+				continue;
 			hidden.add(player.getName());
 			if (dynmap != null)
 				dynmap.setPlayerVisiblity(player, false);

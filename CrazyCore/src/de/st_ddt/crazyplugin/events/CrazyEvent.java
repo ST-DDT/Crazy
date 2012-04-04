@@ -1,20 +1,21 @@
 package de.st_ddt.crazyplugin.events;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import de.st_ddt.crazyplugin.CrazyPlugin;
 
-public class CrazyEvent extends Event
+public abstract class CrazyEvent<T extends CrazyPlugin> extends Event
 {
 
-	private static final HandlerList handlers = new HandlerList();
+	protected final T plugin;
 
-	public HandlerList getHandlers()
+	public CrazyEvent(T plugin)
 	{
-		return handlers;
+		super();
+		this.plugin = plugin;
 	}
 
-	public static HandlerList getHandlerList()
+	public T getPlugin()
 	{
-		return handlers;
+		return plugin;
 	}
 }
