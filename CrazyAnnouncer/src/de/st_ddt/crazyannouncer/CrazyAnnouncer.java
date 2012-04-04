@@ -1,6 +1,7 @@
 package de.st_ddt.crazyannouncer;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,6 +14,7 @@ import de.st_ddt.crazyutil.action.Action;
 import de.st_ddt.crazyutil.action.Action_MESSAGE;
 import de.st_ddt.crazyutil.action.NamedRunnable;
 import de.st_ddt.crazyutil.trigger.EventTrigger;
+import de.st_ddt.crazyutil.trigger.ScheduledTrigger;
 import de.st_ddt.crazyutil.trigger.Trigger;
 
 public class CrazyAnnouncer extends CrazyPlugin
@@ -55,7 +57,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 		}
 		else
 		{
-			actions.add(new Action_MESSAGE("example", "This is a default message", "Welcome to the minecraft server of" + getServer().getServerName()));
+			actions.add(new Action_MESSAGE("example", "This is a default message", "Welcome to the minecraft server of " + getServer().getServerName()));
 		}
 		config = getConfig().getConfigurationSection("triggers");
 		if (config != null)
@@ -63,10 +65,12 @@ public class CrazyAnnouncer extends CrazyPlugin
 			for (String name : config.getKeys(false))
 				triggers.add(Trigger.load(config.getConfigurationSection(name), actions, this));
 		}
+		else
 		{
-			List<Class<? extends Event>> events=new ArrayList<Class<? extends Event>>();
+			List<Class<? extends Event>> events = new ArrayList<Class<? extends Event>>();
 			events.add(PlayerJoinEvent.class);
 			triggers.add(new EventTrigger("exampleEvent", actions, plugin, events, eventListener));
+			triggers.add(new ScheduledTrigger("exampleEvent", actions, plugin, new Date(new Date().getTime() + 20000)));
 		}
 	}
 
