@@ -175,10 +175,25 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		try
 		{
 			bufreader = new BufferedReader(reader);
-			String zeile = null;
+			String zeile = bufreader.readLine();
+			if (zeile == null)
+				throw new NullPointerException();
+			byte[] bytes = zeile.getBytes();
+			if (bytes.length >= 3)
+				if (bytes[0] == (byte) 0x3F && bytes[1] == (byte) 0x43 && bytes[2] == (byte) 0x52)
+					zeile = zeile.substring(1);
+			String[] split = zeile.split("=", 2);
+			try
+			{
+				locale.addLanguageEntry(language, split[0], split[1]);
+			}
+			catch (ArrayIndexOutOfBoundsException e)
+			{
+				System.err.println("Invalid line " + zeile);
+			}
 			while ((zeile = bufreader.readLine()) != null)
 			{
-				String[] split = zeile.split("=", 2);
+				split = zeile.split("=", 2);
 				try
 				{
 					locale.addLanguageEntry(language, split[0], split[1]);
