@@ -178,10 +178,8 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			String zeile = bufreader.readLine();
 			if (zeile == null)
 				throw new NullPointerException();
-			byte[] bytes = zeile.getBytes();
-			if (bytes.length >= 3)
-				if (bytes[0] == (byte) 0x3F && bytes[1] == (byte) 0x43 && bytes[2] == (byte) 0x52)
-					zeile = zeile.substring(1);
+			if (zeile.getBytes()[0] == (byte) 63)
+				zeile = zeile.substring(1);
 			String[] split = zeile.split("=", 2);
 			try
 			{
