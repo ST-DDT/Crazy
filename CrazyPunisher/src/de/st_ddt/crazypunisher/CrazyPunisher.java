@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.dynmap.DynmapAPI;
 
+import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
@@ -41,7 +42,7 @@ public class CrazyPunisher extends CrazyPlugin
 {
 
 	private static CrazyPunisher plugin;
-	private final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	protected final static SimpleDateFormat DateFormat = CrazyCore.DateFormat;
 	private final ArrayList<OfflinePlayer> banned = new ArrayList<OfflinePlayer>();
 	private final PairList<OfflinePlayer, Date> jailed = new PairList<OfflinePlayer, Date>();
 	private final ArrayList<String> hidden = new ArrayList<String>();
@@ -119,7 +120,15 @@ public class CrazyPunisher extends CrazyPlugin
 				Date until;
 				try
 				{
-					until = DateFormat.parse(config.getString("player.jailed." + player.getName()));
+					try
+					{
+						until = DateFormat.parse(config.getString("player.jailed." + player.getName()));
+					}
+					catch (NullPointerException e)
+					{
+						until = DateFormat.parse(config.getString("player.jailed." + jail));
+						config.set("player.jailed." + jail, null);
+					}
 				}
 				catch (ParseException e)
 				{
