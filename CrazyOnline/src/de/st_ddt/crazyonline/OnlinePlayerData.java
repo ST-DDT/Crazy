@@ -39,7 +39,7 @@ public class OnlinePlayerData implements Saveable
 	public OnlinePlayerData(ConfigurationSection config)
 	{
 		super();
-		this.name = config.getString("name");
+		this.name = config.getString("name", config.getName());
 		this.firstLogin = StringToDate(config.getString("LoginFirst"), new Date());
 		this.lastLogin = StringToDate(config.getString("LoginLast"), new Date());
 		this.lastLogout = StringToDate(config.getString("LogoutLast"), new Date());
