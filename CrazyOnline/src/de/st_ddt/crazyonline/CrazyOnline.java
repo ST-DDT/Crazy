@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyonline.databases.CrazyOnlineConfigurationDatabase;
+import de.st_ddt.crazyonline.databases.CrazyOnlineMySQLDatabase;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -25,6 +26,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.databases.Database;
+import de.st_ddt.crazyutil.databases.MySQLConnection;
 
 public class CrazyOnline extends CrazyPlugin
 {
@@ -60,6 +62,16 @@ public class CrazyOnline extends CrazyPlugin
 		if (saveType.equals("flat"))
 		{
 			database = new CrazyOnlineConfigurationDatabase(config, tableName);
+		}
+		else if (saveType.equals("mysql"))
+		{
+			String host = config.getString("database.host");
+			String port = config.getString("database.port");
+			String databasename = config.getString("database.dbname");
+			String user = config.getString("database.user");
+			String password = config.getString("database.password");
+			MySQLConnection connection = new MySQLConnection(host, port, databasename, user, password);
+			database = new CrazyOnlineMySQLDatabase(connection, tableName);
 		}
 		if (database != null)
 			for (OnlinePlayerData data : database.getAllEntries())

@@ -1,5 +1,7 @@
 package de.st_ddt.crazyonline;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +14,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazyutil.databases.DatabaseSaveable;
 import de.st_ddt.crazyutil.databases.Saveable;
 
-public class OnlinePlayerData implements Saveable,DatabaseSaveable
+public class OnlinePlayerData implements Saveable, DatabaseSaveable
 {
 
 	protected final String name;
@@ -45,6 +47,58 @@ public class OnlinePlayerData implements Saveable,DatabaseSaveable
 		this.lastLogin = StringToDate(config.getString("LoginLast"), new Date());
 		this.lastLogout = StringToDate(config.getString("LogoutLast"), new Date());
 		this.onlineTime = config.getInt("TimeTotal", 0);
+	}
+
+	public OnlinePlayerData(ResultSet rawData)
+	{
+		super();
+		String name;
+		try
+		{
+			name = rawData.getString("name");
+		}
+		catch (SQLException e)
+		{
+			name = "ERROR";
+			e.printStackTrace();
+		}
+		try
+		{
+			firstLogin = StringToDate(rawData.getString("LoginFirst"), new Date());
+		}
+		catch (SQLException e)
+		{
+			firstLogin = new Date();
+			e.printStackTrace();
+		}
+		try
+		{
+			lastLogin = StringToDate(rawData.getString("LoginLast"), new Date());
+		}
+		catch (SQLException e)
+		{
+			lastLogin = new Date();
+			e.printStackTrace();
+		}
+		try
+		{
+			lastLogout = StringToDate(rawData.getString("LogoutLast"), new Date());
+		}
+		catch (SQLException e)
+		{
+			lastLogout = new Date();
+			e.printStackTrace();
+		}
+		try
+		{
+			onlineTime = rawData.getInt("TimeTotal");
+		}
+		catch (SQLException e)
+		{
+			onlineTime = 0;
+			e.printStackTrace();
+		}
+		this.name = name;
 	}
 
 	public void save(ConfigurationSection config, String path)
