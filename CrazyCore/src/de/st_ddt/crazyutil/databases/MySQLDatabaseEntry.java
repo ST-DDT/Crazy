@@ -6,11 +6,13 @@ public abstract class MySQLDatabaseEntry<S extends DatabaseSaveable> extends Dat
 {
 
 	protected final MySQLConnection connection;
+	protected String table;
 
-	public MySQLDatabaseEntry(MySQLConnection connection)
+	public MySQLDatabaseEntry(MySQLConnection connection, String table)
 	{
 		super();
 		this.connection = connection;
+		this.table = table;
 	}
 
 	@Override
