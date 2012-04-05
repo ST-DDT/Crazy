@@ -9,9 +9,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyutil.databases.DatabaseSaveable;
 import de.st_ddt.crazyutil.databases.Saveable;
 
-public class OnlinePlayerData implements Saveable
+public class OnlinePlayerData implements Saveable,DatabaseSaveable
 {
 
 	protected final String name;

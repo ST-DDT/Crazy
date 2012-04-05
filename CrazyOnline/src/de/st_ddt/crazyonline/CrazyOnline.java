@@ -34,6 +34,7 @@ public class CrazyOnline extends CrazyPlugin
 	private CrazyOnlinePlayerListener playerListener = null;
 	public static final SimpleDateFormat DateFormat = CrazyCore.DateFormat;
 	protected String saveType;
+	protected String tableName;
 	protected Database<OnlinePlayerData, ?> database;
 
 	public static CrazyOnline getPlugin()
@@ -54,10 +55,11 @@ public class CrazyOnline extends CrazyPlugin
 	{
 		super.load();
 		FileConfiguration config = getConfig();
-		saveType = config.getString("saveType", "flat").toLowerCase();
+		saveType = config.getString("database.saveType", "flat").toLowerCase();
+		tableName = config.getString("database.tableName", "players");
 		if (saveType.equals("flat"))
 		{
-			database = new CrazyOnlineConfigurationDatabase("players", config);
+			database = new CrazyOnlineConfigurationDatabase(config, tableName);
 		}
 		if (database != null)
 			for (OnlinePlayerData data : database.getAllEntries())
@@ -68,7 +70,8 @@ public class CrazyOnline extends CrazyPlugin
 	public void save()
 	{
 		FileConfiguration config = getConfig();
-		config.set("saveType", saveType);
+		config.set("database.saveType", saveType);
+		config.set("database.tableName", tableName);
 		if (database != null)
 			database.saveAll(datas.getData2List());
 		super.save();

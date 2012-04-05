@@ -9,8 +9,24 @@ import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
 public class CrazyOnlineConfigurationDatabase extends ConfigurationDatabase<OnlinePlayerData, ConfigurationDatabaseEntry<OnlinePlayerData>>
 {
 
-	public CrazyOnlineConfigurationDatabase(String tableName, ConfigurationSection config)
+	public CrazyOnlineConfigurationDatabase(ConfigurationSection config, String path)
 	{
-		super(config, "players", OnlinePlayerData.class);
+		super(new ConfigurationDatabaseEntry<OnlinePlayerData>(path)
+		{
+
+			@Override
+			public OnlinePlayerData load(ConfigurationSection rawData)
+			{
+				return new OnlinePlayerData(rawData);
+			}
+
+			@Override
+			public void save(OnlinePlayerData data, ConfigurationSection saveTo)
+			{
+				data.save(saveTo, path);
+			}
+
+
+		}, config, path);
 	}
 }
