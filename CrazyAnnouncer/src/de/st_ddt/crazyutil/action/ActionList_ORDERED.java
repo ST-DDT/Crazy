@@ -2,12 +2,12 @@ package de.st_ddt.crazyutil.action;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class Action_ORDERED extends ActionList
+public class ActionList_ORDERED extends ActionList
 {
 
 	protected int currentIndex;
 
-	public Action_ORDERED(ConfigurationSection config)
+	public ActionList_ORDERED(ConfigurationSection config)
 	{
 		super(config);
 		currentIndex = config.getInt("currentIndex", 0);
