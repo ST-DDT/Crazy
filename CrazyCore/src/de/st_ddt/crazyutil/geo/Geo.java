@@ -6,6 +6,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+
 public abstract class Geo
 {
 
@@ -13,43 +15,7 @@ public abstract class Geo
 
 	public static Geo load(ConfigurationSection config, World world)
 	{
-		if (config == null)
-			return null;
-		String newType = config.getString("type", "-1");
-		if (newType.equals("-1"))
-			return null;
-		Class<?> newClass = null;
-		try
-		{
-			newClass = Class.forName(newType);
-		}
-		catch (ClassNotFoundException e)
-		{
-			try
-			{
-				newClass = Class.forName("de.st_ddt.crazyutil.geo." + newType);
-			}
-			catch (ClassNotFoundException e2)
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-		if (Geo.class.isAssignableFrom(newClass))
-		{
-			return null;
-		}
-		Geo newGeo = null;
-		try
-		{
-			newGeo = (Geo) newClass.getConstructor(ConfigurationSection.class, String.class, World.class).newInstance(config, world);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		return newGeo;
+		return ObjectSaveLoadHelper.load(config, Geo.class, new Class<?>[] { ConfigurationSection.class, World.class }, new Object[] { config, world }, "de.st_ddt.crazyutil.geo");
 	}
 
 	public Geo(ConfigurationSection config, World world)
@@ -67,15 +33,10 @@ public abstract class Geo
 		return getWorld();
 	}
 
-	public final String getClassString()
-	{
-		return this.getClass().toString().substring(6);
-	}
-
 	public final void save(FileConfiguration config, String path, boolean includeType)
 	{
 		if (includeType)
-			config.set(path + "type", getClassString());
+			config.set(path + "type", getClass().getName());
 		save(config, path);
 	}
 

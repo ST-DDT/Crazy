@@ -6,53 +6,21 @@ import java.util.List;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+
 public abstract class Condition<T>
 {
 
 	@SuppressWarnings("unchecked")
 	public static <T> Condition<T> load(ConfigurationSection config)
 	{
-		if (config == null)
-			return null;
-		String type = config.getString("type", "-1");
-		if (type == "-1")
+		String clazzName = config.getString("type", "-1");
+		if (clazzName.equals("-1"))
 		{
-			System.out.println("Invalid Condition Type!");
+			System.err.println("No class defined!");
 			return null;
 		}
-		Class<?> clazz = null;
-		try
-		{
-			clazz = Class.forName(type);
-		}
-		catch (ClassNotFoundException e)
-		{
-			try
-			{
-				clazz = Class.forName("de.st_ddt.crazyutil.conditions." + type);
-			}
-			catch (ClassNotFoundException e2)
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-		// if (Condition.class.isAssignableFrom(clazz))
-		// {
-		// System.out.println("Invalid ConditionType " + clazz.toString().substring(6));
-		// return null;
-		// }
-		Condition<T> condition = null;
-		try
-		{
-			condition = (Condition<T>) clazz.getConstructor(ConfigurationSection.class).newInstance(config);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		return condition;
+		return (Condition<T>) ObjectSaveLoadHelper.load(clazzName, Condition.class, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions", true);
 	}
 
 	public Condition(ConfigurationSection config)
@@ -67,7 +35,7 @@ public abstract class Condition<T>
 
 	public void save(FileConfiguration config, String path)
 	{
-		config.set(path + "type", getClass().toString().substring(6));
+		config.set(path + "type", getClass().getName());
 	}
 
 	public String getTypeIdentifier()
