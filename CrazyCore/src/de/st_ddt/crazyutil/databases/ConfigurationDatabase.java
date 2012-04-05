@@ -5,19 +5,17 @@ import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S, ? extends ConfigurationSection>> extends Database<S, T>
+public class ConfigurationDatabase<S extends DatabaseSaveable, T extends ConfigurationDatabaseEntry<S>> extends Database<S, T>
 {
 
 	protected final ConfigurationSection config;
-	protected final Class<S> clazz;
-	protected String path;
+	protected String table;
 
-	public ConfigurationDatabase(ConfigurationSection config, String path, Class<S> clazz)
+	public ConfigurationDatabase(T entrymaker, ConfigurationSection config, String table)
 	{
-		super(DatabaseTypes.FLAT);
+		super(DatabaseTypes.FLAT, entrymaker);
 		this.config = config;
-		this.clazz = clazz;
-		this.path = path;
+		this.table = table;
 	}
 
 	@Override
@@ -29,18 +27,10 @@ public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S
 	@Override
 	public S getEntry(String key)
 	{
-		ConfigurationSection section = config.getConfigurationSection(path + "." + key);
+		ConfigurationSection section = config.getConfigurationSection(table + "." + key);
 		if (section == null)
 			return null;
-		try
-		{
-			return clazz.getConstructor(ConfigurationSection.class).newInstance(section);
-		}
-		catch (Exception e)
-		{
-			// e.printStackTrace();
-		}
-		return null;
+		return entrymaker.load(section);
 	}
 
 	@Override
@@ -55,9 +45,9 @@ public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S
 	public List<S> getAllEntries()
 	{
 		List<S> list = new ArrayList<S>();
-		if (config.getConfigurationSection(path) == null)
+		if (config.getConfigurationSection(table) == null)
 			return list;
-		for (String key : config.getConfigurationSection(path).getKeys(false))
+		for (String key : config.getConfigurationSection(table).getKeys(false))
 			list.add(getEntry(key));
 		return list;
 	}
@@ -65,12 +55,12 @@ public class ConfigurationDatabase<S extends Saveable, T extends DatabaseEntry<S
 	@Override
 	public void delete(String key)
 	{
-		config.set(path + "." + key, null);
+		config.set(table + "." + key, null);
 	}
 
 	@Override
 	public void save(S entry)
 	{
-		entry.save(config, path + "." + entry.getName() + ".");
+		entrymaker.save(entry, config);
 	}
 }

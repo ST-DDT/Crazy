@@ -2,16 +2,20 @@ package de.st_ddt.crazyutil.databases;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public abstract class ConfigurationDatabaseEntry<S extends Saveable> extends DatabaseEntry<S, ConfigurationSection>
+public abstract class ConfigurationDatabaseEntry<S extends DatabaseSaveable> extends DatabaseEntry<S, ConfigurationSection>
 {
 
-	public ConfigurationDatabaseEntry(ConfigurationSection rawData)
+	protected final String path;
+
+	public ConfigurationDatabaseEntry(String path)
 	{
-		super(rawData);
+		super();
+		this.path = path;
 	}
 
-	public ConfigurationDatabaseEntry(S infoObject)
-	{
-		super(infoObject);
-	}
+	@Override
+	public abstract S load(ConfigurationSection rawData);
+
+	@Override
+	public abstract void save(S data, ConfigurationSection saveTo);
 }
