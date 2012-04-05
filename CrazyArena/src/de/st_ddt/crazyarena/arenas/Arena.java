@@ -49,11 +49,6 @@ public abstract class Arena
 		this.edit = false;
 	}
 
-	public final String getClassString()
-	{
-		return this.getClass().toString().substring(6);
-	}
-
 	public Participant getParticipant(Player player)
 	{
 		return participants.getParticipant(player);
@@ -133,7 +128,7 @@ public abstract class Arena
 	public void save()
 	{
 		config.set("name", name);
-		config.set("type", getClassString());
+		config.set("type", getClass().getName());
 		config.set("world", world);
 		config.set("enabled", enabled);
 		region.save(config, "area.", true);

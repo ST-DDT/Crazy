@@ -5,12 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class ArenaList extends ArrayList<Arena>
 {
@@ -56,38 +58,8 @@ public class ArenaList extends ArrayList<Arena>
 			CrazyArena.getPlugin().ConsoleLog("Invalid Arenaconfig (Missing type) for Arena " + name);
 			return null;
 		}
-		Class<?> clazz = CrazyArena.getArenaTypes().findDataVia1(type);
-		if (type == null)
-			try
-			{
-				clazz = Class.forName(type);
-			}
-			catch (ClassNotFoundException e)
-			{
-				try
-				{
-					clazz = Class.forName("de.st_ddt.crazyarena.arenas." + type);
-				}
-				catch (ClassNotFoundException e2)
-				{
-					e.printStackTrace();
-					return null;
-				}
-			}
-		if (Arena.class.isAssignableFrom(clazz))
-		{
-			CrazyArena.getPlugin().ConsoleLog("Invalid ArenaType " + clazz.toString().substring(6) + " (Arena: " + name + ")");
-			return null;
-		}
-		try
-		{
-			arena = (Arena) clazz.getConstructor(FileConfiguration.class).newInstance(config);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		type = CrazyArena.getArenaTypes().findDataVia1(type).getName();
+		arena = ObjectSaveLoadHelper.load(type, Arena.class, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyarena.arenas");
 		this.add(arena);
 		return arena;
 	}
