@@ -36,7 +36,7 @@ public abstract class Action implements NamedRunnable, Saveable
 				return null;
 			}
 		}
-		if (Action.class.isAssignableFrom(clazz))
+		if (clazz.getClass().isAssignableFrom(Action.class))
 		{
 			System.out.println("Invalid ActionType " + clazz.toString().substring(6));
 			return null;
@@ -76,6 +76,6 @@ public abstract class Action implements NamedRunnable, Saveable
 	@Override
 	public void save(ConfigurationSection config, String path)
 	{
-		config.set(path + "type", getClass().toString().substring(6));
+		config.set(path + "type", getClass().getName());
 	}
 }

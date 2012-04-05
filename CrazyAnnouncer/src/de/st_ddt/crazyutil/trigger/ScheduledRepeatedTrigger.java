@@ -47,4 +47,12 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 			repeat--;
 		register();
 	}
+
+	@Override
+	public void save(ConfigurationSection config, String path)
+	{
+		super.save(config, path);
+		config.set(path + "repeat", repeat);
+		config.set(path + "interval", interval);
+	}
 }

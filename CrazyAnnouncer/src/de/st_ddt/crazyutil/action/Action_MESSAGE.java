@@ -38,6 +38,6 @@ public class Action_MESSAGE extends Action
 	public void save(ConfigurationSection config, String path)
 	{
 		super.save(config, path);
-		config.set("messages", messages);
+		config.set(path + "messages", messages);
 	}
 }

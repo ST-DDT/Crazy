@@ -77,7 +77,13 @@ public class CrazyAnnouncer extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		// EDIT Auto-generated method stub
+		ConfigurationSection config = getConfig();
+		config.set("triggers", null);
+		for (Trigger trigger : triggers)
+			trigger.save(config, "triggers." + trigger.getName() + ".");
+		config.set("actions", null);
+		for (NamedRunnable action : actions)
+			action.save(config, "actions." + action.getName() + ".");
 		super.save();
 	}
 }

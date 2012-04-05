@@ -32,4 +32,11 @@ public class Action_COMMAND extends Action
 		for (String command : commands)
 			Bukkit.getServer().dispatchCommand(sender, ChatHelper.putArgs(command, sender.getName(), CrazyCore.DateFormat.format(new Date())));
 	}
+
+	@Override
+	public void save(ConfigurationSection config, String path)
+	{
+		super.save(config, path);
+		config.set(path + "commands", commands);
+	}
 }

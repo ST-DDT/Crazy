@@ -44,7 +44,7 @@ public abstract class Trigger implements Saveable, Runnable
 				return null;
 			}
 		}
-		if (Trigger.class.isAssignableFrom(clazz))
+		if (clazz.getClass().isAssignableFrom(Trigger.class))
 		{
 			System.out.println("Invalid TriggerType " + clazz.toString().substring(6));
 			return null;
@@ -87,7 +87,7 @@ public abstract class Trigger implements Saveable, Runnable
 	public void save(ConfigurationSection config, String path)
 	{
 		List<String> actionnames = new ArrayList<String>();
-		config.set(path + "typ", this.getClass().getName().substring(6));
+		config.set(path + "type", this.getClass().getName());
 		for (NamedRunnable action : actions)
 			actionnames.add(action.getName());
 		config.set(path + "actions", actionnames);

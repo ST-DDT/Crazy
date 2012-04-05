@@ -74,4 +74,11 @@ public class ScheduledTrigger extends Trigger
 		super.run();
 		taskID = -1;
 	}
+
+	@Override
+	public void save(ConfigurationSection config, String path)
+	{
+		super.save(config, path);
+		config.set(path + "date", CrazyCore.DateFormat.format(date));
+	}
 }
