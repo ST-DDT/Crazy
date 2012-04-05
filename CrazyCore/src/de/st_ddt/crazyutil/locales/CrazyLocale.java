@@ -180,14 +180,18 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 				throw new NullPointerException();
 			if (zeile.getBytes()[0] == (byte) 63)
 				zeile = zeile.substring(1);
-			String[] split = zeile.split("=", 2);
-			try
+			String[] split = null;
+			if (!zeile.equals(""))
 			{
-				locale.addLanguageEntry(language, split[0], split[1]);
-			}
-			catch (ArrayIndexOutOfBoundsException e)
-			{
-				System.err.println("Invalid line " + zeile);
+				split = zeile.split("=", 2);
+				try
+				{
+					locale.addLanguageEntry(language, split[0], split[1]);
+				}
+				catch (ArrayIndexOutOfBoundsException e)
+				{
+					System.err.println("Invalid line " + zeile);
+				}
 			}
 			while ((zeile = bufreader.readLine()) != null)
 			{
