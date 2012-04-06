@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLDatabase<S extends DatabaseSaveable, T extends MySQLDatabaseEntry<S>> extends Database<S, T>
+public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 {
 
 	protected final MySQLConnection connection;
@@ -14,9 +14,9 @@ public class MySQLDatabase<S extends DatabaseSaveable, T extends MySQLDatabaseEn
 	protected final Column[] columns;
 	protected final Column primary;
 
-	public MySQLDatabase(T entrymaker, MySQLConnection connection, String table, Column[] columns, Column primary)
+	public MySQLDatabase(Class<S> clazz, MySQLConnection connection, String table, Column[] columns, Column primary)
 	{
-		super(DatabaseTypes.MySQL, entrymaker);
+		super(DatabaseTypes.MySQL, clazz);
 		this.connection = connection;
 		this.table = table;
 		this.columns = columns;
@@ -46,9 +46,9 @@ public class MySQLDatabase<S extends DatabaseSaveable, T extends MySQLDatabaseEn
 		try
 		{
 			result.next();
-			return entrymaker.load(result);
+			return clazz.getConstructor(ResultSet.class).newInstance(result);
 		}
-		catch (SQLException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -63,9 +63,9 @@ public class MySQLDatabase<S extends DatabaseSaveable, T extends MySQLDatabaseEn
 		try
 		{
 			while (result.next())
-				list.add(entrymaker.load(result));
+				list.add(clazz.getConstructor(ResultSet.class).newInstance(result));
 		}
-		catch (SQLException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -80,9 +80,9 @@ public class MySQLDatabase<S extends DatabaseSaveable, T extends MySQLDatabaseEn
 		try
 		{
 			while (result.next())
-				list.add(entrymaker.load(result));
+				list.add(clazz.getConstructor(ResultSet.class).newInstance(result));
 		}
-		catch (SQLException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -98,6 +98,6 @@ public class MySQLDatabase<S extends DatabaseSaveable, T extends MySQLDatabaseEn
 	@Override
 	public void save(S entry)
 	{
-		entrymaker.save(entry);
+		entry.save(connection, table);
 	}
 }

@@ -2,17 +2,17 @@ package de.st_ddt.crazyutil.databases;
 
 import java.util.List;
 
-public abstract class Database<S extends DatabaseSaveable, T extends DatabaseEntry<S, ?>>
+public abstract class Database<S extends DatabaseEntry>
 {
 
 	private final DatabaseTypes type;
-	protected final T entrymaker;
+	protected final Class<S> clazz;
 
-	public Database(DatabaseTypes type, T entrymaker)
+	public Database(DatabaseTypes type, Class<S> clazz)
 	{
 		super();
 		this.type = type;
-		this.entrymaker = entrymaker;
+		this.clazz = clazz;
 	}
 
 	public DatabaseTypes getType()

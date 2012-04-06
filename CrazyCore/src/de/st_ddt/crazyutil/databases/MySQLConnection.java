@@ -35,13 +35,16 @@ public class MySQLConnection
 		this.password = password;
 		try
 		{
-			// TODO Download?
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
 		}
 		catch (ClassNotFoundException e)
 		{
+			// TODO Download and retry
 			System.err.println("JBDC-Treiber not found");
+		}
+		try
+		{
+			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
 		}
 		catch (SQLException e)
 		{

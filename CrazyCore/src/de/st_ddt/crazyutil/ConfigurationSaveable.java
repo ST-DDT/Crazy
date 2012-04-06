@@ -1,10 +1,8 @@
-package de.st_ddt.crazyutil.databases;
+package de.st_ddt.crazyutil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.Named;
-
-public interface Saveable extends Named
+public interface ConfigurationSaveable
 {
 
 	public void save(ConfigurationSection config, String path);
