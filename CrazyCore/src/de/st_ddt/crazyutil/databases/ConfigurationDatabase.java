@@ -69,6 +69,6 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	@Override
 	public void save(S entry)
 	{
-		entry.save(config, table);
+		entry.save(config, table + "." + entry.getName() + ".");
 	}
 }

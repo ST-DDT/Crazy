@@ -1,5 +1,7 @@
 package de.st_ddt.crazyutil.databases;
 
-public interface DatabaseEntry
+import de.st_ddt.crazyutil.Named;
+
+public interface DatabaseEntry extends Named
 {
 }
