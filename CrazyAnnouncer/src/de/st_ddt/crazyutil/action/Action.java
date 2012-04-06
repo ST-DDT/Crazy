@@ -2,9 +2,9 @@ package de.st_ddt.crazyutil.action;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.databases.Saveable;
+import de.st_ddt.crazyutil.NamedRunnable;
 
-public abstract class Action implements NamedRunnable, Saveable
+public abstract class Action implements NamedRunnable
 {
 
 	protected final String name;
@@ -73,7 +73,6 @@ public abstract class Action implements NamedRunnable, Saveable
 		return name;
 	}
 
-	@Override
 	public void save(ConfigurationSection config, String path)
 	{
 		config.set(path + "type", getClass().getName());

@@ -10,9 +10,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyutil.NamedRunnable;
 import de.st_ddt.crazyutil.action.Action;
 import de.st_ddt.crazyutil.action.Action_MESSAGE;
-import de.st_ddt.crazyutil.action.NamedRunnable;
+
 import de.st_ddt.crazyutil.trigger.EventTrigger;
 import de.st_ddt.crazyutil.trigger.ScheduledTrigger;
 import de.st_ddt.crazyutil.trigger.Trigger;

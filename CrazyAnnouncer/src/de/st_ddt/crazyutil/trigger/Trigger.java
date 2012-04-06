@@ -6,10 +6,9 @@ import java.util.List;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.st_ddt.crazyutil.action.NamedRunnable;
-import de.st_ddt.crazyutil.databases.Saveable;
+import de.st_ddt.crazyutil.NamedRunnable;
 
-public abstract class Trigger implements Saveable, Runnable
+public abstract class Trigger implements NamedRunnable
 {
 
 	public String name;

@@ -8,7 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazycore.CrazyCore;
-import de.st_ddt.crazyutil.action.NamedRunnable;
+import de.st_ddt.crazyutil.NamedRunnable;
 
 public class ScheduledTrigger extends Trigger
 {
