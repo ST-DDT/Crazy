@@ -4,29 +4,12 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyonline.OnlinePlayerData;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabase;
-import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
 
-public class CrazyOnlineConfigurationDatabase extends ConfigurationDatabase<OnlinePlayerData, ConfigurationDatabaseEntry<OnlinePlayerData>>
+public class CrazyOnlineConfigurationDatabase extends ConfigurationDatabase<OnlinePlayerData>
 {
 
-	public CrazyOnlineConfigurationDatabase(ConfigurationSection config, String path)
+	public CrazyOnlineConfigurationDatabase(ConfigurationSection config, String table)
 	{
-		super(new ConfigurationDatabaseEntry<OnlinePlayerData>(path)
-		{
-
-			@Override
-			public OnlinePlayerData load(ConfigurationSection rawData)
-			{
-				return new OnlinePlayerData(rawData);
-			}
-
-			@Override
-			public void save(OnlinePlayerData data, ConfigurationSection saveTo)
-			{
-				data.save(saveTo, path);
-			}
-
-
-		}, config, path);
+		super(OnlinePlayerData.class, config, table);
 	}
 }

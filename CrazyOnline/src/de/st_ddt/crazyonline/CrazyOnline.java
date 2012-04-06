@@ -37,7 +37,7 @@ public class CrazyOnline extends CrazyPlugin
 	public static final SimpleDateFormat DateFormat = CrazyCore.DateFormat;
 	protected String saveType;
 	protected String tableName;
-	protected Database<OnlinePlayerData, ?> database;
+	protected Database<OnlinePlayerData> database;
 
 	public static CrazyOnline getPlugin()
 	{

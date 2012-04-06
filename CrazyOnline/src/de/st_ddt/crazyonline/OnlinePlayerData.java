@@ -11,10 +11,11 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyutil.databases.DatabaseSaveable;
-import de.st_ddt.crazyutil.databases.Saveable;
+import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
+import de.st_ddt.crazyutil.databases.MySQLConnection;
+import de.st_ddt.crazyutil.databases.MySQLDatabaseEntry;
 
-public class OnlinePlayerData implements Saveable, DatabaseSaveable
+public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDatabaseEntry
 {
 
 	protected final String name;
@@ -39,28 +40,45 @@ public class OnlinePlayerData implements Saveable, DatabaseSaveable
 		this(player.getName());
 	}
 
-	public OnlinePlayerData(ConfigurationSection config)
+	// aus Config-Datenbank laden
+	public OnlinePlayerData(ConfigurationSection rawData)
 	{
 		super();
-		this.name = config.getString("name", config.getName());
-		this.firstLogin = StringToDate(config.getString("LoginFirst"), new Date());
-		this.lastLogin = StringToDate(config.getString("LoginLast"), new Date());
-		this.lastLogout = StringToDate(config.getString("LogoutLast"), new Date());
-		this.onlineTime = config.getInt("TimeTotal", 0);
+		this.name = rawData.getString("name", rawData.getName());
+		this.firstLogin = StringToDate(rawData.getString("LoginFirst"), new Date());
+		this.lastLogin = StringToDate(rawData.getString("LoginLast"), new Date());
+		this.lastLogout = StringToDate(rawData.getString("LogoutLast"), new Date());
+		this.onlineTime = rawData.getInt("TimeTotal", 0);
 	}
 
+	// in Config-Datenbank speichern
+	@Override
+	public void save(ConfigurationSection config, String path)
+	{
+		config.set(path + "name", name);
+		config.set(path + "LoginFirst", DateFormat.format(firstLogin));
+		config.set(path + "LoginLast", DateFormat.format(lastLogin));
+		config.set(path + "LogoutLast", DateFormat.format(lastLogout));
+		config.set(path + "TimeTotal", onlineTime);
+	}
+
+	// aus MySQL-Datenbank laden
 	public OnlinePlayerData(ResultSet rawData)
 	{
 		super();
-		String name;
+		String name = null;
 		try
 		{
 			name = rawData.getString("name");
 		}
-		catch (SQLException e)
+		catch (Exception e)
 		{
 			name = "ERROR";
 			e.printStackTrace();
+		}
+		finally
+		{
+			this.name = name;
 		}
 		try
 		{
@@ -98,16 +116,13 @@ public class OnlinePlayerData implements Saveable, DatabaseSaveable
 			onlineTime = 0;
 			e.printStackTrace();
 		}
-		this.name = name;
 	}
 
-	public void save(ConfigurationSection config, String path)
+	// in MySQL-Datenbank speichern
+	@Override
+	public void save(MySQLConnection connection, String table)
 	{
-		config.set(path + "name", name);
-		config.set(path + "LoginFirst", DateFormat.format(firstLogin));
-		config.set(path + "LoginLast", DateFormat.format(lastLogin));
-		config.set(path + "LogoutLast", DateFormat.format(lastLogout));
-		config.set(path + "TimeTotal", onlineTime);
+		connection.getData("INSERT INTO " + table + " (name,firstLogin,lastLogin,lastLogout,onlineTime) VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "')");
 	}
 
 	protected Date StringToDate(String date, Date defaultDate)
