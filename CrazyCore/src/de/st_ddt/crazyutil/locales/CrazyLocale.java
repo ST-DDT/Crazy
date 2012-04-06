@@ -172,12 +172,12 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	public static void readFile(String language, Reader reader) throws IOException
 	{
 		BufferedReader bufreader = null;
-		try
+		read: try
 		{
 			bufreader = new BufferedReader(reader);
 			String zeile = bufreader.readLine();
 			if (zeile == null)
-				throw new NullPointerException();
+				break read;
 			if (zeile.getBytes()[0] == (byte) 63)
 				zeile = zeile.substring(1);
 			String[] split = null;
