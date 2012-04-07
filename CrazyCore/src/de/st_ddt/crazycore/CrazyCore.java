@@ -35,7 +35,7 @@ public class CrazyCore extends CrazyPlugin
 	}
 
 	@Override
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean Command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (commandLabel.equalsIgnoreCase("crazylist"))
 		{
@@ -50,7 +50,7 @@ public class CrazyCore extends CrazyPlugin
 		return false;
 	}
 
-	private void CommandList(CommandSender sender, String[] args) throws CrazyCommandException
+	private void CommandList(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazycore.list"))
 			throw new CrazyCommandPermissionException();
@@ -86,7 +86,7 @@ public class CrazyCore extends CrazyPlugin
 			sendLocaleMessage("COMMAND.PLUGINLIST.ENTRY", sender, String.valueOf(i + 1), list.get(i).getDescription().getName(), list.get(i).getDescription().getVersion());
 	}
 
-	private void CommandLanguage(CommandSender sender, String[] args) throws CrazyCommandException
+	private void CommandLanguage(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		switch (args.length)
 		{

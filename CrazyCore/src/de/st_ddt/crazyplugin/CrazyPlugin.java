@@ -12,9 +12,11 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -46,12 +48,12 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		return plugins.getData2List();
 	}
 
-	public final static CrazyPlugin getPlugin(Class<? extends CrazyPlugin> plugin)
+	public final static CrazyPlugin getPlugin(final Class<? extends CrazyPlugin> plugin)
 	{
 		return plugins.findDataVia1(plugin);
 	}
 
-	public final static CrazyPlugin getPlugin(String name)
+	public final static CrazyPlugin getPlugin(final String name)
 	{
 		for (CrazyPlugin plugin : plugins.getData2List())
 			if (plugin.getName().equalsIgnoreCase(name))
@@ -60,7 +62,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 	}
 
 	@Override
-	public final boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
+	public final boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args)
 	{
 		try
 		{
@@ -121,23 +123,23 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		return super.onCommand(sender, command, commandLabel, args);
 	}
 
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean Command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
 	}
 
-	public boolean CommandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean CommandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
 	}
 
-	public void CommandInfo(CommandSender sender, String[] newArgs)
+	public void CommandInfo(final CommandSender sender, final String[] newArgs)
 	{
 		sender.sendMessage(ChatHeader + "Version " + getDescription().getVersion());
 		sender.sendMessage(ChatHeader + "Authors " + getDescription().getAuthors().toString());
 	}
 
-	public final void CommandReload(CommandSender sender, String[] args) throws CrazyCommandException
+	public final void CommandReload(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission(getDescription().getName().toLowerCase() + ".reload"))
 			throw new CrazyCommandPermissionException();
@@ -147,7 +149,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.COMMAND.CONFIG.RELOADED"), sender);
 	}
 
-	private final void CommandSave(CommandSender sender, String[] args) throws CrazyCommandException
+	private final void CommandSave(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission(getDescription().getName().toLowerCase() + ".save"))
 			throw new CrazyCommandPermissionException();
@@ -157,7 +159,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.COMMAND.CONFIG.SAVED"), sender);
 	}
 
-	public void CommandHelp(CommandSender sender, String[] args)
+	public void CommandHelp(final CommandSender sender, final String[] args)
 	{
 		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.COMMAND.HELP.NOHELP"), sender);
 	}
@@ -212,36 +214,53 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		getServer().getConsoleSender().sendMessage(getChatHeader() + message);
 	}
 
-	public final void sendLocaleMessage(String localepath, CommandSender target, String... args)
+	public final void sendLocaleMessage(final String localepath, final CommandSender target, final String... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), target, args);
 	}
 
-	public final void sendLocaleMessage(CrazyLocale locale, CommandSender target, String... args)
+	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final String... args)
 	{
 		target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
 	}
 
-	public final void sendLocaleMessage(String localepath, CommandSender[] targets, String... args)
+	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final String... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
 	}
 
-	public final void sendLocaleMessage(CrazyLocale locale, CommandSender[] targets, String... args)
+	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final String... args)
 	{
 		for (CommandSender target : targets)
 			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
 	}
 
-	public final void broadcastLocaleMessage(String localepath, String... args)
+	public final void broadcastLocaleMessage(final String localepath, final String... args)
 	{
 		broadcastLocaleMessage(getLocale().getLanguageEntry(localepath), args);
 	}
 
-	public final void broadcastLocaleMessage(CrazyLocale locale, String... args)
+	public final void broadcastLocaleMessage(final CrazyLocale locale, final String... args)
 	{
 		sendLocaleMessage(locale, getServer().getConsoleSender(), args);
 		sendLocaleMessage(locale, getServer().getOnlinePlayers(), args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final boolean op, final String permission, final String localepath, final String... args)
+	{
+		broadcastLocaleMessage(console, op, permission, getLocale().getLanguageEntry(localepath), args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final boolean op, final String permission, final CrazyLocale locale, final String... args)
+	{
+		if (console)
+			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
+		for (Player player : Bukkit.getOnlinePlayers())
+			if (player.isOp())
+				sendLocaleMessage(locale, player, args);
+			else if (permission != null)
+				if (player.hasPermission(permission))
+					sendLocaleMessage(locale, player, args);
 	}
 
 	public final CrazyLocale getLocale()
@@ -249,12 +268,12 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		return locale;
 	}
 
-	public void loadLanguage(String language)
+	public void loadLanguage(final String language)
 	{
 		loadLanguage(language, getServer().getConsoleSender());
 	}
 
-	public void loadLanguage(String language, CommandSender sender)
+	public void loadLanguage(final String language, final CommandSender sender)
 	{
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		if (!file.exists())
@@ -294,7 +313,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		}
 	}
 
-	public void unpackLanguage(String language)
+	public void unpackLanguage(final String language)
 	{
 		try
 		{
@@ -336,7 +355,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src/resource";
 	}
 
-	public void downloadLanguage(String language)
+	public void downloadLanguage(final String language)
 	{
 		try
 		{
