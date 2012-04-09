@@ -97,7 +97,7 @@ public class CrazyOnline extends CrazyPlugin
 	}
 
 	@Override
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
 	{
 		if (commandLabel.equalsIgnoreCase("pinfo"))
 		{
@@ -106,7 +106,7 @@ public class CrazyOnline extends CrazyPlugin
 				case 0:
 					if (!(sender instanceof Player))
 						throw new CrazyCommandUsageException("/pinfo <Player>");
-					CommandInfo(sender, (Player) sender);
+					commandInfo(sender, (Player) sender);
 					return true;
 				case 1:
 					OfflinePlayer info = getServer().getPlayer(args[0]);
@@ -114,7 +114,7 @@ public class CrazyOnline extends CrazyPlugin
 						info = getServer().getOfflinePlayer(args[0]);
 					if (info == null)
 						throw new CrazyCommandNoSuchException("Player", args[0]);
-					CommandInfo(sender, info);
+					commandInfo(sender, info);
 					return true;
 				default:
 					throw new CrazyCommandUsageException("/pinfo <Player>");
@@ -122,7 +122,7 @@ public class CrazyOnline extends CrazyPlugin
 		}
 		if (commandLabel.equalsIgnoreCase("ponlines"))
 		{
-			CommandOnlines(sender);
+			commandOnlines(sender);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("psince"))
@@ -132,15 +132,15 @@ public class CrazyOnline extends CrazyPlugin
 				case 0:
 					if (sender instanceof Player)
 					{
-						CommandSince((Player) sender);
+						commandSince((Player) sender);
 						return true;
 					}
 					throw new CrazyCommandUsageException("/psince <yyyy.MM.dd>", "/psince <yyyy.MM.dd HH:mm:ss>");
 				case 1:
-					CommandSince(sender, args[0] + " 00:00:00");
+					commandSince(sender, args[0] + " 00:00:00");
 					return true;
 				case 2:
-					CommandSince(sender, args[0] + " " + args[1]);
+					commandSince(sender, args[0] + " " + args[1]);
 					return true;
 				default:
 					throw new CrazyCommandUsageException("/psince <yyyy.MM.dd>", "/psince <yyyy.MM.dd HH:mm:ss>");
@@ -153,15 +153,15 @@ public class CrazyOnline extends CrazyPlugin
 				case 0:
 					if (sender instanceof Player)
 					{
-						CommandBefore((Player) sender);
+						commandBefore((Player) sender);
 						return true;
 					}
 					throw new CrazyCommandUsageException("/pbefore <yyyy.MM.dd>", "/pbefore <yyyy.MM.dd HH:mm:ss>");
 				case 1:
-					CommandBefore(sender, args[0] + " 00:00:00");
+					commandBefore(sender, args[0] + " 00:00:00");
 					return true;
 				case 2:
-					CommandBefore(sender, args[0] + " " + args[1]);
+					commandBefore(sender, args[0] + " " + args[1]);
 					return true;
 				default:
 					throw new CrazyCommandUsageException("/pbefore <yyyy.MM.dd>", "/pbefore <yyyy.MM.dd HH:mm:ss>");
@@ -170,7 +170,7 @@ public class CrazyOnline extends CrazyPlugin
 		return false;
 	}
 
-	private void CommandOnlines(CommandSender sender) throws CrazyCommandException
+	private void commandOnlines(CommandSender sender) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.online"))
 			throw new CrazyCommandPermissionException();
@@ -180,7 +180,7 @@ public class CrazyOnline extends CrazyPlugin
 			sendLocaleMessage("MESSAGE.LIST", sender, player.getName(), getPlayerData(player).getLastLoginString());
 	}
 
-	public void CommandInfo(CommandSender sender, OfflinePlayer player) throws CrazyCommandException
+	public void commandInfo(CommandSender sender, OfflinePlayer player) throws CrazyCommandException
 	{
 		if (sender == player)
 		{
@@ -219,18 +219,18 @@ public class CrazyOnline extends CrazyPlugin
 			return time + " " + locale.getLocaleMessage(sender, "TIME.UNIT.MINUTES");
 	}
 
-	public void CommandSince(Player player) throws CrazyCommandException
+	public void commandSince(Player player) throws CrazyCommandException
 	{
 		if (getPlayerData(player) == null)
 			throw new CrazyCommandCircumstanceException("when joined at least for the second time!");
-		CommandSince(player, getPlayerData(player).getLastLogout());
+		commandSince(player, getPlayerData(player).getLastLogout());
 	}
 
-	public void CommandSince(CommandSender sender, String date) throws CrazyCommandException
+	public void commandSince(CommandSender sender, String date) throws CrazyCommandException
 	{
 		try
 		{
-			CommandSince(sender, DateFormat.parse(date));
+			commandSince(sender, DateFormat.parse(date));
 		}
 		catch (ParseException e)
 		{
@@ -238,7 +238,7 @@ public class CrazyOnline extends CrazyPlugin
 		}
 	}
 
-	public void CommandSince(CommandSender sender, Date date) throws CrazyCommandException
+	public void commandSince(CommandSender sender, Date date) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.since"))
 			throw new CrazyCommandPermissionException();
@@ -253,16 +253,16 @@ public class CrazyOnline extends CrazyPlugin
 			sendLocaleMessage("MESSAGE.LIST", sender, data.getName(), data.getLastLoginString());
 	}
 
-	public void CommandBefore(Player player) throws CrazyCommandException
+	public void commandBefore(Player player) throws CrazyCommandException
 	{
-		CommandSince(player, getPlayerData(player).getLastLogin());
+		commandSince(player, getPlayerData(player).getLastLogin());
 	}
 
-	public void CommandBefore(CommandSender sender, String date) throws CrazyCommandException
+	public void commandBefore(CommandSender sender, String date) throws CrazyCommandException
 	{
 		try
 		{
-			CommandBefore(sender, DateFormat.parse(date));
+			commandBefore(sender, DateFormat.parse(date));
 		}
 		catch (ParseException e)
 		{
@@ -270,7 +270,7 @@ public class CrazyOnline extends CrazyPlugin
 		}
 	}
 
-	public void CommandBefore(CommandSender sender, Date date) throws CrazyCommandException
+	public void commandBefore(CommandSender sender, Date date) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.before"))
 			throw new CrazyCommandPermissionException();
@@ -286,18 +286,18 @@ public class CrazyOnline extends CrazyPlugin
 	}
 
 	@Override
-	public boolean CommandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
 	{
 		String[] newArgs = ChatHelper.shiftArray(args, 1);
 		if (commandLabel.equalsIgnoreCase("mode"))
 		{
-			CommandMainMode(sender, newArgs);
+			commandMainMode(sender, newArgs);
 			return true;
 		}
 		return false;
 	}
 
-	private void CommandMainMode(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandMainMode(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.mode"))
 			throw new CrazyCommandPermissionException();

@@ -33,7 +33,7 @@ public class CrazyOnlinePlayerListener implements Listener
 			if (CrazyOnline.getPlugin() != null)
 				try
 				{
-					CrazyOnline.getPlugin().CommandSince(player);
+					CrazyOnline.getPlugin().commandSince(player);
 				}
 				catch (CrazyCommandException e)
 				{
