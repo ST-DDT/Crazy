@@ -19,8 +19,8 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 {
 
 	private static final long serialVersionUID = 7789788937594284997L;
-	private final static CrazyLocale locale = CrazyLocaleHead();
-	private final static CrazyLocale missing = CrazyLocaleMissing();
+	private final static CrazyLocale locale = getCrazyLocaleHead();
+	private final static CrazyLocale missing = getCrazyLocaleMissing();
 	private final static PairList<String, String> userLanguages = new PairList<String, String>();
 	private final static ArrayList<String> languages = new ArrayList<String>();
 	private final String name;
@@ -50,14 +50,14 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		this.localeTexts = new PairList<String, String>();
 	}
 
-	private static CrazyLocale CrazyLocaleHead()
+	private static CrazyLocale getCrazyLocaleHead()
 	{
 		CrazyLocale head = new CrazyLocale(null, "_HEAD_");
 		head.setLanguageText("en_en", "This Entry is the root!");
 		return head;
 	}
 
-	private static CrazyLocale CrazyLocaleMissing()
+	private static CrazyLocale getCrazyLocaleMissing()
 	{
 		CrazyLocale missing = new CrazyLocale(null, "_MISSING_");
 		missing.setLanguageText("en_en", "This Entry is missing!");

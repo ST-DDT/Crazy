@@ -9,10 +9,14 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class ObjectSaveLoadHelper
+public final class ObjectSaveLoadHelper
 {
+	
+	private ObjectSaveLoadHelper()
+	{
+	}
 
-	public static Location loadLocation(ConfigurationSection config, World world)
+	public static Location loadLocation(final ConfigurationSection config,  World world)
 	{
 		if (config == null)
 			return null;
@@ -21,12 +25,12 @@ public class ObjectSaveLoadHelper
 		return new Location(world, config.getDouble("x"), config.getDouble("y"), config.getDouble("z"), (float) config.getDouble("yaw", 0d), (float) config.getDouble("pitch", 0d));
 	}
 
-	public static void saveLocation(FileConfiguration config, String path, Location location)
+	public static void saveLocation(final FileConfiguration config,final  String path, final Location location)
 	{
 		saveLocation(config, path, location, false);
 	}
 
-	public static void saveLocation(FileConfiguration config, String path, Location location, boolean saveWorld)
+	public static void saveLocation(final FileConfiguration config, final String path, final Location location,final  boolean saveWorld)
 	{
 		config.set(path + "x", location.getX());
 		config.set(path + "y", location.getY());
@@ -37,12 +41,12 @@ public class ObjectSaveLoadHelper
 			config.set(path + "world", location.getWorld().getName());
 	}
 
-	public static <T> List<T> loadList(ConfigurationSection config, Class<T> parentClazz, Class<?>[] paraClazzes, Object[] paraObjects, String alternativePackage)
+	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz,final  Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
 		return loadList(config, parentClazz, paraClazzes, paraObjects, null);
 	}
 
-	public static <T> List<T> loadList(ConfigurationSection config, Class<T> parentClazz, Class<?>[] paraClazzes, Object[] paraObjects)
+	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
 	{
 		ArrayList<T> list = new ArrayList<T>();
 		if (config == null)
@@ -52,12 +56,12 @@ public class ObjectSaveLoadHelper
 		return list;
 	}
 
-	public static <T> T load(ConfigurationSection config, Class<T> parentClazz, Class<?>[] paraClazzes, Object[] paraObjects)
+	public static <T> T load(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
 	{
 		return load(config, parentClazz, paraClazzes, paraObjects, null);
 	}
 
-	public static <T> T load(ConfigurationSection config, Class<T> parentClazz, Class<?>[] paraClazzes, Object[] paraObjects, String alternativePackage)
+	public static <T> T load(final ConfigurationSection config,final  Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
 		String clazzName = config.getString("type", "-1");
 		if (clazzName.equals("-1"))
@@ -68,18 +72,18 @@ public class ObjectSaveLoadHelper
 		return load(clazzName, parentClazz, paraClazzes, paraObjects, alternativePackage);
 	}
 
-	public static <T> T load(String clazzname, Class<T> parentClazz, Class<?>[] paraClazzes, Object[] paraObjects)
+	public static <T> T load(final String clazzname, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
 	{
 		return load(clazzname, parentClazz, paraClazzes, paraObjects, null);
 	}
 
-	public static <T> T load(String clazzname, Class<T> parentClazz, Class<?>[] paraClazzes, Object[] paraObjects, String alternativePackage)
+	public static <T> T load(final String clazzname, final Class<T> parentClazz,final  Class<?>[] paraClazzes, final Object[] paraObjects,final  String alternativePackage)
 	{
 		return load(clazzname, parentClazz, paraClazzes, paraObjects, alternativePackage, false);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T load(String clazzname, Class<T> parentClazz, Class<?>[] paraClazzes, Object[] paraObjects, String alternativePackage, boolean skipClassCheck)
+	public static <T> T load(final String clazzname, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage, final boolean skipClassCheck)
 	{
 		Class<?> clazz = null;
 		try
@@ -111,7 +115,7 @@ public class ObjectSaveLoadHelper
 		return load((Class<T>) clazz, paraClazzes, paraObjects);
 	}
 
-	public static <T> T load(Class<T> clazz, Class<?>[] paraClazzes, Object[] paraObjects)
+	public static <T> T load(final Class<T> clazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
 	{
 		T instance = null;
 		try

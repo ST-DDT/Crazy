@@ -6,24 +6,24 @@ public class CrazyCommandCrazyErrorException extends CrazyCommandErrorException
 {
 
 	private static final long serialVersionUID = 1755697197006991043L;
-	private final CrazyException exception;
+	private final CrazyException cexception;
 
-	public CrazyCommandCrazyErrorException(CrazyException exception)
+	public CrazyCommandCrazyErrorException(CrazyException cexception)
 	{
 		super(null);
-		this.exception = exception;
+		this.cexception = cexception;
 	}
 
 	@Override
 	public Exception getException()
 	{
-		return exception;
+		return cexception;
 	}
 
 	@Override
 	public void print(CommandSender sender, String header)
 	{
 		super.print(sender, header);
-		exception.print(sender, header);
+		cexception.print(sender, header);
 	}
 }
