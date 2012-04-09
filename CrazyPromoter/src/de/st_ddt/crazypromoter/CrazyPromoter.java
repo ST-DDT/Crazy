@@ -75,24 +75,24 @@ public class CrazyPromoter extends CrazyPlugin
 	}
 
 	@Override
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
 		if (commandLabel.equalsIgnoreCase("promotioncheck"))
 		{
-			CommandCheck(sender, args);
+			commandCheck(sender, args);
 			return true;
 		}
 		return false;
 	}
 
-	private void CommandCheck(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandCheck(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		switch (args.length)
 		{
 			case 0:
 				if (sender instanceof ConsoleCommandSender)
 					throw new CrazyCommandUsageException("/promotioncheck <Player>");
-				CommandCheck(sender, (Player) sender);
+				commandCheck(sender, (Player) sender);
 				return;
 			case 1:
 				String name = args[0];
@@ -103,14 +103,14 @@ public class CrazyPromoter extends CrazyPlugin
 					if (player == null)
 						throw new CrazyCommandNoSuchException("OnlinePlayer", name);
 				}
-				CommandCheck(sender, player);
+				commandCheck(sender, player);
 				return;
 			default:
 				throw new CrazyCommandUsageException("/promotioncheck <Player>");
 		}
 	}
 
-	private void CommandCheck(CommandSender sender, Player player) throws CrazyCommandException
+	private void commandCheck(final CommandSender sender, final Player player) throws CrazyCommandException
 	{
 		if (!sender.hasPermission(sender == player ? "crazypromoter.check.self" : "crazypromoter.check.other"))
 			throw new CrazyCommandPermissionException();
@@ -120,7 +120,7 @@ public class CrazyPromoter extends CrazyPlugin
 		sendLocaleMessage("COMMAND.CHECK.FAIL", sender, player.getName());
 	}
 
-	public boolean checkStatus(Player player)
+	public boolean checkStatus(final Player player)
 	{
 		for (Promotion promotion : promotions)
 			if (promotion.isApplyable(player))
