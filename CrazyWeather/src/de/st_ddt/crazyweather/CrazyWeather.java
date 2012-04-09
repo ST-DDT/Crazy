@@ -89,7 +89,7 @@ public class CrazyWeather extends CrazyPlugin
 	}
 
 	@Override
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
 		if (commandLabel.equalsIgnoreCase("sun") || commandLabel.equalsIgnoreCase("rain"))
 		{
@@ -98,7 +98,7 @@ public class CrazyWeather extends CrazyPlugin
 			Player player = (Player) sender;
 			if (!sender.hasPermission("crazyweather.change." + commandLabel))
 				throw new CrazyCommandPermissionException();
-			CommandWeather(player, commandLabel, player.getWorld(), false, false);
+			commandWeather(player, commandLabel, player.getWorld(), false, false);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("thunder"))
@@ -125,7 +125,7 @@ public class CrazyWeather extends CrazyPlugin
 			}
 			if (target == null)
 				throw new CrazyCommandNoSuchException("Target", "none");
-			CommandThunder(sender, target);
+			commandThunder(sender, target);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("thundertool"))
@@ -158,7 +158,7 @@ public class CrazyWeather extends CrazyPlugin
 		return false;
 	}
 
-	private void CommandWeather(CommandSender sender, String weather, World world, boolean keepStatic, boolean keepLoad)
+	private void commandWeather(final CommandSender sender, final String weather, final World world, final boolean keepStatic, final boolean keepLoad)
 	{
 		WorldWeather worldWeather = getWorldWeather(world);
 		if (worldWeather != null)
@@ -168,13 +168,13 @@ public class CrazyWeather extends CrazyPlugin
 		sendLocaleMessage("COMMAND.WEATHER.SUCCESS", sender);
 	}
 
-	public void CommandThunder(CommandSender sender, Location target)
+	public void commandThunder(final CommandSender sender, final Location target)
 	{
 		target.getWorld().strikeLightning(target);
 	}
 
 	@Override
-	public boolean CommandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		String weather;
 		World world = null;
@@ -234,7 +234,7 @@ public class CrazyWeather extends CrazyPlugin
 				throw new CrazyCommandPermissionException();
 		if (!sender.hasPermission("crazyweather.change." + weather))
 			throw new CrazyCommandPermissionException();
-		CommandWeather(sender, weather, world, keepStatic, keepLoad);
+		commandWeather(sender, weather, world, keepStatic, keepLoad);
 		return true;
 	}
 
