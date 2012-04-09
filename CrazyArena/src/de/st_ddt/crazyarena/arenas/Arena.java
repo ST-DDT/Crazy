@@ -187,7 +187,7 @@ public abstract class Arena
 
 	public abstract boolean isRunning();
 
-	public boolean Command(Player player, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(Player player, String commandLabel, String[] args) throws CrazyCommandException
 	{
 		return false;
 	}

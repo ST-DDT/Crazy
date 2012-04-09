@@ -40,7 +40,7 @@ public class ArenaList extends ArrayList<Arena>
 		}
 		catch (FileNotFoundException e)
 		{
-			CrazyArena.getPlugin().ConsoleLog("Arenaconfig not found for Arena " + name);
+			CrazyArena.getPlugin().consoleLog("Arenaconfig not found for Arena " + name);
 			return null;
 		}
 		catch (IOException e)
@@ -49,13 +49,13 @@ public class ArenaList extends ArrayList<Arena>
 		}
 		catch (InvalidConfigurationException e)
 		{
-			CrazyArena.getPlugin().ConsoleLog("Invalid Arenaconfig for Arena " + name);
+			CrazyArena.getPlugin().consoleLog("Invalid Arenaconfig for Arena " + name);
 			e.printStackTrace();
 		}
 		String type = config.getString("type", "-1");
 		if (type == "-1")
 		{
-			CrazyArena.getPlugin().ConsoleLog("Invalid Arenaconfig (Missing type) for Arena " + name);
+			CrazyArena.getPlugin().consoleLog("Invalid Arenaconfig (Missing type) for Arena " + name);
 			return null;
 		}
 		type = CrazyArena.getArenaTypes().findDataVia1(type).getName();

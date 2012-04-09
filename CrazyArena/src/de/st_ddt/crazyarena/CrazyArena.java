@@ -78,20 +78,20 @@ public class CrazyArena extends CrazyPlugin
 	}
 
 	@Override
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
 	{
 		if (commandLabel.equalsIgnoreCase("join"))
 		{
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandExecutorException(false);
-			CommandJoin((Player) sender, args);
+			commandJoin((Player) sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("spectate"))
 		{
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandExecutorException(false);
-			CommandSpectate((Player) sender, args);
+			commandSpectate((Player) sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("ready"))
@@ -100,14 +100,14 @@ public class CrazyArena extends CrazyPlugin
 				throw new CrazyCommandExecutorException(false);
 			if (args.length != 0)
 				throw new CrazyCommandUsageException("/ready");
-			CommandReady((Player) sender);
+			commandReady((Player) sender);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("team") || commandLabel.equalsIgnoreCase("teams"))
 		{
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandExecutorException(false);
-			CommandTeam((Player) sender, args);
+			commandTeam((Player) sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("leave"))
@@ -116,27 +116,27 @@ public class CrazyArena extends CrazyPlugin
 				throw new CrazyCommandExecutorException(false);
 			if (args.length != 0)
 				throw new CrazyCommandUsageException("/ready");
-			CommandLeave((Player) sender);
+			commandLeave((Player) sender);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("invite"))
 		{
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandExecutorException(false);
-			CommandInvite((Player) sender, args);
+			commandInvite((Player) sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("score"))
 		{
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandExecutorException(false);
-			CommandScore((Player) sender, args);
+			commandScore((Player) sender, args);
 			return true;
 		}
 		return false;
 	}
 
-	private void CommandJoin(Player player, String[] args) throws CrazyCommandException
+	private void commandJoin(Player player, String[] args) throws CrazyCommandException
 	{
 		if (player.hasPermission("crazyarena.join"))
 			throw new CrazyCommandPermissionException();
@@ -171,7 +171,7 @@ public class CrazyArena extends CrazyPlugin
 		return;
 	}
 
-	private boolean CommandSpectate(Player player, String[] args) throws CrazyCommandException
+	private boolean commandSpectate(Player player, String[] args) throws CrazyCommandException
 	{
 		if (player.hasPermission("crazyarena.spectate"))
 			throw new CrazyCommandPermissionException();
@@ -204,7 +204,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandReady(Player player) throws CrazyCommandException
+	private boolean commandReady(Player player) throws CrazyCommandException
 	{
 		Arena arena = arenas.getArena(player);
 		if (arena == null || !arena.isParticipant(player, ParticipantType.WAITING))
@@ -213,7 +213,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandTeam(Player player, String[] args) throws CrazyCommandException
+	private boolean commandTeam(Player player, String[] args) throws CrazyCommandException
 	{
 		Arena arena = arenas.getArena(player);
 		if (arena == null || !arena.isParticipant(player))
@@ -222,7 +222,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandLeave(Player player) throws CrazyCommandException
+	private boolean commandLeave(Player player) throws CrazyCommandException
 	{
 		if (player.hasPermission("crazyarena.leave"))
 			throw new CrazyCommandPermissionException();
@@ -233,7 +233,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandInvite(Player player, String[] args) throws CrazyCommandException
+	private boolean commandInvite(Player player, String[] args) throws CrazyCommandException
 	{
 		if (player.hasPermission("crazyarena.invite"))
 			throw new CrazyCommandPermissionException();
@@ -276,7 +276,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandScore(Player sender, String[] args)
+	private boolean commandScore(Player sender, String[] args)
 	{
 		// EDIT
 		// <Arena> [Player/Number]
@@ -288,53 +288,53 @@ public class CrazyArena extends CrazyPlugin
 	}
 
 	@Override
-	public boolean CommandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
 	{
-		if (Command(sender, commandLabel, args))
+		if (command(sender, commandLabel, args))
 			return true;
 		if (commandLabel.equalsIgnoreCase("enable"))
 		{
-			CommandEnable(sender, args, true);
+			commandEnable(sender, args, true);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("disable"))
 		{
-			CommandEnable(sender, args, false);
+			commandEnable(sender, args, false);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("import"))
 		{
-			CommandImport(sender, args);
+			commandImport(sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("create") || commandLabel.equalsIgnoreCase("new"))
 		{
-			CommandCreate(sender, args);
+			commandCreate(sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("delete") || commandLabel.equalsIgnoreCase("remove"))
 		{
-			CommandDelete(sender, args);
+			commandDelete(sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("sel") || commandLabel.equalsIgnoreCase("select"))
 		{
-			CommandSelect(sender, args);
+			commandSelect(sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("forceready"))
 		{
-			CommandForceReady(sender, args);
+			commandForceReady(sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("forcestop"))
 		{
-			CommandForceStop(sender, args);
+			commandForceStop(sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("kick"))
 		{
-			CommandKick(sender, args);
+			commandKick(sender, args);
 			return true;
 		}
 		if (sender instanceof ConsoleCommandSender)
@@ -343,12 +343,12 @@ public class CrazyArena extends CrazyPlugin
 		Arena arena = selection.findDataVia1(player);
 		if (arena == null)
 			throw new CrazyCommandCircumstanceException("when an arena is selected!");
-		if (arena.Command(player, commandLabel, args))
+		if (arena.command(player, commandLabel, args))
 			return true;
 		return false;
 	}
 
-	private boolean CommandEnable(CommandSender sender, String[] args, boolean enabled) throws CrazyCommandException
+	private boolean commandEnable(CommandSender sender, String[] args, boolean enabled) throws CrazyCommandException
 	{
 		if (sender.hasPermission("crazyarena.arena.switchmode"))
 			throw new CrazyCommandPermissionException();
@@ -379,7 +379,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandImport(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandImport(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (sender.hasPermission("crazyarena.arena.import"))
 			throw new CrazyCommandPermissionException();
@@ -396,7 +396,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandCreate(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandCreate(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.arena.create"))
 			throw new CrazyCommandPermissionException();
@@ -440,7 +440,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandDelete(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandDelete(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.arena.delete"))
 			throw new CrazyCommandPermissionException();
@@ -456,7 +456,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandSelect(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandSelect(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.arena.modify"))
 			throw new CrazyCommandPermissionException();
@@ -484,7 +484,7 @@ public class CrazyArena extends CrazyPlugin
 		}
 	}
 
-	private boolean CommandForceReady(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandForceReady(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.forceready"))
 			throw new CrazyCommandPermissionException();
@@ -498,7 +498,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandForceStop(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandForceStop(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.forcestop"))
 			throw new CrazyCommandPermissionException();
@@ -513,7 +513,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private boolean CommandKick(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandKick(CommandSender sender, String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.kick"))
 			throw new CrazyCommandPermissionException();
