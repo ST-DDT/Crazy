@@ -20,7 +20,7 @@ public class CrazySpawner extends CrazyPlugin
 {
 
 	@Override
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
 		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
@@ -123,6 +123,6 @@ public class CrazySpawner extends CrazyPlugin
 	@Override
 	protected String getShortPluginName()
 	{
-		return "cms";
+		return "mobs";
 	}
 }

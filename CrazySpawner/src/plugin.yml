@@ -2,7 +2,7 @@ name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
 #C*=needed core version
-version: C3_2
+version: C6_2.1
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
@@ -14,6 +14,9 @@ commands:
     description: Kill monsters (and animals if true)
     usage: /<command> [Range] <killanimals>
     aliases: [cmk,butcher,killall]
+  mobs:
+    description: Mainmenu
+    usage: /<command>
 permissions:
   crazyspawner.*:
     description: Access to all commands
