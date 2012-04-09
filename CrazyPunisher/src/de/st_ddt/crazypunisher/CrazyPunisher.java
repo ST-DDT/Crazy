@@ -80,7 +80,7 @@ public class CrazyPunisher extends CrazyPlugin
 		jailworld = getServer().getWorld(config.getString("jail.world", "world"));
 		if (jailworld == null)
 		{
-			ConsoleLog(ChatColor.RED + "Error getting jailworld, using default");
+			consoleLog(ChatColor.RED + "Error getting jailworld, using default");
 			jailworld = getServer().getWorlds().get(0);
 		}
 		jailcenter = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("jail"), jailworld);
@@ -163,57 +163,57 @@ public class CrazyPunisher extends CrazyPlugin
 	}
 
 	@Override
-	public boolean Command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
 		if (commandLabel.equalsIgnoreCase("hardban"))
 		{
-			CommandHardban(sender, args);
+			commandHardban(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("ban"))
 		{
-			CommandBan(sender, args);
+			commandBan(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("unban") || commandLabel.equalsIgnoreCase("pardon"))
 		{
-			CommandUnban(sender, args);
+			commandUnban(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("jail"))
 		{
-			CommandJail(sender, args);
+			commandJail(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("unjail") || commandLabel.equalsIgnoreCase("free"))
 		{
-			CommandUnjail(sender, args);
+			commandUnjail(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("jailtp") || commandLabel.equalsIgnoreCase("tpjail"))
 		{
-			CommandJailTeleport(sender, args);
+			commandJailTeleport(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("kick"))
 		{
-			CommandKick(sender, args);
+			commandKick(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("show"))
 		{
-			CommandShow(sender, args);
+			commandShow(sender, args);
 			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("hide"))
 		{
-			CommandHide(sender, args);
+			commandHide(sender, args);
 			return true;
 		}
 		return false;
 	}
 
-	private void CommandHardban(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandHardban(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.hardban"))
 			throw new CrazyCommandPermissionException();
@@ -232,7 +232,7 @@ public class CrazyPunisher extends CrazyPlugin
 							throw new CrazyCommandNoSuchException("Player", name);
 					}
 				}
-				HardBan(player);
+				hardBan(player);
 				save();
 				return;
 			default:
@@ -240,11 +240,11 @@ public class CrazyPunisher extends CrazyPlugin
 		}
 	}
 
-	public void HardBan(OfflinePlayer player)
+	public void hardBan(final OfflinePlayer player)
 	{
 		if (player == null)
 			return;
-		Jail(player, 60 * 60 * 24 * 365 * 10);
+		jail(player, 60 * 60 * 24 * 365 * 10);
 		banned.add(player);
 		save();
 		player.setBanned(true);
@@ -257,13 +257,13 @@ public class CrazyPunisher extends CrazyPlugin
 			p.getWorld().strikeLightning(p.getLocation());
 			p.setGameMode(GameMode.SURVIVAL);
 			p.setHealth(0);
-			Kick(p, locale.getLocaleMessage(p, "MESSAGE.HARDBAN"));
+			kick(p, locale.getLocaleMessage(p, "MESSAGE.HARDBAN"));
 		}
 		broadcastLocaleMessage("BROADCAST.HARDBAN", player.getName());
 		getServer().getPluginManager().callEvent(new CrazyPunisherHardbanEvent(player));
 	}
 
-	private void CommandBan(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandBan(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.ban"))
 			throw new CrazyCommandPermissionException();
@@ -282,14 +282,14 @@ public class CrazyPunisher extends CrazyPlugin
 							throw new CrazyCommandNoSuchException("Player", name);
 					}
 				}
-				Ban(player);
+				ban(player);
 				return;
 			default:
 				throw new CrazyCommandUsageException("/ban <Name>");
 		}
 	}
 
-	public void Ban(OfflinePlayer player)
+	public void ban(final OfflinePlayer player)
 	{
 		if (player == null)
 			return;
@@ -299,12 +299,12 @@ public class CrazyPunisher extends CrazyPlugin
 		if (player instanceof Player)
 		{
 			Player p = (Player) player;
-			Kick(p, locale.getLocaleMessage(p, "MESSAGE.BAN"));
+			kick(p, locale.getLocaleMessage(p, "MESSAGE.BAN"));
 		}
 		broadcastLocaleMessage("BROADCAST.BAN", player.getName());
 	}
 
-	private void CommandUnban(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandUnban(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.unban"))
 			throw new CrazyCommandPermissionException();
@@ -323,14 +323,14 @@ public class CrazyPunisher extends CrazyPlugin
 							throw new CrazyCommandNoSuchException("Player", name);
 					}
 				}
-				Unban(player);
+				unban(player);
 				return;
 			default:
 				throw new CrazyCommandUsageException("/unban <Name>");
 		}
 	}
 
-	public void Unban(OfflinePlayer player)
+	public void unban(final OfflinePlayer player)
 	{
 		if (player == null)
 			return;
@@ -340,7 +340,7 @@ public class CrazyPunisher extends CrazyPlugin
 		broadcastLocaleMessage("BROADCAST.UNBAN", player.getName());
 	}
 
-	private void CommandJail(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandJail(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.jail"))
 			throw new CrazyCommandPermissionException();
@@ -389,14 +389,14 @@ public class CrazyPunisher extends CrazyPlugin
 							throw new CrazyCommandNoSuchException("Player", name);
 					}
 				}
-				Jail(player, duration * interval);
+				jail(player, duration * interval);
 				return;
 			default:
 				throw new CrazyCommandUsageException("/jail <Name> [Duration [TimeUnit]]");
 		}
 	}
 
-	public void Jail(OfflinePlayer player, int duration)
+	public void jail(final OfflinePlayer player, final int duration)
 	{
 		if (player == null)
 			return;
@@ -410,7 +410,7 @@ public class CrazyPunisher extends CrazyPlugin
 		getServer().getPluginManager().callEvent(new CrazyPunisherJailEvent(player, time));
 	}
 
-	private void CommandUnjail(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandUnjail(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.unjail"))
 			throw new CrazyCommandPermissionException();
@@ -429,14 +429,14 @@ public class CrazyPunisher extends CrazyPlugin
 							throw new CrazyCommandNoSuchException("Player", name);
 					}
 				}
-				Unjail(player);
+				unjail(player);
 				return;
 			default:
 				throw new CrazyCommandUsageException("/unjail <Name>");
 		}
 	}
 
-	public void Unjail(OfflinePlayer player)
+	public void unjail(final OfflinePlayer player)
 	{
 		if (player == null)
 			return;
@@ -456,7 +456,7 @@ public class CrazyPunisher extends CrazyPlugin
 		getServer().getPluginManager().callEvent(new CrazyPunisherUnjailEvent(player));
 	}
 
-	private void CommandJailTeleport(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandJailTeleport(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.jailtp"))
 			throw new CrazyCommandPermissionException();
@@ -478,21 +478,21 @@ public class CrazyPunisher extends CrazyPlugin
 						player = (Player) sender;
 					else
 						throw new CrazyCommandUsageException("/jailtp <Player>");
-				JailTeleport(player);
+				jailTeleport(player);
 				return;
 			default:
 				throw new CrazyCommandUsageException("/jailtp [Player]");
 		}
 	}
 
-	public void JailTeleport(Player player)
+	public void jailTeleport(final Player player)
 	{
 		if (player == null)
 			return;
 		player.teleport(jailcenter);
 	}
 
-	private void CommandKick(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandKick(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.kick"))
 			throw new CrazyCommandPermissionException();
@@ -506,7 +506,7 @@ public class CrazyPunisher extends CrazyPlugin
 						throw new CrazyCommandPermissionException();
 					for (Player player : getServer().getOnlinePlayers())
 						if (player != sender)
-							Kick(player);
+							kick(player);
 					return;
 				}
 				Player player = getServer().getPlayerExact(name);
@@ -516,19 +516,19 @@ public class CrazyPunisher extends CrazyPlugin
 					if (player == null)
 						throw new CrazyCommandNoSuchException("Player", name);
 				}
-				Kick(player);
+				kick(player);
 				return;
 			default:
 				throw new CrazyCommandUsageException("/kick <Name>");
 		}
 	}
 
-	public void Kick(Player player)
+	public void kick(final Player player)
 	{
-		Kick(player, locale.getLocaleMessage(player, "MESSAGE.KICK"));
+		kick(player, locale.getLocaleMessage(player, "MESSAGE.KICK"));
 	}
 
-	public void Kick(Player player, String message)
+	public void kick(final Player player, String message)
 	{
 		if (player == null)
 			return;
@@ -536,7 +536,7 @@ public class CrazyPunisher extends CrazyPlugin
 		broadcastLocaleMessage("BROADCAST.KICK", player.getName());
 	}
 
-	private void CommandShow(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandShow(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.show"))
 			throw new CrazyCommandPermissionException();
@@ -570,7 +570,7 @@ public class CrazyPunisher extends CrazyPlugin
 		sendLocaleMessage("COMMAND.SHOW.DONE", sender);
 	}
 
-	private void CommandHide(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandHide(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.show"))
 			throw new CrazyCommandPermissionException();
@@ -611,22 +611,22 @@ public class CrazyPunisher extends CrazyPlugin
 	}
 
 	@Override
-	public boolean CommandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
 		if (commandLabel.equalsIgnoreCase("jail") || commandLabel.equalsIgnoreCase("jailloc") || commandLabel.equalsIgnoreCase("jaillocation"))
 		{
-			CommandMainJailLocation(sender, args);
+			commandMainJailLocation(sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("jailrange"))
 		{
-			CommandMainJailRange(sender, args);
+			commandMainJailRange(sender, args);
 			return true;
 		}
 		return false;
 	}
 
-	private void CommandMainJailLocation(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandMainJailLocation(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.admin.jail") && !sender.hasPermission("crazypunisher.admin.jail.set"))
 			throw new CrazyCommandPermissionException();
@@ -702,7 +702,7 @@ public class CrazyPunisher extends CrazyPlugin
 		}
 	}
 
-	private void CommandMainJailRange(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandMainJailRange(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazypunisher.admin.jailrange") && !sender.hasPermission("crazypunisher.admin.jailrange.set"))
 			throw new CrazyCommandPermissionException();
@@ -730,12 +730,12 @@ public class CrazyPunisher extends CrazyPlugin
 		}
 	}
 
-	public boolean isBanned(Player player)
+	public boolean isBanned(final Player player)
 	{
 		return banned.contains(player);
 	}
 
-	public boolean isJailed(Player player)
+	public boolean isJailed(final Player player)
 	{
 		Date time = jailed.findDataVia1(player);
 		if (time == null)
@@ -743,22 +743,22 @@ public class CrazyPunisher extends CrazyPlugin
 		return time.after(new Date());
 	}
 
-	public boolean isHidden(Player player)
+	public boolean isHidden(final Player player)
 	{
 		return hidden.contains(player.toString());
 	}
 
-	public String getJailTime(Player player)
+	public String getJailTime(final Player player)
 	{
 		return DateFormat.format(jailed.findDataVia1(player));
 	}
 
-	public boolean isInsideJail(Location loc)
+	public boolean isInsideJail(final Location loc)
 	{
 		return jailsphere.isInside(loc);
 	}
 
-	public void keepJailed(Player player)
+	public void keepJailed(final Player player)
 	{
 		sendLocaleMessage("MESSAGE.JAILEDUNTIL", player, getJailTime(player));
 		if (player.getVehicle() != null)
