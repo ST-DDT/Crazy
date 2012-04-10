@@ -8,6 +8,7 @@ import java.util.Date;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
@@ -307,24 +308,44 @@ public class CrazyOnline extends CrazyPlugin
 				if (args[0].equalsIgnoreCase("saveType"))
 				{
 					String newValue = args[1];
+					boolean changed = saveType.equals(newValue);
 					if (newValue.equalsIgnoreCase("flat"))
-						saveType = newValue;
+						saveType = "flat";
+					else if (newValue.equalsIgnoreCase("mysql"))
+						saveType = "mysql";
 					else
 						throw new CrazyCommandNoSuchException("SaveType", newValue);
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
+					if (changed)
+						return;
+					ConfigurationSection config = getConfig();
+					if (saveType.equals("flat"))
+					{
+						database = new CrazyOnlineConfigurationDatabase(config, tableName);
+					}
+					else if (saveType.equals("mysql"))
+					{
+						String host = config.getString("database.host", "localhost");
+						String port = config.getString("database.port", "3306");
+						String databasename = config.getString("database.dbname", "Crazy");
+						String user = config.getString("database.user", "root");
+						String password = config.getString("database.password", "");
+						MySQLConnection connection = new MySQLConnection(host, port, databasename, user, password);
+						database = new CrazyOnlineMySQLDatabase(connection, tableName);
+					}
 					save();
 					return;
 				}
 				throw new CrazyCommandNoSuchException("Mode", args[0]);
 			case 1:
-				if (args[0].equalsIgnoreCase("alwaysNeedPassword"))
+				if (args[0].equalsIgnoreCase("saveType"))
 				{
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
 					return;
 				}
 				throw new CrazyCommandNoSuchException("Mode", args[0]);
 			default:
-				throw new CrazyCommandUsageException("/crazyonline mode <Mode> <Value>");
+				throw new CrazyCommandUsageException("/crazyonline mode <Mode> [Value]");
 		}
 	}
 
