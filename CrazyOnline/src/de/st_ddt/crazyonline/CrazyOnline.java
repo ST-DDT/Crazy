@@ -65,11 +65,11 @@ public class CrazyOnline extends CrazyPlugin
 		}
 		else if (saveType.equals("mysql"))
 		{
-			String host = config.getString("database.host");
-			String port = config.getString("database.port");
-			String databasename = config.getString("database.dbname");
-			String user = config.getString("database.user");
-			String password = config.getString("database.password");
+			String host = config.getString("database.host", "localhost");
+			String port = config.getString("database.port", "3306");
+			String databasename = config.getString("database.dbname", "Crazy");
+			String user = config.getString("database.user", "root");
+			String password = config.getString("database.password", "");
 			MySQLConnection connection = new MySQLConnection(host, port, databasename, user, password);
 			database = new CrazyOnlineMySQLDatabase(connection, tableName);
 		}

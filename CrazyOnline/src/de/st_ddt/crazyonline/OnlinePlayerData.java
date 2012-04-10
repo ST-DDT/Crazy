@@ -2,6 +2,7 @@ package de.st_ddt.crazyonline;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -69,7 +70,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		String name = null;
 		try
 		{
-			name = rawData.getString("name");
+			name = rawData.getString("Name");
 		}
 		catch (Exception e)
 		{
@@ -82,7 +83,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		}
 		try
 		{
-			firstLogin = StringToDate(rawData.getString("LoginFirst"), new Date());
+			firstLogin = StringToDate(rawData.getString("FirstLogin"), new Date());
 		}
 		catch (SQLException e)
 		{
@@ -91,7 +92,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		}
 		try
 		{
-			lastLogin = StringToDate(rawData.getString("LoginLast"), new Date());
+			lastLogin = StringToDate(rawData.getString("LastLogin"), new Date());
 		}
 		catch (SQLException e)
 		{
@@ -100,7 +101,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		}
 		try
 		{
-			lastLogout = StringToDate(rawData.getString("LogoutLast"), new Date());
+			lastLogout = StringToDate(rawData.getString("LastLogout"), new Date());
 		}
 		catch (SQLException e)
 		{
@@ -109,7 +110,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		}
 		try
 		{
-			onlineTime = rawData.getInt("TimeTotal");
+			onlineTime = rawData.getInt("OnlineTime");
 		}
 		catch (SQLException e)
 		{
@@ -122,7 +123,17 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	@Override
 	public void save(MySQLConnection connection, String table)
 	{
-		connection.getData("INSERT INTO " + table + " (name,firstLogin,lastLogin,lastLogout,onlineTime) VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "')");
+		Statement query;
+		try
+		{
+			query = connection.getConnection().createStatement();
+			query.executeUpdate("INSERT INTO " + table + " (Name,FirstLogin,LastLogin,LastLogout,OnlineTime) VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "')");
+			query.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	protected Date StringToDate(String date, Date defaultDate)
