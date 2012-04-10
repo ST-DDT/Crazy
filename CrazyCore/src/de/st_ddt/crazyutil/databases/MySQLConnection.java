@@ -2,10 +2,7 @@ package de.st_ddt.crazyutil.databases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 import org.bukkit.configuration.ConfigurationSection;
 
 public class MySQLConnection
@@ -58,22 +55,4 @@ public class MySQLConnection
 		return connection;
 	}
 
-	public ResultSet getData(String sqlQuerry)
-	{
-		if (connection == null)
-			return null;
-		Statement query;
-		try
-		{
-			query = connection.createStatement();
-			ResultSet result = query.executeQuery(sqlQuerry);
-			query.close();
-			return result;
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
 }

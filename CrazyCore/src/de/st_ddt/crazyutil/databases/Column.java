@@ -21,7 +21,7 @@ public class Column
 		this.autoincrement = false;
 	}
 
-	public Column(String name, String type, boolean primary)
+	public Column(String name, String type, boolean primary, boolean autoincrement)
 	{
 		super();
 		this.name = name;
@@ -29,7 +29,7 @@ public class Column
 		this.primary = primary;
 		this.nulled = false;
 		this.defaults = null;
-		this.autoincrement = true;
+		this.autoincrement = autoincrement;
 	}
 
 	public Column(String name, String type, String defaults, boolean nulled, boolean autoincrement)
@@ -75,7 +75,7 @@ public class Column
 
 	public String getCreateString()
 	{
-		return name + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : "") + (nulled ? "NULL " : "NOT NULL") + (defaults == null ? "" : "DEFAULT " + defaults + " ");
+		return name + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
 	}
 
 	public static String getFullCreateString(Column... columns)
