@@ -1,7 +1,7 @@
 name: CrazyArena
 main: de.st_ddt.crazyarena.CrazyArena
 author: ST-DDT
-version: C4_0.1
+version: C6_0.1
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 description: >
