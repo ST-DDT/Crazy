@@ -279,10 +279,10 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		if (!file.exists())
 		{
-			unpackLanguage(language);
+			downloadLanguage(language);
 			if (!file.exists())
 			{
-				downloadLanguage(language);
+				unpackLanguage(language);
 				if (!file.exists())
 				{
 					sender.sendMessage("Language " + language + " not availiable for " + getDescription().getName() + "!");
