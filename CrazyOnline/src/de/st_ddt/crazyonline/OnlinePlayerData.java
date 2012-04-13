@@ -127,7 +127,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		try
 		{
 			query = connection.getConnection().createStatement();
-			query.executeUpdate("INSERT INTO " + table + " (Name,FirstLogin,LastLogin,LastLogout,OnlineTime) VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "')");
+			query.executeUpdate("INSERT INTO " + table + " (Name,FirstLogin,LastLogin,LastLogout,OnlineTime) VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "')" + " ON DUPLICATE KEY UPDATE " + "FirstLogin=" + getFirstLoginString() + ", " + "LastLogin=" + getLastLoginString() + ", " + "LastLogout=" + getLastLogoutString() + ", " + "OnlineTime=" + onlineTime);
 			query.close();
 		}
 		catch (SQLException e)
