@@ -178,6 +178,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			String zeile = bufreader.readLine();
 			if (zeile == null)
 				break read;
+			// EDIT Linux BOM
 			if (zeile.getBytes()[0] == (byte) 63)
 				zeile = zeile.substring(1);
 			String[] split = null;

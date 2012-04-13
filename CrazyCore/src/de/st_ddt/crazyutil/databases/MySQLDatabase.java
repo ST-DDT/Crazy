@@ -141,7 +141,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	@Override
 	public void save(S entry)
 	{
-		delete(entry.getName());
 		entry.save(connection, table);
 	}
 }
