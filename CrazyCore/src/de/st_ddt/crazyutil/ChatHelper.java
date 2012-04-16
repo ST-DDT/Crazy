@@ -62,7 +62,6 @@ public class ChatHelper
 			return "";
 		Iterator<String> list = strings.iterator();
 		String res = list.next();
-		System.out.println(res);
 		while (list.hasNext())
 			res = res + seperator + list.next();
 		return res;
