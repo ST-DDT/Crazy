@@ -11,9 +11,9 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	protected final ConfigurationSection config;
 	protected String table;
 
-	public ConfigurationDatabase(Class<S> clazz, ConfigurationSection config, String table)
+	public ConfigurationDatabase(Class<S> clazz, ConfigurationSection config, String table, String[] columnNames)
 	{
-		super(DatabaseTypes.FLAT, clazz);
+		super(DatabaseTypes.CONFIG, clazz, columnNames);
 		this.config = config;
 		this.table = table;
 	}
@@ -32,7 +32,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 			return null;
 		try
 		{
-			return clazz.getConstructor(ConfigurationSection.class).newInstance(section);
+			return clazz.getConstructor(ConfigurationSection.class, String[].class).newInstance(section, columnNames);
 		}
 		catch (Exception e)
 		{
@@ -69,6 +69,6 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	@Override
 	public void save(S entry)
 	{
-		entry.save(config, table + "." + entry.getName() + ".");
+		entry.saveToConfigDatabase(config, table + "." + entry.getName() + ".", columnNames);
 	}
 }

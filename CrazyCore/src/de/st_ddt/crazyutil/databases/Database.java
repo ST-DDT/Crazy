@@ -7,12 +7,14 @@ public abstract class Database<S extends DatabaseEntry>
 
 	private final DatabaseTypes type;
 	protected final Class<S> clazz;
+	protected final String[] columnNames;
 
-	public Database(DatabaseTypes type, Class<S> clazz)
+	public Database(final DatabaseTypes type, final Class<S> clazz, final String[] columnNames)
 	{
 		super();
 		this.type = type;
 		this.clazz = clazz;
+		this.columnNames = columnNames;
 	}
 
 	public DatabaseTypes getType()
@@ -36,5 +38,15 @@ public abstract class Database<S extends DatabaseEntry>
 	{
 		for (S entry : entries)
 			save(entry);
+	}
+
+	public String[] getColumnNames()
+	{
+		return columnNames;
+	}
+
+	public Class<S> getEntryClazz()
+	{
+		return clazz;
 	}
 }

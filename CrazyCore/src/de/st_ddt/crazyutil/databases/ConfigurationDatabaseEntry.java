@@ -2,11 +2,9 @@ package de.st_ddt.crazyutil.databases;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.ConfigurationSaveable;
-
-public interface ConfigurationDatabaseEntry extends DatabaseEntry, ConfigurationSaveable
+public interface ConfigurationDatabaseEntry extends DatabaseEntry
 {
 
-	// public ConfigurationDatabaseEntry(ConfigurationSection rawData);
-	public abstract void save(ConfigurationSection config, String table);
+	// public ConfigurationDatabaseEntry(ConfigurationSection rawData, String[] columnNames);
+	public abstract void saveToConfigDatabase(ConfigurationSection config, String table, String[] columnNames);
 }

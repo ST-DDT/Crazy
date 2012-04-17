@@ -39,6 +39,11 @@ public class MySQLConnection
 			// TODO Download and retry
 			System.err.println("JBDC-Treiber not found");
 		}
+		connect();
+	}
+
+	public void connect()
+	{
 		try
 		{
 			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
@@ -52,7 +57,14 @@ public class MySQLConnection
 
 	public Connection getConnection()
 	{
+		try
+		{
+			if (connection.isClosed())
+				connect();
+		}
+		catch (Exception e)
+		{
+		}
 		return connection;
 	}
-
 }

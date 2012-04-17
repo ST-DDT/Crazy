@@ -11,16 +11,16 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 
 	protected final MySQLConnection connection;
 	protected String table;
-	protected final Column[] columns;
-	protected final Column primary;
+	protected final MySQLColumn[] columns;
+	protected final MySQLColumn primary;
 
-	public MySQLDatabase(Class<S> clazz, MySQLConnection connection, String table, Column[] columns, Column primary)
+	public MySQLDatabase(Class<S> clazz, MySQLConnection connection, String table, MySQLColumn[] columns, int primaryIndex)
 	{
-		super(DatabaseTypes.MySQL, clazz);
+		super(DatabaseTypes.MySQL, clazz, convertColumnNames(columns));
 		this.connection = connection;
 		this.table = table;
 		this.columns = columns;
-		this.primary = primary;
+		this.primary = columns[primaryIndex];
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 		try
 		{
 			query = connection.getConnection().createStatement();
-			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" + Column.getFullCreateString(columns) + ");");
+			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" + MySQLColumn.getFullCreateString(columns) + ");");
 			query.close();
 		}
 		catch (SQLException e)
@@ -50,7 +50,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			ResultSet result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "' LIMIT=1");
 			try
 			{
-				res = clazz.getConstructor(ResultSet.class).newInstance(result);
+				res = clazz.getConstructor(ResultSet.class, String[].class).newInstance(result, columnNames);
 			}
 			catch (Exception e)
 			{
@@ -141,6 +141,39 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	@Override
 	public void save(S entry)
 	{
-		entry.save(connection, table);
+		entry.saveToMySQLDatabase(connection, table, getColumnNames());
+	}
+
+	public final MySQLColumn[] getColumns()
+	{
+		return columns;
+	}
+
+	private static String[] convertColumnNames(MySQLColumn[] columns)
+	{
+		int length = columns.length;
+		String[] names = new String[length];
+		for (int i = 0; i < length; i++)
+			names[i] = columns[i].getName();
+		return names;
+	}
+
+	public final MySQLColumn getPrimary()
+	{
+		return primary;
+	}
+
+	public final String getPrimaryName()
+	{
+		return primary.getName();
+	}
+
+	public final int getPrimaryIndex()
+	{
+		int length = columns.length;
+		for (int i = 0; i < length; i++)
+			if (columns[i] == primary)
+				return i;
+		return -1;
 	}
 }

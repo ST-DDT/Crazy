@@ -1,6 +1,6 @@
 package de.st_ddt.crazyutil.databases;
 
-public class Column
+public class MySQLColumn
 {
 
 	protected final String name;
@@ -10,7 +10,7 @@ public class Column
 	protected final String defaults;
 	protected final boolean autoincrement;
 
-	public Column(String name, String type)
+	public MySQLColumn(String name, String type)
 	{
 		super();
 		this.name = name;
@@ -21,7 +21,7 @@ public class Column
 		this.autoincrement = false;
 	}
 
-	public Column(String name, String type, boolean primary, boolean autoincrement)
+	public MySQLColumn(String name, String type, boolean primary, boolean autoincrement)
 	{
 		super();
 		this.name = name;
@@ -32,7 +32,7 @@ public class Column
 		this.autoincrement = autoincrement;
 	}
 
-	public Column(String name, String type, String defaults, boolean nulled, boolean autoincrement)
+	public MySQLColumn(String name, String type, String defaults, boolean nulled, boolean autoincrement)
 	{
 		super();
 		this.name = name;
@@ -78,7 +78,7 @@ public class Column
 		return name + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
 	}
 
-	public static String getFullCreateString(Column... columns)
+	public static String getFullCreateString(MySQLColumn... columns)
 	{
 		int length = columns.length;
 		if (length == 0)
