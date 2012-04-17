@@ -3,7 +3,6 @@ package de.st_ddt.crazyutil.geo;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
@@ -33,14 +32,14 @@ public abstract class Geo
 		return getWorld();
 	}
 
-	public final void save(FileConfiguration config, String path, boolean includeType)
+	public final void save(ConfigurationSection config, String path, boolean includeType)
 	{
 		if (includeType)
 			config.set(path + "type", getClass().getName());
 		save(config, path);
 	}
 
-	public abstract void save(FileConfiguration config, String path);
+	public abstract void save(ConfigurationSection config, String path);
 
 	public final boolean isInside(Entity entity)
 	{

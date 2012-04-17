@@ -3,8 +3,6 @@ package de.st_ddt.crazyutil.geo;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class Sphere extends Geo
@@ -57,7 +55,7 @@ public class Sphere extends Geo
 	}
 
 	@Override
-	public void save(FileConfiguration config, String path)
+	public void save(ConfigurationSection config, String path)
 	{
 		ObjectSaveLoadHelper.saveLocation(config, path + "center.", center, false);
 		config.set(path + "range", radius);
