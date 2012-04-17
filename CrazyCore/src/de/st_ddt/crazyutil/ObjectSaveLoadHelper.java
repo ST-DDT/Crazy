@@ -7,16 +7,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public final class ObjectSaveLoadHelper
 {
-	
+
 	private ObjectSaveLoadHelper()
 	{
 	}
 
-	public static Location loadLocation(final ConfigurationSection config,  World world)
+	public static Location loadLocation(final ConfigurationSection config, World world)
 	{
 		if (config == null)
 			return null;
@@ -25,23 +24,31 @@ public final class ObjectSaveLoadHelper
 		return new Location(world, config.getDouble("x"), config.getDouble("y"), config.getDouble("z"), (float) config.getDouble("yaw", 0d), (float) config.getDouble("pitch", 0d));
 	}
 
-	public static void saveLocation(final FileConfiguration config,final  String path, final Location location)
+	public static void saveLocation(final ConfigurationSection config, final String path, final Location location)
 	{
-		saveLocation(config, path, location, false);
+		saveLocation(config, path, location, false, true);
 	}
 
-	public static void saveLocation(final FileConfiguration config, final String path, final Location location,final  boolean saveWorld)
+	public static void saveLocation(final ConfigurationSection config, final String path, final Location location, final boolean saveRotation)
+	{
+		saveLocation(config, path, location, false, saveRotation);
+	}
+
+	public static void saveLocation(final ConfigurationSection config, final String path, final Location location, final boolean saveWorld, final boolean saveRotation)
 	{
 		config.set(path + "x", location.getX());
 		config.set(path + "y", location.getY());
 		config.set(path + "z", location.getZ());
-		config.set(path + "yaw", location.getYaw());
-		config.set(path + "pitch", location.getPitch());
+		if (saveRotation)
+		{
+			config.set(path + "yaw", location.getYaw());
+			config.set(path + "pitch", location.getPitch());
+		}
 		if (saveWorld)
 			config.set(path + "world", location.getWorld().getName());
 	}
 
-	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz,final  Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
+	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
 		return loadList(config, parentClazz, paraClazzes, paraObjects, null);
 	}
@@ -61,7 +68,7 @@ public final class ObjectSaveLoadHelper
 		return load(config, parentClazz, paraClazzes, paraObjects, null);
 	}
 
-	public static <T> T load(final ConfigurationSection config,final  Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
+	public static <T> T load(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
 		String clazzName = config.getString("type", "-1");
 		if (clazzName.equals("-1"))
@@ -77,13 +84,8 @@ public final class ObjectSaveLoadHelper
 		return load(clazzname, parentClazz, paraClazzes, paraObjects, null);
 	}
 
-	public static <T> T load(final String clazzname, final Class<T> parentClazz,final  Class<?>[] paraClazzes, final Object[] paraObjects,final  String alternativePackage)
-	{
-		return load(clazzname, parentClazz, paraClazzes, paraObjects, alternativePackage, false);
-	}
-
 	@SuppressWarnings("unchecked")
-	public static <T> T load(final String clazzname, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage, final boolean skipClassCheck)
+	public static <T> T load(final String clazzname, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
 		Class<?> clazz = null;
 		try
@@ -107,11 +109,12 @@ public final class ObjectSaveLoadHelper
 				return null;
 			}
 		}
-		if (!clazz.getClass().isAssignableFrom(parentClazz) && !skipClassCheck)
-		{
-			new ClassCastException("Cannot cast " + clazz.getName() + " to " + parentClazz.getName()).printStackTrace();
-			return null;
-		}
+		if (clazz != null)
+			if (!clazz.getClass().isAssignableFrom(parentClazz))
+			{
+				new ClassCastException("Cannot cast " + clazz.getName() + " to " + parentClazz.getName()).printStackTrace();
+				return null;
+			}
 		return load((Class<T>) clazz, paraClazzes, paraObjects);
 	}
 

@@ -14,13 +14,7 @@ public abstract class Condition<T>
 	@SuppressWarnings("unchecked")
 	public static <T> Condition<T> load(ConfigurationSection config)
 	{
-		String clazzName = config.getString("type", "-1");
-		if (clazzName.equals("-1"))
-		{
-			System.err.println("No class defined!");
-			return null;
-		}
-		return (Condition<T>) ObjectSaveLoadHelper.load(clazzName, Condition.class, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions", true);
+		return (Condition<T>) ObjectSaveLoadHelper.load(config, null, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
 	}
 
 	public Condition(ConfigurationSection config)
