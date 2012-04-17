@@ -1,5 +1,6 @@
 package de.st_ddt.crazyonline;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyonline.databases.CrazyOnlineConfigurationDatabase;
+import de.st_ddt.crazyonline.databases.CrazyOnlineFlatDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineMySQLDatabase;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
@@ -57,12 +59,32 @@ public class CrazyOnline extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		FileConfiguration config = getConfig();
+		ConfigurationSection config = getConfig();
 		saveType = config.getString("database.saveType", "flat").toLowerCase();
 		tableName = config.getString("database.tableName", "players");
-		if (saveType.equals("flat"))
+		setupDatabase();
+		if (database != null)
+			for (OnlinePlayerData data : database.getAllEntries())
+				datas.setDataVia1(data.getName().toLowerCase(), data);
+	}
+
+	public void setupDatabase()
+	{
+		ConfigurationSection config = getConfig();
+		// Columns
+		String colName = config.getString("database.columns.name", "name");
+		config.set("database.columns.name", colName);
+		String colFirstLogin = config.getString("database.columns.firstlogin", "FirstLogin");
+		config.set("database.columns.firstlogin", colFirstLogin);
+		String colLastLogin = config.getString("database.columns.lastlogin", "LastLogin");
+		config.set("database.columns.lastlogin", colLastLogin);
+		String colLastLogout = config.getString("database.columns.lastlogout", "LastLogout");
+		config.set("database.columns.lastlogout", colLastLogout);
+		String colOnlineTime = config.getString("database.columns.onlinetime", "OnlineTime");
+		config.set("database.columns.onlinetime", colOnlineTime);
+		if (saveType.equals("config"))
 		{
-			database = new CrazyOnlineConfigurationDatabase(config, tableName);
+			database = new CrazyOnlineConfigurationDatabase(config, tableName, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
 		}
 		else if (saveType.equals("mysql"))
 		{
@@ -77,11 +99,13 @@ public class CrazyOnline extends CrazyPlugin
 			String password = config.getString("database.password", "");
 			config.set("database.password", password);
 			MySQLConnection connection = new MySQLConnection(host, port, databasename, user, password);
-			database = new CrazyOnlineMySQLDatabase(connection, tableName);
+			database = new CrazyOnlineMySQLDatabase(connection, tableName, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
 		}
-		if (database != null)
-			for (OnlinePlayerData data : database.getAllEntries())
-				datas.setDataVia1(data.getName().toLowerCase(), data);
+		else if (saveType.equals("flat"))
+		{
+			File file = new File(getDataFolder().getPath() + "/" + tableName + ".db");
+			database = new CrazyOnlineFlatDatabase(config, file, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
+		}
 	}
 
 	@Override
@@ -314,35 +338,19 @@ public class CrazyOnline extends CrazyPlugin
 				{
 					String newValue = args[1];
 					boolean changed = saveType.equals(newValue);
-					if (newValue.equalsIgnoreCase("flat"))
-						saveType = "flat";
+					if (newValue.equalsIgnoreCase("config"))
+						saveType = "config";
 					else if (newValue.equalsIgnoreCase("mysql"))
 						saveType = "mysql";
+					else if (newValue.equalsIgnoreCase("flat"))
+						saveType = "flat";
 					else
 						throw new CrazyCommandNoSuchException("SaveType", newValue);
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
 					if (changed)
 						return;
-					ConfigurationSection config = getConfig();
-					if (saveType.equals("flat"))
-					{
-						database = new CrazyOnlineConfigurationDatabase(config, tableName);
-					}
-					else if (saveType.equals("mysql"))
-					{
-						String host = config.getString("database.host", "localhost");
-						config.set("database.host", host);
-						String port = config.getString("database.port", "3306");
-						config.set("database.port", port);
-						String databasename = config.getString("database.dbname", "Crazy");
-						config.set("database.dbname", databasename);
-						String user = config.getString("database.user", "root");
-						config.set("database.user", user);
-						String password = config.getString("database.password", "");
-						config.set("database.password", password);
-						MySQLConnection connection = new MySQLConnection(host, port, databasename, user, password);
-						database = new CrazyOnlineMySQLDatabase(connection, tableName);
-					}
+					getConfig().set("database.saveType", saveType);
+					setupDatabase();
 					save();
 					return;
 				}
