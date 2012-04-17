@@ -168,7 +168,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		this.onlineTime = Integer.parseInt(rawData[4]);
 	}
 
-	// in Config-Datenbank speichern
+	// in Flat-Datenbank speichern
 	@Override
 	public String[] saveToFlatDatabase()
 	{
