@@ -1,6 +1,7 @@
 package de.st_ddt.crazyarena.score;
 
 import java.util.HashMap;
+import java.util.List;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 
@@ -64,10 +65,10 @@ public class Score implements Comparable<Score>
 
 	public String getEntry(String column)
 	{
-		Object object = getString(column);
-		if (object == null)
-			object = getValue(column);
-		return object.toString();
+		String string = getString(column);
+		if (string == null)
+			string = getValue(column).toString();
+		return string;
 	}
 
 	public String[] getSignRow(String[] columns)
@@ -76,6 +77,15 @@ public class Score implements Comparable<Score>
 		String[] row = new String[length];
 		for (int i = 0; i < length; i++)
 			row[i] = getEntry(columns[i]);
+		return row;
+	}
+
+	public String[] getSignRow(List<String> columns)
+	{
+		int length = columns.size();
+		String[] row = new String[length];
+		for (int i = 0; i < length; i++)
+			row[i] = getEntry(columns.get(i));
 		return row;
 	}
 

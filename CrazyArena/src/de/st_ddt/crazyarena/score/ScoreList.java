@@ -88,6 +88,21 @@ public class ScoreList
 	{
 		String[][] entries = new String[anz][];
 		Score[] scores = getXSortedScore(sort);
+		for (int i = scores.length; i < anz; i++)
+			entries[i] = new String[columns.length];
+		anz = Math.min(anz, scores.length);
+		for (int i = 0; i < anz; i++)
+			entries[i] = scores[i].getSignRow(columns);
+		return entries;
+	}
+
+	public String[][] getSignEntries(int anz, String sort, List<String> columns)
+	{
+		String[][] entries = new String[anz][];
+		Score[] scores = getXSortedScore(sort);
+		for (int i = scores.length; i < anz; i++)
+			entries[i] = new String[columns.size()];
+		anz = Math.min(anz, scores.length);
 		for (int i = 0; i < anz; i++)
 			entries[i] = scores[i].getSignRow(columns);
 		return entries;
@@ -95,6 +110,7 @@ public class ScoreList
 
 	public void updateSign(Location location)
 	{
+		// Ausrichtung suchen
 		Vector vector = null;
 		if (location.clone().add(1, 0, 0).getBlock().getType() == Material.WALL_SIGN)
 			vector = new Vector(1, 0, 0);
@@ -106,18 +122,38 @@ public class ScoreList
 			vector = new Vector(0, -1, 0);
 		else
 			return;
+		// Spalten suchen
 		ArrayList<String> columns = new ArrayList<String>();
 		Location search = location.clone();
 		int depth = checkColumn(location);
+		String sort = "name";
 		columns.add("name");
 		while (search.add(vector).getBlock().getType() == Material.WALL_SIGN)
 		{
 			String[] lines = ((Sign) search.add(vector).getBlock()).getLines();
+			if (lines[2].equals("sort"))
+				sort = lines[3];
 			columns.add(lines[3]);
 			depth = Math.min(depth, checkColumn(search));
 		}
-		// EDIT Einträge anfprdern
-		// EDIT EINTRÄGE anzeigen
+		// Einträge holen
+		String[][] entrylist = getSignEntries(depth * 4, sort, columns);
+		// Einträge anzeigen
+		int columnsAnz = columns.size();
+		location.add(0, -1, 0);
+		for (int i = 0; i < depth; i++)
+		{
+			search = location.clone();
+			search.add(0, -i, 0);
+			for (int j = 0; j < columnsAnz; j++)
+			{
+				Sign sign = ((Sign) search.add(vector).getBlock());
+				sign.setLine(0, entrylist[i * 4][j]);
+				sign.setLine(0, entrylist[i * 4 + 1][j + 1]);
+				sign.setLine(0, entrylist[i * 4 + 2][j + 2]);
+				sign.setLine(0, entrylist[i * 4 + 3][j + 3]);
+			}
+		}
 	}
 
 	private int checkColumn(Location location)
