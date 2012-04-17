@@ -42,7 +42,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 			return null;
 		try
 		{
-			return clazz.getConstructor(String[].class).newInstance(data);
+			return clazz.getConstructor(String[].class).newInstance(new Object[] { data });
 		}
 		catch (Exception e)
 		{
