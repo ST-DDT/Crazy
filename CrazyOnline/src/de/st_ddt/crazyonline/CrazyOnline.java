@@ -104,7 +104,7 @@ public class CrazyOnline extends CrazyPlugin
 		else if (saveType.equals("flat"))
 		{
 			File file = new File(getDataFolder().getPath() + "/" + tableName + ".db");
-			database = new CrazyOnlineFlatDatabase(config, file, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
+			database = new CrazyOnlineFlatDatabase(file, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
 		}
 	}
 
