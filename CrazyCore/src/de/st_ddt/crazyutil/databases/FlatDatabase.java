@@ -96,7 +96,6 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 			while ((zeile = bufreader.readLine()) != null)
 			{
 				String[] split = zeile.split("\\|");
-				System.out.println(zeile + "=" + split);
 				try
 				{
 					entries.put(split[0], split);
@@ -145,18 +144,30 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 
 	private void saveFile()
 	{
+		FileWriter writer = null;
 		try
 		{
-			FileWriter writer = new FileWriter(file);
+			writer = new FileWriter(file);
 			writer.write(ChatHelper.listToString(columnNames, "|") + System.getProperty("line.separator"));
 			for (String[] strings : entries.values())
 				writer.write(ChatHelper.listToString(strings, "|") + System.getProperty("line.separator"));
 			writer.flush();
-			writer.close();
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			if (writer != null)
+				try
+				{
+					writer.close();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
 		}
 	}
 }
