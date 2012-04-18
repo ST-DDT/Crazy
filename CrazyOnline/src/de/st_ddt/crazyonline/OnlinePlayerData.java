@@ -144,16 +144,26 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		String colLastLogin = columnNames[2];
 		String colLastLogout = columnNames[3];
 		String colOnlineTime = columnNames[4];
-		Statement query;
+		Statement query = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
 			query.executeUpdate("INSERT INTO " + table + " (" + colName + "," + colFirstLogin + "," + colLastLogin + "," + colLastLogout + "," + colOnlineTime + ") VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "') " + "ON DUPLICATE KEY UPDATE " + colFirstLogin + "='" + getFirstLoginString() + "', " + colLastLogin + "='" + getLastLoginString() + "', " + colLastLogout + "='" + getLastLogoutString() + "', " + colOnlineTime + "='" + onlineTime + "'");
-			query.close();
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (SQLException e)
+				{}
+			connection.closeConnection();
 		}
 	}
 
