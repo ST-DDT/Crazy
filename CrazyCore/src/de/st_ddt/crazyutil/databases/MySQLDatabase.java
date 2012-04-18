@@ -108,7 +108,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			try
 			{
 				while (result.next())
-					list.add(clazz.getConstructor(ResultSet.class).newInstance(result));
+					list.add(clazz.getConstructor(ResultSet.class, String[].class).newInstance(result, columnNames));
 			}
 			catch (Exception e)
 			{
@@ -155,7 +155,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			try
 			{
 				while (result.next())
-					list.add(clazz.getConstructor(ResultSet.class).newInstance(result));
+					list.add(clazz.getConstructor(ResultSet.class, String[].class).newInstance(result, columnNames));
 			}
 			catch (Exception e)
 			{

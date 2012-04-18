@@ -184,8 +184,8 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 	{
 		for (String language : CrazyLocale.getLoadedLanguages())
 			loadLanguage(language);
-		load();
 		checkLocale();
+		load();
 		consoleLog("Version " + getDescription().getVersion() + " enabled");
 	}
 
