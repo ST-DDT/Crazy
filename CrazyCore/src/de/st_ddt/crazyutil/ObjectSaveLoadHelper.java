@@ -110,7 +110,7 @@ public final class ObjectSaveLoadHelper
 			}
 		}
 		if (parentClazz != null)
-			if (!clazz.getClass().isAssignableFrom(parentClazz))
+			if (!parentClazz.isAssignableFrom(clazz))
 			{
 				new ClassCastException("Cannot cast " + clazz.getName() + " to " + parentClazz.getName()).printStackTrace();
 				return null;
