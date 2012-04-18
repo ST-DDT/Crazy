@@ -17,7 +17,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 {
 
 	protected final File file;
-	protected HashMap<String, String[]> entries=new HashMap<String, String[]>();
+	protected HashMap<String, String[]> entries = new HashMap<String, String[]>();
 
 	public FlatDatabase(Class<S> clazz, File file, String[] columnNames)
 	{
@@ -95,7 +95,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 			String zeile = bufreader.readLine();
 			while ((zeile = bufreader.readLine()) != null)
 			{
-				String[] split = zeile.split("|");
+				String[] split = zeile.split("\\|");
+				System.out.println(zeile + "=" + split);
 				try
 				{
 					entries.put(split[0], split);
