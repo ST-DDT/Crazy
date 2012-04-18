@@ -17,7 +17,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 {
 
 	protected final File file;
-	protected HashMap<String, String[]> entries;
+	protected HashMap<String, String[]> entries=new HashMap<String, String[]>();
 
 	public FlatDatabase(Class<S> clazz, File file, String[] columnNames)
 	{
