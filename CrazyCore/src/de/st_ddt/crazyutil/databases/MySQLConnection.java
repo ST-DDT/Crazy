@@ -62,9 +62,25 @@ public class MySQLConnection
 			if (connection.isClosed())
 				connect();
 		}
+		catch (NullPointerException e)
+		{
+			connect();
+		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 		}
 		return connection;
+	}
+
+	public void closeConnection()
+	{
+		try
+		{
+			connection.close();
+		}
+		catch (SQLException e)
+		{
+		}
 	}
 }

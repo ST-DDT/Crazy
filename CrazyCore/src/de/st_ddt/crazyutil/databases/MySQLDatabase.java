@@ -26,16 +26,26 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	@Override
 	public void checkTable()
 	{
-		Statement query;
+		Statement query = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
 			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" + MySQLColumn.getFullCreateString(columns) + ");");
-			query.close();
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (SQLException e)
+				{}
+			connection.closeConnection();
 		}
 	}
 
@@ -43,11 +53,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	public S getEntry(String key)
 	{
 		S res = null;
-		Statement query;
+		Statement query = null;
+		ResultSet result = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
-			ResultSet result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "' LIMIT=1");
+			result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "' LIMIT=1");
 			try
 			{
 				res = clazz.getConstructor(ResultSet.class, String[].class).newInstance(result, columnNames);
@@ -63,6 +74,24 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			e.printStackTrace();
 			return null;
 		}
+		finally
+		{
+			if (result != null)
+				try
+				{
+					result.close();
+				}
+				catch (Exception e)
+				{}
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (Exception e)
+				{}
+			connection.closeConnection();
+		}
 		return res;
 	}
 
@@ -70,11 +99,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	public List<S> getEntries(String key)
 	{
 		List<S> list = new ArrayList<S>();
-		Statement query;
+		Statement query = null;
+		ResultSet result = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
-			ResultSet result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "'");
+			result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "'");
 			try
 			{
 				while (result.next())
@@ -90,6 +120,24 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 		{
 			e.printStackTrace();
 			return null;
+		}
+		finally
+		{
+			if (result != null)
+				try
+				{
+					result.close();
+				}
+				catch (Exception e)
+				{}
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (Exception e)
+				{}
+			connection.closeConnection();
 		}
 		return list;
 	}
@@ -98,11 +146,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	public List<S> getAllEntries()
 	{
 		List<S> list = new ArrayList<S>();
-		Statement query;
+		Statement query = null;
+		ResultSet result = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
-			ResultSet result = query.executeQuery("SELECT * FROM " + table + " WHERE 1=1");
+			result = query.executeQuery("SELECT * FROM " + table + " WHERE 1=1");
 			try
 			{
 				while (result.next())
@@ -112,12 +161,29 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			{
 				e.printStackTrace();
 			}
-			query.close();
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
 			return null;
+		}
+		finally
+		{
+			if (result != null)
+				try
+				{
+					result.close();
+				}
+				catch (Exception e)
+				{}
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (Exception e)
+				{}
+			connection.closeConnection();
 		}
 		return list;
 	}
@@ -125,16 +191,26 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	@Override
 	public void delete(String key)
 	{
-		Statement query;
+		Statement query = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
 			query.executeUpdate("DELETE FROM " + table + " WHERE " + primary.getName() + "='" + key + "'");
-			query.close();
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (SQLException e)
+				{}
+			connection.closeConnection();
 		}
 	}
 
