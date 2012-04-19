@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.databases;
 
+import java.lang.reflect.Constructor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,11 +17,24 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 
 	public MySQLDatabase(Class<S> clazz, MySQLConnection connection, String table, MySQLColumn[] columns, int primaryIndex)
 	{
-		super(DatabaseTypes.MySQL, clazz, convertColumnNames(columns));
+		super(DatabaseTypes.MySQL, clazz, convertColumnNames(columns), getConstructor(clazz));
 		this.connection = connection;
 		this.table = table;
 		this.columns = columns;
 		this.primary = columns[primaryIndex];
+	}
+
+	private static <S> Constructor<S> getConstructor(Class<S> clazz)
+	{
+		try
+		{
+			return clazz.getConstructor(ResultSet.class, String[].class);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
@@ -61,7 +75,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "' LIMIT=1");
 			try
 			{
-				res = clazz.getConstructor(ResultSet.class, String[].class).newInstance(result, columnNames);
+				res = constructor.newInstance(result, columnNames);
 			}
 			catch (Exception e)
 			{
@@ -108,7 +122,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			try
 			{
 				while (result.next())
-					list.add(clazz.getConstructor(ResultSet.class, String[].class).newInstance(result, columnNames));
+					list.add(constructor.newInstance(result, columnNames));
 			}
 			catch (Exception e)
 			{
@@ -155,7 +169,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 			try
 			{
 				while (result.next())
-					list.add(clazz.getConstructor(ResultSet.class, String[].class).newInstance(result, columnNames));
+					list.add(constructor.newInstance(result, columnNames));
 			}
 			catch (Exception e)
 			{

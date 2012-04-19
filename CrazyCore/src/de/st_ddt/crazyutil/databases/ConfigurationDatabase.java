@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.databases;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +14,22 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 
 	public ConfigurationDatabase(Class<S> clazz, ConfigurationSection config, String table, String[] columnNames)
 	{
-		super(DatabaseTypes.CONFIG, clazz, columnNames);
+		super(DatabaseTypes.CONFIG, clazz, columnNames, getConstructor(clazz));
 		this.config = config;
 		this.table = table;
+	}
+
+	private static <S> Constructor<S> getConstructor(Class<S> clazz)
+	{
+		try
+		{
+			return clazz.getConstructor(ConfigurationSection.class, String[].class);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
@@ -32,7 +46,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 			return null;
 		try
 		{
-			return clazz.getConstructor(ConfigurationSection.class, String[].class).newInstance(section, columnNames);
+			return constructor.newInstance(section, columnNames);
 		}
 		catch (Exception e)
 		{

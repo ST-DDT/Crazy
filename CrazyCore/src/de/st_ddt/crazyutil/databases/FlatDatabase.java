@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,17 +22,29 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 
 	public FlatDatabase(Class<S> clazz, File file, String[] columnNames)
 	{
-		super(DatabaseTypes.FLAT, clazz, columnNames);
+		super(DatabaseTypes.FLAT, clazz, columnNames, getConstructor(clazz));
 		this.file = file;
 		checkTable();
+		loadFile();
+	}
+
+	private static <S> Constructor<S> getConstructor(Class<S> clazz)
+	{
+		try
+		{
+			return clazz.getConstructor(String[].class);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
 	public void checkTable()
 	{
 		file.getAbsoluteFile().getParentFile().mkdirs();
-		loadFile();
-		return;
 	}
 
 	@Override
@@ -42,7 +55,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 			return null;
 		try
 		{
-			return clazz.getConstructor(String[].class).newInstance(new Object[] { data });
+			return constructor.newInstance(new Object[] { data });
 		}
 		catch (Exception e)
 		{
@@ -107,8 +120,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 			}
 		}
 		catch (FileNotFoundException e)
-		{
-		}
+		{}
 		catch (IOException e)
 		{
 			e.printStackTrace();
@@ -121,24 +133,21 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 					bufreader.close();
 				}
 				catch (IOException e)
-				{
-				}
+				{}
 			if (inputStreamReader != null)
 				try
 				{
 					inputStreamReader.close();
 				}
 				catch (IOException e)
-				{
-				}
+				{}
 			if (fileInputStream != null)
 				try
 				{
 					fileInputStream.close();
 				}
 				catch (IOException e)
-				{
-				}
+				{}
 		}
 	}
 
