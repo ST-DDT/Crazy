@@ -259,7 +259,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	{
 		int time = onlineTime;
 		if (lastLogin.after(lastLogout))
-			time = (int) ((new Date().getTime() - lastLogin.getTime()) / 1000 / 60);
+			time += (int) ((new Date().getTime() - lastLogin.getTime()) / 1000 / 60);
 		return time;
 	}
 
