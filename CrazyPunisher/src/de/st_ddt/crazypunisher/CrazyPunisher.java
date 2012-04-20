@@ -1,7 +1,6 @@
 package de.st_ddt.crazypunisher;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -21,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.dynmap.DynmapAPI;
 
-import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
