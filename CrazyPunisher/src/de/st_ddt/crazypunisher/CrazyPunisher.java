@@ -42,7 +42,6 @@ public class CrazyPunisher extends CrazyPlugin
 {
 
 	private static CrazyPunisher plugin;
-	protected final static SimpleDateFormat DateFormat = CrazyCore.DateFormat;
 	private final ArrayList<OfflinePlayer> banned = new ArrayList<OfflinePlayer>();
 	private final PairList<OfflinePlayer, Date> jailed = new PairList<OfflinePlayer, Date>();
 	private final ArrayList<String> hidden = new ArrayList<String>();
