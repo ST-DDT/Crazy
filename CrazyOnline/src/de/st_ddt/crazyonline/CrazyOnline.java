@@ -14,7 +14,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyonline.databases.CrazyOnlineConfigurationDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineFlatDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineMySQLDatabase;
@@ -37,7 +36,6 @@ public class CrazyOnline extends CrazyPlugin
 	private static CrazyOnline plugin;
 	protected PairList<String, OnlinePlayerData> datas = new PairList<String, OnlinePlayerData>();
 	private CrazyOnlinePlayerListener playerListener = null;
-	public static final SimpleDateFormat DateFormat = CrazyCore.DateFormat;
 	protected String saveType;
 	protected String tableName;
 	protected Database<OnlinePlayerData> database;
