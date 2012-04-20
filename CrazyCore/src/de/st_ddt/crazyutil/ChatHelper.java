@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import org.bukkit.ChatColor;
 
-import de.st_ddt.crazycore.CrazyCore;
+import de.st_ddt.crazyplugin.CrazyPlugin;
 
 public class ChatHelper
 {
@@ -69,6 +69,6 @@ public class ChatHelper
 
 	public static String dateToString(Date date)
 	{
-		return CrazyCore.DateFormat.format(date);
+		return CrazyPlugin.DateFormat.format(date);
 	}
 }

@@ -1,6 +1,5 @@
 package de.st_ddt.crazycore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
@@ -21,7 +20,6 @@ public class CrazyCore extends CrazyPlugin
 	protected static CrazyCore plugin;
 	protected static final ArrayList<String> defaultLanguages = new ArrayList<String>();
 	protected static String defaultLanguage;
-	public static final SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
 	public static CrazyCore getPlugin()
 	{

@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -34,6 +35,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 
 	private String chatHeader = null;
 	protected CrazyLocale locale = null;
+	public final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	private static final PairList<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
 
 	public final String getChatHeader()
