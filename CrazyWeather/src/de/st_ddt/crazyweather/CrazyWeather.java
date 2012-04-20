@@ -2,11 +2,10 @@ package de.st_ddt.crazyweather;
 
 import java.util.ArrayList;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -54,7 +53,7 @@ public class CrazyWeather extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		FileConfiguration config = getConfig();
+		ConfigurationSection config = getConfig();
 		worldWeather = new ArrayList<WorldWeather>();
 		for (World world : getServer().getWorlds())
 		{
@@ -63,19 +62,19 @@ public class CrazyWeather extends CrazyPlugin
 			worldWeather.add(weather);
 		}
 		tool = config.getInt("tool", 280);
-		lightningdisabled = config.getBoolean("lightning", false);
-		lightningdamagedisabled = config.getBoolean("lightningdamage", false);
+		lightningdisabled = config.getBoolean("lightningdisabled", false);
+		lightningdamagedisabled = config.getBoolean("lightningdamagedisabled", false);
 	}
 
 	@Override
 	public void save()
 	{
-		FileConfiguration config = getConfig();
+		ConfigurationSection config = getConfig();
 		for (WorldWeather world : worldWeather)
 			world.save(config, "worlds." + world.getName());
 		config.set("tool", tool);
-		config.set("lightning", lightningdisabled);
-		config.set("lightningdamage", lightningdamagedisabled);
+		config.set("lightningdisabled", lightningdisabled);
+		config.set("lightningdamagedisabled", lightningdamagedisabled);
 		super.save();
 	}
 
@@ -177,6 +176,15 @@ public class CrazyWeather extends CrazyPlugin
 	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		String weather;
+		if (commandLabel.equalsIgnoreCase("sun") || commandLabel.equalsIgnoreCase("sunny") || commandLabel.equalsIgnoreCase("dry") || commandLabel.equalsIgnoreCase("clear") || commandLabel.equalsIgnoreCase("false") || commandLabel.equalsIgnoreCase("none"))
+			weather = "sun";
+		else if (commandLabel.equalsIgnoreCase("rain") || commandLabel.equalsIgnoreCase("rainy") || commandLabel.equalsIgnoreCase("wet") || commandLabel.equalsIgnoreCase("snow") || commandLabel.equalsIgnoreCase("storm"))
+			weather = "rain";
+		else if (commandLabel.equalsIgnoreCase("thunder") || commandLabel.equalsIgnoreCase("lightning"))
+			weather = "thunder";
+		else
+			return false;
+		// throw new CrazyCommandParameterException(0, "Weather", ChatColor.YELLOW + "sun", ChatColor.BLUE + "rain", ChatColor.DARK_BLUE + "thunder");
 		World world = null;
 		boolean keepStatic = false;
 		boolean keepLoad = false;
@@ -216,14 +224,6 @@ public class CrazyWeather extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/weather <Type> [World] [Static/OnLoad]");
 		}
-		if (commandLabel.equalsIgnoreCase("sun") || commandLabel.equalsIgnoreCase("sunny") || commandLabel.equalsIgnoreCase("dry") || commandLabel.equalsIgnoreCase("clear") || commandLabel.equalsIgnoreCase("false") || commandLabel.equalsIgnoreCase("none"))
-			weather = "sun";
-		else if (commandLabel.equalsIgnoreCase("rain") || commandLabel.equalsIgnoreCase("rainy") || commandLabel.equalsIgnoreCase("wet") || commandLabel.equalsIgnoreCase("snow") || commandLabel.equalsIgnoreCase("storm"))
-			weather = "rain";
-		else if (commandLabel.equalsIgnoreCase("thunder") || commandLabel.equalsIgnoreCase("lightning"))
-			weather = "thunder";
-		else
-			throw new CrazyCommandParameterException(0, "Weather", ChatColor.YELLOW + "sun", ChatColor.BLUE + "rain", ChatColor.DARK_BLUE + "thunder");
 		if (world == null)
 			if (sender instanceof Player)
 				world = ((Player) sender).getWorld();

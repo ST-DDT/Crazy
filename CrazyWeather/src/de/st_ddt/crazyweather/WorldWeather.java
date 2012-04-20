@@ -3,7 +3,6 @@ package de.st_ddt.crazyweather;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class WorldWeather
 {
@@ -44,7 +43,7 @@ public class WorldWeather
 		}
 	}
 
-	public void save(FileConfiguration config, String worldData)
+	public void save(ConfigurationSection config, String worldData)
 	{
 		config.set(worldData + ".static", staticWeather);
 		config.set(worldData + ".onLoad", onLoad);
