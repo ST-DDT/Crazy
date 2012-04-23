@@ -1,4 +1,5 @@
-﻿CRAZYWEATHER.COMMAND.WEATHER.ERROR=Fehler in der Welt (eventuell nicht geladen)
+﻿CRAZYWEATHER=CrazyWeather
+CRAZYWEATHER.COMMAND.WEATHER.ERROR=Fehler in der Welt (eventuell nicht geladen)
 CRAZYWEATHER.COMMAND.WEATHER.SUCCESS=Wetter erfolgreich geändert!
 CRAZYWEATHER.WEATHER.SUN=$0$ hat jetzt &Esonniges &FWetter!
 CRAZYWEATHER.WEATHER.RAIN=$0$ hat jetzt &9regnerisches &FWetter!
