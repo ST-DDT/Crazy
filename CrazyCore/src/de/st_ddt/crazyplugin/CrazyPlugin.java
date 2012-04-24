@@ -209,7 +209,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 
 	public void checkLocale()
 	{
-		locale = CrazyLocale.getLocaleHead().getLanguageEntry(getDescription().getName());
+		locale = CrazyLocale.getPluginHead(this);
 	}
 
 	public final void consoleLog(String message)

@@ -3,8 +3,7 @@ package de.st_ddt.crazycore;
 import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-
+import org.bukkit.configuration.ConfigurationSection;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
@@ -219,7 +218,7 @@ public class CrazyCore extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		FileConfiguration config = getConfig();
+		ConfigurationSection config = getConfig();
 		for (String language : config.getStringList("defaultLanguages"))
 		{
 			defaultLanguages.add(language);
@@ -233,7 +232,7 @@ public class CrazyCore extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		FileConfiguration config = getConfig();
+		ConfigurationSection config = getConfig();
 		config.set("defaultLanguage", defaultLanguage);
 		config.set("defaultLanguages", defaultLanguages);
 		CrazyLocale.save(config, "players.");
