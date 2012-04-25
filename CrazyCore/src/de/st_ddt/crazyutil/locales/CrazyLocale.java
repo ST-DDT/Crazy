@@ -40,7 +40,6 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	public final static CrazyLocale getPluginHead(CrazyPlugin plugin)
 	{
 		getLocaleHead().addLanguageEntry("root", plugin.getName().toUpperCase(), plugin.getName());
-		System.out.println("root:" + plugin.getName().toUpperCase() + "=" + plugin.getName());
 		return getLocaleHead().getLanguageEntry(plugin.getName());
 	}
 
