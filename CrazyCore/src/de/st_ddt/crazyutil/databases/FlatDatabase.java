@@ -68,7 +68,9 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 	public List<S> getEntries(String key)
 	{
 		List<S> list = new ArrayList<S>();
-		list.add(getEntry(key));
+		S entry = getEntry(key);
+		if (entry != null)
+			list.add(entry);
 		return list;
 	}
 
@@ -77,7 +79,11 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 	{
 		List<S> list = new ArrayList<S>();
 		for (String key : entries.keySet())
-			list.add(getEntry(key));
+		{
+			S entry = getEntry(key);
+			if (entry != null)
+				list.add(entry);
+		}
 		return list;
 	}
 
@@ -108,6 +114,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 			String zeile = bufreader.readLine();
 			while ((zeile = bufreader.readLine()) != null)
 			{
+				if (zeile.equals(""))
+					continue;
 				String[] split = zeile.split("\\|");
 				try
 				{
