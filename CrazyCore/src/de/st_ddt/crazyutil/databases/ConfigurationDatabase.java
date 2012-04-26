@@ -85,4 +85,9 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	{
 		entry.saveToConfigDatabase(config, table + "." + entry.getName() + ".", columnNames);
 	}
+
+	@Override
+	protected void saveDatabase()
+	{
+	}
 }

@@ -266,4 +266,9 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 				return i;
 		return -1;
 	}
+
+	@Override
+	protected void saveDatabase()
+	{
+	}
 }

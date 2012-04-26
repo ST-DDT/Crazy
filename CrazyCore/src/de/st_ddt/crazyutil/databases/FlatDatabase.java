@@ -97,7 +97,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 	public void save(S entry)
 	{
 		entries.put(entry.getName(), entry.saveToFlatDatabase());
-		saveFile();
+		if (!bulkOperation)
+			saveFile();
 	}
 
 	private void loadFile()
@@ -186,5 +187,11 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 					e.printStackTrace();
 				}
 		}
+	}
+
+	@Override
+	protected void saveDatabase()
+	{
+		saveFile();
 	}
 }
