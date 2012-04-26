@@ -10,7 +10,7 @@ public abstract class Database<S extends DatabaseEntry>
 	protected final Class<S> clazz;
 	protected final String[] columnNames;
 	protected final Constructor<S> constructor;
-	protected boolean bulkOperation=false;
+	protected boolean bulkOperation = false;
 
 	public Database(final DatabaseTypes type, final Class<S> clazz, final String[] columnNames, final Constructor<S> constructor)
 	{
@@ -18,7 +18,7 @@ public abstract class Database<S extends DatabaseEntry>
 		this.type = type;
 		this.clazz = clazz;
 		this.columnNames = columnNames;
-		this.constructor=constructor;
+		this.constructor = constructor;
 	}
 
 	public DatabaseTypes getType()
@@ -40,13 +40,13 @@ public abstract class Database<S extends DatabaseEntry>
 
 	public final void saveAll(List<S> entries)
 	{
-		bulkOperation=true;
+		bulkOperation = true;
 		for (S entry : entries)
 			save(entry);
-		bulkOperation=false;
+		bulkOperation = false;
 		saveDatabase();
 	}
-	
+
 	protected abstract void saveDatabase();
 
 	public String[] getColumnNames()
