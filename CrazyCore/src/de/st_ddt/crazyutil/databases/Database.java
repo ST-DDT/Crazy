@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class Database<S extends DatabaseEntry>
@@ -38,7 +39,7 @@ public abstract class Database<S extends DatabaseEntry>
 
 	public abstract void save(S entry);
 
-	public final void saveAll(List<S> entries)
+	public final void saveAll(Collection<S> entries)
 	{
 		bulkOperation = true;
 		for (S entry : entries)
