@@ -278,7 +278,7 @@ public class CrazyArena extends CrazyPlugin
 
 	private boolean commandScore(Player sender, String[] args)
 	{
-		// EDIT
+		// EDIT score
 		// <Arena> [Player/Number]
 		// Arena => 1.2.3.
 		// Arena Player/Rank => Detailed Information about Player/Rank (lastest match maybe total)

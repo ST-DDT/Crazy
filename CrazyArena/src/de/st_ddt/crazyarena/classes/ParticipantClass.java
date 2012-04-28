@@ -40,13 +40,13 @@ public class ParticipantClass
 
 	public void activate(Player player)
 	{
-		// TODO Auto-generated method stub
+		// TODO activate
 		
 	}
 	
 	
 	
-	//EDIT
+	//EDIT save
 	//public void save();
 	
 }
