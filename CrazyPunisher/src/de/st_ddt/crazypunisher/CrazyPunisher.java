@@ -251,8 +251,8 @@ public class CrazyPunisher extends CrazyPlugin
 		{
 			Player p = (Player) player;
 			p.getInventory().clear();
-			p.getWorld().strikeLightning(p.getLocation());
 			p.setGameMode(GameMode.SURVIVAL);
+			p.getWorld().strikeLightning(p.getLocation());
 			p.setHealth(0);
 			kick(p, locale.getLocaleMessage(p, "MESSAGE.HARDBAN"));
 		}
