@@ -1,0 +1,20 @@
+﻿CRAZYPUNISHER=CrazyPunisher
+CRAZYPUNISHER.MESSAGE.HARDBAN=&CВы навсегда потеряли доступ к этому серверу!
+CRAZYPUNISHER.MESSAGE.BAN=&CДоступ временно ограничен. У вас бан!
+CRAZYPUNISHER.MESSAGE.JAILED=Вы в &Cтюремном заключении!
+CRAZYPUNISHER.MESSAGE.JAILEDUNTIL=Вы в &Cтюремном заключении&F до $0$
+CRAZYPUNISHER.MESSAGE.KICK=Вас выкинули с сервера!
+CRAZYPUNISHER.BROADCAST.HARDBAN=&5$0$ потерял доступ к серверу навсегда!
+CRAZYPUNISHER.BROADCAST.BAN=&5$0$ отправлен в бан!
+CRAZYPUNISHER.BROADCAST.UNBAN=&5$0$ исправился и будет себя хорошо вести!
+CRAZYPUNISHER.BROADCAST.JAIL=&5$0$ брошен в тюремные застенки!
+CRAZYPUNISHER.BROADCAST.UNJAIL=&5$0$ вышел на свободу из заточения!
+CRAZYPUNISHER.BROADCAST.KICK=&5$0$ был выкинут с сервера!
+CRAZYPUNISHER.COMMAND.SHOW=Вы снова видимый!
+CRAZYPUNISHER.COMMAND.SHOW.DONE=Невидимость успешно удалена!
+CRAZYPUNISHER.COMMAND.HIDDEN=Вы невидимка!
+CRAZYPUNISHER.COMMAND.HIDDEN.DONE=Невидимость успешно установлена!
+CRAZYPUNISHER.JAILLOCATION=Расположение тюрьмы = $0$ $1$ $2$ $3$
+CRAZYPUNISHER.JAILLOCATION.CHANGED=Тюрьма сменила адрес
+CRAZYPUNISHER.JAILRANGE=Тюремный срок = $0$
+CRAZYPUNISHER.JAILRANGE.CHANGED=Тюремный срок изменен

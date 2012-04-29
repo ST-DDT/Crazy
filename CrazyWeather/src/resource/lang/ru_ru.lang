@@ -1,0 +1,8 @@
+﻿CRAZYWEATHER=CrazyWeather
+CRAZYWEATHER.COMMAND.WEATHER.ERROR=Неправильный мир (возможно не загружен)
+CRAZYWEATHER.COMMAND.WEATHER.SUCCESS=Погода изменена успешно
+CRAZYWEATHER.WEATHER.SUN=$0$ теперь &Eсолнечная &Fпогода!
+CRAZYWEATHER.WEATHER.RAIN=$0$ теперь &9дождливая &Fпогода!
+CRAZYWEATHER.WEATHER.STORM=$0$ получено &8штормовое &Fпредупреждение!
+CRAZYWEATHER.THUNDERTOOL.GET=Метатель молний = &D$0$ ($1$)
+CRAZYWEATHER.THUNDERTOOL.SET=Метатель молний установлен на &D$0$ ($1$)
