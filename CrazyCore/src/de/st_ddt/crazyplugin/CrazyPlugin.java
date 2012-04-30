@@ -251,7 +251,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final String localepath, final Object... args)
 	{
-		broadcastLocaleMessage(console,permission, getLocale().getLanguageEntry(localepath), args);
+		broadcastLocaleMessage(console, permission, getLocale().getLanguageEntry(localepath), args);
 	}
 
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final CrazyLocale locale, final Object... args)
@@ -276,6 +276,7 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 
 	public void loadLanguage(final String language, final CommandSender sender)
 	{
+		// default files
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		if (!file.exists())
 		{
@@ -311,6 +312,33 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		catch (IOException e)
 		{
 			sender.sendMessage("Failed reading " + language + " languagefile for " + getDescription().getName() + "!");
+		}
+		// Custom files:
+		file = new File(getDataFolder().getPath() + "/lang/custom_" + language + ".lang");
+		if (file.exists())
+		{
+			try
+			{
+				InputStream stream = null;
+				InputStreamReader reader = null;
+				try
+				{
+					stream = new FileInputStream(file);
+					reader = new InputStreamReader(stream, "UTF-8");
+					CrazyLocale.readFile(language, reader);
+				}
+				finally
+				{
+					if (reader != null)
+						reader.close();
+					if (stream != null)
+						stream.close();
+				}
+			}
+			catch (IOException e)
+			{
+				sender.sendMessage("Failed reading custom " + language + " languagefile for " + getDescription().getName() + "!");
+			}
 		}
 	}
 
