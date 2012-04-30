@@ -82,7 +82,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return parent.getPath() + "." + name;
 	}
 
-	public String getLocaleMessage(CommandSender sender, String localePath, String... args)
+	public String getLocaleMessage(CommandSender sender, String localePath, Object... args)
 	{
 		return ChatHelper.putArgs(getLanguageEntry(localePath).getLanguageText(getUserLanguage(sender)), args);
 	}
@@ -130,12 +130,12 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			sendMessage(target);
 	}
 
-	public void sendMessage(CommandSender target, String... args)
+	public void sendMessage(CommandSender target, Object... args)
 	{
 		target.sendMessage(ChatHelper.putArgs(getLanguageText(target), args));
 	}
 
-	public void sendMessage(CommandSender[] targets, String... args)
+	public void sendMessage(CommandSender[] targets, Object... args)
 	{
 		for (CommandSender target : targets)
 			sendMessage(target, args);

@@ -3,7 +3,6 @@ package de.st_ddt.crazyonline;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,6 +11,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
 import de.st_ddt.crazyutil.databases.FlatDatabaseEntry;
 import de.st_ddt.crazyutil.databases.MySQLConnection;
@@ -52,9 +52,9 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		String colLastLogout = columnNames[3];
 		String colOnlineTime = columnNames[4];
 		this.name = rawData.getString(colName, rawData.getName());
-		this.firstLogin = StringToDate(rawData.getString(colFirstLogin), new Date());
-		this.lastLogin = StringToDate(rawData.getString(colLastLogin), new Date());
-		this.lastLogout = StringToDate(rawData.getString(colLastLogout), new Date());
+		this.firstLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colFirstLogin), new Date());
+		this.lastLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colLastLogin), new Date());
+		this.lastLogout = ObjectSaveLoadHelper.StringToDate(rawData.getString(colLastLogout), new Date());
 		this.onlineTime = rawData.getInt(colOnlineTime, 0);
 	}
 
@@ -99,7 +99,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		}
 		try
 		{
-			firstLogin = StringToDate(rawData.getString(colFirstLogin), new Date());
+			firstLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colFirstLogin), new Date());
 		}
 		catch (SQLException e)
 		{
@@ -108,7 +108,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		}
 		try
 		{
-			lastLogin = StringToDate(rawData.getString(colLastLogin), new Date());
+			lastLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colLastLogin), new Date());
 		}
 		catch (SQLException e)
 		{
@@ -117,7 +117,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		}
 		try
 		{
-			lastLogout = StringToDate(rawData.getString(colLastLogout), new Date());
+			lastLogout = ObjectSaveLoadHelper.StringToDate(rawData.getString(colLastLogout), new Date());
 		}
 		catch (SQLException e)
 		{
@@ -172,9 +172,9 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	{
 		super();
 		this.name = rawData[0];
-		this.firstLogin = StringToDate(rawData[1], new Date());
-		this.lastLogin = StringToDate(rawData[2], new Date());
-		this.lastLogout = StringToDate(rawData[3], new Date());
+		this.firstLogin = ObjectSaveLoadHelper.StringToDate(rawData[1], new Date());
+		this.lastLogin = ObjectSaveLoadHelper.StringToDate(rawData[2], new Date());
+		this.lastLogout = ObjectSaveLoadHelper.StringToDate(rawData[3], new Date());
 		this.onlineTime = Integer.parseInt(rawData[4]);
 	}
 
@@ -189,20 +189,6 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		strings[3] = getLastLogoutString();
 		strings[4] = String.valueOf(getTimeTotal());
 		return strings;
-	}
-
-	protected Date StringToDate(String date, Date defaultDate)
-	{
-		if (date == null)
-			return defaultDate;
-		try
-		{
-			return DateFormat.parse(date);
-		}
-		catch (ParseException e)
-		{
-			return defaultDate;
-		}
 	}
 
 	public OfflinePlayer getPlayer()

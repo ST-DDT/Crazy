@@ -217,51 +217,49 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 		getServer().getConsoleSender().sendMessage(getChatHeader() + message);
 	}
 
-	public final void sendLocaleMessage(final String localepath, final CommandSender target, final String... args)
+	public final void sendLocaleMessage(final String localepath, final CommandSender target, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), target, args);
 	}
 
-	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final String... args)
+	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
 	{
 		target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
 	}
 
-	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final String... args)
+	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
 	}
 
-	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final String... args)
+	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
 	{
 		for (CommandSender target : targets)
 			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
 	}
 
-	public final void broadcastLocaleMessage(final String localepath, final String... args)
+	public final void broadcastLocaleMessage(final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(getLocale().getLanguageEntry(localepath), args);
 	}
 
-	public final void broadcastLocaleMessage(final CrazyLocale locale, final String... args)
+	public final void broadcastLocaleMessage(final CrazyLocale locale, final Object... args)
 	{
 		sendLocaleMessage(locale, getServer().getConsoleSender(), args);
 		sendLocaleMessage(locale, getServer().getOnlinePlayers(), args);
 	}
 
-	public final void broadcastLocaleMessage(final boolean console, final boolean op, final String permission, final String localepath, final String... args)
+	public final void broadcastLocaleMessage(final boolean console, final String permission, final String localepath, final Object... args)
 	{
-		broadcastLocaleMessage(console, op, permission, getLocale().getLanguageEntry(localepath), args);
+		broadcastLocaleMessage(console,permission, getLocale().getLanguageEntry(localepath), args);
 	}
 
-	public final void broadcastLocaleMessage(final boolean console, final boolean op, final String permission, final CrazyLocale locale, final String... args)
+	public final void broadcastLocaleMessage(final boolean console, final String permission, final CrazyLocale locale, final Object... args)
 	{
 		if (console)
 			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
 		for (Player player : Bukkit.getOnlinePlayers())
-			if (player.isOp())
-				sendLocaleMessage(locale, player, args);
-			else if (permission != null)
+			if (permission != null)
 				if (player.hasPermission(permission))
 					sendLocaleMessage(locale, player, args);
 	}
