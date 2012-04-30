@@ -59,9 +59,31 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 				}
 				catch (SQLException e)
 				{}
-			connection.closeConnection();
 		}
-		//EDIT check missing columns
+		for (MySQLColumn column : columns)
+		{
+			query = null;
+			try
+			{
+				query = connection.getConnection().createStatement();
+				query.executeUpdate("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + table + "' AND COLUMN_NAME = '" + column.getName() + "') BEGIN ALTER TABLE " + table + " ADD " + column.getName() + " " + column.getType() + " END");
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				if (query != null)
+					try
+					{
+						query.close();
+					}
+					catch (SQLException e)
+					{}
+			}
+		}
+		connection.closeConnection();
 	}
 
 	@Override
