@@ -41,6 +41,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	public void checkTable()
 	{
 		Statement query = null;
+		//Create Table if not exists
 		try
 		{
 			query = connection.getConnection().createStatement();
@@ -60,6 +61,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 				catch (SQLException e)
 				{}
 		}
+		//Create columns if not exist
 		for (MySQLColumn column : columns)
 		{
 			query = null;
