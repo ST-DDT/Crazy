@@ -188,7 +188,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			if (zeile.getBytes()[0] == (byte) 63)
 				zeile = zeile.substring(1);
 			String[] split = null;
-			if (!zeile.equals(""))
+			if (!zeile.equals("") && !zeile.startsWith("#"))
 			{
 				split = zeile.split("=", 2);
 				try
@@ -202,6 +202,8 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			}
 			while ((zeile = bufreader.readLine()) != null)
 			{
+				if (zeile.startsWith("#"))
+					continue;
 				split = zeile.split("=", 2);
 				try
 				{
