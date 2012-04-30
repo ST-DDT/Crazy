@@ -184,9 +184,17 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			String zeile = bufreader.readLine();
 			if (zeile == null)
 				break read;
-			// EDIT Linux BOM
-			if (zeile.getBytes()[0] == (byte) 63)
-				zeile = zeile.substring(1);
+			try
+			{
+				if (zeile.getBytes()[0] == (byte) 63)
+					zeile = zeile.substring(1);
+				else if (zeile.getBytes()[0] == (byte) 239)
+					if (zeile.getBytes()[1] == (byte) 187)
+						if (zeile.getBytes()[2] == (byte) 191)
+							zeile = zeile.substring(3);
+			}
+			catch (IndexOutOfBoundsException e)
+			{}
 			String[] split = null;
 			if (!zeile.equals("") && !zeile.startsWith("#"))
 			{
