@@ -61,6 +61,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 				{}
 			connection.closeConnection();
 		}
+		//EDIT check missing columns
 	}
 
 	@Override

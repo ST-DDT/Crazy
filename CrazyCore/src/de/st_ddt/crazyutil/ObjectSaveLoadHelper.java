@@ -1,12 +1,16 @@
 package de.st_ddt.crazyutil;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+
+import de.st_ddt.crazyplugin.CrazyPlugin;
 
 public final class ObjectSaveLoadHelper
 {
@@ -47,7 +51,31 @@ public final class ObjectSaveLoadHelper
 		if (saveWorld)
 			config.set(path + "world", location.getWorld().getName());
 	}
+	
+	public static Date StringToDate(String date, Date defaultDate)
+	{
+		if (date == null)
+			return defaultDate;
+		try
+		{
+			return CrazyPlugin.DateFormat.parse(date);
+		}
+		catch (ParseException e)
+		{
+			return defaultDate;
+		}
+	}
+	
+	public static String DateToString(Date lastAction)
+	{
+		return CrazyPlugin.DateFormat.format(lastAction);
+	}
+	
+	/* Load Objects*/
 
+	/*
+	 * Load a list of Objects
+	 */
 	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
 		return loadList(config, parentClazz, paraClazzes, paraObjects, null);
