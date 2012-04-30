@@ -41,7 +41,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	public void checkTable()
 	{
 		Statement query = null;
-		//Create Table if not exists
+		// Create Table if not exists
 		try
 		{
 			query = connection.getConnection().createStatement();
@@ -61,14 +61,51 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 				catch (SQLException e)
 				{}
 		}
-		//Create columns if not exist
+		// Create columns if not exist
+		query = null;
+		ArrayList<String> columnsNames = new ArrayList<String>();
+		try
+		{
+			query = connection.getConnection().createStatement();
+			// Vorhandene Spalten abfragen
+			ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + table);
+			try
+			{
+				while (result.next())
+					columnsNames.add(result.getString("Field"));
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (SQLException e)
+				{}
+		}
+		query = null;
 		for (MySQLColumn column : columns)
 		{
+			// Prüfen ob Spalte vorhanden ist
+			if (columnsNames.contains(column.getName()))
+				continue;
+			System.out.println("ADDED COLUMN " + column.getName() + " TO TABLE " + table);
 			query = null;
 			try
 			{
+				// Spalte hinzufügen
 				query = connection.getConnection().createStatement();
-				query.executeUpdate("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + table + "' AND COLUMN_NAME = '" + column.getName() + "') BEGIN ALTER TABLE " + table + " ADD " + column.getName() + " " + column.getType() + " END");
+				query.executeUpdate("ALTER TABLE " + table + " ADD " + column.getCreateString());
 			}
 			catch (SQLException e)
 			{

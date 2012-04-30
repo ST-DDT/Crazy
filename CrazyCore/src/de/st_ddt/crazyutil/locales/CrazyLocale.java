@@ -186,6 +186,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 				break read;
 			try
 			{
+				// Remove UTF-8 BOM (Windows, Linux)
 				if (zeile.getBytes()[0] == (byte) 63)
 					zeile = zeile.substring(1);
 				else if (zeile.getBytes()[0] == (byte) 239)
