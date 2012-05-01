@@ -118,6 +118,10 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 				if (zeile.equals(""))
 					continue;
 				String[] split = zeile.split("\\|");
+				if (split == null)
+					continue;
+				if (split.length == 0)
+					continue;
 				try
 				{
 					entries.put(split[0], split);
@@ -168,7 +172,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 			writer = new FileWriter(file);
 			writer.write(ChatHelper.listToString(columnNames, "|") + System.getProperty("line.separator"));
 			for (String[] strings : entries.values())
-				writer.write(ChatHelper.listToString(strings, "|") + System.getProperty("line.separator"));
+				if (strings != null)
+					writer.write(ChatHelper.listToString(strings, "|") + System.getProperty("line.separator"));
 			writer.flush();
 		}
 		catch (IOException e)
