@@ -2,7 +2,7 @@ name: CrazyWeather
 main: de.st_ddt.crazyweather.CrazyWeather
 author: ST-DDT
 #C*=needed core version
-version: C6_2.3
+version: C6.3_2.4
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
