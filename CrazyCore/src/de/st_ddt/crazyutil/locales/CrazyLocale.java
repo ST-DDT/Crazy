@@ -104,7 +104,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 				if (res == null)
 				{
 					if (localeTexts.size() == 0)
-						return "EMPTY";
+						return "EMPTY!";
 					if (localeTexts.get(0) == null)
 						return "EMPTY!";
 					res = localeTexts.get(0).getData2();
