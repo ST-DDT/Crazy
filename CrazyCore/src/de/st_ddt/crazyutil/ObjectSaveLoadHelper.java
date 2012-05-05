@@ -60,7 +60,7 @@ public final class ObjectSaveLoadHelper
 	}
 
 	// Date
-	public static Date StringToDate(String date, Date defaultDate)
+	public static Date StringToDate(final String date, final Date defaultDate)
 	{
 		if (date == null)
 			return defaultDate;
@@ -74,13 +74,13 @@ public final class ObjectSaveLoadHelper
 		}
 	}
 
-	public static String DateToString(Date lastAction)
+	public static String DateToString(final Date date)
 	{
-		return CrazyPlugin.DateFormat.format(lastAction);
+		return CrazyPlugin.DateFormat.format(date);
 	}
 
 	// ItemStack
-	public static ItemStack loadItemStack(ConfigurationSection config)
+	public static ItemStack loadItemStack(final ConfigurationSection config)
 	{
 		ItemStack item = new MaterialData(config.getInt("id"), (byte) config.getInt("data")).toItemStack(config.getInt("amount", 1));
 		if (config.contains("durability"))
@@ -90,17 +90,17 @@ public final class ObjectSaveLoadHelper
 		return item;
 	}
 
-	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item)
+	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item)
 	{
 		saveItemStack(config, path, item, true, true);
 	}
 
-	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item, boolean includeDurability)
+	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item, final boolean includeDurability)
 	{
 		saveItemStack(config, path, item, includeDurability, true);
 	}
 
-	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item, boolean includeDurability, boolean includeEnchantments)
+	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item, final boolean includeDurability, final boolean includeEnchantments)
 	{
 		if (item == null)
 			return;
@@ -117,7 +117,7 @@ public final class ObjectSaveLoadHelper
 	}
 
 	// Enchantments
-	public static Map<Enchantment, Integer> loadEnchantments(ConfigurationSection config)
+	public static Map<Enchantment, Integer> loadEnchantments(final ConfigurationSection config)
 	{
 		Map<Enchantment, Integer> map = new LinkedHashMap<Enchantment, Integer>();
 		for (String name : config.getKeys(false))
@@ -125,12 +125,12 @@ public final class ObjectSaveLoadHelper
 		return map;
 	}
 
-	public static void saveEnchantments(ConfigurationSection config, String path, ItemStack item)
+	public static void saveEnchantments(final ConfigurationSection config, final String path, final ItemStack item)
 	{
 		saveEnchantments(config, path, item.getEnchantments());
 	}
 
-	public static void saveEnchantments(ConfigurationSection config, String path, Map<Enchantment, Integer> enchantments)
+	public static void saveEnchantments(final ConfigurationSection config, final String path, final Map<Enchantment, Integer> enchantments)
 	{
 		for (Entry<Enchantment, Integer> entry : enchantments.entrySet())
 			config.set(path + entry.getKey().getName(), entry.getValue());
