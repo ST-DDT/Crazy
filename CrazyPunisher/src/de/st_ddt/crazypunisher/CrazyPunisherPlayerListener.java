@@ -132,6 +132,8 @@ public class CrazyPunisherPlayerListener implements Listener
 		Player player = event.getPlayer();
 		if (!plugin.isBanned(player))
 			return;
+		if (plugin.isAutoBanIPEnabled())
+			plugin.getServer().banIP(player.getAddress().getAddress().getHostAddress());
 		player.setBanned(true);
 		event.setKickMessage("You are banned!");
 		event.setResult(Result.KICK_BANNED);

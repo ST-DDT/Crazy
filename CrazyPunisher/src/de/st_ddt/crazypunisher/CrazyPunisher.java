@@ -48,6 +48,7 @@ public class CrazyPunisher extends CrazyPlugin
 	public Location jailcenter = null;
 	private World jailworld = null;
 	private int jailrange = 1;
+	private boolean autoBanIP;
 	private DynmapAPI dynmap = null;
 	private boolean dynmapEnabled;
 
@@ -85,6 +86,7 @@ public class CrazyPunisher extends CrazyPlugin
 			jailcenter = jailworld.getSpawnLocation();
 		jailrange = config.getInt("jail.range", 5);
 		jailsphere = new Sphere(jailcenter, jailrange);
+		autoBanIP = config.getBoolean("autoBanIP", true);
 		dynmapEnabled = config.getBoolean("dynmapEnabled", true);
 		if (dynmapEnabled)
 			dynmap = (DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap");
@@ -143,6 +145,7 @@ public class CrazyPunisher extends CrazyPlugin
 		config.set("player.banned", null);
 		ObjectSaveLoadHelper.saveLocation(config, "jail.", jailcenter);
 		config.set("jail.range", jailrange);
+		config.set("autoBanIP", autoBanIP);
 		if (dynmap != null)
 			config.set("dynmapEnabled", dynmapEnabled);
 		for (OfflinePlayer player : banned)
@@ -250,6 +253,8 @@ public class CrazyPunisher extends CrazyPlugin
 		if (player instanceof Player)
 		{
 			Player p = (Player) player;
+			if (autoBanIP)
+				getServer().banIP(p.getAddress().getAddress().getHostAddress());
 			p.getInventory().clear();
 			p.setGameMode(GameMode.SURVIVAL);
 			p.getWorld().strikeLightning(p.getLocation());
@@ -296,6 +301,8 @@ public class CrazyPunisher extends CrazyPlugin
 		if (player instanceof Player)
 		{
 			Player p = (Player) player;
+			if (autoBanIP)
+				getServer().banIP(p.getAddress().getAddress().getHostAddress());
 			kick(p, locale.getLocaleMessage(p, "MESSAGE.BAN"));
 		}
 		broadcastLocaleMessage("BROADCAST.BAN", player.getName());
@@ -725,6 +732,11 @@ public class CrazyPunisher extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/crazypunisher jailrange [Range]");
 		}
+	}
+
+	public boolean isAutoBanIPEnabled()
+	{
+		return autoBanIP;
 	}
 
 	public boolean isBanned(final Player player)
