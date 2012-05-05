@@ -400,7 +400,7 @@ public class CrazyPunisher extends CrazyPlugin
 		}
 	}
 
-	public void jail(final OfflinePlayer player, final int duration)
+	public void jail(final OfflinePlayer player, final long duration)
 	{
 		if (player == null)
 			return;
