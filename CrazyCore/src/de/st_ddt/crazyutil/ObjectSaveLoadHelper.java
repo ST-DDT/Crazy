@@ -3,12 +3,17 @@ package de.st_ddt.crazyutil;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 
@@ -19,6 +24,7 @@ public final class ObjectSaveLoadHelper
 	{
 	}
 
+	// Location
 	public static Location loadLocation(final ConfigurationSection config, World world)
 	{
 		if (config == null)
@@ -51,7 +57,8 @@ public final class ObjectSaveLoadHelper
 		if (saveWorld)
 			config.set(path + "world", location.getWorld().getName());
 	}
-	
+
+	// Date
 	public static Date StringToDate(String date, Date defaultDate)
 	{
 		if (date == null)
@@ -65,14 +72,67 @@ public final class ObjectSaveLoadHelper
 			return defaultDate;
 		}
 	}
-	
+
 	public static String DateToString(Date lastAction)
 	{
 		return CrazyPlugin.DateFormat.format(lastAction);
 	}
-	
-	/* Load Objects*/
 
+	// ItemStack
+	public static ItemStack loadItemStack(ConfigurationSection config)
+	{
+		ItemStack item = new ItemStack(config.getInt("id"), config.getInt("amount", 1));
+		if (config.contains("durability"))
+			item.setDurability((short) config.getInt("durability"));
+		if (config.contains("enchantments"))
+			item.addEnchantments(loadEnchantments(config.getConfigurationSection("enchantments")));
+		return item;
+	}
+
+	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item)
+	{
+		saveItemStack(config, path, item, true, true);
+	}
+
+	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item, boolean includeDurability)
+	{
+		saveItemStack(config, path, item, includeDurability, true);
+	}
+
+	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item, boolean includeDurability, boolean includeEnchantments)
+	{
+		config.set(path + "id", item.getTypeId());
+		config.set(path + "amount", item.getAmount());
+		if (includeDurability)
+			config.set(path + "durability", item.getDurability());
+		else
+			config.set(path + "durability", null);
+		config.set(path + "enchantments", null);
+		if (includeEnchantments)
+			saveEnchantments(config, path + "enchantments.", item);
+	}
+
+	// Enchantments
+	public static Map<Enchantment, Integer> loadEnchantments(ConfigurationSection config)
+	{
+		Map<Enchantment, Integer> map = new LinkedHashMap<Enchantment, Integer>();
+		for (String name : config.getKeys(false))
+			map.put(Enchantment.getByName(name), config.getInt(name));
+		return map;
+	}
+
+	public static void saveEnchantments(ConfigurationSection config, String path, ItemStack item)
+	{
+		saveEnchantments(config, path, item.getEnchantments());
+	}
+
+	public static void saveEnchantments(ConfigurationSection config, String path, Map<Enchantment, Integer> enchantments)
+	{
+		for (Entry<Enchantment, Integer> entry : enchantments.entrySet())
+			config.set(path + entry.getKey().getName(), entry.getValue());
+	}
+
+	/* Load Objects */
 	/*
 	 * Load a list of Objects
 	 */
