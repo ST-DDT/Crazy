@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 
@@ -81,7 +82,7 @@ public final class ObjectSaveLoadHelper
 	// ItemStack
 	public static ItemStack loadItemStack(ConfigurationSection config)
 	{
-		ItemStack item = new ItemStack(config.getInt("id"), config.getInt("amount", 1));
+		ItemStack item = new MaterialData(config.getInt("id"), (byte) config.getInt("data")).toItemStack(config.getInt("amount", 1));
 		if (config.contains("durability"))
 			item.setDurability((short) config.getInt("durability"));
 		if (config.contains("enchantments"))
@@ -102,6 +103,7 @@ public final class ObjectSaveLoadHelper
 	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item, boolean includeDurability, boolean includeEnchantments)
 	{
 		config.set(path + "id", item.getTypeId());
+		config.set(path + "data", item.getData().getData());
 		config.set(path + "amount", item.getAmount());
 		if (includeDurability)
 			config.set(path + "durability", item.getDurability());
