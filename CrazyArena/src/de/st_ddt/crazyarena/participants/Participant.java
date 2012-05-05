@@ -33,8 +33,8 @@ public class Participant
 		return participantType;
 	}
 
-	public void setParticipantType(ParticipantType waiting)
+	public void setParticipantType(ParticipantType type)
 	{
-		this.participantType = waiting;
+		this.participantType = type;
 	}
 }
