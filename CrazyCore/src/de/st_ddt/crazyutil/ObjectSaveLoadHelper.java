@@ -102,6 +102,8 @@ public final class ObjectSaveLoadHelper
 
 	public static void saveItemStack(ConfigurationSection config, String path, ItemStack item, boolean includeDurability, boolean includeEnchantments)
 	{
+		if (item == null)
+			return;
 		config.set(path + "id", item.getTypeId());
 		config.set(path + "data", item.getData().getData());
 		config.set(path + "amount", item.getAmount());
