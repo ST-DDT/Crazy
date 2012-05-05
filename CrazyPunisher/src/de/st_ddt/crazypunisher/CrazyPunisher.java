@@ -402,16 +402,21 @@ public class CrazyPunisher extends CrazyPlugin
 
 	public void jail(final OfflinePlayer player, final long duration)
 	{
-		if (player == null)
-			return;
 		Date time = new Date();
 		time.setTime(time.getTime() + duration * 1000);
-		jailed.setDataVia1(player, time);
+		jail(player, time);
+	}
+
+	public void jail(final OfflinePlayer player, final Date date)
+	{
+		if (player == null)
+			return;
+		jailed.setDataVia1(player, date);
 		save();
 		if (player instanceof Player)
 			keepJailed((Player) player);
 		broadcastLocaleMessage("BROADCAST.JAIL", player.getName());
-		getServer().getPluginManager().callEvent(new CrazyPunisherJailEvent(player, time));
+		getServer().getPluginManager().callEvent(new CrazyPunisherJailEvent(player, date));
 	}
 
 	private void commandUnjail(final CommandSender sender, final String[] args) throws CrazyCommandException
