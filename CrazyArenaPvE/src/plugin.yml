@@ -1,0 +1,8 @@
+name: CrazyArena_PvE
+main: de.st_ddt.crazyarena.CrazyArenaPvE
+author: ST-DDT
+version: C6_A0.1_0.1
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore,CrazyArena]
+description: >
+            PvE Arena Plugin
