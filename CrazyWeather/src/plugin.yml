@@ -84,6 +84,8 @@ permissions:
   crazyweather.thunder.toolchange: 
     description: Allow changing thunderstrikes tool
     default: false
+    children: 
+      crazyweather.thunder.tool: true
   crazyweather.thunder.player: 
     description: Allow casting thunderstrikes on player
     default: op
