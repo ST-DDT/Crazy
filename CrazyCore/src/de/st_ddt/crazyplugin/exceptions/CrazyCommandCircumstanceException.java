@@ -42,6 +42,6 @@ public class CrazyCommandCircumstanceException extends CrazyCommandException
 				sender.sendMessage(header + locale.getLocaleMessage(sender, "NOW", current));
 		}
 		else
-			sender.sendMessage(header + locale.getLocaleMessage(sender, "ERROR", current));
+			sender.sendMessage(header + locale.getLocaleMessage(sender, "ERROR"));
 	}
 }

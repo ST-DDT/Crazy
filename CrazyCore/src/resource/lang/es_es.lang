@@ -24,6 +24,10 @@ CRAZYEXCEPTION.COMMAND.CIRCUMSTANCE.MUSTBE=Comando sólo puede ser ejecutado, $0
 CRAZYEXCEPTION.COMMAND.CIRCUMSTANCE.NOW=(En la actualidad: $0$) 
 CRAZYEXCEPTION.COMMAND.CIRCUMSTANCE.CONSOLE=Este comando es para la consola de utilizar sólo! 
 CRAZYEXCEPTION.COMMAND.CIRCUMSTANCE.PLAYER=Este comando es para el jugador utilice sólo! 
+
+
+
+
 CRAZYEXCEPTION.COMMAND.NOSUCH.HEAD=Error al ejecutar el comando: 
 CRAZYEXCEPTION.COMMAND.NOSUCH.ERROR=$0$ $1$ no se encontró! 
 CRAZYEXCEPTION.COMMAND.USAGE.HEAD=Error al ejecutar el comando: 
