@@ -14,12 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
@@ -30,20 +27,12 @@ import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public abstract class CrazyPlugin extends JavaPlugin implements Named
+public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 {
 
-	private String chatHeader = null;
 	protected CrazyLocale locale = null;
 	public final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	private static final PairList<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
-
-	public final String getChatHeader()
-	{
-		if (chatHeader == null)
-			chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + getDescription().getName() + ChatColor.RED + "] " + ChatColor.WHITE;
-		return chatHeader;
-	}
 
 	public static ArrayList<CrazyPlugin> getCrazyPlugins()
 	{
@@ -188,14 +177,14 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 			loadLanguage(language);
 		checkLocale();
 		load();
-		consoleLog("Version " + getDescription().getVersion() + " enabled");
+		super.onEnable();
 	}
 
 	@Override
 	public void onDisable()
 	{
 		save();
-		consoleLog("disabled");
+		super.onDisable();
 	}
 
 	public void save()
@@ -210,11 +199,6 @@ public abstract class CrazyPlugin extends JavaPlugin implements Named
 	public void checkLocale()
 	{
 		locale = CrazyLocale.getPluginHead(this);
-	}
-
-	public final void consoleLog(String message)
-	{
-		getServer().getConsoleSender().sendMessage(getChatHeader() + message);
 	}
 
 	public final void sendLocaleMessage(final String localepath, final CommandSender target, final Object... args)

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
@@ -72,7 +74,8 @@ public class CrazyCore extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/crazylist [Page]");
 		}
-		ArrayList<CrazyPlugin> list = getCrazyPlugins();
+		ArrayList<JavaPlugin> list = new ArrayList<JavaPlugin>();
+		list.addAll(getCrazyLightPlugins());
 		int lastIndex = list.size();
 		if (lastIndex + 9 < page * 10)
 		{
