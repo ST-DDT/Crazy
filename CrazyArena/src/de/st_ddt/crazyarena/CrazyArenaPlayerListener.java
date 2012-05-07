@@ -1,6 +1,7 @@
 package de.st_ddt.crazyarena;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,38 +11,37 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyutil.PairList;
 
 public class CrazyArenaPlayerListener implements Listener
 {
 
-	private PairList<Player, Arena> rejoins = null;
-
-	public CrazyArenaPlayerListener()
-	{
-		rejoins = new PairList<Player, Arena>();
-	}
+	private final HashMap<String, Rejoin> rejoins = new HashMap<String, Rejoin>();
 
 	@EventHandler
 	public void PlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		if (rejoins.findDataVia1(player) != null)
+		Rejoin rejoin = rejoins.get(player.getName());
+		if (rejoin != null)
 		{
+			rejoins.remove(player.getName());
+			// Arena aktiv?
+			if (!rejoin.getArena().isEnabled())
+				return;
 			Date now = new Date();
-			Date last = new Date();
-			last.setTime(player.getLastPlayed() + 10 * 60 * 1000);
-			// 10 Minuten Zeit für rejoin
-			if (last.after(now))
-				try
-				{
-					rejoins.findDataVia1(player).join(player, true);
-				}
-				catch (CrazyCommandException e)
-				{
-					// e.printStackTrace();
-				}
-			rejoins.removeDataVia1(player);
+			Date last = new Date(player.getLastPlayed() + 10 * 60 * 1000);
+			// noch gleicher Durchlauf?
+			if (rejoin.getRun() != rejoin.getArena().getRunNumber())
+				return;
+			// 10 Minuten Zeit fÃ¼r rejoin
+			if (last.before(now))
+				return;
+			try
+			{
+				rejoin.getArena().join(player, true);
+			}
+			catch (CrazyCommandException e)
+			{}
 		}
 	}
 
@@ -52,8 +52,32 @@ public class CrazyArenaPlayerListener implements Listener
 		Arena arena = CrazyArena.getPlugin().getArenas().getArena(player);
 		if (arena != null)
 		{
-			rejoins.setDataVia1(player, arena);
+			rejoins.put(player.getName(), new Rejoin(arena));
 			arena.quitgame(player);
+		}
+	}
+
+	private class Rejoin
+	{
+
+		private final Arena arena;
+		private final int run;
+
+		public Rejoin(Arena arena)
+		{
+			super();
+			this.arena = arena;
+			run = arena.getRunNumber();
+		}
+
+		public Arena getArena()
+		{
+			return arena;
+		}
+
+		public int getRun()
+		{
+			return run;
 		}
 	}
 }

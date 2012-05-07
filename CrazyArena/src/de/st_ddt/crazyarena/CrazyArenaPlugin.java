@@ -1,6 +1,7 @@
 package de.st_ddt.crazyarena;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -19,21 +20,21 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 	@Override
 	public void onLoad()
 	{
-		CrazyArena.registerArenaType(getArenaType(), getArenaClass());
+		CrazyArena.registerArenaTypes(getArenaTypes());
 		super.onLoad();
 	}
 
+	@Override
+	public void onDisable()
+	{
+		CrazyArena.unregisterArenaType(getArenaTypes().values());
+		super.onDisable();
+	}
+
 	/**
-	 * Gibt den Arenatyp zurück
+	 * Gibt die Arenatyp zurÃ¼ck
 	 * 
 	 * @return Arenatypen
 	 */
-	public abstract String getArenaType();
-
-	/**
-	 * Gibt die Arenaklasse zurück
-	 * 
-	 * @return Arenaklassen
-	 */
-	public abstract Class<? extends Arena> getArenaClass();
+	public abstract Map<String, Class<? extends Arena>> getArenaTypes();
 }

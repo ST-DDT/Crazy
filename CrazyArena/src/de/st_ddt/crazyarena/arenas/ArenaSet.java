@@ -3,7 +3,8 @@ package de.st_ddt.crazyarena.arenas;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -14,13 +15,13 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
-public class ArenaList extends ArrayList<Arena>
+public class ArenaSet extends LinkedHashSet<Arena>
 {
 
 	private static final long serialVersionUID = -2907903782945515247L;
 	private final String arenaDir;
 
-	public ArenaList(FileConfiguration config)
+	public ArenaSet(FileConfiguration config)
 	{
 		arenaDir = CrazyArena.getPlugin().getDataFolder().getPath();
 		new File(arenaDir).mkdir();
@@ -58,7 +59,7 @@ public class ArenaList extends ArrayList<Arena>
 			CrazyArena.getPlugin().consoleLog("Invalid Arenaconfig (Missing type) for Arena " + name);
 			return null;
 		}
-		type = CrazyArena.getArenaTypes().findDataVia1(type).getName();
+		type = CrazyArena.getArenaTypes().get(type).getName();
 		arena = ObjectSaveLoadHelper.load(type, Arena.class, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyarena.arenas");
 		this.add(arena);
 		return arena;
@@ -78,5 +79,25 @@ public class ArenaList extends ArrayList<Arena>
 			if (arena.getName().equalsIgnoreCase(name))
 				return arena;
 		return null;
+	}
+
+	public void removeArena(Arena arena)
+	{
+		this.remove(arena);
+		arena.disable();
+	}
+
+	public void removeArenaType(Class<? extends Arena> clazz)
+	{
+		Iterator<Arena> iterator = this.iterator();
+		while (iterator.hasNext())
+		{
+			Arena arena = iterator.next();
+			if (clazz.isAssignableFrom(arena.getClass()))
+			{
+				iterator.remove();
+				arena.disable();
+			}
+		}
 	}
 }

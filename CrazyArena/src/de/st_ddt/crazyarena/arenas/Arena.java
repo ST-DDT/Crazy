@@ -125,6 +125,10 @@ public abstract class Arena
 		this.region = Geo.load(config.getConfigurationSection("area"), world);
 	}
 
+	public abstract void enable();
+
+	public abstract void disable();
+
 	public void save()
 	{
 		config.set("name", name);
@@ -181,8 +185,7 @@ public abstract class Arena
 				setEnabled(false);
 			}
 			catch (CrazyArenaException e)
-			{
-			}
+			{}
 	}
 
 	public abstract boolean isRunning();
@@ -211,4 +214,9 @@ public abstract class Arena
 	 * @param sender
 	 */
 	public abstract boolean checkArena(CommandSender sender);
+
+	/**
+	 * @return Returns the current run number. (needed for rejoins)
+	 */
+	public abstract int getRunNumber();
 }

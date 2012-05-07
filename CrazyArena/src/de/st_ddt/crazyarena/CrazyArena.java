@@ -1,5 +1,11 @@
 package de.st_ddt.crazyarena;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -8,7 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyarena.arenas.ArenaList;
+import de.st_ddt.crazyarena.arenas.ArenaSet;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
@@ -31,10 +37,10 @@ public class CrazyArena extends CrazyPlugin
 	private static CrazyArena plugin;
 	private CrazyArenaPlayerListener playerListener = null;
 	private CrazyArenaBlockListener blocklistener = null;
-	private ArenaList arenas = null;
+	private ArenaSet arenas = null;
 	private final PairList<Player, Arena> invitations = new PairList<Player, Arena>();
-	private final  PairList<Player, Arena> selection = new PairList<Player, Arena>();
-	private static PairList<String, Class<? extends Arena>> arenaTypes = new PairList<String, Class<? extends Arena>>();
+	private final PairList<Player, Arena> selection = new PairList<Player, Arena>();
+	private static HashMap<String, Class<? extends Arena>> arenaTypes = new HashMap<String, Class<? extends Arena>>();
 
 	public static CrazyArena getPlugin()
 	{
@@ -51,7 +57,7 @@ public class CrazyArena extends CrazyPlugin
 	{
 		plugin = this;
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
-		this.arenas = new ArenaList(getConfig());
+		this.arenas = new ArenaSet(getConfig());
 		registerHooks();
 		super.onEnable();
 	}
@@ -59,7 +65,10 @@ public class CrazyArena extends CrazyPlugin
 	public void onDisable()
 	{
 		for (Arena arena : arenas)
+		{
 			arena.stop(Bukkit.getConsoleSender(), true);
+			arena.disable();
+		}
 		super.onDisable();
 	}
 
@@ -72,7 +81,7 @@ public class CrazyArena extends CrazyPlugin
 		pm.registerEvents(blocklistener, this);
 	}
 
-	public ArenaList getArenas()
+	public ArenaSet getArenas()
 	{
 		return arenas;
 	}
@@ -254,7 +263,7 @@ public class CrazyArena extends CrazyPlugin
 						invitations.setDataVia1(invited, arena);
 						sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 					}
-				sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, String.valueOf(anz), arena.getName());
+				sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());
 				return true;
 			}
 			else
@@ -272,7 +281,7 @@ public class CrazyArena extends CrazyPlugin
 			invitations.setDataVia1(invited, arena);
 			sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 		}
-		sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, String.valueOf(anz), arena.getName());
+		sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());
 		return true;
 	}
 
@@ -535,22 +544,54 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	public static PairList<String, Class<? extends Arena>> getArenaTypes()
+	public static Map<String, Class<? extends Arena>> getArenaTypes()
 	{
 		return arenaTypes;
 	}
 
-	public static void registerArenaType(String type, Class<? extends Arena> class1)
+	public static void registerArenaType(String type, Class<? extends Arena> clazz)
 	{
-		arenaTypes.setDataVia1(type, class1);
+		arenaTypes.put(type, clazz);
 	}
 
-	public static void registerArenaType(String[] type, Class<? extends Arena>[] class1) throws IndexOutOfBoundsException
+	public static void registerArenaTypes(Map<String, Class<? extends Arena>> types)
 	{
-		if (type.length != class1.length)
-			throw new IndexOutOfBoundsException("Length dismatch (ArenaTypes/Classes");
-		int length = type.length;
-		for (int i = 0; i < length; i++)
-			registerArenaType(type[i], class1[i]);
+		for (Map.Entry<String, Class<? extends Arena>> type : types.entrySet())
+			registerArenaType(type.getKey(), type.getValue());
+	}
+
+	public static void unregisterArenaType(String... types)
+	{
+		for (String type : types)
+		{
+			Class<? extends Arena> clazz = arenaTypes.remove(type);
+			if (clazz != null)
+				if (!arenaTypes.values().contains(clazz))
+					getPlugin().getArenas().removeArenaType(clazz);
+		}
+	}
+
+	public static void unregisterArenaType(Class<? extends Arena>... clazzes)
+	{
+		for (Class<? extends Arena> clazz : clazzes)
+		{
+			Set<Entry<String, Class<? extends Arena>>> entries = arenaTypes.entrySet();
+			for (Entry<String, Class<? extends Arena>> entry : entries)
+				if (entry.getValue().equals(arenaTypes))
+					arenaTypes.remove(entry);
+			getPlugin().getArenas().removeArenaType(clazz);
+		}
+	}
+
+	public static void unregisterArenaType(Collection<Class<? extends Arena>> clazzes)
+	{
+		for (Class<? extends Arena> clazz : clazzes)
+		{
+			Set<Entry<String, Class<? extends Arena>>> entries = arenaTypes.entrySet();
+			for (Entry<String, Class<? extends Arena>> entry : entries)
+				if (entry.getValue().equals(arenaTypes))
+					arenaTypes.remove(entry);
+			getPlugin().getArenas().removeArenaType(clazz);
+		}
 	}
 }
