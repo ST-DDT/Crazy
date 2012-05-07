@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PairList<S, T> extends ArrayList<Pair<S, T>>
 {
@@ -72,22 +73,18 @@ public class PairList<S, T> extends ArrayList<Pair<S, T>>
 
 	public void removeDataVia1(S data1)
 	{
-		for (int i = 0; i < size(); i++)
-			if (get(i).getData1().equals(data1))
-			{
-				remove(i);
-				return;
-			}
+		Iterator<Pair<S, T>> it = this.iterator();
+		while (it.hasNext())
+			if (it.next().getData1().equals(data1))
+				it.remove();
 	}
 
 	public void removeDataVia2(T data2)
 	{
-		for (int i = 0; i < size(); i++)
-			if (get(i).getData2().equals(data2))
-			{
-				remove(i);
-				return;
-			}
+		Iterator<Pair<S, T>> it = this.iterator();
+		while (it.hasNext())
+			if (it.next().getData2().equals(data2))
+				it.remove();
 	}
 
 	public ArrayList<S> getData1List()
