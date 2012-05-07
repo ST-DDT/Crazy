@@ -282,6 +282,18 @@ public class ArenaPvE extends Arena
 				startRound();
 	}
 
+	public void PlayerDeath(final Player player)
+	{
+		ParticipantPvE participant = (ParticipantPvE) getParticipants().getParticipant(player);
+		if (participant == null)
+			return;
+		if (participant.getParticipantType() != ParticipantType.PARTICIPANT)
+			return;
+		participant.setParticipantType(ParticipantType.SPECTATOR);
+		spectatorspawns.teleport(player);
+		stop(null, false);
+	}
+
 	@Override
 	public void enable()
 	{

@@ -29,4 +29,10 @@ public class ArenaPvEEntityListener implements Listener
 			return;
 		arena.removeEnemy(entity);
 	}
+
+	@EventHandler
+	public void PlayerDeathEvent(PlayerDeathEvent event)
+	{
+		arena.PlayerDeath(event.getEntity());
+	}
 }
