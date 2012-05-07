@@ -35,6 +35,6 @@ public class CrazyArenaTeamExceedingMemberLimitException extends CrazyArenaTeamE
 	public void print(CommandSender sender, String header)
 	{
 		super.print(sender, header);
-		sender.sendMessage(header+locale.getLocaleMessage(sender,"MEMBERS", String.valueOf(maxSize)));
+		sender.sendMessage(header+locale.getLocaleMessage(sender,"MEMBERS", maxSize));
 	}
 }

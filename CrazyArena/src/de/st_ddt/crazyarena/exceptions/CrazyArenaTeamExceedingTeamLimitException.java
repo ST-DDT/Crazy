@@ -32,6 +32,6 @@ public class CrazyArenaTeamExceedingTeamLimitException extends CrazyArenaTeamExc
 	public void print(CommandSender sender, String header)
 	{
 		super.print(sender, header);
-		sender.sendMessage(header + locale.getLocaleMessage(sender, "TEAMS", String.valueOf(maxAmount)));
+		sender.sendMessage(header + locale.getLocaleMessage(sender, "TEAMS", maxAmount));
 	}
 }
