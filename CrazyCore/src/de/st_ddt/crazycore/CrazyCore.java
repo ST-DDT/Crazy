@@ -79,13 +79,13 @@ public class CrazyCore extends CrazyPlugin
 		int lastIndex = list.size();
 		if (lastIndex + 9 < page * 10)
 		{
-			sendLocaleMessage("COMMAND.PLUGINLIST.EMPTYPAGE", sender, String.valueOf(page));
+			sendLocaleMessage("COMMAND.PLUGINLIST.EMPTYPAGE", sender, page);
 			return;
 		}
 		lastIndex = Math.min(lastIndex, page * 10);
-		sendLocaleMessage("COMMAND.PLUGINLIST.HEADER", sender, String.valueOf(page));
+		sendLocaleMessage("COMMAND.PLUGINLIST.HEADER", sender,page);
 		for (int i = page * 10 - 10; i < lastIndex; i++)
-			sendLocaleMessage("COMMAND.PLUGINLIST.ENTRY", sender, String.valueOf(i + 1), list.get(i).getDescription().getName(), list.get(i).getDescription().getVersion());
+			sendLocaleMessage("COMMAND.PLUGINLIST.ENTRY", sender, i + 1, list.get(i).getDescription().getName(), list.get(i).getDescription().getVersion());
 	}
 
 	private void commandLanguage(final CommandSender sender, final String[] args) throws CrazyCommandException

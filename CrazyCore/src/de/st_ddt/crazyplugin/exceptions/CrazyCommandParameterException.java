@@ -34,7 +34,7 @@ public class CrazyCommandParameterException extends CrazyCommandException
 	public void print(CommandSender sender, String header)
 	{
 		super.print(sender, header);
-		sender.sendMessage(header + locale.getLocaleMessage(sender, "ERROR", String.valueOf(number), type));
+		sender.sendMessage(header + locale.getLocaleMessage(sender, "ERROR", number, type));
 		for (String allow : allowed)
 			sender.sendMessage(header + allow);
 	}
