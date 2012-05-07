@@ -18,27 +18,31 @@ public class CrazyArenaPlayerListener implements Listener
 	private final HashMap<String, Rejoin> rejoins = new HashMap<String, Rejoin>();
 
 	@EventHandler
-	public void PlayerJoin(PlayerJoinEvent event)
+	public void PlayerJoin(final PlayerJoinEvent event)
 	{
-		Player player = event.getPlayer();
-		Rejoin rejoin = rejoins.get(player.getName());
+		final Player player = event.getPlayer();
+		final Rejoin rejoin = rejoins.get(player.getName());
 		if (rejoin != null)
 		{
+			final Arena arena = rejoin.getArena();
 			rejoins.remove(player.getName());
 			// Arena aktiv?
-			if (!rejoin.getArena().isEnabled())
+			if (!arena.isEnabled())
 				return;
-			Date now = new Date();
-			Date last = new Date(player.getLastPlayed() + 10 * 60 * 1000);
+			// Arena läuft?
+			if (!arena.isRunning())
+				return;
 			// noch gleicher Durchlauf?
-			if (rejoin.getRun() != rejoin.getArena().getRunNumber())
+			if (rejoin.getRun() != arena.getRunNumber())
 				return;
+			final Date now = new Date();
+			final Date last = new Date(player.getLastPlayed() + 10 * 60 * 1000);
 			// 10 Minuten Zeit für rejoin
 			if (last.before(now))
 				return;
 			try
 			{
-				rejoin.getArena().join(player, true);
+				arena.join(player, true);
 			}
 			catch (CrazyCommandException e)
 			{}
@@ -46,10 +50,10 @@ public class CrazyArenaPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerQuit(PlayerQuitEvent event)
+	public void PlayerQuit(final PlayerQuitEvent event)
 	{
-		Player player = event.getPlayer();
-		Arena arena = CrazyArena.getPlugin().getArenas().getArena(player);
+		final Player player = event.getPlayer();
+		final Arena arena = CrazyArena.getPlugin().getArenas().getArena(player);
 		if (arena != null)
 		{
 			rejoins.put(player.getName(), new Rejoin(arena));
@@ -57,7 +61,7 @@ public class CrazyArenaPlayerListener implements Listener
 		}
 	}
 
-	private class Rejoin
+	private final class Rejoin
 	{
 
 		private final Arena arena;
