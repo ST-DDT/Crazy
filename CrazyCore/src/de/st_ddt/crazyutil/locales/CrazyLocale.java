@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -26,6 +25,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	private final String name;
 	private PairList<String, String> localeTexts;
 	private final CrazyLocale parent;
+	private CrazyLocale alternative = null;
 
 	public final static CrazyLocale getLocaleHead()
 	{
@@ -80,6 +80,19 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		if (parent == null)
 			return name;
 		return parent.getPath() + "." + name;
+	}
+
+	// Be carefull and avoid loops
+	public void setAlternative(CrazyLocale alternative)
+	{
+		this.alternative = alternative;
+		CrazyLocale locale;
+		for (Pair<String, CrazyLocale> subPath : alternative)
+		{
+			locale = this.findDataVia1(subPath.getData1());
+			if (locale != null)
+				locale.setAlternative(subPath.getData2());
+		}
 	}
 
 	public String getLocaleMessage(CommandSender sender, String localePath, Object... args)
@@ -150,7 +163,14 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		try
 		{
 			for (String section : path.split("\\."))
+			{
 				locale = locale.findDataVia1(section);
+				if (locale == null)
+					if (alternative == null)
+						throw new NullPointerException();
+					else
+						locale = alternative.findDataVia1(section);
+			}
 			if (locale == null)
 				throw new NullPointerException();
 		}
@@ -158,6 +178,21 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		{
 			System.out.println("[CrazyLocale] Missing language entry " + this.getPath() + "." + path);
 			return missing;
+		}
+		return locale;
+	}
+
+	public CrazyLocale getSecureLanguageEntry(String path)
+	{
+		path = path.toUpperCase();
+		CrazyLocale locale = this;
+		CrazyLocale parent = this;
+		for (String section : path.split("\\."))
+		{
+			locale = parent.findDataVia1(section);
+			if (locale == null)
+				locale = parent.setDataVia1(section, new CrazyLocale(parent, section)).getData2();
+			parent = locale;
 		}
 		return locale;
 	}
