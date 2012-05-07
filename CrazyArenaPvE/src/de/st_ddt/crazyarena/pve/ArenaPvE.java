@@ -1,12 +1,16 @@
 package de.st_ddt.crazyarena.pve;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginManager;
+
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.classes.ParticipantClass;
 import de.st_ddt.crazyarena.participants.Participant;
@@ -28,7 +32,7 @@ public class ArenaPvE extends Arena
 	protected final SpawnList arenaspawns = new SpawnList(world);
 	protected final SpawnList lobbyspawns = new SpawnList(world);
 	protected final SpawnList spectatorspawns = new SpawnList(world);
-	protected final ArrayList<Creature> monsters = new ArrayList<Creature>();
+	protected final HashSet<Creature> monsters = new HashSet<Creature>();
 	protected final RoundTree rounds = new RoundTree(this);
 	protected ParticipantClass autoPartipantClass;
 	protected boolean running;
@@ -38,6 +42,9 @@ public class ArenaPvE extends Arena
 	private boolean clearWaves;
 	private long roundTime;
 	private boolean autoStartNext;
+	protected int run;
+	// Listener
+	private ArenaPvEEntityListener entityListener;
 
 	public ArenaPvE(FileConfiguration config)
 	{
@@ -131,11 +138,27 @@ public class ArenaPvE extends Arena
 				leave(participant.getPlayer(), true);
 			}
 			catch (CrazyCommandException e)
-			{
-			}
+			{}
 		running = true;
 		round = 0;
+		registerGameHooks();
+		run++;
 		startRound();
+	}
+
+	private void registerGameHooks()
+	{
+		unregisterGameHooks();
+		PluginManager pm = plugin.getServer().getPluginManager();
+		entityListener = new ArenaPvEEntityListener(this);
+		pm.registerEvents(entityListener, plugin);
+	}
+
+	private void unregisterGameHooks()
+	{
+		if (entityListener != null)
+			HandlerList.unregisterAll(entityListener);
+		entityListener = null;
 	}
 
 	public void startRound()
@@ -153,14 +176,14 @@ public class ArenaPvE extends Arena
 		delayTimer = new ArenaPvEDelayedRun(this);
 		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, delayTimer, delayTime);
 		if (round != 0)
-			plugin.sendLocaleMessage("ARENAMONSTERFIGHT.ROUND.FINSIHED", participants.getPlayers(), String.valueOf(round));
+			plugin.sendLocaleMessage("ARENAMONSTERFIGHT.ROUND.FINSIHED", participants.getPlayers(), round);
 	}
 
 	public void delayedStartRound()
 	{
 		round++;
 		rounds.getRound(round).activate(round);
-		plugin.sendLocaleMessage("ARENAMONSTERFIGHT.ROUND.STARTED", participants.getPlayers(), String.valueOf(round));
+		plugin.sendLocaleMessage("ARENAMONSTERFIGHT.ROUND.STARTED", participants.getPlayers(), round);
 		if (autoStartNext)
 		{
 			delayTimer = new ArenaPvEDelayedNext(this);
@@ -184,6 +207,7 @@ public class ArenaPvE extends Arena
 		if (!checkFinished() && !force)
 			return;
 		running = false;
+		unregisterGameHooks();
 		for (Participant participant : participants)
 		{
 			if (participant.getParticipantType() != ParticipantType.PARTICIPANT)
@@ -244,5 +268,36 @@ public class ArenaPvE extends Arena
 	public void addEnemy(Creature entity)
 	{
 		monsters.add(entity);
+	}
+
+	public boolean containsEnemy(Entity entity)
+	{
+		return monsters.contains(entity);
+	}
+
+	public void removeEnemy(Entity entity)
+	{
+		if (monsters.remove(entity))
+			if (monsters.size() == 0)
+				startRound();
+	}
+
+	@Override
+	public void enable()
+	{
+		// EDIT registerArenaHooks();
+	}
+
+	@Override
+	public void disable()
+	{
+		unregisterGameHooks();
+		// unregisterArenaHooks();
+	}
+
+	@Override
+	public int getRunNumber()
+	{
+		return run;
 	}
 }
