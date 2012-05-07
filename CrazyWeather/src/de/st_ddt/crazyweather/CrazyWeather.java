@@ -134,7 +134,7 @@ public class CrazyWeather extends CrazyPlugin
 			switch (args.length)
 			{
 				case 0:
-					sendLocaleMessage("THUNDERTOOL.GET", sender, new ItemStack(tool).getType().toString(), String.valueOf(tool));
+					sendLocaleMessage("THUNDERTOOL.GET", sender, new ItemStack(tool).getType().toString(), tool);
 					return true;
 				case 1:
 					if (!sender.hasPermission("crazyweather.thunder.toolchange"))
@@ -148,7 +148,7 @@ public class CrazyWeather extends CrazyPlugin
 					{
 						throw new CrazyCommandUsageException("/thundertool", "/thundertool <ToolID>");
 					}
-					sendLocaleMessage("THUNDERTOOL.SET", sender, new ItemStack(tool).getType().toString(), String.valueOf(tool));
+					sendLocaleMessage("THUNDERTOOL.SET", sender, new ItemStack(tool).getType().toString(), tool);
 					return true;
 				default:
 					throw new CrazyCommandUsageException("/thundertool", "/thundertool <ToolID>");
