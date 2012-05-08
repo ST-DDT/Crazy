@@ -1,23 +1,21 @@
 package de.st_ddt.crazycore;
 
-import java.nio.charset.Charset;
-
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-
+import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.CrazyPluginMessageListener;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public class CrazyCoreMessageListener implements PluginMessageListener
+public class CrazyCoreMessageListener extends CrazyPluginMessageListener
 {
 
-	protected final Charset charset = Charset.forName("UTF-8");
+	public CrazyCoreMessageListener(CrazyPlugin plugin)
+	{
+		super(plugin);
+	}
 
 	@Override
-	public void onPluginMessageReceived(final String channel, final Player player, final byte[] bytes)
+	public void pluginMessageRecieved(String channel, Player player, String message)
 	{
-		if (!channel.equals("CrazyCore"))
-			return;
-		String message = new String(bytes, charset);
 		if (message.startsWith("Q_Lang "))
 		{
 			message = message.substring(7);

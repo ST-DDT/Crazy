@@ -40,7 +40,7 @@ public class CrazyCore extends CrazyPlugin
 
 	private void registerHooks()
 	{
-		messageListener = new CrazyCoreMessageListener();
+		messageListener = new CrazyCoreMessageListener(this);
 		final Messenger ms = getServer().getMessenger();
 		ms.registerIncomingPluginChannel(this, "CrazyCore", messageListener);
 	}
