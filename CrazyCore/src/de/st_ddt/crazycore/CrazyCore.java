@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -21,7 +22,7 @@ public class CrazyCore extends CrazyPlugin
 	protected static CrazyCore plugin;
 	protected static final ArrayList<String> defaultLanguages = new ArrayList<String>();
 	protected static String defaultLanguage;
-	private CrazyCoreLanguageListener messageListener;
+	private CrazyCoreMessageListener messageListener;
 
 	public static CrazyCore getPlugin()
 	{
@@ -39,8 +40,9 @@ public class CrazyCore extends CrazyPlugin
 
 	private void registerHooks()
 	{
-		messageListener = new CrazyCoreLanguageListener();
-		getServer().getMessenger().registerIncomingPluginChannel(this, "crazylanguage", messageListener);
+		messageListener = new CrazyCoreMessageListener();
+		final Messenger ms = getServer().getMessenger();
+		ms.registerIncomingPluginChannel(this, "CrazyCore", messageListener);
 	}
 
 	@Override
