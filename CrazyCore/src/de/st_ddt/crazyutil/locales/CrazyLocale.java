@@ -82,10 +82,21 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return parent.getPath() + "." + name;
 	}
 
-	// Be carefull and avoid loops
+	public CrazyLocale getAlternative()
+	{
+		return alternative;
+	}
+
 	public void setAlternative(CrazyLocale alternative)
 	{
 		this.alternative = alternative;
+		updateAlternative();
+	}
+
+	public void updateAlternative()
+	{
+		if (alternative == null)
+			return;
 		CrazyLocale locale;
 		for (Pair<String, CrazyLocale> subPath : alternative)
 		{
@@ -206,7 +217,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		{
 			locale = parent.findDataVia1(section);
 			if (locale == null)
+			{
 				locale = parent.setDataVia1(section, new CrazyLocale(parent, section)).getData2();
+				if (parent.getAlternative() != null)
+					locale.setAlternative(parent.getAlternative().findDataVia1(section));
+			}
 			parent = locale;
 		}
 		locale.setLanguageText(language, ChatHelper.colorise(entry));
