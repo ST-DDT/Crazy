@@ -1,7 +1,10 @@
 package de.st_ddt.crazyarena.arenas;
 
 import java.io.IOException;
+import java.util.Collection;
+
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -15,7 +18,9 @@ import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantList;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.geo.Geo;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public abstract class Arena
 {
@@ -25,9 +30,11 @@ public abstract class Arena
 	protected boolean enabled;
 	protected boolean edit;
 	protected Geo region;
+	protected CrazyLocale locale;
 	protected final ParticipantList participants = new ParticipantList(this);
 	protected FileConfiguration config;
 	protected final CrazyArena plugin = CrazyArena.getPlugin();
+	private String chatHeader = null;
 
 	public Arena(FileConfiguration config)
 	{
@@ -36,6 +43,12 @@ public abstract class Arena
 		this.world = Bukkit.getWorld(config.getString("world"));
 		this.config = config;
 		this.edit = false;
+		this.region = Geo.load(config.getConfigurationSection("region"), world);
+		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
+		CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + getArenaTypeLocaleDefault().toUpperCase());
+		this.locale.setAlternative(typeLocale);
+		CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA.DEFAULT");
+		typeLocale.setAlternative(defaultLocale);
 		load();
 	}
 
@@ -47,6 +60,18 @@ public abstract class Arena
 		this.config = new YamlConfiguration();
 		this.enabled = false;
 		this.edit = false;
+	}
+
+	public final String getChatHeader()
+	{
+		if (chatHeader == null)
+			chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + "Arena_" + getName() + ChatColor.RED + "] " + ChatColor.WHITE;
+		return chatHeader;
+	}
+
+	public CrazyLocale getLocale()
+	{
+		return locale;
 	}
 
 	public Participant getParticipant(Player player)
@@ -153,6 +178,8 @@ public abstract class Arena
 
 	public abstract String getArenaType();
 
+	protected abstract String getArenaTypeLocaleDefault();
+
 	public final World getWorld()
 	{
 		return world;
@@ -188,6 +215,11 @@ public abstract class Arena
 			{}
 	}
 
+	public CrazyArena getPlugin()
+	{
+		return plugin;
+	}
+
 	public abstract boolean isRunning();
 
 	public boolean command(Player player, String commandLabel, String[] args) throws CrazyCommandException
@@ -219,4 +251,36 @@ public abstract class Arena
 	 * @return Returns the current run number. (needed for rejoins)
 	 */
 	public abstract int getRunNumber();
+
+	public final void sendLocaleMessage(final String localepath, final CommandSender target, final Object... args)
+	{
+		sendLocaleMessage(getLocale().getLanguageEntry(localepath), target, args);
+	}
+
+	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
+	{
+		target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+	}
+
+	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final Object... args)
+	{
+		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
+	}
+
+	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
+	{
+		for (CommandSender target : targets)
+			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+	}
+
+	public final void sendLocaleMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
+	{
+		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
+	}
+
+	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
+	{
+		for (CommandSender target : targets)
+			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+	}
 }

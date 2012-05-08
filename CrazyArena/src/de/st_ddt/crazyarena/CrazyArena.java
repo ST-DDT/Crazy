@@ -184,7 +184,9 @@ public class CrazyArena extends CrazyPlugin
 	{
 		if (player.hasPermission("crazyarena.spectate"))
 			throw new CrazyCommandPermissionException();
-		Arena arena = null;
+		Arena arena = arenas.getArena(player);
+		if (arena != null)
+			throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + arena.getName() + ")");
 		switch (args.length)
 		{
 			case 0:

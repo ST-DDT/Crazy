@@ -3,9 +3,10 @@ package de.st_ddt.crazyarena.participants;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class ParticipantList extends ArrayList<Participant>
 {
@@ -46,7 +47,7 @@ public class ParticipantList extends ArrayList<Participant>
 
 	public Player[] getPlayers()
 	{
-		return (Player[]) getPlayerList().toArray();
+		return getPlayerList().toArray(new Player[this.size()]);
 	}
 
 	public Participant findNearest(Location location)
@@ -60,5 +61,23 @@ public class ParticipantList extends ArrayList<Participant>
 				res = participant;
 			}
 		return res;
+	}
+
+	public ArrayList<CommandSender> getCommandSenderList()
+	{
+		ArrayList<CommandSender> players = new ArrayList<CommandSender>();
+		for (Participant participant : this)
+			players.add(participant.getPlayer());
+		return players;
+	}
+
+	public final void sendLocaleMessage(final String localepath, final Object... args)
+	{
+		arena.sendLocaleMessage(localepath, getCommandSenderList(), args);
+	}
+
+	public final void sendLocaleMessage(final CrazyLocale locale, final Object... args)
+	{
+		arena.sendLocaleMessage(locale, getCommandSenderList(), args);
 	}
 }
