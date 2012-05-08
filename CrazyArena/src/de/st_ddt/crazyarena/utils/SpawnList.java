@@ -34,4 +34,22 @@ public class SpawnList extends ArrayList<Location>
 	{
 		return get((int) (Math.random() * size()));
 	}
+
+	public Location findNearest(Location target)
+	{
+		if (target.getWorld() != world)
+			return null;
+		double dist = Double.MAX_VALUE;
+		Location nearest = null;
+		for (Location location : this)
+		{
+			double temp = location.distance(target);
+			if (temp < dist)
+			{
+				dist = temp;
+				nearest = location;
+			}
+		}
+		return nearest;
+	}
 }

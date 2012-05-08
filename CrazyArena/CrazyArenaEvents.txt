@@ -73,6 +73,6 @@ org.bukkit.event.vehicle.VehicleUpdateEvent
 
 org.bukkit.event.weather.LightningStrikeEvent
 
-//Spielerkommandos prüfen 
+//Spielerkommandos prÃ¼fen 
 PlayerCommandPreprocessEvent (das eher nicht)
 org.bukkit.event.server.ServerCommandEvent

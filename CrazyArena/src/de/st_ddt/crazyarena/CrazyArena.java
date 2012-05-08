@@ -39,7 +39,7 @@ public class CrazyArena extends CrazyPlugin
 	private CrazyArenaBlockListener blocklistener = null;
 	private ArenaSet arenas = null;
 	private final PairList<Player, Arena> invitations = new PairList<Player, Arena>();
-	private final PairList<Player, Arena> selection = new PairList<Player, Arena>();
+	private final HashMap<Player, Arena> selection = new HashMap<Player, Arena>();
 	private static HashMap<String, Class<? extends Arena>> arenaTypes = new HashMap<String, Class<? extends Arena>>();
 
 	public static CrazyArena getPlugin()
@@ -351,7 +351,7 @@ public class CrazyArena extends CrazyPlugin
 		if (sender instanceof ConsoleCommandSender)
 			return false;
 		Player player = (Player) sender;
-		Arena arena = selection.findDataVia1(player);
+		Arena arena = selection.get(player);
 		if (arena == null)
 			throw new CrazyCommandCircumstanceException("when an arena is selected!");
 		if (arena.command(player, commandLabel, args))
@@ -420,22 +420,23 @@ public class CrazyArena extends CrazyPlugin
 		if (arenas.getArena(name) != null)
 			throw new CrazyCommandAlreadyExistsException("Arena", name);
 		String type = args[1];
-		Class<?> clazz = null;
-		try
-		{
-			clazz = Class.forName(type);
-		}
-		catch (ClassNotFoundException e)
-		{
+		Class<?> clazz = arenaTypes.get(type);
+		if (clazz == null)
 			try
 			{
-				clazz = Class.forName("de.st_ddt.crazyarena.arenas." + type);
+				clazz = Class.forName(type);
 			}
-			catch (ClassNotFoundException e2)
+			catch (ClassNotFoundException e)
 			{
-				throw new CrazyCommandNoSuchException("ArenaClass/Type", type);
+				try
+				{
+					clazz = Class.forName("de.st_ddt.crazyarena.arenas." + type);
+				}
+				catch (ClassNotFoundException e2)
+				{
+					throw new CrazyCommandNoSuchException("ArenaClass/Type", type);
+				}
 			}
-		}
 		if (!Arena.class.isAssignableFrom(clazz))
 			throw new CrazyCommandParameterException(2, "ArenaClass/Type");
 		Arena arena = null;
@@ -447,7 +448,12 @@ public class CrazyArena extends CrazyPlugin
 		{
 			throw new CrazyCommandErrorException(e);
 		}
+		if (arena == null)
+			throw new CrazyCommandException();
 		arenas.add(arena);
+		sendLocaleMessage("COMMAND.ARENA.CREATED", player, arena.getName());
+		selection.put(player, arena);
+		sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
 		return true;
 	}
 
@@ -477,7 +483,7 @@ public class CrazyArena extends CrazyPlugin
 		switch (args.length)
 		{
 			case 0:
-				Arena arena = selection.findDataVia1(player);
+				Arena arena = selection.get(player);
 				if (arena == null)
 					sendLocaleMessage("COMMAND.ARENA.SELECTED.NONE", player);
 				else
@@ -487,7 +493,7 @@ public class CrazyArena extends CrazyPlugin
 				arena = arenas.getArena(args[0]);
 				if (arena == null)
 					throw new CrazyCommandNoSuchException("Arena", args[0]);
-				selection.setDataVia1(player, arena);
+				selection.put(player, arena);
 				sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
 				return true;
 			default:
