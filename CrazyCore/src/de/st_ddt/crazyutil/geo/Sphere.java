@@ -9,9 +9,9 @@ public class Sphere extends Geo
 {
 
 	protected Location center;
-	protected int radius;
+	protected double radius;
 
-	public Sphere(Location center, int radius)
+	public Sphere(Location center, double radius)
 	{
 		super(center.getWorld());
 		this.center = center;
@@ -22,7 +22,7 @@ public class Sphere extends Geo
 	{
 		super(config, world);
 		center = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("center"), world);
-		radius = config.getInt("radius.", 1);
+		radius = config.getDouble("radius.", 1);
 	}
 
 	public Location getCenter()
@@ -38,12 +38,12 @@ public class Sphere extends Geo
 		this.world = center.getWorld();
 	}
 
-	public int getRadius()
+	public double getRadius()
 	{
 		return radius;
 	}
 
-	public void setRadius(int radius)
+	public void setRadius(double radius)
 	{
 		this.radius = radius;
 	}

@@ -9,8 +9,8 @@ import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 public class Cuboid extends Geo
 {
 
-	Location location1, location2;
-	Location locationMin, locationMax;
+	protected Location location1, location2;
+	protected Location locationMin, locationMax;
 
 	public Cuboid(ConfigurationSection config, World world)
 	{
@@ -72,5 +72,37 @@ public class Cuboid extends Geo
 		if (locationMin.getZ() < location.getZ() || location.getZ() > locationMax.getZ())
 			return false;
 		return true;
+	}
+
+	public Location getLocation1()
+	{
+		return location1;
+	}
+
+	public void setLocation1(Location location1)
+	{
+		this.location1 = location1;
+		updateCornerLocations();
+	}
+
+	public Location getLocation2()
+	{
+		return location2;
+	}
+
+	public void setLocation2(Location location2)
+	{
+		this.location2 = location2;
+		updateCornerLocations();
+	}
+
+	public Location getLocationMin()
+	{
+		return locationMin;
+	}
+
+	public Location getLocationMax()
+	{
+		return locationMax;
 	}
 }
