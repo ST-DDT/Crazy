@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -217,6 +218,17 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 	}
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
+	{
+		for (CommandSender target : targets)
+			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+	}
+
+	public final void sendLocaleMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
+	{
+		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
+	}
+
+	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
 	{
 		for (CommandSender target : targets)
 			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
