@@ -21,6 +21,7 @@ public class CrazyCore extends CrazyPlugin
 	protected static CrazyCore plugin;
 	protected static final ArrayList<String> defaultLanguages = new ArrayList<String>();
 	protected static String defaultLanguage;
+	private CrazyCoreLanguageListener messageListener;
 
 	public static CrazyCore getPlugin()
 	{
@@ -31,8 +32,15 @@ public class CrazyCore extends CrazyPlugin
 	public void onEnable()
 	{
 		plugin = this;
+		registerHooks();
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
 		super.onEnable();
+	}
+
+	private void registerHooks()
+	{
+		messageListener = new CrazyCoreLanguageListener();
+		getServer().getMessenger().registerIncomingPluginChannel(this, "crazylanguage", messageListener);
 	}
 
 	@Override
@@ -83,7 +91,7 @@ public class CrazyCore extends CrazyPlugin
 			return;
 		}
 		lastIndex = Math.min(lastIndex, page * 10);
-		sendLocaleMessage("COMMAND.PLUGINLIST.HEADER", sender,page);
+		sendLocaleMessage("COMMAND.PLUGINLIST.HEADER", sender, page);
 		for (int i = page * 10 - 10; i < lastIndex; i++)
 			sendLocaleMessage("COMMAND.PLUGINLIST.ENTRY", sender, i + 1, list.get(i).getDescription().getName(), list.get(i).getDescription().getVersion());
 	}
