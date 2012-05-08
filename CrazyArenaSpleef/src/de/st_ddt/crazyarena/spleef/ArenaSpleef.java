@@ -384,8 +384,57 @@ public class ArenaSpleef extends Arena
 		}
 	}
 
-	private void commandSpectatorSpawn(Player player, String[] args)
+	private void commandSpectatorSpawn(Player player, String[] args) throws CrazyCommandException
 	{
-		// EDIT Auto-generated method stub
+		if (player.getWorld() != world)
+			throw new CrazyCommandCircumstanceException("when in same world as arena!");
+		Location location = player.getLocation();
+		switch (args.length)
+		{
+			case 4:
+				int x = 0;
+				int y = 0;
+				int z = 0;
+				try
+				{
+					x = Integer.parseInt(args[1]);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(1, "Integer");
+				}
+				try
+				{
+					y = Integer.parseInt(args[2]);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(2, "Integer");
+				}
+				try
+				{
+					z = Integer.parseInt(args[3]);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(3, "Integer");
+				}
+				location = new Location(world, x, y, z);
+			case 1:
+				if (args[0].equalsIgnoreCase("add"))
+				{
+					spectatorspawns.add(location);
+					sendLocaleMessage("SPECTATORSPAWN.ADD", player, location.getBlockX(), location.getBlockY(), location.getBlockZ());
+				}
+				else if (args[0].equalsIgnoreCase("remove"))
+				{
+					location = spectatorspawns.findNearest(location);
+					spectatorspawns.remove(location);
+					sendLocaleMessage("SPECTATORSPAWN.REMOVE", player, location.getBlockX(), location.getBlockY(), location.getBlockZ());
+				}
+				return;
+			default:
+				throw new CrazyCommandUsageException("/crazyarena <Arena> arenaspawns <add/remove> [x y z]");
+		}
 	}
 }
