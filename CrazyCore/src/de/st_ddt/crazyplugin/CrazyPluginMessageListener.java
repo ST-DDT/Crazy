@@ -33,6 +33,7 @@ public abstract class CrazyPluginMessageListener implements PluginMessageListene
 			if (message.equals("Q_Version"))
 				sendPluginMessage(player, "A_Version " + plugin.getDescription().getVersion());
 		}
+		pluginMessageRecieved(channel, player, message);
 	}
 
 	public abstract void pluginMessageRecieved(final String channel, final Player player, String message);
