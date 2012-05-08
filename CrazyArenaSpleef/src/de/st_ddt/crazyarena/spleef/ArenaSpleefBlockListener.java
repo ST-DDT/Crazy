@@ -1,5 +1,7 @@
 package de.st_ddt.crazyarena.spleef;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,6 +16,9 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+
+import de.st_ddt.crazyarena.participants.Participant;
+import de.st_ddt.crazyarena.participants.ParticipantType;
 
 public class ArenaSpleefBlockListener implements Listener
 {
@@ -33,9 +38,9 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockBreakEvent(BlockBreakEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
-		if (arena.getArena().isInside(event.getBlock().getLocation()))
+		if (arena.getArena().isInside(event.getBlock().getLocation()) && arena.isRunning())
 			return;
 		event.setCancelled(true);
 	}
@@ -43,9 +48,9 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockBurnEvent(BlockBurnEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
-		if (arena.getArena().isInside(event.getBlock().getLocation()))
+		if (arena.getArena().isInside(event.getBlock().getLocation()) && arena.isRunning())
 			return;
 		event.setCancelled(true);
 	}
@@ -53,9 +58,9 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockCanBuildEvent(BlockCanBuildEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
-		if (arena.getArena().isInside(event.getBlock().getLocation()))
+		if (arena.getArena().isInside(event.getBlock().getLocation()) && arena.isRunning())
 			return;
 		event.setBuildable(false);
 	}
@@ -63,17 +68,26 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockDamageEvent(BlockDamageEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
-		if (arena.getArena().isInside(event.getBlock().getLocation()))
-			return;
+		if (arena.getArena().isInside(event.getBlock().getLocation()) && arena.isRunning())
+		{
+			Player player = (Player) event.getPlayer();
+			Participant participant = arena.getParticipant(player);
+			if (participant != null)
+				if (participant.getParticipantType() == ParticipantType.PARTICIPANT)
+				{
+					event.getBlock().setType(Material.AIR);
+					return;
+				}
+		}
 		event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void BlockFadeEvent(BlockFadeEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
 		event.setCancelled(true);
 	}
@@ -81,7 +95,7 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockFormEvent(BlockFormEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
 		event.setCancelled(true);
 	}
@@ -89,7 +103,7 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockFromToEvent(BlockFromToEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
 		event.setCancelled(true);
 	}
@@ -97,7 +111,7 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockGrowEvent(BlockGrowEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
 		event.setCancelled(true);
 	}
@@ -105,9 +119,9 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockIgniteEvent(BlockIgniteEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
-		if (arena.getArena().isInside(event.getBlock().getLocation()))
+		if (arena.getArena().isInside(event.getBlock().getLocation()) && arena.isRunning())
 			return;
 		event.setCancelled(true);
 	}
@@ -115,7 +129,7 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockPlaceEvent(BlockPlaceEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
 		event.setCancelled(true);
 	}
@@ -123,9 +137,9 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void BlockSpreadEvent(BlockSpreadEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
-		if (arena.getArena().isInside(event.getBlock().getLocation()))
+		if (arena.getArena().isInside(event.getBlock().getLocation()) && arena.isRunning())
 			return;
 		event.setCancelled(true);
 	}
@@ -133,9 +147,9 @@ public class ArenaSpleefBlockListener implements Listener
 	@EventHandler
 	public void LeavesDecayEvent(LeavesDecayEvent event)
 	{
-		if (!arena.getRegion().isInside(event.getBlock().getLocation()))
+		if (!arena.getRegion().isInside(event.getBlock().getLocation()) || arena.getEditMode())
 			return;
-		if (arena.getArena().isInside(event.getBlock().getLocation()))
+		if (arena.getArena().isInside(event.getBlock().getLocation()) && arena.isRunning())
 			return;
 		event.setCancelled(true);
 	}

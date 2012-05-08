@@ -1,5 +1,6 @@
 package de.st_ddt.crazyarena.spleef;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,6 +14,8 @@ import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.geo.Geo;
 
@@ -24,7 +27,6 @@ public class ArenaSpleef extends Arena
 	protected final SpawnList arenaspawns = new SpawnList(world);
 	protected final SpawnList spectatorspawns = new SpawnList(world);
 	protected boolean running;
-	protected int round;
 	private long maxTime;
 	protected int run;
 	private ArenaSpleefTimeOut timeOut;
@@ -217,7 +219,6 @@ public class ArenaSpleef extends Arena
 			plugin.sendLocaleMessage("ARENASPLEEF.CHECK.NOARENASPAWNS", sender);
 			return false;
 		}
-		
 		if (spectatorspawns.size() == 0)
 		{
 			plugin.sendLocaleMessage("ARENASPLEEF.CHECK.NOSPECTATORSPAWNS", sender);
@@ -278,5 +279,113 @@ public class ArenaSpleef extends Arena
 	public Geo getOut()
 	{
 		return out;
+	}
+
+	@Override
+	public boolean command(Player player, String commandLabel, String[] args) throws CrazyCommandException
+	{
+		if (this.isRunning())
+			throw new CrazyCommandCircumstanceException("when Arena is idle!");
+		if (this.isEnabled())
+			if (commandLabel.equalsIgnoreCase("region"))
+			{
+				commandRegion(player, args);
+				return true;
+			}
+		if (commandLabel.equalsIgnoreCase("arena"))
+		{
+			commandArena(player, args);
+			return true;
+		}
+		if (commandLabel.equalsIgnoreCase("out"))
+		{
+			commandOut(player, args);
+			return true;
+		}
+		if (commandLabel.equalsIgnoreCase("spawn") || commandLabel.equalsIgnoreCase("arenaspawn") || commandLabel.equalsIgnoreCase("arenaspawns"))
+		{
+			commandArenaSpawn(player, args);
+			return true;
+		}
+		if (commandLabel.equalsIgnoreCase("spectator") || commandLabel.equalsIgnoreCase("spectatorspawn") || commandLabel.equalsIgnoreCase("spectatorspawns"))
+		{
+			commandSpectatorSpawn(player, args);
+			return true;
+		}
+		return false;
+	}
+
+	private void commandRegion(Player player, String[] args)
+	{
+		// EDIT Auto-generated method stub
+	}
+
+	private void commandArena(Player player, String[] args)
+	{
+		// EDIT Auto-generated method stub
+	}
+
+	private void commandOut(Player player, String[] args)
+	{
+		// EDIT Auto-generated method stub
+	}
+
+	private void commandArenaSpawn(Player player, String[] args) throws CrazyCommandException
+	{
+		if (player.getWorld() != world)
+			throw new CrazyCommandCircumstanceException("when in same world as arena!");
+		Location location = player.getLocation();
+		switch (args.length)
+		{
+			case 4:
+				int x = 0;
+				int y = 0;
+				int z = 0;
+				try
+				{
+					x = Integer.parseInt(args[1]);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(1, "Integer");
+				}
+				try
+				{
+					y = Integer.parseInt(args[2]);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(2, "Integer");
+				}
+				try
+				{
+					z = Integer.parseInt(args[3]);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(3, "Integer");
+				}
+				location = new Location(world, x, y, z);
+			case 1:
+				if (args[0].equalsIgnoreCase("add"))
+				{
+					arenaspawns.add(location);
+					sendLocaleMessage("ARENASPAWN.ADD", player, location.getBlockX(), location.getBlockY(), location.getBlockZ());
+				}
+				else if (args[0].equalsIgnoreCase("remove"))
+				{
+					location = arenaspawns.findNearest(location);
+					arenaspawns.remove(location);
+					sendLocaleMessage("ARENASPAWN.REMOVE", player, location.getBlockX(), location.getBlockY(), location.getBlockZ());
+				}
+				return;
+			default:
+				throw new CrazyCommandUsageException("/crazyarena <Arena> arenaspawns <add/remove> [x y z]");
+		}
+	}
+
+	private void commandSpectatorSpawn(Player player, String[] args)
+	{
+		// EDIT Auto-generated method stub
 	}
 }
