@@ -47,7 +47,7 @@ public class CrazyPunisher extends CrazyPlugin
 	public Sphere jailsphere = null;
 	public Location jailcenter = null;
 	private World jailworld = null;
-	private int jailrange = 1;
+	private double jailrange = 1;
 	private boolean autoBanIP;
 	private DynmapAPI dynmap = null;
 	private boolean dynmapEnabled;
@@ -84,7 +84,7 @@ public class CrazyPunisher extends CrazyPlugin
 		jailcenter = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("jail"), jailworld);
 		if (jailcenter == null)
 			jailcenter = jailworld.getSpawnLocation();
-		jailrange = config.getInt("jail.range", 5);
+		jailrange = config.getDouble("jail.range", 5D);
 		jailsphere = new Sphere(jailcenter, jailrange);
 		autoBanIP = config.getBoolean("autoBanIP", true);
 		dynmapEnabled = config.getBoolean("dynmapEnabled", true);
