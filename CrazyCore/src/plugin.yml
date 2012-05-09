@@ -38,12 +38,12 @@ permissions:
     description: Access to all commands (Subsection geo)
     default: op
     children:
-      crazygeo.weimport: true;
+      crazygeo.weimport: true
   crazylanguage.*:
     description: Access to all commands (Subsection language)
     default: op
     children:
-      crazylanguage.advanced: true;
+      crazylanguage.advanced: true
   crazylanguage.advanced:
     description: Allow changing default languages or language reloads.
     default: op
