@@ -13,6 +13,7 @@ import com.sk89q.worldedit.bukkit.WorldEditAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
+import com.sk89q.worldedit.regions.CylinderRegionSelector;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
@@ -79,6 +80,7 @@ public class WorldEditBridge
 			Location location1 = new Location(world, v1.getX(), v1.getY(), v1.getZ());
 			geo = new Sphere(location1, v2.length());
 		}
+		//EDIT WE to Cylinder
 		return geo;
 	}
 
@@ -101,6 +103,17 @@ public class WorldEditBridge
 		{
 			Sphere region = (Sphere) geo;
 			selector = new SphereRegionSelector(bukkitWorld);
+			Location location1 = region.getCenter();
+			Vector v1 = new Vector(location1.getX(), location1.getY(), location1.getZ());
+			Vector v2 = new Vector(location1.getX()+region.getRadius(), location1.getY(), location1.getZ());
+			selector.selectPrimary(v1);
+			selector.selectSecondary(v2);
+		} 
+		else if (geo instanceof Cylinder)
+		{
+			Cylinder region = (Cylinder) geo;
+			selector = new CylinderRegionSelector(bukkitWorld);
+			//EDIT Cylinder to WE
 			Location location1 = region.getCenter();
 			Vector v1 = new Vector(location1.getX(), location1.getY(), location1.getZ());
 			Vector v2 = new Vector(region.getRadius(), 0, 0);

@@ -22,7 +22,7 @@ public class Sphere extends Geo
 	{
 		super(config, world);
 		center = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("center"), world);
-		radius = config.getDouble("radius.", 1);
+		radius = config.getDouble("radius", 1);
 	}
 
 	public Location getCenter()
@@ -58,6 +58,6 @@ public class Sphere extends Geo
 	public void save(ConfigurationSection config, String path)
 	{
 		ObjectSaveLoadHelper.saveLocation(config, path + "center.", center, false);
-		config.set(path + "range", radius);
+		config.set(path + "radius", radius);
 	}
 }
