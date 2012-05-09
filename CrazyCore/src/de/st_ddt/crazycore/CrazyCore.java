@@ -3,17 +3,21 @@ package de.st_ddt.crazycore;
 import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.geo.CrazyGeo;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class CrazyCore extends CrazyPlugin
@@ -22,6 +26,7 @@ public class CrazyCore extends CrazyPlugin
 	protected static CrazyCore plugin;
 	protected static final ArrayList<String> defaultLanguages = new ArrayList<String>();
 	protected static String defaultLanguage;
+	protected CrazyGeo geoHandler;
 	private CrazyCoreMessageListener messageListener;
 
 	public static CrazyCore getPlugin()
@@ -35,6 +40,7 @@ public class CrazyCore extends CrazyPlugin
 		plugin = this;
 		registerHooks();
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
+		geoHandler = new CrazyGeo();
 		super.onEnable();
 	}
 
@@ -56,6 +62,11 @@ public class CrazyCore extends CrazyPlugin
 		if (commandLabel.equalsIgnoreCase("crazylanguage") || commandLabel.equalsIgnoreCase("language"))
 		{
 			commandLanguage(sender, args);
+			return true;
+		}
+		if (commandLabel.equalsIgnoreCase("crazygeo") || commandLabel.equalsIgnoreCase("geo"))
+		{
+			commandGeo(sender, args);
 			return true;
 		}
 		return false;
@@ -115,7 +126,7 @@ public class CrazyCore extends CrazyPlugin
 				sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, args[0]);
 				return;
 			case 2:
-				if (!sender.hasPermission("crazycore.language.advanced"))
+				if (!sender.hasPermission("crazylanguage.advanced"))
 					throw new CrazyCommandPermissionException();
 				if (args[0].equalsIgnoreCase("print"))
 				{
@@ -225,6 +236,17 @@ public class CrazyCore extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/crazylanguage [Language]");
 		}
+	}
+
+	private void commandGeo(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (sender instanceof ConsoleCommandSender)
+			throw new CrazyCommandExecutorException(false);
+		final Player player = (Player) sender;
+		final String[] newArgs = ChatHelper.shiftArray(args, 1);
+		if (args.length == 0)
+			geoHandler.commandInfo(player, newArgs);
+		geoHandler.command(player, args[0], newArgs);
 	}
 
 	@Override

@@ -10,13 +10,17 @@ commands:
   crazylist:
     description: Shows all enabled CrazyPlugins
     usage: /<command>
+  crazycore:
+    description: Some further information and commands.
+    usage: /<command> [Subcommands...]
+  crazygeo:
+    description: Region selection
+    usage: /<command> [Subcommands...]
+    aliases: [geo]
   crazylanguage:
     description: Change languages
     usage: /<command> [Language]
     aliases: [language]
-  crazycore:
-    description: Some further information and commands.
-    usage: /<command> [Subcommands...]
 permissions:
   crazy*.*:
     description: Access to all crazyplugin commands
@@ -26,10 +30,20 @@ permissions:
     default: false
     children:
       crazycore.list: true
-      crazycore.language.advanced: true
+      crazylanguage.*: true
   crazycore.list:
     description: Allow showing all enabled CrazyPlugins
     default: op
-  crazycore.language.advanced:
+  crazygeo.*:
+    description: Access to all commands (Subsection geo)
+    default: op
+    children:
+      crazygeo.weimport: true;
+  crazylanguage.*:
+    description: Access to all commands (Subsection language)
+    default: op
+    children:
+      crazylanguage.advanced: true;
+  crazylanguage.advanced:
     description: Allow changing default languages or language reloads.
     default: op
