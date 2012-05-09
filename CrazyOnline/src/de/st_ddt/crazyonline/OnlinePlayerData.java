@@ -198,6 +198,9 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 
 	public String getName()
 	{
+		OfflinePlayer player = getPlayer();
+		if (player != null)
+			return player.getName();
 		return name;
 	}
 
