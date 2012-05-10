@@ -283,4 +283,9 @@ public class CrazyCore extends CrazyPlugin
 	{
 		return defaultLanguages;
 	}
+
+	public CrazyGeo getGeoHandler()
+	{
+		return geoHandler;
+	}
 }
