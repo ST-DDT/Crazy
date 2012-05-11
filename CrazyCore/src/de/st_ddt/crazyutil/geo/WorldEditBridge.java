@@ -7,12 +7,14 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.Vector2D;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
+import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.CylinderRegionSelector;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.Region;
@@ -80,7 +82,15 @@ public class WorldEditBridge
 			Location location1 = new Location(world, v1.getX(), v1.getY(), v1.getZ());
 			geo = new Sphere(location1, v2.length());
 		}
-		//EDIT WE to Cylinder
+		else if (region instanceof CylinderRegion)
+		{
+			CylinderRegion region2 = (CylinderRegion) region;
+			Vector v1 = region2.getCenter();
+			Vector2D v2 = region2.getRadius();
+			int height = region2.getMaximumY() - region2.getMinimumY() + 1;
+			Location location1 = new Location(world, v1.getX(), region2.getMinimumY(), v1.getZ());
+			geo = new Cylinder(location1, v2.length(), height);
+		}
 		return geo;
 	}
 
@@ -105,18 +115,17 @@ public class WorldEditBridge
 			selector = new SphereRegionSelector(bukkitWorld);
 			Location location1 = region.getCenter();
 			Vector v1 = new Vector(location1.getX(), location1.getY(), location1.getZ());
-			Vector v2 = new Vector(location1.getX()+region.getRadius(), location1.getY(), location1.getZ());
+			Vector v2 = new Vector(location1.getX() + region.getRadius(), location1.getY(), location1.getZ());
 			selector.selectPrimary(v1);
 			selector.selectSecondary(v2);
-		} 
+		}
 		else if (geo instanceof Cylinder)
 		{
 			Cylinder region = (Cylinder) geo;
 			selector = new CylinderRegionSelector(bukkitWorld);
-			//EDIT Cylinder to WE
 			Location location1 = region.getCenter();
 			Vector v1 = new Vector(location1.getX(), location1.getY(), location1.getZ());
-			Vector v2 = new Vector(region.getRadius(), 0, 0);
+			Vector v2 = new Vector(location1.getX() + region.getRadius(), location1.getY() + region.getHeight(), location1.getZ() + region.getRadius());
 			selector.selectPrimary(v1);
 			selector.selectSecondary(v2);
 		}
