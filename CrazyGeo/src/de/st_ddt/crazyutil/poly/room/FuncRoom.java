@@ -12,7 +12,7 @@ public class FuncRoom
 	protected double exponent;
 	protected boolean doubleSided;
 
-	public FuncRoom(FlatRegion region, double height, double exponent, boolean doubleSided)
+	public FuncRoom(final FlatRegion region, final double height, final double exponent, final boolean doubleSided)
 	{
 		super();
 		this.region = region;
@@ -21,7 +21,7 @@ public class FuncRoom
 		this.doubleSided = doubleSided;
 	}
 
-	public FuncRoom(ConfigurationSection config)
+	public FuncRoom(final ConfigurationSection config)
 	{
 		super();
 		this.region = FlatRegion.load(config.getConfigurationSection("region"));
@@ -30,7 +30,7 @@ public class FuncRoom
 		this.doubleSided = config.getBoolean("doubleSided");
 	}
 
-	public boolean isInsideRel(double x, double y, double z)
+	public boolean isInsideRel(final double x, final double y, final double z)
 	{
 		if (0 > y || height < y)
 			return false;
@@ -39,19 +39,21 @@ public class FuncRoom
 
 	protected double heightScale(double y)
 	{
+		if (doubleSided)
+			y = Math.abs(y);
 		if (0 > y || height < y)
 			return 0;
 		return y / height;
 	}
 
-	protected double heightScaledSize(double y)
+	protected double heightScaledSize(final double y)
 	{
 		return Math.pow(heightScale(y), exponent);
 	}
 
-	protected FlatRegion heightScaledRegion(double y)
+	protected FlatRegion heightScaledRegion(final double y)
 	{
-		FlatRegion scaled = region.clone();
+		final FlatRegion scaled = region.clone();
 		scaled.scale(y);
 		return scaled;
 	}
@@ -77,7 +79,7 @@ public class FuncRoom
 		return region;
 	}
 
-	public void setRegion(FlatRegion region)
+	public void setRegion(final FlatRegion region)
 	{
 		this.region = region;
 	}
@@ -87,7 +89,7 @@ public class FuncRoom
 		return height;
 	}
 
-	public void setHeight(double height)
+	public void setHeight(final double height)
 	{
 		this.height = Math.abs(height);
 	}
@@ -97,7 +99,7 @@ public class FuncRoom
 		return exponent;
 	}
 
-	public void setExponent(double exponent)
+	public void setExponent(final double exponent)
 	{
 		this.exponent = Math.abs(exponent);
 	}
@@ -107,7 +109,7 @@ public class FuncRoom
 		return doubleSided;
 	}
 
-	public void setDoubleSided(boolean doubleSided)
+	public void setDoubleSided(final boolean doubleSided)
 	{
 		this.doubleSided = doubleSided;
 	}
@@ -119,7 +121,7 @@ public class FuncRoom
 		save(config, path);
 	}
 
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		region.save(config, path + "region");
 		config.set(path + "height", height);
