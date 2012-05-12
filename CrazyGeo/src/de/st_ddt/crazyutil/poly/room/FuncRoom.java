@@ -49,7 +49,9 @@ public class FuncRoom implements Room
 
 	protected double heightScaledSize(final double y)
 	{
-		return Math.pow(heightScale(y), exponent);
+		if (exponent == 0)
+			return 1;
+		return Math.pow(heightScale(y), 1 / exponent);
 	}
 
 	protected FlatRegion heightScaledRegion(final double y)
