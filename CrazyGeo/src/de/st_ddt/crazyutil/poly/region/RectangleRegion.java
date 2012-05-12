@@ -7,40 +7,40 @@ public class RectangleRegion extends QuadradRegion
 
 	protected double sizeZ;
 
-	public RectangleRegion(double sizeX, double sizeZ)
+	public RectangleRegion(final double sizeX, final double sizeZ)
 	{
 		super(sizeX);
 		this.sizeZ = sizeZ;
 	}
 
-	public RectangleRegion(ConfigurationSection config)
+	public RectangleRegion(final ConfigurationSection config)
 	{
 		super(config);
 		config.getDouble("sizeZ");
 	}
 
 	@Override
-	public boolean isInsideRel(double x, double z)
+	public boolean isInsideRel(final double x, final double z)
 	{
 		return x <= sizeX && z <= sizeZ;
 	}
 
 	@Override
-	public void expand(double x, double z)
+	public void expand(final double x, final double z)
 	{
 		sizeX += Math.abs(x);
 		sizeZ += Math.abs(z);
 	}
 
 	@Override
-	public void contract(double x, double z)
+	public void contract(final double x, final double z)
 	{
 		sizeX = Math.abs(sizeX - x);
 		sizeZ = Math.abs(sizeZ - z);
 	}
 
 	@Override
-	public void scale(double scale)
+	public void scale(final double scale)
 	{
 		sizeX *= Math.abs(scale);
 		sizeZ *= Math.abs(scale);
@@ -53,13 +53,13 @@ public class RectangleRegion extends QuadradRegion
 	}
 
 	@Override
-	public void setSizeZ(double sizeZ)
+	public void setSizeZ(final double sizeZ)
 	{
 		this.sizeZ = Math.abs(sizeZ);
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "sizeZ", sizeZ);

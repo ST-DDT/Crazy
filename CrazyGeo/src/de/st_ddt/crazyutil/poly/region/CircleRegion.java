@@ -82,7 +82,7 @@ public class CircleRegion extends FlatRegion
 	}
 
 	@Override
-	public boolean equals(FlatRegion region)
+	public boolean equals(final FlatRegion region)
 	{
 		if (region instanceof CircleRegion)
 			return ((CircleRegion) region).getRadiusX() == getRadiusX() && ((CircleRegion) region).getRadiusZ() == getRadiusZ();

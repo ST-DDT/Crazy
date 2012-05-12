@@ -9,38 +9,38 @@ public class QuadradRegion extends FlatRegion
 
 	protected double sizeX;
 
-	public QuadradRegion(double size)
+	public QuadradRegion(final double size)
 	{
 		super();
 		this.sizeX = size;
 	}
 
-	public QuadradRegion(ConfigurationSection config)
+	public QuadradRegion(final ConfigurationSection config)
 	{
 		super(config);
 		this.sizeX = config.getDouble("sizeX");
 	}
 
 	@Override
-	public boolean isInsideRel(double x, double z)
+	public boolean isInsideRel(final double x, final double z)
 	{
 		return Math.min(x, z) < sizeX;
 	}
 
 	@Override
-	public void expand(double x, double z)
+	public void expand(final double x, final double z)
 	{
 		sizeX += new Vector2D(x, z).length();
 	}
 
 	@Override
-	public void contract(double x, double z)
+	public void contract(final double x, final double z)
 	{
 		sizeX = Math.abs(sizeX - new Vector2D(x, z).length());
 	}
 
 	@Override
-	public void scale(double scale)
+	public void scale(final double scale)
 	{
 		sizeX *= Math.abs(scale);
 	}
@@ -56,7 +56,7 @@ public class QuadradRegion extends FlatRegion
 		return sizeX;
 	}
 
-	public void setSizeX(double sizeX)
+	public void setSizeX(final double sizeX)
 	{
 		this.sizeX = Math.abs(sizeX);
 	}
@@ -66,13 +66,13 @@ public class QuadradRegion extends FlatRegion
 		return sizeX;
 	}
 
-	public void setSizeZ(double sizeZ)
+	public void setSizeZ(final double sizeZ)
 	{
 		this.sizeX = Math.abs(sizeZ);
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "sizeX", sizeX);
 	}
@@ -84,7 +84,7 @@ public class QuadradRegion extends FlatRegion
 	}
 
 	@Override
-	public boolean equals(FlatRegion region)
+	public boolean equals(final FlatRegion region)
 	{
 		if (region instanceof QuadradRegion)
 			return ((QuadradRegion) region).getSizeX() < getSizeX() && ((QuadradRegion) region).getSizeZ() < getSizeZ();

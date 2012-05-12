@@ -61,11 +61,13 @@ public class RoundRegion extends CircleRegion
 		return radiusX * radiusZ * Math.PI;
 	}
 
+	@Override
 	public double getRadiusZ()
 	{
 		return radiusZ;
 	}
 
+	@Override
 	public void setRadiusZ(final double radiusZ)
 	{
 		this.radiusZ = Math.abs(radiusZ);
