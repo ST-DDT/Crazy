@@ -1,0 +1,49 @@
+name: CrazyGeo
+main: de.st_ddt.crazygeo.CrazyGeo
+author: ST-DDT
+#C*=needed core version
+version: C7_0.1
+softdepend: [PermissionsBukkit]
+description: >
+            CrazyPlugin Core needed for all CrazyPlugins
+commands:
+  crazylist:
+    description: Shows all enabled CrazyPlugins
+    usage: /<command>
+  crazycore:
+    description: Some further information and commands.
+    usage: /<command> [Subcommands...]
+  crazygeo:
+    description: Region selection
+    usage: /<command> [Subcommands...]
+    aliases: [geo]
+  crazylanguage:
+    description: Change languages
+    usage: /<command> [Language]
+    aliases: [language]
+permissions:
+  crazy*.*:
+    description: Access to all crazyplugin commands
+    default: false 
+  crazycore.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazycore.list: true
+      crazylanguage.*: true
+  crazycore.list:
+    description: Allow showing all enabled CrazyPlugins
+    default: op
+  crazygeo.*:
+    description: Access to all commands (Subsection geo)
+    default: op
+    children:
+      crazygeo.weimport: true
+  crazylanguage.*:
+    description: Access to all commands (Subsection language)
+    default: op
+    children:
+      crazylanguage.advanced: true
+  crazylanguage.advanced:
+    description: Allow changing default languages or language reloads.
+    default: op
