@@ -24,6 +24,11 @@ public class PrismRoom extends FuncRoom
 	}
 
 	@Override
+	public void setExponent(double exponent)
+	{
+	}
+
+	@Override
 	public PrismRoom clone()
 	{
 		return new PrismRoom(region, height, doubleSided);

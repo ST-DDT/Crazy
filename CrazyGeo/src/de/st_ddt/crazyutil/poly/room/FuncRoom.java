@@ -89,6 +89,11 @@ public class FuncRoom
 		return height;
 	}
 
+	public double getTotalHeight()
+	{
+		return height * (doubleSided ? 2 : 1);
+	}
+
 	public void setHeight(final double height)
 	{
 		this.height = Math.abs(height);
