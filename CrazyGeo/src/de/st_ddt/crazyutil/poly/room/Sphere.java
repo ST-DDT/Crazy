@@ -26,16 +26,6 @@ public class Sphere extends FuncRoom
 		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) < getRadius();
 	}
 
-	private double getRadius()
-	{
-		return height;
-	}
-
-	@Override
-	public void setExponent(double exponent)
-	{
-	}
-
 	@Override
 	public CircleRegion getRegion()
 	{
@@ -47,6 +37,23 @@ public class Sphere extends FuncRoom
 	{
 		if (region instanceof CircleRegion)
 			super.setRegion(region);
+	}
+
+	@Override
+	public void setHeight(double height)
+	{
+		this.region = new CircleRegion(height);
+		this.height = height;
+	}
+
+	public double getRadius()
+	{
+		return height;
+	}
+
+	@Override
+	public void setExponent(double exponent)
+	{
 	}
 
 	@Override

@@ -21,11 +21,6 @@ public class Elipsoid extends FuncRoom
 	}
 
 	@Override
-	public void setExponent(double exponent)
-	{
-	}
-
-	@Override
 	public CircleRegion getRegion()
 	{
 		return (CircleRegion) super.getRegion();
@@ -39,8 +34,13 @@ public class Elipsoid extends FuncRoom
 	}
 
 	@Override
+	public void setExponent(double exponent)
+	{
+	}
+
+	@Override
 	public Elipsoid clone()
 	{
-		return new Elipsoid((CircleRegion) region, height);
+		return new Elipsoid(((CircleRegion) region).clone(), height);
 	}
 }
