@@ -1,0 +1,3 @@
+﻿CRAZYPROMOTER=CrazyPromoter
+CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ is gepromoveerd (Rank: $1$)
+CRAZYPROMOTER.COMMAND.CHECK.FAIL=Sorry, geen promoties beschikbaar!

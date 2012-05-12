@@ -1,0 +1,8 @@
+﻿CRAZYWEATHER=CrazyWeather
+CRAZYWEATHER.COMMAND.WEATHER.ERROR=Wereldfout (misschien is hij niet geladen)
+CRAZYWEATHER.COMMAND.WEATHER.SUCCESS=Weer succesvol veranderd!
+CRAZYWEATHER.WEATHER.SUN=$0$ heeft nu &Ezonnig &Fweer!
+CRAZYWEATHER.WEATHER.RAIN=$0$ heeft nu &9regenachtig &Fweer!
+CRAZYWEATHER.WEATHER.STORM=$0$ heeft nu &8stormend &Fweer!
+CRAZYWEATHER.THUNDERTOOL.GET=Bliksemtool = &D$0$ ($1$)
+CRAZYWEATHER.THUNDERTOOL.SET=Bliksemtool veranderd in &D$0$ ($1$)
