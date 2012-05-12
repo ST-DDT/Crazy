@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.poly.region.FlatRegion;
 
-public class FuncRoom
+public class FuncRoom implements Room
 {
 
 	protected FlatRegion region;
@@ -138,5 +138,21 @@ public class FuncRoom
 	public FuncRoom clone()
 	{
 		return new FuncRoom(region, height, exponent, doubleSided);
+	}
+
+	@Override
+	public boolean equals(Room room)
+	{
+		// I know thats dirty!
+		if (!(room instanceof FuncRoom))
+			return false;
+		return equals((FuncRoom) room);
+	}
+
+	public boolean equals(FuncRoom room)
+	{
+		if (exponent == 0 && room.getExponent() == 0)
+			return region.equals(room.getRegion()) && getTotalHeight() == room.getTotalHeight();
+		return region.equals(room.getRegion()) && height == room.getHeight() && exponent == room.getExponent() && doubleSided == room.isDoubleSided();
 	}
 }
