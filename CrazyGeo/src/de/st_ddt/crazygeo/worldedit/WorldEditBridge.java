@@ -1,8 +1,7 @@
 package de.st_ddt.crazygeo.worldedit;
 
 import org.bukkit.Bukkit;
-//import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 //import com.sk89q.worldedit.LocalWorld;
@@ -19,8 +18,10 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 //import com.sk89q.worldedit.regions.EllipsoidRegion;
 //import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
-//import com.sk89q.worldedit.regions.SphereRegionSelector;
 
+import de.st_ddt.crazyutil.poly.room.RealRoom;
+
+//import com.sk89q.worldedit.regions.SphereRegionSelector;
 public class WorldEditBridge
 {
 
@@ -92,10 +93,14 @@ public class WorldEditBridge
 	// }
 	// return geo;
 	// }
-	
-	public void setPlayerSelection(Player player, World world, WorldEditRegionable region)
+	public void setPlayerSelection(Player player, RealRoom<WorldEditRoom> room)
 	{
-		BukkitWorld bukkitWorld = new BukkitWorld(world);
+		setPlayerSelection(player, room.getBasis(), room.getRoom());
+	}
+
+	public void setPlayerSelection(Player player, Location location, WorldEditRoom region)
+	{
+		BukkitWorld bukkitWorld = new BukkitWorld(location.getWorld());
 		RegionSelector selector = region.getRegionSelector();
 		we.getSession(player).setRegionSelector(bukkitWorld, selector);
 	}

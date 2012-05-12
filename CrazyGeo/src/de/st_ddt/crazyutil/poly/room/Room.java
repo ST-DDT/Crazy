@@ -17,6 +17,7 @@ public interface Room extends ConfigurationSaveable
 
 	public void save(final ConfigurationSection config, final String path, final boolean includeType);
 
+	@Override
 	public void save(final ConfigurationSection config, final String path);
 
 	public Room clone();

@@ -8,12 +8,12 @@ import de.st_ddt.crazyutil.poly.region.FlatRegion;
 public class Sphere extends FuncRoom
 {
 
-	public Sphere(double radius)
+	public Sphere(final double radius)
 	{
 		super(new CircleRegion(radius), radius, Math.PI, true);
 	}
 
-	public Sphere(ConfigurationSection config)
+	public Sphere(final ConfigurationSection config)
 	{
 		super(config);
 		this.exponent = Math.PI;
@@ -21,7 +21,7 @@ public class Sphere extends FuncRoom
 	}
 
 	@Override
-	public boolean isInsideRel(double x, double y, double z)
+	public boolean isInsideRel(final double x, final double y, final double z)
 	{
 		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) < getRadius();
 	}
@@ -33,14 +33,14 @@ public class Sphere extends FuncRoom
 	}
 
 	@Override
-	public void setRegion(FlatRegion region)
+	public void setRegion(final FlatRegion region)
 	{
 		if (region instanceof CircleRegion)
 			super.setRegion(region);
 	}
 
 	@Override
-	public void setHeight(double height)
+	public void setHeight(final double height)
 	{
 		this.region = new CircleRegion(height);
 		this.height = height;
@@ -52,7 +52,7 @@ public class Sphere extends FuncRoom
 	}
 
 	@Override
-	public void setExponent(double exponent)
+	public void setExponent(final double exponent)
 	{
 	}
 

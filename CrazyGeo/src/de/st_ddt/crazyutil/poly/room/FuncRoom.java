@@ -26,10 +26,11 @@ public class FuncRoom implements Room
 		super();
 		this.region = FlatRegion.load(config.getConfigurationSection("region"));
 		this.height = Math.abs(config.getDouble("height"));
-		exponent = Math.abs(config.getDouble("exponent"));
+		this.exponent = Math.abs(config.getDouble("exponent"));
 		this.doubleSided = config.getBoolean("doubleSided");
 	}
 
+	@Override
 	public boolean isInsideRel(final double x, final double y, final double z)
 	{
 		if (0 > y || height < y)
@@ -58,17 +59,20 @@ public class FuncRoom implements Room
 		return scaled;
 	}
 
+	@Override
 	public void expand(final double x, final double y, final double z)
 	{
 		region.expand(x, z);
 		height += Math.abs(y);
 	}
 
+	@Override
 	public void contract(final double x, final double y, final double z)
 	{
 		region.contract(x, z);
 	}
 
+	@Override
 	public void scale(final double scale)
 	{
 		region.scale(scale);
@@ -119,6 +123,7 @@ public class FuncRoom implements Room
 		this.doubleSided = doubleSided;
 	}
 
+	@Override
 	public final void save(final ConfigurationSection config, final String path, final boolean includeType)
 	{
 		if (includeType)
@@ -126,6 +131,7 @@ public class FuncRoom implements Room
 		save(config, path);
 	}
 
+	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
 		region.save(config, path + "region");
@@ -141,7 +147,7 @@ public class FuncRoom implements Room
 	}
 
 	@Override
-	public boolean equals(Room room)
+	public boolean equals(final Room room)
 	{
 		// I know thats dirty!
 		if (!(room instanceof FuncRoom))
@@ -149,7 +155,7 @@ public class FuncRoom implements Room
 		return equals((FuncRoom) room);
 	}
 
-	public boolean equals(FuncRoom room)
+	public boolean equals(final FuncRoom room)
 	{
 		if (exponent == 0 && room.getExponent() == 0)
 			return region.equals(room.getRegion()) && getTotalHeight() == room.getTotalHeight();

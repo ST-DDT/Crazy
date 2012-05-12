@@ -7,19 +7,19 @@ import de.st_ddt.crazyutil.poly.region.FlatRegion;
 public class PyramidRoom extends FuncRoom
 {
 
-	public PyramidRoom(FlatRegion region, double height, boolean doubleSided)
+	public PyramidRoom(final FlatRegion region, final double height, final boolean doubleSided)
 	{
 		super(region, height, 1, doubleSided);
 	}
 
-	public PyramidRoom(ConfigurationSection config)
+	public PyramidRoom(final ConfigurationSection config)
 	{
 		super(config);
 		this.exponent = 1;
 	}
 
 	@Override
-	public void setExponent(double exponent)
+	public void setExponent(final double exponent)
 	{
 	}
 

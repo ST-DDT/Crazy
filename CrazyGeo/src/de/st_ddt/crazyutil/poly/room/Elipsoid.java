@@ -8,12 +8,12 @@ import de.st_ddt.crazyutil.poly.region.FlatRegion;
 public class Elipsoid extends FuncRoom
 {
 
-	public Elipsoid(CircleRegion region, double height)
+	public Elipsoid(final CircleRegion region, final double height)
 	{
 		super(region, height, Math.PI, true);
 	}
 
-	public Elipsoid(ConfigurationSection config)
+	public Elipsoid(final ConfigurationSection config)
 	{
 		super(config);
 		this.exponent = Math.PI;
@@ -27,14 +27,14 @@ public class Elipsoid extends FuncRoom
 	}
 
 	@Override
-	public void setRegion(FlatRegion region)
+	public void setRegion(final FlatRegion region)
 	{
 		if (region instanceof CircleRegion)
 			super.setRegion(region);
 	}
 
 	@Override
-	public void setExponent(double exponent)
+	public void setExponent(final double exponent)
 	{
 	}
 
