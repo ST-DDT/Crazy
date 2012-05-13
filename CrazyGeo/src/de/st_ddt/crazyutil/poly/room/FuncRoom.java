@@ -148,6 +148,11 @@ public class FuncRoom implements Room
 		return new FuncRoom(region, height, exponent, doubleSided);
 	}
 
+	public final FuncRoom cloneAsFuncRoom()
+	{
+		return new FuncRoom(region, height, exponent, doubleSided);
+	}
+
 	@Override
 	public boolean equals(final Room room)
 	{
