@@ -4,7 +4,7 @@ author: ST-DDT
 #C*=needed core version
 version: C7_G0.1_3.7
 softdepend: [PermissionsBukkit,dynmap]
-depend: [CrazyCore]
+depend: [CrazyCore,CrazyGeo]
 commands:
   show:
     description: Unhide a player
