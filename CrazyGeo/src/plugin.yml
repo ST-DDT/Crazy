@@ -3,7 +3,7 @@ main: de.st_ddt.crazygeo.CrazyGeo
 author: ST-DDT
 #C*=needed core version
 version: C7_0.1
-softdepend: [PermissionsBukkit]
+softdepend: [CrazyCore,PermissionsBukkit]
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
 commands:
