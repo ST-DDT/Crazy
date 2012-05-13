@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.dynmap.DynmapAPI;
 
+import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
@@ -34,7 +35,7 @@ import de.st_ddt.crazypunisher.events.CrazyPunisherVisibilityChangeEvent;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.Pair;
 import de.st_ddt.crazyutil.PairList;
-import de.st_ddt.crazyutil.geo.Sphere;
+import de.st_ddt.crazyutil.poly.room.Sphere;
 
 public class CrazyPunisher extends CrazyPlugin
 {
@@ -44,7 +45,7 @@ public class CrazyPunisher extends CrazyPlugin
 	private final PairList<OfflinePlayer, Date> jailed = new PairList<OfflinePlayer, Date>();
 	private final ArrayList<String> hidden = new ArrayList<String>();
 	private CrazyPunisherPlayerListener playerListener = null;
-	public Sphere jailsphere = null;
+	public RealRoom<Sphere> jailsphere = null;
 	public Location jailcenter = null;
 	private World jailworld = null;
 	private double jailrange = 1;
@@ -85,7 +86,7 @@ public class CrazyPunisher extends CrazyPlugin
 		if (jailcenter == null)
 			jailcenter = jailworld.getSpawnLocation();
 		jailrange = config.getDouble("jail.range", 5D);
-		jailsphere = new Sphere(jailcenter, jailrange);
+		jailsphere = new RealRoom<Sphere>(new Sphere(jailrange), jailcenter);
 		autoBanIP = config.getBoolean("autoBanIP", true);
 		dynmapEnabled = config.getBoolean("dynmapEnabled", true);
 		if (dynmapEnabled)
@@ -700,7 +701,7 @@ public class CrazyPunisher extends CrazyPlugin
 							loc = ((Player) sender).getLocation();
 					jailcenter = loc;
 					jailworld = jailcenter.getWorld();
-					jailsphere.setCenter(loc);
+					jailsphere.setBasis(loc);
 					save();
 					sendLocaleMessage("JAILLOCATION.CHANGED", sender);
 					sendLocaleMessage("JAILLOCATION", sender, jailcenter.getWorld().getName(), String.valueOf(jailcenter.getBlockX()), String.valueOf(jailcenter.getBlockY()), String.valueOf(jailcenter.getBlockZ()));
@@ -728,7 +729,7 @@ public class CrazyPunisher extends CrazyPlugin
 					throw new CrazyCommandParameterException(1, "Integer");
 				}
 				jailrange = range;
-				jailsphere.setRadius(range);
+				jailsphere.getRoom().setRadius(range);
 				save();
 				sendLocaleMessage("JAILRANGE.CHANGED", sender);
 			case 0:
