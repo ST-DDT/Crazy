@@ -41,77 +41,77 @@ public class WorldEditBridge
 
 	public static WorldEditBridge getWorldEditBridge()
 	{
-		WorldEditPlugin plugin = getWorldEditPlugin();
+		final WorldEditPlugin plugin = getWorldEditPlugin();
 		if (plugin == null)
 			return null;
 		return new WorldEditBridge(plugin);
 	}
 
-	private WorldEditBridge(WorldEditPlugin plugin)
+	private WorldEditBridge(final WorldEditPlugin plugin)
 	{
 		we = new WorldEditAPI(plugin);
 	}
 
-	public RealRoom<FuncRoom> getSavePlayerSelection(Player player)
+	public RealRoom<FuncRoom> getSavePlayerSelection(final Player player)
 	{
 		try
 		{
 			return getPlayerSelection(player);
 		}
-		catch (WorldEditException e)
+		catch (final WorldEditException e)
 		{
 			return null;
 		}
 	}
 
-	public RealRoom<FuncRoom> getPlayerSelection(Player player) throws WorldEditException
+	public RealRoom<FuncRoom> getPlayerSelection(final Player player) throws WorldEditException
 	{
-		LocalWorld localWorld = we.getSession(player).getSelectionWorld();
-		Region weregion = we.getSession(player).getSelection(localWorld);
+		final LocalWorld localWorld = we.getSession(player).getSelectionWorld();
+		final Region weregion = we.getSession(player).getSelection(localWorld);
 		RealRoom<FuncRoom> result = null;
-		World world = player.getWorld();
+		final World world = player.getWorld();
 		if (weregion instanceof CuboidRegion)
 		{
 			final CuboidRegion region = (CuboidRegion) weregion;
-			Vector vSize = region.getPos1().subtract(region.getPos2());
-			Vector vMin = region.getMinimumPoint();
-			Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
+			final Vector vSize = region.getPos1().subtract(region.getPos2());
+			final Vector vMin = region.getMinimumPoint();
+			final Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
 			final RectangleRegion flat = new RectangleRegion(vSize.getX(), vSize.getZ());
-			FuncRoom room = new PrismRoom(flat, vSize.getY(), false);
+			final FuncRoom room = new PrismRoom(flat, vSize.getY(), false);
 			result = new RealRoom<FuncRoom>(room, basis);
 		}
 		else if (weregion instanceof EllipsoidRegion)
 		{
-			EllipsoidRegion region = (EllipsoidRegion) weregion;
-			Vector vSize = region.getRadius();
-			Vector vMin = region.getCenter();
-			Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
+			final EllipsoidRegion region = (EllipsoidRegion) weregion;
+			final Vector vSize = region.getRadius();
+			final Vector vMin = region.getCenter();
+			final Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
 			final CircleRegion flat = new RoundRegion(vSize.getX(), vSize.getZ());
-			FuncRoom room = new Elipsoid(flat, vSize.getY());
+			final FuncRoom room = new Elipsoid(flat, vSize.getY());
 			result = new RealRoom<FuncRoom>(room, basis);
 		}
 		else if (weregion instanceof CylinderRegion)
 		{
-			CylinderRegion region = (CylinderRegion) weregion;
-			Vector2D vSize = region.getRadius();
-			Vector vMin = region.getCenter();
-			Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
+			final CylinderRegion region = (CylinderRegion) weregion;
+			final Vector2D vSize = region.getRadius();
+			final Vector vMin = region.getCenter();
+			final Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
 			final CircleRegion flat = new RoundRegion(vSize.getX(), vSize.getZ());
-			FuncRoom room = new PrismRoom(flat, region.getHeight(), false);
+			final FuncRoom room = new PrismRoom(flat, region.getHeight(), false);
 			result = new RealRoom<FuncRoom>(room, basis);
 		}
 		return result;
 	}
 
-	public void setPlayerSelection(Player player, RealRoom<WorldEditRoom> room)
+	public void setPlayerSelection(final Player player, final RealRoom<WorldEditRoom> room)
 	{
 		setPlayerSelection(player, room.getBasis(), room.getRoom());
 	}
 
-	public void setPlayerSelection(Player player, Location location, WorldEditRoom region)
+	public void setPlayerSelection(final Player player, final Location location, final WorldEditRoom region)
 	{
-		BukkitWorld bukkitWorld = new BukkitWorld(location.getWorld());
-		RegionSelector selector = region.getRegionSelector();
+		final BukkitWorld bukkitWorld = new BukkitWorld(location.getWorld());
+		final RegionSelector selector = region.getRegionSelector();
 		we.getSession(player).setRegionSelector(bukkitWorld, selector);
 	}
 }

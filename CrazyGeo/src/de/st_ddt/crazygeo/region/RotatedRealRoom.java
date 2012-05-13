@@ -12,7 +12,7 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 	protected double pitch; // xz
 	protected double roll; // yz
 
-	public RotatedRealRoom(S room, Location basis)
+	public RotatedRealRoom(final S room, final Location basis)
 	{
 		super(room, basis);
 		this.yaw = 0;
@@ -20,7 +20,7 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 		this.roll = 0;
 	}
 
-	public RotatedRealRoom(S room, Location basis, double yaw, double pitch, double roll)
+	public RotatedRealRoom(final S room, final Location basis, final double yaw, final double pitch, final double roll)
 	{
 		super(room, basis);
 		this.yaw = yaw;
@@ -33,7 +33,7 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 		return yaw;
 	}
 
-	public void setYaw(double yaw)
+	public void setYaw(final double yaw)
 	{
 		this.yaw = yaw;
 	}
@@ -43,7 +43,7 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 		return pitch;
 	}
 
-	public void setPitch(double pitch)
+	public void setPitch(final double pitch)
 	{
 		this.pitch = pitch;
 	}
@@ -53,13 +53,13 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 		return roll;
 	}
 
-	public void setRoll(double roll)
+	public void setRoll(final double roll)
 	{
 		this.roll = roll;
 	}
 
 	@Override
-	public boolean isInside(Location location)
+	public boolean isInside(final Location location)
 	{
 		final Location clone = basis.clone();
 		clone.subtract(location);
@@ -79,7 +79,7 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "yaw", yaw);

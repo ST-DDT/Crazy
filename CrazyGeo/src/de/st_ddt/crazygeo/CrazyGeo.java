@@ -1,14 +1,18 @@
 package de.st_ddt.crazygeo;
 
-//import java.util.HashMap;
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.poly.room.Room;
 
 public class CrazyGeo
 {
 
-	// protected final HashMap<Player, Geo> geos = new HashMap<Player, Geo>();
+	protected final HashMap<Player, RealRoom<Room>> geos = new HashMap<Player, RealRoom<Room>>();
+
 	public void command(final Player sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 	}

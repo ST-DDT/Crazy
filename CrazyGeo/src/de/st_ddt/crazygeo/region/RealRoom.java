@@ -1,7 +1,9 @@
 package de.st_ddt.crazygeo.region;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
@@ -12,6 +14,11 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 
 	protected S room;
 	protected Location basis;
+
+	public static RealRoom<Room> load(final ConfigurationSection config, final World world)
+	{
+		return null;
+	}
 
 	public RealRoom(final S room, final Location basis)
 	{
@@ -40,11 +47,23 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 		this.basis = basis;
 	}
 
+	public final boolean isInside(final Entity entity)
+	{
+		return isInside(entity.getLocation());
+	}
+
 	public boolean isInside(final Location location)
 	{
 		final Location clone = basis.clone();
 		clone.subtract(location);
 		return room.isInsideRel(clone.getX(), clone.getY(), clone.getZ());
+	}
+
+	public final void save(final ConfigurationSection config, final String path, final boolean includeType)
+	{
+		if (includeType)
+			config.set(path + "type", getClass().getName());
+		save(config, path);
 	}
 
 	@Override
