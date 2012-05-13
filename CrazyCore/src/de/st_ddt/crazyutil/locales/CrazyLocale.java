@@ -37,6 +37,15 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return missing;
 	}
 
+	static
+	{
+		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.READ", "Failed reading $0$ language files!");
+		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.EXPORT", "Failed exporting $0$ language files!");
+		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", "Failed downloading $0$ language files!");
+		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", "$0$ language files not available!");
+		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.LOADED", "Language $0$ loaded sucessfully!");
+	}
+
 	public final static CrazyLocale getPluginHead(CrazyPlugin plugin)
 	{
 		getLocaleHead().addLanguageEntry("root", plugin.getName().toUpperCase(), plugin.getName());

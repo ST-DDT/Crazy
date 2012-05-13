@@ -139,7 +139,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 			throw new CrazyCommandUsageException("/" + getDescription().getName().toLowerCase() + " reload");
 		reloadConfig();
 		load();
-		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.COMMAND.CONFIG.RELOADED"), sender);
+		sendLocaleRootMessage("CRAZYPLUGIN.COMMAND.CONFIG.RELOADED", sender);
 	}
 
 	private final void commandSave(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -149,12 +149,12 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		if (args.length != 0)
 			throw new CrazyCommandUsageException("/" + getDescription().getName().toLowerCase() + " save");
 		save();
-		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.COMMAND.CONFIG.SAVED"), sender);
+		sendLocaleRootMessage("CRAZYPLUGIN.COMMAND.CONFIG.SAVED", sender);
 	}
 
 	public void commandHelp(final CommandSender sender, final String[] args)
 	{
-		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.COMMAND.HELP.NOHELP"), sender);
+		sendLocaleRootMessage("CRAZYPLUGIN.COMMAND.HELP.NOHELP", sender);
 	}
 
 	protected String getShortPluginName()
@@ -207,6 +207,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), target, args);
 	}
 
+	public final void sendLocaleRootMessage(final String localepath, final CommandSender target, final Object... args)
+	{
+		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), target, args);
+	}
+
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
 	{
 		target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
@@ -215,6 +220,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
+	}
+
+	public final void sendLocaleRootMessage(final String localepath, final CommandSender[] targets, final Object... args)
+	{
+		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), targets, args);
 	}
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
@@ -228,6 +238,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
 	}
 
+	public final void sendLocaleRootMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
+	{
+		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), targets, args);
+	}
+
 	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
 	{
 		for (CommandSender target : targets)
@@ -239,6 +254,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		broadcastLocaleMessage(getLocale().getLanguageEntry(localepath), args);
 	}
 
+	public final void broadcastLocaleRootMessage(final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
+	}
+
 	public final void broadcastLocaleMessage(final CrazyLocale locale, final Object... args)
 	{
 		sendLocaleMessage(locale, getServer().getConsoleSender(), args);
@@ -248,6 +268,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(console, permission, getLocale().getLanguageEntry(localepath), args);
+	}
+
+	public final void broadcastLocaleRootMessage(final boolean console, final String permission, final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(console, permission, CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
 	}
 
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final CrazyLocale locale, final Object... args)
@@ -272,6 +297,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 
 	public void loadLanguage(final String language, final CommandSender sender)
 	{
+		getServer().getScheduler().scheduleAsyncDelayedTask(this, new LanguageLoadRunnable(this, language, sender));
+	}
+
+	protected void delayedLoadLanguage(final String language, final CommandSender sender)
+	{
 		// default files
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		if (!file.exists())
@@ -282,7 +312,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 				unpackLanguage(language);
 				if (!file.exists())
 				{
-					sender.sendMessage("Language " + language + " not availiable for " + getDescription().getName() + "!");
+					sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", sender, language);
 					return;
 				}
 			}
@@ -296,6 +326,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 				stream = new FileInputStream(file);
 				reader = new InputStreamReader(stream, "UTF-8");
 				CrazyLocale.readFile(language, reader);
+				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
 			}
 			finally
 			{
@@ -307,7 +338,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		}
 		catch (IOException e)
 		{
-			sender.sendMessage("Failed reading " + language + " languagefile for " + getDescription().getName() + "!");
+			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language);
 		}
 		// Custom files:
 		file = new File(getDataFolder().getPath() + "/lang/custom_" + language + ".lang");
@@ -322,6 +353,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 					stream = new FileInputStream(file);
 					reader = new InputStreamReader(stream, "UTF-8");
 					CrazyLocale.readFile(language, reader);
+					sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language + " (Custom)");
 				}
 				finally
 				{
@@ -333,7 +365,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 			}
 			catch (IOException e)
 			{
-				sender.sendMessage("Failed reading custom " + language + " languagefile for " + getDescription().getName() + "!");
+				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language + " (Custom)");
 			}
 		}
 	}
@@ -370,8 +402,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		}
 		catch (IOException e)
 		{
-			System.err.println("Error exporting " + language + " language file");
-			// e.printStackTrace();
+			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.EXPORT", getServer().getConsoleSender(), language);
 		}
 	}
 
@@ -412,9 +443,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		}
 		catch (IOException e)
 		{
-			System.err.println("Error downloading " + language + " language file");
-			// System.err.println("from: "+getMainDownloadLocation() + "/resource/lang/" + language + ".lang");
-			// e.printStackTrace();
+			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", getServer().getConsoleSender(), language);
 		}
 	}
 }
