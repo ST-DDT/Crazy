@@ -295,12 +295,12 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		loadLanguage(language, getServer().getConsoleSender());
 	}
 
-	public void loadLanguage(final String language, final CommandSender sender)
+	public void loadLanguageDelayed(final String language, final CommandSender sender)
 	{
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new LanguageLoadRunnable(this, language, sender));
 	}
 
-	protected void delayedLoadLanguage(final String language, final CommandSender sender)
+	public void loadLanguage(final String language, final CommandSender sender)
 	{
 		// default files
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
@@ -381,7 +381,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 			{
 				stream = getClass().getResourceAsStream("/resource/lang/" + language + ".lang");
 				if (stream == null)
-					return;
+					throw new NullPointerException();
 				in = new BufferedInputStream(stream);
 				out = new BufferedOutputStream(new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang"));
 				byte data[] = new byte[1024];
