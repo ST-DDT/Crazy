@@ -12,18 +12,19 @@ import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyarena.utils.SpawnList;
+import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
-import de.st_ddt.crazyutil.geo.Geo;
+import de.st_ddt.crazyutil.poly.room.Room;
 
 public class ArenaSpleef extends Arena
 {
 
-	protected Geo arena;
-	protected Geo out;
+	protected RealRoom<Room> arena;
+	protected RealRoom<Room> out;
 	protected final SpawnList arenaspawns = new SpawnList(world);
 	protected final SpawnList spectatorspawns = new SpawnList(world);
 	protected boolean running;
@@ -36,7 +37,7 @@ public class ArenaSpleef extends Arena
 	public ArenaSpleef(FileConfiguration config)
 	{
 		super(config);
-		arena = Geo.load(config.getConfigurationSection("arena"), world);
+		arena = RealRoom.load(config.getConfigurationSection("arena"), world);
 		for (String name : config.getConfigurationSection("arenaspawns").getKeys(false))
 			arenaspawns.add(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("arenaspawns." + name), world));
 		for (String name : config.getConfigurationSection("spectatorspawns").getKeys(false))
@@ -266,17 +267,17 @@ public class ArenaSpleef extends Arena
 		return "ARENASPLEEF";
 	}
 
-	public Geo getRegion()
+	public RealRoom<Room> getRegion()
 	{
 		return region;
 	}
 
-	public Geo getArena()
+	public RealRoom<Room> getArena()
 	{
 		return arena;
 	}
 
-	public Geo getOut()
+	public RealRoom<Room> getOut()
 	{
 		return out;
 	}

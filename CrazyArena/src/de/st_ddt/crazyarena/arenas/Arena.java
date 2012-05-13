@@ -17,10 +17,11 @@ import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantList;
 import de.st_ddt.crazyarena.participants.ParticipantType;
+import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.geo.Geo;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.poly.room.Room;
 
 public abstract class Arena
 {
@@ -29,7 +30,7 @@ public abstract class Arena
 	protected final World world;
 	protected boolean enabled;
 	protected boolean edit;
-	protected Geo region;
+	protected RealRoom<Room> region;
 	protected CrazyLocale locale;
 	protected final ParticipantList participants = new ParticipantList(this);
 	protected FileConfiguration config;
@@ -43,7 +44,7 @@ public abstract class Arena
 		this.world = Bukkit.getWorld(config.getString("world"));
 		this.config = config;
 		this.edit = false;
-		this.region = Geo.load(config.getConfigurationSection("region"), world);
+		this.region = RealRoom.load(config.getConfigurationSection("region"), world);
 		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
 		CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + getArenaTypeLocaleDefault().toUpperCase());
 		this.locale.setAlternative(typeLocale);
@@ -147,7 +148,7 @@ public abstract class Arena
 	public void load()
 	{
 		this.enabled = config.getBoolean("enabled", false);
-		this.region = Geo.load(config.getConfigurationSection("area"), world);
+		this.region = RealRoom.load(config.getConfigurationSection("area"), world);
 	}
 
 	public abstract void enable();
