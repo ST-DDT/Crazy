@@ -46,6 +46,12 @@ public class Sphere extends FuncRoom
 		this.height = height;
 	}
 
+	public void setRadius(final double range)
+	{
+		this.region = new CircleRegion(range);
+		this.height = range;
+	}
+
 	public double getRadius()
 	{
 		return height;
