@@ -1,10 +1,11 @@
-package de.st_ddt.crazyutil.poly.room;
+package de.st_ddt.crazygeo.region;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+import de.st_ddt.crazyutil.poly.room.Room;
 
 public class RealRoom<S extends Room> implements ConfigurationSaveable
 {

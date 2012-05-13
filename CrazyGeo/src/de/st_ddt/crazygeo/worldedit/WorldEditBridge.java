@@ -19,7 +19,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 //import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 
-import de.st_ddt.crazyutil.poly.room.RealRoom;
+import de.st_ddt.crazygeo.region.RealRoom;
 
 //import com.sk89q.worldedit.regions.SphereRegionSelector;
 public class WorldEditBridge
