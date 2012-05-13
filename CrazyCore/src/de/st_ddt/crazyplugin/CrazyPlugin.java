@@ -326,7 +326,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 				stream = new FileInputStream(file);
 				reader = new InputStreamReader(stream, "UTF-8");
 				CrazyLocale.readFile(language, reader);
-				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
+				// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
 			}
 			finally
 			{
@@ -353,7 +353,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 					stream = new FileInputStream(file);
 					reader = new InputStreamReader(stream, "UTF-8");
 					CrazyLocale.readFile(language, reader);
-					sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language + " (Custom)");
+					// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language + " (Custom)");
 				}
 				finally
 				{
