@@ -68,7 +68,7 @@ public final class ObjectSaveLoadHelper
 		{
 			return CrazyPlugin.DateFormat.parse(date);
 		}
-		catch (ParseException e)
+		catch (final ParseException e)
 		{
 			return defaultDate;
 		}
@@ -82,7 +82,7 @@ public final class ObjectSaveLoadHelper
 	// ItemStack
 	public static ItemStack loadItemStack(final ConfigurationSection config)
 	{
-		ItemStack item = new MaterialData(config.getInt("id"), (byte) config.getInt("data")).toItemStack(config.getInt("amount", 1));
+		final ItemStack item = new MaterialData(config.getInt("id"), (byte) config.getInt("data")).toItemStack(config.getInt("amount", 1));
 		if (config.contains("durability"))
 			item.setDurability((short) config.getInt("durability"));
 		if (config.contains("enchantments"))
@@ -119,8 +119,8 @@ public final class ObjectSaveLoadHelper
 	// Enchantments
 	public static Map<Enchantment, Integer> loadEnchantments(final ConfigurationSection config)
 	{
-		Map<Enchantment, Integer> map = new LinkedHashMap<Enchantment, Integer>();
-		for (String name : config.getKeys(false))
+		final Map<Enchantment, Integer> map = new LinkedHashMap<Enchantment, Integer>();
+		for (final String name : config.getKeys(false))
 			map.put(Enchantment.getByName(name), config.getInt(name));
 		return map;
 	}
@@ -132,7 +132,7 @@ public final class ObjectSaveLoadHelper
 
 	public static void saveEnchantments(final ConfigurationSection config, final String path, final Map<Enchantment, Integer> enchantments)
 	{
-		for (Entry<Enchantment, Integer> entry : enchantments.entrySet())
+		for (final Entry<Enchantment, Integer> entry : enchantments.entrySet())
 			config.set(path + entry.getKey().getName(), entry.getValue());
 	}
 
@@ -147,10 +147,10 @@ public final class ObjectSaveLoadHelper
 
 	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
 	{
-		ArrayList<T> list = new ArrayList<T>();
+		final ArrayList<T> list = new ArrayList<T>();
 		if (config == null)
 			return list;
-		for (String key : config.getKeys(false))
+		for (final String key : config.getKeys(false))
 			list.add(load(config.getConfigurationSection(key), parentClazz, paraClazzes, paraObjects));
 		return list;
 	}
@@ -162,7 +162,7 @@ public final class ObjectSaveLoadHelper
 
 	public static <T> T load(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
-		String clazzName = config.getString("type", "-1");
+		final String clazzName = config.getString("type", "-1");
 		if (clazzName.equals("-1"))
 		{
 			System.err.println("No class defined!");
@@ -184,7 +184,7 @@ public final class ObjectSaveLoadHelper
 		{
 			clazz = Class.forName(clazzname);
 		}
-		catch (ClassNotFoundException e)
+		catch (final ClassNotFoundException e)
 		{
 			if (alternativePackage == null)
 			{
@@ -195,7 +195,7 @@ public final class ObjectSaveLoadHelper
 			{
 				clazz = Class.forName(alternativePackage + "." + clazzname);
 			}
-			catch (ClassNotFoundException e2)
+			catch (final ClassNotFoundException e2)
 			{
 				e.printStackTrace();
 				return null;
@@ -217,7 +217,7 @@ public final class ObjectSaveLoadHelper
 		{
 			instance = clazz.getConstructor(paraClazzes).newInstance(paraObjects);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
