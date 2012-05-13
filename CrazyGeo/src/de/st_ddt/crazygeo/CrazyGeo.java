@@ -5,10 +5,11 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazygeo.region.RealRoom;
+import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.poly.room.Room;
 
-public class CrazyGeo
+public class CrazyGeo extends CrazyPlugin
 {
 
 	protected final HashMap<Player, RealRoom<Room>> geos = new HashMap<Player, RealRoom<Room>>();
