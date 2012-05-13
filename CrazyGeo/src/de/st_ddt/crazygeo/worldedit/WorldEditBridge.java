@@ -2,26 +2,30 @@ package de.st_ddt.crazygeo.worldedit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-//import com.sk89q.worldedit.LocalWorld;
-//import com.sk89q.worldedit.Vector;
-//import com.sk89q.worldedit.Vector2D;
-//import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.Vector2D;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-//import com.sk89q.worldedit.regions.CuboidRegion;
-//import com.sk89q.worldedit.regions.CuboidRegionSelector;
-//import com.sk89q.worldedit.regions.CylinderRegion;
-//import com.sk89q.worldedit.regions.CylinderRegionSelector;
-//import com.sk89q.worldedit.regions.EllipsoidRegion;
-//import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.CylinderRegion;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 
 import de.st_ddt.crazygeo.region.RealRoom;
+import de.st_ddt.crazyutil.poly.region.CircleRegion;
+import de.st_ddt.crazyutil.poly.region.RectangleRegion;
+import de.st_ddt.crazyutil.poly.region.RoundRegion;
+import de.st_ddt.crazyutil.poly.room.Elipsoid;
+import de.st_ddt.crazyutil.poly.room.FuncRoom;
+import de.st_ddt.crazyutil.poly.room.PrismRoom;
 
-//import com.sk89q.worldedit.regions.SphereRegionSelector;
 public class WorldEditBridge
 {
 
@@ -48,51 +52,57 @@ public class WorldEditBridge
 		we = new WorldEditAPI(plugin);
 	}
 
-	// public Room getSavePlayerSelection(Player player)
-	// {
-	// try
-	// {
-	// return getPlayerSelection(player);
-	// }
-	// catch (WorldEditException e)
-	// {
-	// return null;
-	// }
-	// }
-	// public Geo getPlayerSelection(Player player) throws WorldEditException
-	// {
-	// LocalWorld localWorld = we.getSession(player).getSelectionWorld();
-	// Region region = we.getSession(player).getSelection(localWorld);
-	// Geo geo = null;
-	// World world = player.getWorld();
-	// if (region instanceof CuboidRegion)
-	// {
-	// CuboidRegion region2 = (CuboidRegion) region;
-	// Vector v1 = region2.getPos1();
-	// Vector v2 = region2.getPos2();
-	// Location location1 = new Location(world, v1.getX(), v1.getY(), v1.getZ());
-	// Location location2 = new Location(world, v2.getX(), v2.getY(), v2.getZ());
-	// geo = new Cuboid(world, location1, location2);
-	// }
-	// else if (region instanceof EllipsoidRegion)
-	// {
-	// EllipsoidRegion region2 = (EllipsoidRegion) region;
-	// Vector v1 = region2.getCenter();
-	// Vector v2 = region2.getRadius();
-	// Location location1 = new Location(world, v1.getX(), v1.getY(), v1.getZ());
-	// geo = new Sphere(location1, v2.length());
-	// }
-	// else if (region instanceof CylinderRegion)
-	// {
-	// CylinderRegion region2 = (CylinderRegion) region;
-	// Vector v1 = region2.getCenter();
-	// Vector2D v2 = region2.getRadius();
-	// int height = region2.getMaximumY() - region2.getMinimumY() + 1;
-	// Location location1 = new Location(world, v1.getX(), region2.getMinimumY(), v1.getZ());
-	// geo = new Cylinder(location1, v2.length(), height);
-	// }
-	// return geo;
-	// }
+	public RealRoom<FuncRoom> getSavePlayerSelection(Player player)
+	{
+		try
+		{
+			return getPlayerSelection(player);
+		}
+		catch (WorldEditException e)
+		{
+			return null;
+		}
+	}
+
+	public RealRoom<FuncRoom> getPlayerSelection(Player player) throws WorldEditException
+	{
+		LocalWorld localWorld = we.getSession(player).getSelectionWorld();
+		Region weregion = we.getSession(player).getSelection(localWorld);
+		RealRoom<FuncRoom> result = null;
+		World world = player.getWorld();
+		if (weregion instanceof CuboidRegion)
+		{
+			final CuboidRegion region = (CuboidRegion) weregion;
+			Vector vSize = region.getPos1().subtract(region.getPos2());
+			Vector vMin = region.getMinimumPoint();
+			Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
+			final RectangleRegion flat = new RectangleRegion(vSize.getX(), vSize.getZ());
+			FuncRoom room = new PrismRoom(flat, vSize.getY(), false);
+			result = new RealRoom<FuncRoom>(room, basis);
+		}
+		else if (weregion instanceof EllipsoidRegion)
+		{
+			EllipsoidRegion region = (EllipsoidRegion) weregion;
+			Vector vSize = region.getRadius();
+			Vector vMin = region.getCenter();
+			Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
+			final CircleRegion flat = new RoundRegion(vSize.getX(), vSize.getZ());
+			FuncRoom room = new Elipsoid(flat, vSize.getY());
+			result = new RealRoom<FuncRoom>(room, basis);
+		}
+		else if (weregion instanceof CylinderRegion)
+		{
+			CylinderRegion region = (CylinderRegion) weregion;
+			Vector2D vSize = region.getRadius();
+			Vector vMin = region.getCenter();
+			Location basis = new Location(world, vMin.getX(), vMin.getY(), vMin.getZ());
+			final CircleRegion flat = new RoundRegion(vSize.getX(), vSize.getZ());
+			FuncRoom room = new PrismRoom(flat, region.getHeight(), false);
+			result = new RealRoom<FuncRoom>(room, basis);
+		}
+		return result;
+	}
+
 	public void setPlayerSelection(Player player, RealRoom<WorldEditRoom> room)
 	{
 		setPlayerSelection(player, room.getBasis(), room.getRoom());

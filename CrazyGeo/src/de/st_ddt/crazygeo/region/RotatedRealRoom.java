@@ -12,6 +12,14 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 	protected double pitch; // xz
 	protected double roll; // yz
 
+	public RotatedRealRoom(S room, Location basis)
+	{
+		super(room, basis);
+		this.yaw = 0;
+		this.pitch = 0;
+		this.roll = 0;
+	}
+
 	public RotatedRealRoom(S room, Location basis, double yaw, double pitch, double roll)
 	{
 		super(room, basis);

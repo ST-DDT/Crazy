@@ -2,8 +2,6 @@ package de.st_ddt.crazyutil.poly.region;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.vector.Vector2D;
-
 public class QuadradRegion extends FlatRegion
 {
 
@@ -30,13 +28,13 @@ public class QuadradRegion extends FlatRegion
 	@Override
 	public void expand(final double x, final double z)
 	{
-		sizeX += new Vector2D(x, z).length();
+		sizeX += Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2));
 	}
 
 	@Override
 	public void contract(final double x, final double z)
 	{
-		sizeX = Math.abs(sizeX - new Vector2D(x, z).length());
+		sizeX = Math.abs(sizeX - Math.pow(x, 2) + Math.pow(z, 2));
 	}
 
 	@Override
