@@ -56,6 +56,18 @@ public class WorldEditBridge
 	{
 		try
 		{
+			return getSemiSavePlayerSelection(player);
+		}
+		catch (final CrazyWEUnsupportedRegionTypeException e)
+		{
+			return null;
+		}
+	}
+
+	public RealRoom<FuncRoom> getSemiSavePlayerSelection(final Player player) throws CrazyWEUnsupportedRegionTypeException
+	{
+		try
+		{
 			return getPlayerSelection(player);
 		}
 		catch (final WorldEditException e)
@@ -64,7 +76,7 @@ public class WorldEditBridge
 		}
 	}
 
-	public RealRoom<FuncRoom> getPlayerSelection(final Player player) throws WorldEditException
+	public RealRoom<FuncRoom> getPlayerSelection(final Player player) throws WorldEditException, CrazyWEUnsupportedRegionTypeException
 	{
 		final LocalWorld localWorld = we.getSession(player).getSelectionWorld();
 		final Region weregion = we.getSession(player).getSelection(localWorld);
@@ -100,6 +112,8 @@ public class WorldEditBridge
 			final FuncRoom room = new PrismRoom(flat, region.getHeight(), false);
 			result = new RealRoom<FuncRoom>(room, basis);
 		}
+		else
+			throw new CrazyWEUnsupportedRegionTypeException(localWorld, weregion);
 		return result;
 	}
 
