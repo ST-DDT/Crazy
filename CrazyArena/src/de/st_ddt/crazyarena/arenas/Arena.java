@@ -21,6 +21,7 @@ import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.poly.room.Room;
 
@@ -37,6 +38,11 @@ public abstract class Arena
 	protected FileConfiguration config;
 	protected final CrazyArena plugin = CrazyArena.getPlugin();
 	private String chatHeader = null;
+
+	public static Arena loadArena(FileConfiguration config)
+	{
+		return ObjectSaveLoadHelper.load(config, Arena.class, new Class[] { FileConfiguration.class }, new Object[] { config });
+	}
 
 	private Arena(final World world)
 	{
@@ -58,8 +64,6 @@ public abstract class Arena
 		this(Bukkit.getWorld(config.getString("world")));
 		this.name = config.getString("name");
 		this.config = config;
-		this.edit = false;
-		this.region = RealRoom.load(config.getConfigurationSection("region"), world);
 		load();
 	}
 
@@ -155,7 +159,8 @@ public abstract class Arena
 	public void load()
 	{
 		this.enabled = config.getBoolean("enabled", false);
-		this.region = RealRoom.load(config.getConfigurationSection("area"), world);
+		this.edit = config.getBoolean("edit", true);
+		this.region = RealRoom.load(config.getConfigurationSection("region"), world);
 	}
 
 	public abstract void enable();
@@ -168,7 +173,13 @@ public abstract class Arena
 		config.set("type", getClass().getName());
 		config.set("world", world);
 		config.set("enabled", enabled);
-		region.save(config, "area.", true);
+		config.set("edit", edit);
+		config.set("region", null);
+		region.save(config, "region.", true);
+	}
+
+	public final void saveConfig()
+	{
 		try
 		{
 			config.save(plugin.getDataFolder().getPath() + "/Arenas/" + name + ".yml");

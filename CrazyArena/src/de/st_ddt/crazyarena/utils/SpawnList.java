@@ -3,11 +3,15 @@ package de.st_ddt.crazyarena.utils;
 import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-public class SpawnList extends ArrayList<Location>
+import de.st_ddt.crazyutil.ConfigurationSaveable;
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+
+public class SpawnList extends ArrayList<Location> implements ConfigurationSaveable
 {
 
 	protected final World world;
@@ -17,6 +21,16 @@ public class SpawnList extends ArrayList<Location>
 	{
 		super();
 		this.world = world;
+	}
+
+	public SpawnList(World world, ConfigurationSection config)
+	{
+		this(world);
+		if (config != null)
+		{
+			for (String key : config.getKeys(false))
+				this.add(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection(key), world));
+		}
 	}
 
 	public void teleport(LivingEntity entity)
@@ -51,5 +65,13 @@ public class SpawnList extends ArrayList<Location>
 			}
 		}
 		return nearest;
+	}
+
+	@Override
+	public void save(ConfigurationSection config, String path)
+	{
+		int anz = 0;
+		for (Location location : this)
+			ObjectSaveLoadHelper.saveLocation(config, path + "Location_" + (anz++), location);
 	}
 }

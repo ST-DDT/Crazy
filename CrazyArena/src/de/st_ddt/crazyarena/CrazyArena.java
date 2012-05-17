@@ -2,6 +2,7 @@ package de.st_ddt.crazyarena;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
@@ -64,12 +66,23 @@ public class CrazyArena extends CrazyPlugin
 
 	public void onDisable()
 	{
+		save();
+		super.onDisable();
+	}
+
+	public void save()
+	{
+		ConfigurationSection config = getConfig();
+		LinkedList<String> names = new LinkedList<String>();
 		for (Arena arena : arenas)
 		{
 			arena.stop(Bukkit.getConsoleSender(), true);
 			arena.disable();
+			arena.save();
+			arena.saveConfig();
+			names.add(arena.getName());
 		}
-		super.onDisable();
+		config.set("arenas", names);
 	}
 
 	public void registerHooks()
