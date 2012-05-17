@@ -12,6 +12,7 @@ import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyarena.utils.SpawnList;
+import de.st_ddt.crazygeo.CrazyGeo;
 import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -23,8 +24,8 @@ import de.st_ddt.crazyutil.poly.room.Room;
 public class ArenaSpleef extends Arena
 {
 
-	protected RealRoom<Room> arena;
-	protected RealRoom<Room> out;
+	protected RealRoom<? extends Room> arena;
+	protected RealRoom<? extends Room> out;
 	protected final SpawnList arenaspawns = new SpawnList(world);
 	protected final SpawnList spectatorspawns = new SpawnList(world);
 	protected boolean running;
@@ -267,17 +268,17 @@ public class ArenaSpleef extends Arena
 		return "ARENASPLEEF";
 	}
 
-	public RealRoom<Room> getRegion()
+	public RealRoom<? extends Room> getRegion()
 	{
 		return region;
 	}
 
-	public RealRoom<Room> getArena()
+	public RealRoom<? extends Room> getArena()
 	{
 		return arena;
 	}
 
-	public RealRoom<Room> getOut()
+	public RealRoom<? extends Room> getOut()
 	{
 		return out;
 	}
@@ -316,19 +317,73 @@ public class ArenaSpleef extends Arena
 		return false;
 	}
 
-	private void commandRegion(Player player, String[] args)
+	private void commandRegion(Player player, String[] args) throws CrazyCommandException
 	{
-		// EDIT Auto-generated method stub
+		if (args.length == 0)
+		{
+			CrazyGeo.getPlugin().setPlayerSelection(player, region);
+			sendLocaleMessage("REGION.SELECTED", player);
+			return;
+		}
+		if (args[0].equalsIgnoreCase("get"))
+		{
+			CrazyGeo.getPlugin().setPlayerSelection(player, region);
+			sendLocaleMessage("REGION.SELECTED", player);
+			return;
+		}
+		else if (args[0].equalsIgnoreCase("set"))
+		{
+			region = CrazyGeo.getPlugin().getPlayerSelection(player);
+			sendLocaleMessage("REGION.SET", player);
+			return;
+		}
+		throw new CrazyCommandUsageException("/crazyarena <Arena> region [get]", "/crazyarena <Arena> region set");
 	}
 
-	private void commandArena(Player player, String[] args)
+	private void commandArena(Player player, String[] args) throws CrazyCommandException
 	{
-		// EDIT Auto-generated method stub
+		if (args.length == 0)
+		{
+			CrazyGeo.getPlugin().setPlayerSelection(player, region);
+			sendLocaleMessage("ARENA.SELECTED", player);
+			return;
+		}
+		if (args[0].equalsIgnoreCase("get"))
+		{
+			CrazyGeo.getPlugin().setPlayerSelection(player, region);
+			sendLocaleMessage("ARENA.SELECTED", player);
+			return;
+		}
+		else if (args[0].equalsIgnoreCase("set"))
+		{
+			region = CrazyGeo.getPlugin().getPlayerSelection(player);
+			sendLocaleMessage("ARENA.SET", player);
+			return;
+		}
+		throw new CrazyCommandUsageException("/crazyarena <Arena> arena [get]", "/crazyarena <Arena> arena set");
 	}
 
-	private void commandOut(Player player, String[] args)
+	private void commandOut(Player player, String[] args) throws CrazyCommandException
 	{
-		// EDIT Auto-generated method stub
+		if (args.length == 0)
+		{
+			CrazyGeo.getPlugin().setPlayerSelection(player, region);
+			sendLocaleMessage("OUT.SELECTED", player);
+			return;
+		}
+		if (args[0].equalsIgnoreCase("get"))
+		{
+			CrazyGeo.getPlugin().setPlayerSelection(player, region);
+			sendLocaleMessage("OUT.SELECTED", player);
+			return;
+		}
+		else if (args[0].equalsIgnoreCase("set"))
+		{
+			region = CrazyGeo.getPlugin().getPlayerSelection(player);
+			sendLocaleMessage("OUT.SET", player);
+			return;
+		}
+		throw new CrazyCommandUsageException("/crazyarena <Arena> out [get]", "/crazyarena <Arena> out set");
 	}
 
 	private void commandArenaSpawn(Player player, String[] args) throws CrazyCommandException
