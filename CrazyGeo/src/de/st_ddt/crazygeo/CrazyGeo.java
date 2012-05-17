@@ -20,66 +20,95 @@ public class CrazyGeo extends CrazyPlugin
 
 	protected final HashMap<Player, RealRoom<? extends Room>> geos = new HashMap<Player, RealRoom<? extends Room>>();
 	protected final HashMap<String, Class<Room>> type = new HashMap<String, Class<Room>>();
-	protected WorldEditBridge webridge;
+	protected WorldEditBridge weBridge;
 
 	@Override
 	public void onEnable()
 	{
-		this.webridge = WorldEditBridge.getWorldEditBridge();
+		this.weBridge = WorldEditBridge.getWorldEditBridge();
 		super.onEnable();
 	}
 
 	@Override
-	public boolean command(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (sender instanceof ConsoleCommandSender)
 			throw new CrazyCommandExecutorException(false);
-		return super.command((Player) sender, commandLabel, args);
+		return super.command(sender, commandLabel, args);
 	}
 
-	public boolean command(Player sender, String commandLabel, String[] args) throws CrazyException
+	public boolean command(final Player player, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
 	}
 
-	public void commandInfo(Player sender, String[] newArgs)
+	public void commandInfo(final Player player, final String[] newArgs)
 	{
-		// EDIT Auto-generated method stub
+		// RealRoom<? extends Room> region = getPlayerSelection(player);
+		// region.getBasis();
+		// region.getRoom();
+		// Rotated?
 	}
 
 	@Override
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (sender instanceof ConsoleCommandSender)
 			throw new CrazyCommandExecutorException(false);
-		return super.commandMain((Player) sender, commandLabel, args);
+		return super.commandMain(sender, commandLabel, args);
 	}
 
-	public boolean commandMain(final Player sender, final String commandLabel, final String[] args) throws CrazyException
+	public boolean commandMain(final Player player, final String commandLabel, final String[] args) throws CrazyException
 	{
-		if (commandLabel.equalsIgnoreCase("selType"))
+		// if (commandLabel.equalsIgnoreCase("selType"))
+		// {
+		// commandMainSelect(player, args);
+		// return true;
+		// }
+		if (commandLabel.equalsIgnoreCase("we") || commandLabel.equalsIgnoreCase("wei") || commandLabel.equalsIgnoreCase("weimport"))
 		{
-			commandMainSelect(sender, args);
+			commandMainWEImport(player, args);
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("we") || commandLabel.equalsIgnoreCase("weimport"))
+		if (commandLabel.equalsIgnoreCase("wee") || commandLabel.equalsIgnoreCase("weexport"))
 		{
-			commandMainWEImport(sender, args);
+			commandMainWEExport(player, args);
 			return true;
 		}
 		return false;
 	}
 
-	private void commandMainSelect(Player sender, String[] args)
+	// private void commandMainSelect(Player player, String[] args)
+	// {
+	// }
+	private void commandMainWEImport(final Player player, final String[] args) throws CrazyException
 	{
+		if (weBridge == null)
+			throw new CrazyCommandCircumstanceException("when WorldEdit is enabled!");
+		RealRoom<FuncRoom> region = weBridge.getSemiSavePlayerSelection(player);
+		geos.put(player, region);
 	}
 
-	private void commandMainWEImport(Player sender, String[] args) throws CrazyException
+	private void commandMainWEExport(final Player player, final String[] args) throws CrazyException
 	{
-		if (webridge == null)
+		if (weBridge == null)
 			throw new CrazyCommandCircumstanceException("when WorldEdit is enabled!");
-		RealRoom<FuncRoom> region;
-		region = webridge.getSemiSavePlayerSelection(sender);
-		geos.put(sender, region);
+		RealRoom<? extends Room> region = getPlayerSelection(player);
+		weBridge.setSemiSavePlayerSelection(player, region);
+	}
+
+	public RealRoom<? extends Room> getPlayerSelection(final Player player)
+	{
+		return geos.get(player);
+	}
+
+	public void setPlayerSelection(final Player player, final RealRoom<? extends Room> room)
+	{
+		geos.put(player, room);
+	}
+
+	public void clearPlayerSelection(final Player player)
+	{
+		geos.remove(player);
 	}
 }

@@ -25,6 +25,7 @@ import de.st_ddt.crazyutil.poly.region.RoundRegion;
 import de.st_ddt.crazyutil.poly.room.Elipsoid;
 import de.st_ddt.crazyutil.poly.room.FuncRoom;
 import de.st_ddt.crazyutil.poly.room.PrismRoom;
+import de.st_ddt.crazyutil.poly.room.Room;
 
 public class WorldEditBridge
 {
@@ -58,13 +59,13 @@ public class WorldEditBridge
 		{
 			return getSemiSavePlayerSelection(player);
 		}
-		catch (final CrazyWEUnsupportedRegionTypeException e)
+		catch (final CrazyWEUnsupportedGeoRegionTypeException e)
 		{
 			return null;
 		}
 	}
 
-	public RealRoom<FuncRoom> getSemiSavePlayerSelection(final Player player) throws CrazyWEUnsupportedRegionTypeException
+	public RealRoom<FuncRoom> getSemiSavePlayerSelection(final Player player) throws CrazyWEUnsupportedGeoRegionTypeException
 	{
 		try
 		{
@@ -76,7 +77,7 @@ public class WorldEditBridge
 		}
 	}
 
-	public RealRoom<FuncRoom> getPlayerSelection(final Player player) throws WorldEditException, CrazyWEUnsupportedRegionTypeException
+	public RealRoom<FuncRoom> getPlayerSelection(final Player player) throws WorldEditException, CrazyWEUnsupportedGeoRegionTypeException
 	{
 		final LocalWorld localWorld = we.getSession(player).getSelectionWorld();
 		final Region weregion = we.getSession(player).getSelection(localWorld);
@@ -113,8 +114,21 @@ public class WorldEditBridge
 			result = new RealRoom<FuncRoom>(room, basis);
 		}
 		else
-			throw new CrazyWEUnsupportedRegionTypeException(localWorld, weregion);
+			throw new CrazyWEUnsupportedGeoRegionTypeException(localWorld, weregion);
 		return result;
+	}
+
+	public void setSavePlayerSelection(final Player player, final RealRoom<? extends Room> room)
+	{
+		if (room.getRoom() instanceof WorldEditRoom)
+			setPlayerSelection(player, room.getBasis(), (WorldEditRoom) room.getRoom());
+	}
+
+	public void setSemiSavePlayerSelection(final Player player, final RealRoom<? extends Room> room) throws CrazyWEUnsupportedWERegionTypeException
+	{
+		if (room.getRoom() instanceof WorldEditRoom)
+			setPlayerSelection(player, room.getBasis(), (WorldEditRoom) room.getRoom());
+		throw new CrazyWEUnsupportedWERegionTypeException(room);
 	}
 
 	public void setPlayerSelection(final Player player, final RealRoom<WorldEditRoom> room)

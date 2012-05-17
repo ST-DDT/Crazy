@@ -7,14 +7,14 @@ import com.sk89q.worldedit.regions.Region;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class CrazyWEUnsupportedRegionTypeException extends CrazyException
+public class CrazyWEUnsupportedGeoRegionTypeException extends CrazyException
 {
 
 	private static final long serialVersionUID = -56978119580962345L;
 	protected final LocalWorld world;
 	protected final Region region;
 
-	public CrazyWEUnsupportedRegionTypeException(LocalWorld world, Region region)
+	public CrazyWEUnsupportedGeoRegionTypeException(final LocalWorld world, final Region region)
 	{
 		super();
 		this.world = world;
@@ -34,12 +34,14 @@ public class CrazyWEUnsupportedRegionTypeException extends CrazyException
 	@Override
 	public String getLangPath()
 	{
-		return super.getLangPath() + ".GEO.WORLDEDIT.UNSUPPORTEDREGIONTYPE";
+		return super.getLangPath() + ".GEO.WORLDEDIT.IMPORT.UNSUPPORTEDREGIONTYPE";
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "Head"));
+		sender.sendMessage(header + locale.getLocaleMessage(sender, "SUPPORTEDHEAD"));
+		sender.sendMessage(header + locale.getLocaleMessage(sender, "SUPPORTED"));
 	}
 }
