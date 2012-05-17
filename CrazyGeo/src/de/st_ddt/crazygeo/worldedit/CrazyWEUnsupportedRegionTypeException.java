@@ -1,5 +1,7 @@
 package de.st_ddt.crazygeo.worldedit;
 
+import org.bukkit.command.CommandSender;
+
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.regions.Region;
 
@@ -27,5 +29,17 @@ public class CrazyWEUnsupportedRegionTypeException extends CrazyException
 	public Region getRegion()
 	{
 		return region;
+	}
+
+	@Override
+	public String getLangPath()
+	{
+		return super.getLangPath() + ".GEO.WORLDEDIT.UNSUPPORTEDREGIONTYPE";
+	}
+
+	@Override
+	public void print(CommandSender sender, String header)
+	{
+		sender.sendMessage(header + locale.getLocaleMessage(sender, "Head"));
 	}
 }

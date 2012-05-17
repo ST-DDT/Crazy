@@ -12,6 +12,22 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 	protected double pitch; // xz
 	protected double roll; // yz
 
+	public RotatedRealRoom(final RealRoom<S> realRoom)
+	{
+		super(realRoom);
+		this.yaw = 0;
+		this.pitch = 0;
+		this.roll = 0;
+	}
+
+	public RotatedRealRoom(final RotatedRealRoom<S> realRoom)
+	{
+		super(realRoom);
+		this.yaw = realRoom.getYaw();
+		this.pitch = realRoom.getPitch();
+		this.roll = realRoom.getRoll();
+	}
+
 	public RotatedRealRoom(final S room, final Location basis)
 	{
 		super(room, basis);
@@ -85,5 +101,11 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 		config.set(path + "yaw", yaw);
 		config.set(path + "pitch", pitch);
 		config.set(path + "roll", roll);
+	}
+
+	@Override
+	protected RotatedRealRoom<S> clone()
+	{
+		return new RotatedRealRoom<S>(room, basis, yaw, pitch, roll);
 	}
 }

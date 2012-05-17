@@ -20,6 +20,13 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 		return null;
 	}
 
+	public RealRoom(final RealRoom<S> realRoom)
+	{
+		super();
+		this.room = realRoom.getRoom();
+		this.basis = realRoom.getBasis();
+	}
+
 	public RealRoom(final S room, final Location basis)
 	{
 		super();
@@ -71,5 +78,17 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 	{
 		ObjectSaveLoadHelper.saveLocation(config, path + "basis.", basis, true, false);
 		room.save(config, path + "room.", true);
+	}
+
+	@Override
+	protected RealRoom<S> clone()
+	{
+		return new RealRoom<S>(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	public final RealRoom<S> cloneAsRealRoom()
+	{
+		return new RealRoom<S>((S) room.clone(), basis);
 	}
 }
