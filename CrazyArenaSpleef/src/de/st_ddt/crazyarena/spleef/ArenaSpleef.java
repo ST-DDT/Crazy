@@ -18,7 +18,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
-import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.poly.room.Room;
 
 public class ArenaSpleef extends Arena
@@ -28,9 +27,9 @@ public class ArenaSpleef extends Arena
 	protected RealRoom<? extends Room> out;
 	protected final SpawnList arenaspawns = new SpawnList(world);
 	protected final SpawnList spectatorspawns = new SpawnList(world);
-	protected boolean running;
-	private long maxTime;
-	protected int run;
+	protected boolean running = false;
+	private long maxTime = 60;
+	protected int run = 0;
 	private ArenaSpleefTimeOut timeOut;
 	// Listener
 	private ArenaSpleefEntityListener entityListener;
@@ -38,11 +37,6 @@ public class ArenaSpleef extends Arena
 	public ArenaSpleef(FileConfiguration config)
 	{
 		super(config);
-		arena = RealRoom.load(config.getConfigurationSection("arena"), world);
-		for (String name : config.getConfigurationSection("arenaspawns").getKeys(false))
-			arenaspawns.add(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("arenaspawns." + name), world));
-		for (String name : config.getConfigurationSection("spectatorspawns").getKeys(false))
-			spectatorspawns.add(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("spectatorspawns." + name), world));
 	}
 
 	public ArenaSpleef(String name, World world)
@@ -166,7 +160,7 @@ public class ArenaSpleef extends Arena
 	@Override
 	protected boolean checkFinished()
 	{
-		if (isRunning() && participants.getParticipants(ParticipantType.PARTICIPANT).size() == 0)
+		if (isRunning() && participants.getParticipants(ParticipantType.PARTICIPANT).size() <= 1)
 			return true;
 		return false;
 	}
@@ -206,24 +200,29 @@ public class ArenaSpleef extends Arena
 	@Override
 	public boolean checkArena(CommandSender sender)
 	{
+		if (region == null)
+		{
+			sendLocaleMessage("CHECK.NOREGION", sender);
+			return false;
+		}
 		if (arena == null)
 		{
-			sendLocaleMessage("ARENASPLEEF.CHECK.NOARENAREGION", sender);
+			sendLocaleMessage("CHECK.NOARENA", sender);
 			return false;
 		}
 		if (out == null)
 		{
-			plugin.sendLocaleMessage("ARENASPLEEF.CHECK.NOARENAREGION", sender);
+			sendLocaleMessage("CHECK.NOOUT", sender);
 			return false;
 		}
 		if (arenaspawns.size() == 0)
 		{
-			plugin.sendLocaleMessage("ARENASPLEEF.CHECK.NOARENASPAWNS", sender);
+			sendLocaleMessage("CHECK.NOARENASPAWNS", sender);
 			return false;
 		}
 		if (spectatorspawns.size() == 0)
 		{
-			plugin.sendLocaleMessage("ARENASPLEEF.CHECK.NOSPECTATORSPAWNS", sender);
+			sendLocaleMessage("CHECK.NOSPECTATORSPAWNS", sender);
 			return false;
 		}
 		return true;
@@ -281,6 +280,32 @@ public class ArenaSpleef extends Arena
 	public RealRoom<? extends Room> getOut()
 	{
 		return out;
+	}
+
+	@Override
+	public void load()
+	{
+		super.load();
+		this.arena = RealRoom.load(config.getConfigurationSection("arena"), world);
+		this.out = RealRoom.load(config.getConfigurationSection("out"), world);
+		this.arenaspawns.addAll(new SpawnList(world, config.getConfigurationSection("arenaspawns")));
+		this.spectatorspawns.addAll(new SpawnList(world, config.getConfigurationSection("spectatorspawns")));
+		this.maxTime = config.getLong("maxTime", 60);
+	}
+
+	@Override
+	public void save()
+	{
+		super.save();
+		config.set("arena", null);
+		arena.save(config, "arena.", true);
+		config.set("out", null);
+		out.save(config, "out.", true);
+		config.set("arenaspawns", null);
+		arenaspawns.save(config, "arenaspawns.");
+		config.set("spectatorspawns", null);
+		spectatorspawns.save(config, "spectatorspawns.");
+		config.set("maxTime", maxTime);
 	}
 
 	@Override
