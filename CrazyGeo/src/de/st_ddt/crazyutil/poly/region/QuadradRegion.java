@@ -22,7 +22,7 @@ public class QuadradRegion extends FlatRegion
 	@Override
 	public boolean isInsideRel(final double x, final double z)
 	{
-		return Math.min(x, z) < sizeX;
+		return Math.min(Math.abs(x), Math.abs(z)) <= sizeX / 2;
 	}
 
 	@Override

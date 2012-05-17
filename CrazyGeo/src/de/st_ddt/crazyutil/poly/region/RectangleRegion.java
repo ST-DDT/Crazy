@@ -22,7 +22,7 @@ public class RectangleRegion extends QuadradRegion
 	@Override
 	public boolean isInsideRel(final double x, final double z)
 	{
-		return x <= sizeX && z <= sizeZ;
+		return Math.abs(x) <= sizeX / 2 && Math.abs(z) <= sizeZ / 2;
 	}
 
 	@Override
