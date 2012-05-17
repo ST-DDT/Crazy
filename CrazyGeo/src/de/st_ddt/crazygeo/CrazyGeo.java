@@ -18,13 +18,26 @@ import de.st_ddt.crazyutil.poly.room.Room;
 public class CrazyGeo extends CrazyPlugin
 {
 
+	private static CrazyGeo plugin;
 	protected final HashMap<Player, RealRoom<? extends Room>> geos = new HashMap<Player, RealRoom<? extends Room>>();
 	protected final HashMap<String, Class<Room>> type = new HashMap<String, Class<Room>>();
 	protected WorldEditBridge weBridge;
 
+	public static CrazyGeo getPlugin()
+	{
+		return plugin;
+	}
+
+	@Override
+	protected String getShortPluginName()
+	{
+		return "geo";
+	}
+
 	@Override
 	public void onEnable()
 	{
+		plugin = this;
 		this.weBridge = WorldEditBridge.getWorldEditBridge();
 		super.onEnable();
 	}
