@@ -18,6 +18,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.poly.room.Room;
 
 public class ArenaSpleef extends Arena
@@ -358,6 +359,16 @@ public class ArenaSpleef extends Arena
 		}
 		else if (args[0].equalsIgnoreCase("set"))
 		{
+			if (args.length > 2)
+				if (args[1].equalsIgnoreCase("we"))
+					try
+					{
+						CrazyGeo.getPlugin().importWE(player);
+					}
+					catch (CrazyException e)
+					{
+						e.print(player, getChatHeader());
+					}
 			region = CrazyGeo.getPlugin().getPlayerSelection(player);
 			sendLocaleMessage("REGION.SET", player);
 			return;
@@ -381,6 +392,16 @@ public class ArenaSpleef extends Arena
 		}
 		else if (args[0].equalsIgnoreCase("set"))
 		{
+			if (args.length > 2)
+				if (args[1].equalsIgnoreCase("we"))
+					try
+					{
+						CrazyGeo.getPlugin().importWE(player);
+					}
+					catch (CrazyException e)
+					{
+						e.print(player, getChatHeader());
+					}
 			region = CrazyGeo.getPlugin().getPlayerSelection(player);
 			sendLocaleMessage("ARENA.SET", player);
 			return;
@@ -404,6 +425,16 @@ public class ArenaSpleef extends Arena
 		}
 		else if (args[0].equalsIgnoreCase("set"))
 		{
+			if (args.length > 2)
+				if (args[1].equalsIgnoreCase("we"))
+					try
+					{
+						CrazyGeo.getPlugin().importWE(player);
+					}
+					catch (CrazyException e)
+					{
+						e.print(player, getChatHeader());
+					}
 			region = CrazyGeo.getPlugin().getPlayerSelection(player);
 			sendLocaleMessage("OUT.SET", player);
 			return;
