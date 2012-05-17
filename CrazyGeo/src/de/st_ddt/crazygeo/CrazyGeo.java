@@ -15,6 +15,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.poly.room.FuncRoom;
 import de.st_ddt.crazyutil.poly.room.Room;
 
+/**
+ * @author Daniel
+ * 
+ */
 public class CrazyGeo extends CrazyPlugin
 {
 
@@ -98,7 +102,22 @@ public class CrazyGeo extends CrazyPlugin
 	{
 		if (weBridge == null)
 			throw new CrazyCommandCircumstanceException("when WorldEdit is enabled!");
-		RealRoom<FuncRoom> region = weBridge.getSemiSavePlayerSelection(player);
+		final RealRoom<FuncRoom> region = weBridge.getSemiSavePlayerSelection(player);
+		geos.put(player, region);
+	}
+
+	/**
+	 * Import a region from WorldEdit
+	 * 
+	 * @param player
+	 *            The Player whos selection should be imported
+	 * @throws CrazyException
+	 */
+	public void importWE(final Player player) throws CrazyException
+	{
+		if (weBridge == null)
+			return;
+		final RealRoom<FuncRoom> region = weBridge.getSemiSavePlayerSelection(player);
 		geos.put(player, region);
 	}
 
@@ -106,7 +125,22 @@ public class CrazyGeo extends CrazyPlugin
 	{
 		if (weBridge == null)
 			throw new CrazyCommandCircumstanceException("when WorldEdit is enabled!");
-		RealRoom<? extends Room> region = getPlayerSelection(player);
+		final RealRoom<? extends Room> region = getPlayerSelection(player);
+		weBridge.setSemiSavePlayerSelection(player, region);
+	}
+
+	/**
+	 * Export a region to WorldEdit
+	 * 
+	 * @param player
+	 *            The Player whos selection should be exported
+	 * @throws CrazyException
+	 */
+	public void exportWE(final Player player) throws CrazyException
+	{
+		if (weBridge == null)
+			return;
+		final RealRoom<? extends Room> region = getPlayerSelection(player);
 		weBridge.setSemiSavePlayerSelection(player, region);
 	}
 
