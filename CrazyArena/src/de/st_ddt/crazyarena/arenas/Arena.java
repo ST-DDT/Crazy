@@ -45,9 +45,9 @@ public abstract class Arena
 		this.world = world;
 		// Locale
 		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
-		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + getArenaTypeLocaleDefault().toUpperCase());
+		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_" + getArenaTypeLocaleDefault().toUpperCase());
 		this.locale.setAlternative(typeLocale);
-		final CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA.DEFAULT");
+		final CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_DEFAULT");
 		typeLocale.setAlternative(defaultLocale);
 		// ChatHeader
 		chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + "Arena_" + getName() + ChatColor.RED + "] " + ChatColor.WHITE;
