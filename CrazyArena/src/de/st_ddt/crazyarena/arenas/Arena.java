@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaCheckExcetion;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
@@ -30,43 +31,49 @@ public abstract class Arena
 	protected final World world;
 	protected boolean enabled;
 	protected boolean edit;
-	protected RealRoom<Room> region;
+	protected RealRoom<? extends Room> region;
 	protected CrazyLocale locale;
 	protected final ParticipantList participants = new ParticipantList(this);
 	protected FileConfiguration config;
 	protected final CrazyArena plugin = CrazyArena.getPlugin();
 	private String chatHeader = null;
 
-	public Arena(FileConfiguration config)
+	private Arena(final World world)
 	{
 		super();
+		// World
+		this.world = world;
+		// Locale
+		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
+		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + getArenaTypeLocaleDefault().toUpperCase());
+		this.locale.setAlternative(typeLocale);
+		final CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA.DEFAULT");
+		typeLocale.setAlternative(defaultLocale);
+		// ChatHeader
+		chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + "Arena_" + getName() + ChatColor.RED + "] " + ChatColor.WHITE;
+	}
+
+	public Arena(final FileConfiguration config)
+	{
+		this(Bukkit.getWorld(config.getString("world")));
 		this.name = config.getString("name");
-		this.world = Bukkit.getWorld(config.getString("world"));
 		this.config = config;
 		this.edit = false;
 		this.region = RealRoom.load(config.getConfigurationSection("region"), world);
-		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
-		CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + getArenaTypeLocaleDefault().toUpperCase());
-		this.locale.setAlternative(typeLocale);
-		CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA.DEFAULT");
-		typeLocale.setAlternative(defaultLocale);
 		load();
 	}
 
-	public Arena(String name, World world)
+	public Arena(final String name, final World world)
 	{
-		super();
+		this(world);
 		this.name = name;
-		this.world = world;
 		this.config = new YamlConfiguration();
 		this.enabled = false;
 		this.edit = false;
 	}
 
-	public final String getChatHeader()
+	public String getChatHeader()
 	{
-		if (chatHeader == null)
-			chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + "Arena_" + getName() + ChatColor.RED + "] " + ChatColor.WHITE;
 		return chatHeader;
 	}
 
@@ -75,7 +82,7 @@ public abstract class Arena
 		return locale;
 	}
 
-	public Participant getParticipant(Player player)
+	public Participant getParticipant(final Player player)
 	{
 		return participants.getParticipant(player);
 	}
@@ -85,25 +92,25 @@ public abstract class Arena
 		return participants;
 	}
 
-	public ParticipantList getParticipants(ParticipantType type)
+	public ParticipantList getParticipants(final ParticipantType type)
 	{
 		return participants.getParticipants(type);
 	}
 
-	public boolean isParticipant(Player player)
+	public boolean isParticipant(final Player player)
 	{
 		return getParticipant(player) != null;
 	}
 
-	public boolean isParticipant(Player player, ParticipantType type)
+	public boolean isParticipant(final Player player, final ParticipantType type)
 	{
-		Participant participant = getParticipant(player);
+		final Participant participant = getParticipant(player);
 		if (participant == null)
 			return false;
 		return participant.getParticipantType() == type;
 	}
 
-	public final void join(Player player) throws CrazyCommandException
+	public final void join(final Player player) throws CrazyCommandException
 	{
 		join(player, false);
 	}
@@ -112,26 +119,26 @@ public abstract class Arena
 
 	public abstract void ready(Player player) throws CrazyCommandException;
 
-	public void team(Player player, String... team) throws CrazyCommandException
+	public void team(final Player player, final String... team) throws CrazyCommandException
 	{
 		plugin.sendLocaleMessage("ARENA.TEAM.UNSUPPORTED", player);
 	}
 
-	public void spectate(Player player) throws CrazyCommandException
+	public void spectate(final Player player) throws CrazyCommandException
 	{
 		plugin.sendLocaleMessage("ARENA.SPECTATOR.UNSUPPORTED", player);
 	}
 
-	public final void leave(Player player) throws CrazyCommandException
+	public final void leave(final Player player) throws CrazyCommandException
 	{
 		leave(player, false);
 	}
 
 	public abstract void leave(Player player, boolean kicked) throws CrazyCommandException;
 
-	public void quitgame(Player player)
+	public void quitgame(final Player player)
 	{
-		Participant participant = getParticipant(player);
+		final Participant participant = getParticipant(player);
 		if (participant != null)
 			participant.setParticipantType(ParticipantType.QUITER);
 		stop(null, false);
@@ -166,7 +173,7 @@ public abstract class Arena
 		{
 			config.save(plugin.getDataFolder().getPath() + "/Arenas/" + name + ".yml");
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -191,7 +198,7 @@ public abstract class Arena
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) throws CrazyArenaException
+	public void setEnabled(final boolean enabled) throws CrazyArenaException
 	{
 		if (enabled)
 			if (!checkArena(null))
@@ -204,7 +211,7 @@ public abstract class Arena
 		return edit;
 	}
 
-	public void setEditMode(boolean edit)
+	public void setEditMode(final boolean edit)
 	{
 		this.edit = edit;
 		if (edit)
@@ -212,7 +219,7 @@ public abstract class Arena
 			{
 				setEnabled(false);
 			}
-			catch (CrazyArenaException e)
+			catch (final CrazyArenaException e)
 			{}
 	}
 
@@ -223,17 +230,17 @@ public abstract class Arena
 
 	public abstract boolean isRunning();
 
-	public boolean command(Player player, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(final Player player, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
 		return false;
 	}
 
-	public void addSign(Player player, Block block)
+	public void addSign(final Player player, final Block block)
 	{
 		plugin.sendLocaleMessage("ARENA.SIGN.UNSUPPORTED", player);
 	}
 
-	public void sendInfo(CommandSender sender)
+	public void sendInfo(final CommandSender sender)
 	{
 		plugin.sendLocaleMessage("ARENA.INFO.NAME", sender, name);
 		plugin.sendLocaleMessage("MESSAGE.SEPERATOR", sender);
@@ -270,7 +277,7 @@ public abstract class Arena
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
 	{
-		for (CommandSender target : targets)
+		for (final CommandSender target : targets)
 			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
 	}
 
@@ -281,7 +288,7 @@ public abstract class Arena
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
 	{
-		for (CommandSender target : targets)
+		for (final CommandSender target : targets)
 			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
 	}
 }
