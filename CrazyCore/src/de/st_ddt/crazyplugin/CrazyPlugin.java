@@ -17,6 +17,7 @@ import java.util.Collection;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
@@ -174,10 +175,14 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 	@Override
 	public void onEnable()
 	{
+		ConfigurationSection config = getConfig();
+		boolean updated = config.getString("version", "").equals(getDescription().getVersion());
 		for (String language : CrazyLocale.getLoadedLanguages())
-			loadLanguage(language);
+			loadLanguage(language, updated);
 		checkLocale();
 		load();
+		if (updated)
+			save();
 		super.onEnable();
 	}
 
@@ -292,7 +297,12 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 
 	public void loadLanguage(final String language)
 	{
-		loadLanguage(language, getServer().getConsoleSender());
+		loadLanguage(language, Bukkit.getConsoleSender(), false);
+	}
+
+	public void loadLanguage(final String language, boolean forceDownload)
+	{
+		loadLanguage(language, Bukkit.getConsoleSender(), forceDownload);
 	}
 
 	public void loadLanguageDelayed(final String language, final CommandSender sender)
@@ -302,9 +312,14 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 
 	public void loadLanguage(final String language, final CommandSender sender)
 	{
+		loadLanguage(language, sender, false);
+	}
+
+	public void loadLanguage(final String language, final CommandSender sender, boolean forceDownload)
+	{
 		// default files
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
-		if (!file.exists())
+		if (!file.exists() || forceDownload)
 		{
 			downloadLanguage(language);
 			if (!file.exists())
@@ -413,6 +428,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 
 	public void downloadLanguage(final String language)
 	{
+		downloadLanguage(language, Bukkit.getConsoleSender());
+	}
+
+	public void downloadLanguage(final String language, CommandSender sender)
+	{
 		try
 		{
 			InputStream stream = null;
@@ -443,7 +463,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 		}
 		catch (IOException e)
 		{
-			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", getServer().getConsoleSender(), language);
+			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", sender, language);
 		}
 	}
 }

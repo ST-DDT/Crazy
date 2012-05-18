@@ -156,8 +156,7 @@ public class CrazyCore extends CrazyPlugin
 						{
 							for (CrazyPlugin plugin : getCrazyPlugins())
 							{
-								plugin.downloadLanguage(language);
-								plugin.loadLanguage(language, sender);
+								plugin.loadLanguage(language, sender, true);
 								plugin.checkLocale();
 							}
 							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED", sender, language);
@@ -169,8 +168,7 @@ public class CrazyCore extends CrazyPlugin
 					{
 						for (String language : CrazyLocale.getLoadedLanguages())
 						{
-							plugin.downloadLanguage(language);
-							plugin.loadLanguage(language, sender);
+							plugin.loadLanguage(language, sender, true);
 							plugin.checkLocale();
 							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED.PLUGIN", sender, language, plugin.getName());
 						}
@@ -178,8 +176,7 @@ public class CrazyCore extends CrazyPlugin
 					}
 					for (CrazyPlugin plugin2 : getCrazyPlugins())
 					{
-						plugin2.downloadLanguage(download);
-						plugin2.loadLanguage(download, sender);
+						plugin2.loadLanguage(download, sender, true);
 						plugin2.checkLocale();
 					}
 					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.DOWNLOADED", sender, download);
