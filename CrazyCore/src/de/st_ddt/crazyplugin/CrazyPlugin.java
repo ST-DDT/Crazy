@@ -177,6 +177,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 	{
 		ConfigurationSection config = getConfig();
 		boolean updated = config.getString("version", "").equals(getDescription().getVersion());
+		config.set("version", getDescription().getVersion());
 		for (String language : CrazyLocale.getLoadedLanguages())
 			loadLanguage(language, updated);
 		checkLocale();
