@@ -108,6 +108,8 @@ public class ArenaSpleef extends Arena
 			return false;
 		if (participants.getParticipants(ParticipantType.WAITING).size() != 0)
 			return false;
+		if (participants.getParticipants(ParticipantType.PARTICIPANT).size() < 2)
+			return false;
 		return true;
 	}
 
