@@ -6,10 +6,9 @@ version: C6.5_3
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
-  crazyweather:
-    description: Change the weather
-    usage: /<command> sun|/<command> rain|/<command> storm
-    aliases: [weather]
+  weather: 
+    description: Change weather
+    usage: /<command> [World] <Weather> [static] [onLoad]
   sun:
     description: Cast sun
     usage: /<command>
@@ -22,9 +21,9 @@ commands:
   thunder:
     description: Cast a lighting strike on target.
     usage: /<command>|/<command> player
-  thundertool:
-    description: Shows/Sets the current thundertool
-    usage: /<command>|/<command> ToolID
+  crazyweather:
+    description: Plugin Main Menu
+    usage: /<command> [Subcommands...]
 permissions:
   crazyweather.*:
     description: Access to all commands

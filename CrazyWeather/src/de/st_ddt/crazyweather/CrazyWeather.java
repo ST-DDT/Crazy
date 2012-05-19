@@ -38,12 +38,6 @@ public class CrazyWeather extends CrazyPlugin
 	}
 
 	@Override
-	protected String getShortPluginName()
-	{
-		return "weather";
-	}
-
-	@Override
 	public void onEnable()
 	{
 		plugin = this;
