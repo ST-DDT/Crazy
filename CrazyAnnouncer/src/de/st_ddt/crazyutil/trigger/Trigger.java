@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazyutil.NamedRunnable;
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public abstract class Trigger implements NamedRunnable
 {
@@ -20,45 +21,7 @@ public abstract class Trigger implements NamedRunnable
 	{
 		if (config == null)
 			return null;
-		final String type = config.getString("type", "-1");
-		if (type == "-1")
-		{
-			System.out.println("Invalid Trigger Type!");
-			return null;
-		}
-		Class<?> clazz = null;
-		try
-		{
-			clazz = Class.forName(type);
-		}
-		catch (final ClassNotFoundException e)
-		{
-			try
-			{
-				clazz = Class.forName("de.st_ddt.crazyutil.trigger." + type);
-			}
-			catch (final ClassNotFoundException e2)
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-		if (clazz.getClass().isAssignableFrom(Trigger.class))
-		{
-			System.out.println("Invalid TriggerType " + clazz.toString().substring(6));
-			return null;
-		}
-		Trigger trigger = null;
-		try
-		{
-			trigger = (Trigger) clazz.getConstructor(ConfigurationSection.class, List.class, JavaPlugin.class).newInstance(config, actionlist, plugin);
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		return trigger;
+		return ObjectSaveLoadHelper.load(config, Trigger.class, new Class[] { ConfigurationSection.class, List.class, JavaPlugin.class }, new Object[] { config, actionlist, plugin });
 	}
 
 	public Trigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin)

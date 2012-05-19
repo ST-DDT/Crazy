@@ -11,14 +11,19 @@ import de.st_ddt.crazyutil.NamedRunnable;
 public class ScheduledRepeatedTrigger extends ScheduledTrigger
 {
 
-	long interval;
-	int repeat;
+	protected long interval;
+	protected int repeat;
 
 	public ScheduledRepeatedTrigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super(config, actionlist, plugin);
-		config.getInt("interval", 1000);
-		config.getInt("repeat", 0);
+		this.interval = config.getInt("interval", 1000);
+		this.repeat = config.getInt("repeat", 0);
+		Date now = new Date();
+		if (repeat > 0)
+			this.repeat = (int) Math.max((repeat - date.getTime() - now.getTime()) / interval, 0);
+		if (repeat != 0)
+			this.date.setTime((now.getTime() - date.getTime()) % interval + now.getTime());
 	}
 
 	public ScheduledRepeatedTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date, final long interval, final int repeat)

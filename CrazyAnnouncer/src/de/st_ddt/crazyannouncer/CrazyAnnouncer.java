@@ -62,8 +62,10 @@ public class CrazyAnnouncer extends CrazyPlugin
 		config = getConfig().getConfigurationSection("triggers");
 		if (config != null)
 		{
-			for (final String name : config.getKeys(false))
+			for (String name : config.getKeys(false))
 				triggers.add(Trigger.load(config.getConfigurationSection(name), actions, this));
+			for (Trigger trigger : triggers)
+				trigger.register();
 		}
 		else
 		{

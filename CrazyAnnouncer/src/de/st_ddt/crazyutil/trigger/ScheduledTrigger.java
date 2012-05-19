@@ -28,14 +28,12 @@ public class ScheduledTrigger extends Trigger
 		{
 			this.date = new Date();
 		}
-		register();
 	}
 
 	public ScheduledTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date)
 	{
 		super(name, actionlist, plugin);
 		this.date = date;
-		register();
 	}
 
 	@Override
