@@ -2,7 +2,7 @@ name: CrazyWeather
 main: de.st_ddt.crazyweather.CrazyWeather
 author: ST-DDT
 #C*=needed core version
-version: C6.3_2.4
+version: C6.5_3
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
@@ -78,14 +78,20 @@ permissions:
   crazyweather.thunder: 
     description: Allow casting thunderstrikes
     default: op
+  crazyweather.thunder.player: 
+    description: Allow casting thunderstrikes on player
+    default: op
+  crazyweather.mode:
+    description: Allow changing plugin mode
+    default: op
   crazyweather.thunder.tool: 
     description: Allow casting thunderstrikes with tool
     default: false
+    children:
+      crazyweather.mode: true
   crazyweather.thunder.toolchange: 
     description: Allow changing thunderstrikes tool
     default: false
     children: 
       crazyweather.thunder.tool: true
-  crazyweather.thunder.player: 
-    description: Allow casting thunderstrikes on player
-    default: op
+      crazyweather.mode: true
