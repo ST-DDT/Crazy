@@ -175,11 +175,6 @@ public class CrazyWeather extends CrazyPlugin
 				else
 					throw new CrazyCommandUsageException("/weather [World] <Weather> [static] [onLoad]");
 		}
-		if (keepStatic)
-			if (!sender.hasPermission("crazyweather.set." + weather) && !sender.hasPermission("crazyweather." + world.getName() + ".set." + weather))
-				throw new CrazyCommandPermissionException();
-		if (!sender.hasPermission("crazyweather.change." + weather) && !sender.hasPermission("crazyweather." + world.getName() + ".change." + weather))
-			throw new CrazyCommandPermissionException();
 		changeWeather(sender, weather, world, keepStatic, keepLoad);
 	}
 
@@ -189,13 +184,13 @@ public class CrazyWeather extends CrazyPlugin
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
 		final World world = player.getWorld();
-		if (!sender.hasPermission("crazyweather.change." + weather) && !sender.hasPermission("crazyweather." + world.getName() + ".change." + weather))
-			throw new CrazyCommandPermissionException();
 		changeWeather(player, weather, world, false, false);
 	}
 
-	public void changeWeather(final CommandSender sender, final String weather, final World world, final boolean keepStatic, final boolean keepLoad)
+	protected void changeWeather(final CommandSender sender, final String weather, final World world, final boolean keepStatic, final boolean keepLoad) throws CrazyCommandPermissionException
 	{
+		if (!hasWeatherPermission(sender, world, keepStatic || keepLoad, weather))
+			throw new CrazyCommandPermissionException();
 		final WorldWeather worldWeather = getWorldWeather(world);
 		if (worldWeather != null)
 		{
@@ -204,6 +199,13 @@ public class CrazyWeather extends CrazyPlugin
 		}
 		else
 			sendLocaleMessage("COMMAND.WEATHER.ERROR", sender);
+	}
+
+	public void setWeather(final String weather, final World world, final boolean keepStatic, final boolean keepLoad)
+	{
+		final WorldWeather worldWeather = getWorldWeather(world);
+		if (worldWeather != null)
+			worldWeather.setWeather(weather, keepStatic, keepLoad);
 	}
 
 	private void commandThunder(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -289,6 +291,31 @@ public class CrazyWeather extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/crazyweather mode <Mode> [Value]");
 		}
+	}
+
+	private boolean hasWeatherPermission(CommandSender sender, World world, boolean set, String weather)
+	{
+		if (sender.hasPermission("crazyweather.set.*"))
+			return true;
+		if (world != null)
+		{
+			if (sender.hasPermission("crazyweather." + world.getName() + ".set.*"))
+				return true;
+			if (sender.hasPermission("crazyweather." + world.getName() + ".set." + weather))
+				return true;
+		}
+		if (set)
+			return false;
+		if (sender.hasPermission("crazyweather.change.*"))
+			return true;
+		if (world != null)
+		{
+			if (sender.hasPermission("crazyweather." + world.getName() + ".change.*"))
+				return true;
+			if (sender.hasPermission("crazyweather." + world.getName() + ".change." + weather))
+				return true;
+		}
+		return false;
 	}
 
 	public int getTool()
