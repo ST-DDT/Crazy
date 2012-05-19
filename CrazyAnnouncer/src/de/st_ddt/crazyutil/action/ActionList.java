@@ -1,13 +1,12 @@
 package de.st_ddt.crazyutil.action;
 
-import java.util.List;
-
+import java.util.ArrayList;
 import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class ActionList extends Action
 {
 
-	protected List<Action> actions;
+	protected final ArrayList<Action> actions = new ArrayList<Action>();
 
 	public ActionList(ConfigurationSection config)
 	{

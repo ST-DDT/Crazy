@@ -7,7 +7,7 @@ import java.util.List;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.st_ddt.crazycore.CrazyCore;
+import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyutil.NamedRunnable;
 
 public class ScheduledTrigger extends Trigger
@@ -16,22 +16,22 @@ public class ScheduledTrigger extends Trigger
 	protected Date date;
 	protected int taskID = -1;
 
-	public ScheduledTrigger(ConfigurationSection config, List<NamedRunnable> actionlist, JavaPlugin plugin)
+	public ScheduledTrigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super(config, actionlist, plugin);
-		String datesString = config.getString("date");
+		final String datesString = config.getString("date");
 		try
 		{
-			this.date = CrazyCore.DateFormat.parse(datesString);
+			this.date = CrazyPlugin.DateFormat.parse(datesString);
 		}
-		catch (ParseException e)
+		catch (final ParseException e)
 		{
 			this.date = new Date();
 		}
 		register();
 	}
 
-	public ScheduledTrigger(String name, List<NamedRunnable> actionlist, JavaPlugin plugin, Date date)
+	public ScheduledTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date)
 	{
 		super(name, actionlist, plugin);
 		this.date = date;
@@ -39,7 +39,7 @@ public class ScheduledTrigger extends Trigger
 	}
 
 	@Override
-	public void setEnabled(boolean enabled)
+	public void setEnabled(final boolean enabled)
 	{
 		if (enabled != this.enabled)
 			if (enabled)
@@ -76,9 +76,9 @@ public class ScheduledTrigger extends Trigger
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
-		config.set(path + "date", CrazyCore.DateFormat.format(date));
+		config.set(path + "date", CrazyPlugin.DateFormat.format(date));
 	}
 }

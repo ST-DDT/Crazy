@@ -13,7 +13,6 @@ import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyutil.NamedRunnable;
 import de.st_ddt.crazyutil.action.Action;
 import de.st_ddt.crazyutil.action.Action_MESSAGE;
-
 import de.st_ddt.crazyutil.trigger.EventTrigger;
 import de.st_ddt.crazyutil.trigger.ScheduledTrigger;
 import de.st_ddt.crazyutil.trigger.Trigger;
@@ -42,7 +41,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 	public void registerHooks()
 	{
 		this.eventListener = new CrazyAnnouncerEventListener(this);
-		PluginManager pm = this.getServer().getPluginManager();
+		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(eventListener, this);
 	}
 
@@ -53,7 +52,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 		ConfigurationSection config = getConfig().getConfigurationSection("actions");
 		if (config != null)
 		{
-			for (String name : config.getKeys(false))
+			for (final String name : config.getKeys(false))
 				actions.add(Action.load(config.getConfigurationSection(name)));
 		}
 		else
@@ -63,12 +62,12 @@ public class CrazyAnnouncer extends CrazyPlugin
 		config = getConfig().getConfigurationSection("triggers");
 		if (config != null)
 		{
-			for (String name : config.getKeys(false))
+			for (final String name : config.getKeys(false))
 				triggers.add(Trigger.load(config.getConfigurationSection(name), actions, this));
 		}
 		else
 		{
-			List<Class<? extends Event>> events = new ArrayList<Class<? extends Event>>();
+			final List<Class<? extends Event>> events = new ArrayList<Class<? extends Event>>();
 			events.add(PlayerJoinEvent.class);
 			triggers.add(new EventTrigger("exampleEvent", actions, plugin, events, eventListener));
 			triggers.add(new ScheduledTrigger("exampleEvent", actions, plugin, new Date(new Date().getTime() + 20000)));
@@ -78,12 +77,12 @@ public class CrazyAnnouncer extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		config.set("triggers", null);
-		for (Trigger trigger : triggers)
+		for (final Trigger trigger : triggers)
 			trigger.save(config, "triggers." + trigger.getName() + ".");
 		config.set("actions", null);
-		for (NamedRunnable action : actions)
+		for (final NamedRunnable action : actions)
 			action.save(config, "actions." + action.getName() + ".");
 		super.save();
 	}

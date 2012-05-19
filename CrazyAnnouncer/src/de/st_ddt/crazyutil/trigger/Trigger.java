@@ -16,11 +16,11 @@ public abstract class Trigger implements NamedRunnable
 	public boolean enabled;
 	protected final JavaPlugin plugin;
 
-	public static Trigger load(ConfigurationSection config, List<? extends NamedRunnable> actionlist, JavaPlugin plugin)
+	public static Trigger load(final ConfigurationSection config, final List<? extends NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		if (config == null)
 			return null;
-		String type = config.getString("type", "-1");
+		final String type = config.getString("type", "-1");
 		if (type == "-1")
 		{
 			System.out.println("Invalid Trigger Type!");
@@ -31,13 +31,13 @@ public abstract class Trigger implements NamedRunnable
 		{
 			clazz = Class.forName(type);
 		}
-		catch (ClassNotFoundException e)
+		catch (final ClassNotFoundException e)
 		{
 			try
 			{
 				clazz = Class.forName("de.st_ddt.crazyutil.trigger." + type);
 			}
-			catch (ClassNotFoundException e2)
+			catch (final ClassNotFoundException e2)
 			{
 				e.printStackTrace();
 				return null;
@@ -53,7 +53,7 @@ public abstract class Trigger implements NamedRunnable
 		{
 			trigger = (Trigger) clazz.getConstructor(ConfigurationSection.class, List.class, JavaPlugin.class).newInstance(config, actionlist, plugin);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -61,7 +61,7 @@ public abstract class Trigger implements NamedRunnable
 		return trigger;
 	}
 
-	public Trigger(String name, List<NamedRunnable> actionlist, JavaPlugin plugin)
+	public Trigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super();
 		this.name = name;
@@ -70,12 +70,12 @@ public abstract class Trigger implements NamedRunnable
 		this.plugin = plugin;
 	}
 
-	public Trigger(ConfigurationSection config, List<NamedRunnable> actionlist, JavaPlugin plugin)
+	public Trigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super();
 		this.name = config.getName();
-		List<String> actionnames = config.getStringList("actions");
-		for (NamedRunnable action : actionlist)
+		final List<String> actionnames = config.getStringList("actions");
+		for (final NamedRunnable action : actionlist)
 			if (actionnames.contains(action.getName()))
 				this.actions.add(action);
 		this.enabled = config.getBoolean("enabled", true);
@@ -83,11 +83,11 @@ public abstract class Trigger implements NamedRunnable
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
-		List<String> actionnames = new ArrayList<String>();
+		final List<String> actionnames = new ArrayList<String>();
 		config.set(path + "type", this.getClass().getName());
-		for (NamedRunnable action : actions)
+		for (final NamedRunnable action : actions)
 			actionnames.add(action.getName());
 		config.set(path + "actions", actionnames);
 		config.set(path + "enabled", enabled);
@@ -104,7 +104,7 @@ public abstract class Trigger implements NamedRunnable
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled)
+	public void setEnabled(final boolean enabled)
 	{
 		if (this.enabled != enabled)
 			if (enabled)
@@ -114,13 +114,13 @@ public abstract class Trigger implements NamedRunnable
 		this.enabled = enabled;
 	}
 
-	public void addAction(NamedRunnable action)
+	public void addAction(final NamedRunnable action)
 	{
 		if (!actions.contains(action))
 			actions.add(action);
 	}
 
-	public void removeAction(NamedRunnable action)
+	public void removeAction(final NamedRunnable action)
 	{
 		actions.remove(action);
 	}
@@ -136,7 +136,7 @@ public abstract class Trigger implements NamedRunnable
 	{
 		if (!enabled)
 			return;
-		for (Runnable action : actions)
+		for (final Runnable action : actions)
 			action.run();
 	}
 }

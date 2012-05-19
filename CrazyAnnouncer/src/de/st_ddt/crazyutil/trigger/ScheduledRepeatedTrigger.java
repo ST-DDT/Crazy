@@ -14,14 +14,14 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 	long interval;
 	int repeat;
 
-	public ScheduledRepeatedTrigger(ConfigurationSection config, List<NamedRunnable> actionlist, JavaPlugin plugin)
+	public ScheduledRepeatedTrigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super(config, actionlist, plugin);
 		config.getInt("interval", 1000);
 		config.getInt("repeat", 0);
 	}
 
-	public ScheduledRepeatedTrigger(String name, List<NamedRunnable> actionlist, JavaPlugin plugin, Date date, long interval, int repeat)
+	public ScheduledRepeatedTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date, final long interval, final int repeat)
 	{
 		super(name, actionlist, plugin, date);
 		this.interval = interval;
@@ -29,7 +29,7 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 	}
 
 	@Override
-	public void setEnabled(boolean enabled)
+	public void setEnabled(final boolean enabled)
 	{
 		if (enabled != this.enabled)
 			if (enabled)
@@ -49,7 +49,7 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "repeat", repeat);

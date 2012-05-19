@@ -16,27 +16,27 @@ public class EventTrigger extends Trigger
 	List<Class<? extends Event>> events;
 
 	@SuppressWarnings("unchecked")
-	public EventTrigger(ConfigurationSection config, List<NamedRunnable> actionlist, JavaPlugin plugin, TriggerEventListener listener)
+	public EventTrigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final TriggerEventListener listener)
 	{
 		super(config, actionlist, plugin);
 		this.listener = listener;
 		this.events = new ArrayList<Class<? extends Event>>();
-		for (String clazz : config.getStringList("events"))
+		for (final String clazz : config.getStringList("events"))
 			try
 			{
 				events.add((Class<Event>) Class.forName(clazz));
 			}
-			catch (ClassNotFoundException e)
+			catch (final ClassNotFoundException e)
 			{
 				System.out.println("Class " + clazz + " not found!");
 			}
-			catch (ClassCastException e)
+			catch (final ClassCastException e)
 			{
 				System.out.println("Class " + clazz + " is not an event!");
 			}
 	}
 
-	public EventTrigger(String name, List<NamedRunnable> actionlist, JavaPlugin plugin, List<Class<? extends Event>> events, TriggerEventListener listener)
+	public EventTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final List<Class<? extends Event>> events, final TriggerEventListener listener)
 	{
 		super(name, actionlist, plugin);
 		this.listener = listener;
