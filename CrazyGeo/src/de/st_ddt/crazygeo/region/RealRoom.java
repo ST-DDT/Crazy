@@ -54,6 +54,11 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 		this.basis = basis;
 	}
 
+	public World getWorld()
+	{
+		return basis.getWorld();
+	}
+
 	public final boolean isInside(final Entity entity)
 	{
 		return isInside(entity.getLocation());
