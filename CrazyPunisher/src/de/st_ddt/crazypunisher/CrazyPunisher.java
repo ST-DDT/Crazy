@@ -13,8 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -35,6 +35,7 @@ import de.st_ddt.crazypunisher.events.CrazyPunisherVisibilityChangeEvent;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.Pair;
 import de.st_ddt.crazyutil.PairList;
+import de.st_ddt.crazyutil.poly.room.Room;
 import de.st_ddt.crazyutil.poly.room.Sphere;
 
 public class CrazyPunisher extends CrazyPlugin
@@ -46,11 +47,12 @@ public class CrazyPunisher extends CrazyPlugin
 	private final ArrayList<String> hidden = new ArrayList<String>();
 	private CrazyPunisherPlayerListener playerListener = null;
 	public RealRoom<Sphere> jailsphere = null;
+	protected final ArrayList<RealRoom<? extends Room>> jails = new ArrayList<RealRoom<? extends Room>>();
 	public Location jailcenter = null;
 	private World jailworld = null;
 	private double jailrange = 1;
 	private boolean autoBanIP;
-	private DynmapAPI dynmap = null;
+	private DynmapAddIn dynmap = null;
 	private boolean dynmapEnabled;
 
 	public static CrazyPunisher getPlugin()
@@ -87,10 +89,15 @@ public class CrazyPunisher extends CrazyPlugin
 			jailcenter = jailworld.getSpawnLocation();
 		jailrange = config.getDouble("jail.range", 5D);
 		jailsphere = new RealRoom<Sphere>(new Sphere(jailrange), jailcenter);
+		jails.add(jailsphere);
 		autoBanIP = config.getBoolean("autoBanIP", true);
 		dynmapEnabled = config.getBoolean("dynmapEnabled", true);
 		if (dynmapEnabled)
-			dynmap = (DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap");
+		{
+			DynmapAPI dynmapAPI = (DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap");
+			dynmap = new DynmapAddIn(dynmapAPI, this);
+			dynmap.updateMarkers();
+		}
 		Set<String> list = null;
 		if (config.getConfigurationSection("player.banned") != null)
 			list = config.getConfigurationSection("player.banned").getKeys(false);
@@ -142,7 +149,7 @@ public class CrazyPunisher extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		YamlConfiguration config = (YamlConfiguration) getConfig();
+		ConfigurationSection config = getConfig();
 		config.set("player.banned", null);
 		ObjectSaveLoadHelper.saveLocation(config, "jail.", jailcenter);
 		config.set("jail.range", jailrange);
@@ -572,7 +579,7 @@ public class CrazyPunisher extends CrazyPlugin
 				continue;
 			hidden.remove(player.getName());
 			if (dynmap != null)
-				dynmap.setPlayerVisiblity(player, true);
+				dynmap.getDynmapApi().setPlayerVisiblity(player, true);
 			for (Player plr : getServer().getOnlinePlayers())
 				plr.showPlayer(player);
 			sendLocaleMessage("COMMAND.SHOW", player);
@@ -606,7 +613,7 @@ public class CrazyPunisher extends CrazyPlugin
 				continue;
 			hidden.add(player.getName());
 			if (dynmap != null)
-				dynmap.setPlayerVisiblity(player, false);
+				dynmap.getDynmapApi().setPlayerVisiblity(player, false);
 			for (Player plr : getServer().getOnlinePlayers())
 				if (plr.hasPermission("crazypunisher.showall") || isHidden(plr))
 				{
@@ -738,6 +745,11 @@ public class CrazyPunisher extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/crazypunisher jailrange [Range]");
 		}
+	}
+
+	public ArrayList<RealRoom<? extends Room>> getJails()
+	{
+		return jails;
 	}
 
 	public boolean isAutoBanIPEnabled()
