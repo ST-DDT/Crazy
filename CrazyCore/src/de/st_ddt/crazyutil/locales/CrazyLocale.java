@@ -120,6 +120,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return ChatHelper.putArgs(getLanguageEntry(localePath).getLanguageText(getUserLanguage(sender)), args);
 	}
 
+	public String getDefaultLocaleMessage(String localePath, Object... args)
+	{
+		return ChatHelper.putArgs(getLanguageEntry(localePath).getDefaultLanguageText(), args);
+	}
+
 	public String getLanguageText(CommandSender sender)
 	{
 		return getLanguageText(getUserLanguage(sender));
@@ -130,20 +135,26 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		String res = localeTexts.findDataVia1(language);
 		if (res == null)
 		{
-			res = localeTexts.findDataVia1(CrazyCore.getDefaultLanguage());
+			res = getDefaultLanguageText();
+		}
+		return res;
+	}
+
+	public String getDefaultLanguageText()
+	{
+		String res = localeTexts.findDataVia1(CrazyCore.getDefaultLanguage());
+		if (res == null)
+		{
+			res = localeTexts.findDataVia1("en_en");
 			if (res == null)
 			{
-				res = localeTexts.findDataVia1("en_en");
+				if (localeTexts.size() == 0)
+					return "EMPTY!";
+				if (localeTexts.get(0) == null)
+					return "EMPTY!";
+				res = localeTexts.get(0).getData2();
 				if (res == null)
-				{
-					if (localeTexts.size() == 0)
-						return "EMPTY!";
-					if (localeTexts.get(0) == null)
-						return "EMPTY!";
-					res = localeTexts.get(0).getData2();
-					if (res == null)
-						return "EMPTY!";
-				}
+					return "EMPTY!";
 			}
 		}
 		return res;
