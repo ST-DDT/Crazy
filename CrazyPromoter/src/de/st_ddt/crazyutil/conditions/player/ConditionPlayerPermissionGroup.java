@@ -2,12 +2,12 @@ package de.st_ddt.crazyutil.conditions.player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
+//requires PermissionsBukkit (PermBukkit)
 public class ConditionPlayerPermissionGroup extends ConditionPlayer
 {
 
@@ -27,7 +27,7 @@ public class ConditionPlayerPermissionGroup extends ConditionPlayer
 	}
 
 	@Override
-	public void save(FileConfiguration config, String path)
+	public void save(ConfigurationSection config, String path)
 	{
 		super.save(config, path);
 		config.set(path + "group", groupname);

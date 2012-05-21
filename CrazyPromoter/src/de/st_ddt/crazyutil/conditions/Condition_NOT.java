@@ -1,7 +1,6 @@
 package de.st_ddt.crazyutil.conditions;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class Condition_NOT<T> extends Condition<T>
 {
@@ -22,7 +21,7 @@ public class Condition_NOT<T> extends Condition<T>
 	}
 
 	@Override
-	public void save(FileConfiguration config, String path)
+	public void save(ConfigurationSection config, String path)
 	{
 		super.save(config, path);
 		condition.save(config, path + "condition.");

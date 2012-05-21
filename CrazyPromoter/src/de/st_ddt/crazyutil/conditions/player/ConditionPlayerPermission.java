@@ -1,7 +1,6 @@
 package de.st_ddt.crazyutil.conditions.player;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ConditionPlayerPermission extends ConditionPlayer
@@ -22,7 +21,7 @@ public class ConditionPlayerPermission extends ConditionPlayer
 	}
 
 	@Override
-	public void save(FileConfiguration config, String path)
+	public void save(ConfigurationSection config, String path)
 	{
 		super.save(config, path);
 		config.set(path + "permission", permission);
