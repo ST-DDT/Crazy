@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
@@ -55,7 +54,7 @@ public class Promotion
 		return name;
 	}
 
-	public void save(FileConfiguration config, String path)
+	public void save(ConfigurationSection config, String path)
 	{
 		config.set(path + "name", name);
 		config.set(path + "commands", commands);

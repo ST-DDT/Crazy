@@ -2,18 +2,20 @@ package de.st_ddt.crazypromoter;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.conditions.ConditionList;
 import de.st_ddt.crazyutil.conditions.Condition_AND;
 import de.st_ddt.crazyutil.conditions.Condition_FALSE;
@@ -25,6 +27,7 @@ public class CrazyPromoter extends CrazyPlugin
 	private static CrazyPromoter plugin;
 	protected ArrayList<Promotion> promotions = new ArrayList<Promotion>();
 	private CrazyPromoterPlayerListener playerListener = null;
+	private int checkInterval;
 
 	public static CrazyPromoter getPlugin()
 	{
@@ -43,7 +46,10 @@ public class CrazyPromoter extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		ConfigurationSection config = getConfig().getConfigurationSection("promotions");
+		ConfigurationSection config = getConfig();
+		checkInterval = config.getInt("checkInterval", 60);
+		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new ScheduledCheckTask(plugin), 100, checkInterval * 20 * 60);
+		config = config.getConfigurationSection("promotions");
 		if (config == null)
 		{
 			Promotion promotion = new Promotion("default");
@@ -61,10 +67,16 @@ public class CrazyPromoter extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		FileConfiguration config = getConfig();
+		ConfigurationSection config = getConfig();
 		for (Promotion promotion : promotions)
 			promotion.save(config, "promotions." + promotion.getName() + ".");
 		super.save();
+	}
+
+	public void saveConfiguration()
+	{
+		ConfigurationSection config = getConfig();
+		config.set("checkInterval", "checkInterval");
 	}
 
 	public void registerHooks()
@@ -120,6 +132,12 @@ public class CrazyPromoter extends CrazyPlugin
 		sendLocaleMessage("COMMAND.CHECK.FAIL", sender, player.getName());
 	}
 
+	public void checkStatus()
+	{
+		for (Player player : Bukkit.getOnlinePlayers())
+			checkStatus(player);
+	}
+
 	public boolean checkStatus(final Player player)
 	{
 		for (Promotion promotion : promotions)
@@ -130,5 +148,52 @@ public class CrazyPromoter extends CrazyPlugin
 				return true;
 			}
 		return false;
+	}
+
+	@Override
+	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	{
+		if (commandLabel.equalsIgnoreCase("mode"))
+		{
+			commandMainMode(sender, args);
+			return true;
+		}
+		return false;
+	}
+
+	private void commandMainMode(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazylogin.mode"))
+			throw new CrazyCommandPermissionException();
+		switch (args.length)
+		{
+			case 2:
+				if (args[0].equalsIgnoreCase("checkInterval"))
+				{
+					int time = checkInterval;
+					try
+					{
+						time = Integer.parseInt(args[1]);
+					}
+					catch (NumberFormatException e)
+					{
+						throw new CrazyCommandParameterException(1, "Integer", "-1 = disabled", "Time in Seconds > 60");
+					}
+					checkInterval = time;
+					sendLocaleMessage("MODE.CHANGE", sender, "checkInterval", checkInterval == -1 ? "disabled" : checkInterval + " minutes");
+					saveConfiguration();
+					return;
+				}
+				throw new CrazyCommandNoSuchException("Mode", args[0]);
+			case 1:
+				if (args[0].equalsIgnoreCase("checkInterval"))
+				{
+					sendLocaleMessage("MODE.CHANGE", sender, "checkInterval", checkInterval == -1 ? "disabled" : checkInterval + " minutes");
+					return;
+				}
+				throw new CrazyCommandNoSuchException("Mode", args[0]);
+			default:
+				throw new CrazyCommandUsageException("/crazylogin mode <Mode> [Value]");
+		}
 	}
 }
