@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
+
+import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
-public abstract class Condition<T>
+public abstract class Condition<T> implements ConfigurationSaveable
 {
 
 	@SuppressWarnings("unchecked")
