@@ -70,13 +70,14 @@ public class CrazyPromoter extends CrazyPlugin
 		ConfigurationSection config = getConfig();
 		for (Promotion promotion : promotions)
 			promotion.save(config, "promotions." + promotion.getName() + ".");
-		super.save();
+		saveConfiguration();
 	}
 
 	public void saveConfiguration()
 	{
 		ConfigurationSection config = getConfig();
 		config.set("checkInterval", "checkInterval");
+		saveConfig();
 	}
 
 	public void registerHooks()
