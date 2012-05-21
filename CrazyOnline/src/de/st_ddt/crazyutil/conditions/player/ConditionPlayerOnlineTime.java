@@ -1,7 +1,6 @@
 package de.st_ddt.crazyutil.conditions.player;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyonline.CrazyOnline;
@@ -18,7 +17,7 @@ public class ConditionPlayerOnlineTime extends ConditionPlayer
 	}
 
 	@Override
-	public void save(FileConfiguration config, String path)
+	public void save(ConfigurationSection config, String path)
 	{
 		super.save(config, path);
 		config.set(path + "time", time);
