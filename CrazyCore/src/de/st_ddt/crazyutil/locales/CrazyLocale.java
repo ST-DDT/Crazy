@@ -75,14 +75,14 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return getLocaleHead().getLanguageEntry("LANGUAGE.NAME");
 	}
 
-	public static String getLanguageName(String language)
+	public static String getLanguageName(final String language)
 	{
 		return getLocaleHead().getLanguageEntry("LANGUAGE.NAME").getExactLanguageText(language);
 	}
 
-	public static String getLanguageName(String language, boolean appendLanguage)
+	public static String getLanguageName(final String language, final boolean appendLanguage)
 	{
-		String res = getLanguageName(language);
+		final String res = getLanguageName(language);
 		if (res == null)
 			return null;
 		return res + " (" + language + ")";
@@ -93,12 +93,12 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return getLanguageName().getData1List();
 	}
 
-	public static List<String> getActiveLanguagesNames(boolean appendLanguage)
+	public static List<String> getActiveLanguagesNames(final boolean appendLanguage)
 	{
-		List<String> res = new ArrayList<String>();
-		for (String language : getActiveLanguages())
+		final List<String> res = new ArrayList<String>();
+		for (final String language : getActiveLanguages())
 		{
-			String text = getLanguageName(language, appendLanguage);
+			final String text = getLanguageName(language, appendLanguage);
 			if (text == null)
 				continue;
 			res.add(text);
@@ -109,6 +109,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	public static boolean isValid(final CrazyLocale locale)
 	{
 		return locale != null && locale != getLocaleHead() && locale != getLocaleMissing();
+	}
+
+	public boolean isValid()
+	{
+		return this != getLocaleHead() && this != getLocaleMissing();
 	}
 
 	public CrazyLocale(final CrazyLocale parent, final String name)
@@ -194,7 +199,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return res;
 	}
 
-	public String getExactLanguageText(String language)
+	public String getExactLanguageText(final String language)
 	{
 		return localeTexts.findDataVia1(language);
 	}
