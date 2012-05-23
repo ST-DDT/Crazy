@@ -2,8 +2,8 @@ package de.st_ddt.crazyutil.poly.room;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import de.st_ddt.crazyutil.poly.region.BasicRegion;
 import de.st_ddt.crazyutil.poly.region.CircleRegion;
-import de.st_ddt.crazyutil.poly.region.FlatRegion;
 
 public class Elipsoid extends FuncRoom
 {
@@ -27,7 +27,7 @@ public class Elipsoid extends FuncRoom
 	}
 
 	@Override
-	public void setRegion(final FlatRegion region)
+	public void setRegion(final BasicRegion region)
 	{
 		if (region instanceof CircleRegion)
 			super.setRegion(region);

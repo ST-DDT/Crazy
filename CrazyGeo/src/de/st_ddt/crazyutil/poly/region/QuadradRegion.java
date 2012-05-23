@@ -2,7 +2,7 @@ package de.st_ddt.crazyutil.poly.region;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class QuadradRegion extends FlatRegion
+public class QuadradRegion extends BasicRegion
 {
 
 	protected double sizeX;
@@ -44,6 +44,12 @@ public class QuadradRegion extends FlatRegion
 	}
 
 	@Override
+	public void scale(final double scaleX, final double scaleZ)
+	{
+		sizeX *= Math.abs(Math.sqrt(Math.pow(scaleX, 2) + Math.pow(scaleZ, 2)));
+	}
+
+	@Override
 	public double getArea()
 	{
 		return Math.pow(sizeX, 2);
@@ -76,13 +82,13 @@ public class QuadradRegion extends FlatRegion
 	}
 
 	@Override
-	public FlatRegion clone()
+	public QuadradRegion clone()
 	{
 		return new QuadradRegion(sizeX);
 	}
 
 	@Override
-	public boolean equals(final FlatRegion region)
+	public boolean equals(final Region region)
 	{
 		if (region instanceof QuadradRegion)
 			return ((QuadradRegion) region).getSizeX() < getSizeX() && ((QuadradRegion) region).getSizeZ() < getSizeZ();

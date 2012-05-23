@@ -47,6 +47,13 @@ public class RectangleRegion extends QuadradRegion
 	}
 
 	@Override
+	public void scale(final double scaleX, final double scaleZ)
+	{
+		this.sizeX *= Math.abs(scaleX);
+		this.sizeZ *= Math.abs(scaleZ);
+	}
+
+	@Override
 	public double getSizeZ()
 	{
 		return sizeZ;
@@ -66,7 +73,7 @@ public class RectangleRegion extends QuadradRegion
 	}
 
 	@Override
-	public FlatRegion clone()
+	public RectangleRegion clone()
 	{
 		return new RectangleRegion(sizeX, sizeZ);
 	}

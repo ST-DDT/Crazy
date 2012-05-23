@@ -2,17 +2,18 @@ package de.st_ddt.crazyutil.poly.room;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.poly.region.FlatRegion;
+import de.st_ddt.crazyutil.poly.region.BasicRegion;
+import de.st_ddt.crazyutil.poly.region.Region;
 
-public class FuncRoom implements Room
+public class FuncRoom extends BasicRoom
 {
 
-	protected FlatRegion region;
+	protected Region region;
 	protected double height;
 	protected double exponent;
 	protected boolean doubleSided;
 
-	public FuncRoom(final FlatRegion region, final double height, final double exponent, final boolean doubleSided)
+	public FuncRoom(final Region region, final double height, final double exponent, final boolean doubleSided)
 	{
 		super();
 		this.region = region;
@@ -24,24 +25,26 @@ public class FuncRoom implements Room
 	public FuncRoom(final ConfigurationSection config)
 	{
 		super();
-		this.region = FlatRegion.load(config.getConfigurationSection("region"));
+		this.region = BasicRegion.load(config.getConfigurationSection("region"));
 		this.height = Math.abs(config.getDouble("height"));
 		this.exponent = Math.abs(config.getDouble("exponent"));
 		this.doubleSided = config.getBoolean("doubleSided");
 	}
 
 	@Override
-	public boolean isInsideRel(final double x, final double y, final double z)
+	public boolean isInsideRel(final double x, double y, final double z)
 	{
+		if (doubleSided)
+			y = Math.abs(y);
+		if (height < 0)
+			y *= -1;
 		if (0 > y || height < y)
 			return false;
 		return heightScaledRegion(y).isInsideRel(x, z);
 	}
 
-	protected double heightScale(double y)
+	protected double heightScale(final double y)
 	{
-		if (doubleSided)
-			y = Math.abs(y);
 		if (0 > y || height < y)
 			return 0;
 		return y / height;
@@ -54,9 +57,9 @@ public class FuncRoom implements Room
 		return Math.pow(heightScale(y), 1 / exponent);
 	}
 
-	protected FlatRegion heightScaledRegion(final double y)
+	protected Region heightScaledRegion(final double y)
 	{
-		final FlatRegion scaled = region.clone();
+		final Region scaled = region.clone();
 		scaled.scale(y);
 		return scaled;
 	}
@@ -72,20 +75,28 @@ public class FuncRoom implements Room
 	public void contract(final double x, final double y, final double z)
 	{
 		region.contract(x, z);
+		height -= y;
 	}
 
 	@Override
 	public void scale(final double scale)
 	{
 		region.scale(scale);
+		height *= scale;
 	}
 
-	public FlatRegion getRegion()
+	@Override
+	public void scale(final double scaleX, final double scaleY, final double scaleZ)
+	{
+		// EDIT Auto-generated method stub
+	}
+
+	public Region getRegion()
 	{
 		return region;
 	}
 
-	public void setRegion(final FlatRegion region)
+	public void setRegion(final BasicRegion region)
 	{
 		this.region = region;
 	}
@@ -123,14 +134,6 @@ public class FuncRoom implements Room
 	public void setDoubleSided(final boolean doubleSided)
 	{
 		this.doubleSided = doubleSided;
-	}
-
-	@Override
-	public final void save(final ConfigurationSection config, final String path, final boolean includeType)
-	{
-		if (includeType)
-			config.set(path + "type", getClass().getName());
-		save(config, path);
 	}
 
 	@Override

@@ -2,12 +2,12 @@ package de.st_ddt.crazyutil.poly.room;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.poly.region.FlatRegion;
+import de.st_ddt.crazyutil.poly.region.Region;
 
 public class PrismRoom extends FuncRoom
 {
 
-	public PrismRoom(final FlatRegion region, final double height, final boolean doubleSided)
+	public PrismRoom(final Region region, final double height, final boolean doubleSided)
 	{
 		super(region, height, 0, doubleSided);
 	}

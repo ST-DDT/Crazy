@@ -2,7 +2,7 @@ package de.st_ddt.crazyutil.poly.region;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class CircleRegion extends FlatRegion
+public class CircleRegion extends BasicRegion
 {
 
 	protected double radiusX;
@@ -44,6 +44,12 @@ public class CircleRegion extends FlatRegion
 	}
 
 	@Override
+	public void scale(final double scaleX, final double scaleZ)
+	{
+		radiusX *= Math.abs(Math.sqrt(Math.pow(scaleX, 2) + Math.pow(scaleZ, 2)));
+	}
+
+	@Override
 	public double getArea()
 	{
 		return Math.pow(radiusX, 2) * Math.PI;
@@ -82,7 +88,7 @@ public class CircleRegion extends FlatRegion
 	}
 
 	@Override
-	public boolean equals(final FlatRegion region)
+	public boolean equals(final Region region)
 	{
 		if (region instanceof CircleRegion)
 			return ((CircleRegion) region).getRadiusX() == getRadiusX() && ((CircleRegion) region).getRadiusZ() == getRadiusZ();

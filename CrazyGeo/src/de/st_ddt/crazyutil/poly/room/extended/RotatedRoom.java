@@ -1,47 +1,38 @@
-package de.st_ddt.crazygeo.region;
+package de.st_ddt.crazyutil.poly.room.extended;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.poly.room.Room;
 
-public class RotatedRealRoom<S extends Room> extends RealRoom<S>
+public class RotatedRoom extends ExtendedRoom
 {
 
 	protected double yaw; // xy
 	protected double pitch; // xz
 	protected double roll; // yz
 
-	public RotatedRealRoom(final RealRoom<S> realRoom)
+	public RotatedRoom(final Room room)
 	{
-		super(realRoom);
+		super(room);
 		this.yaw = 0;
 		this.pitch = 0;
 		this.roll = 0;
 	}
 
-	public RotatedRealRoom(final RotatedRealRoom<S> realRoom)
+	public RotatedRoom(final Room room, final double yaw, final double pitch, final double roll)
 	{
-		super(realRoom);
-		this.yaw = realRoom.getYaw();
-		this.pitch = realRoom.getPitch();
-		this.roll = realRoom.getRoll();
-	}
-
-	public RotatedRealRoom(final S room, final Location basis)
-	{
-		super(room, basis);
-		this.yaw = 0;
-		this.pitch = 0;
-		this.roll = 0;
-	}
-
-	public RotatedRealRoom(final S room, final Location basis, final double yaw, final double pitch, final double roll)
-	{
-		super(room, basis);
+		super(room);
 		this.yaw = yaw;
 		this.pitch = pitch;
 		this.roll = roll;
+	}
+
+	public RotatedRoom(final ConfigurationSection config)
+	{
+		super(config);
+		this.yaw = config.getDouble("yaw", 0);
+		this.pitch = config.getDouble("pitch", 0);
+		this.roll = config.getDouble("roll", 0);
 	}
 
 	public double getYaw()
@@ -75,13 +66,8 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 	}
 
 	@Override
-	public boolean isInside(final Location location)
+	public boolean isInsideRel(double x, double y, double z)
 	{
-		final Location clone = basis.clone();
-		clone.subtract(location);
-		double x = location.getX();
-		double y = location.getY();
-		double z = location.getZ();
 		// Yaw xy
 		x = Math.sin(yaw) * x + Math.cos(yaw) * y;
 		y = Math.cos(yaw) * x + Math.sin(yaw) * y;
@@ -104,8 +90,26 @@ public class RotatedRealRoom<S extends Room> extends RealRoom<S>
 	}
 
 	@Override
-	protected RotatedRealRoom<S> clone()
+	public boolean equals(final Room room)
 	{
-		return new RotatedRealRoom<S>(room, basis, yaw, pitch, roll);
+		if (room instanceof OffsetRoom)
+			return equals(room);
+		return this.room.equals(room) && yaw == 0 && pitch == 0 && roll == 0;
+	}
+
+	public boolean equals(final RotatedRoom room)
+	{
+		return this.room.equals(room) && yaw == room.getYaw() && pitch == room.getPitch() && roll == room.getRoll();
+	}
+
+	@Override
+	public RotatedRoom clone()
+	{
+		return new RotatedRoom(room, yaw, pitch, roll);
+	}
+
+	public RotatedRoom cloneAsRotatedRoom()
+	{
+		return new RotatedRoom(room, yaw, pitch, roll);
 	}
 }

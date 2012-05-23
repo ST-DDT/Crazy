@@ -2,12 +2,12 @@ package de.st_ddt.crazyutil.poly.room;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.poly.region.FlatRegion;
+import de.st_ddt.crazyutil.poly.region.Region;
 
 public class RoundedRoom extends FuncRoom
 {
 
-	public RoundedRoom(final FlatRegion region, final double height, final boolean doubleSided)
+	public RoundedRoom(final Region region, final double height, final boolean doubleSided)
 	{
 		super(region, height, Math.PI, doubleSided);
 	}

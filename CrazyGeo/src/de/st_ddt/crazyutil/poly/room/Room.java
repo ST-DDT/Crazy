@@ -9,11 +9,9 @@ public interface Room extends ConfigurationSaveable
 
 	public boolean isInsideRel(final double x, final double y, final double z);
 
-	public void expand(final double x, final double y, final double z);
-
-	public void contract(final double x, final double y, final double z);
-
 	public void scale(final double scale);
+
+	public void scale(final double scaleX, final double scaleY, final double scaleZ);
 
 	public void save(final ConfigurationSection config, final String path, final boolean includeType);
 
