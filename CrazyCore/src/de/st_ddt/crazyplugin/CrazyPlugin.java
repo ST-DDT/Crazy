@@ -396,7 +396,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 			{
 				stream = getClass().getResourceAsStream("/resource/lang/" + language + ".lang");
 				if (stream == null)
-					throw new NullPointerException();
+					return;
 				in = new BufferedInputStream(stream);
 				out = new BufferedOutputStream(new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang"));
 				byte data[] = new byte[1024];
