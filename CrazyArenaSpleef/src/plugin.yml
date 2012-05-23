@@ -1,8 +1,8 @@
-name: CrazyArena_PvE
-main: de.st_ddt.crazyarena.CrazyArenaPvE
+name: CrazyArenaSpleef
+main: de.st_ddt.crazyarena.CrazyArenaSpleef
 author: ST-DDT
 version: C7_G0.1_A0.1_0.1
 softdepend: [PermissionsBukkit]
-depend: [CrazyCore,CrazyArena]
+depend: [CrazyCore,CrazyGeo,CrazyArena]
 description: >
-            PvE Arena Plugin
+            Spleef Arena Plugin
