@@ -26,6 +26,8 @@ public class DynmapAddIn
 	{
 		super();
 		this.dynmapApi = dynmapApi;
+		if (dynmapApi==null)
+			throw new NullPointerException();
 		this.plugin = plugin;
 		// Initialize
 		MarkerAPI markerAPI = dynmapApi.getMarkerAPI();

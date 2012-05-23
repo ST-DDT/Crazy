@@ -95,8 +95,13 @@ public class CrazyPunisher extends CrazyPlugin
 		if (dynmapEnabled)
 		{
 			DynmapAPI dynmapAPI = (DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap");
-			dynmap = new DynmapAddIn(dynmapAPI, this);
-			dynmap.updateMarkers();
+			if (dynmapAPI != null)
+			{
+				dynmap = new DynmapAddIn(dynmapAPI, this);
+				dynmap.updateMarkers();
+			}
+			else
+				dynmap = null;
 		}
 		Set<String> list = null;
 		if (config.getConfigurationSection("player.banned") != null)
