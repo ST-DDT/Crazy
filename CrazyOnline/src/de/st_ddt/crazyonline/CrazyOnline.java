@@ -29,6 +29,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.MySQLConnection;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class CrazyOnline extends CrazyPlugin
 {
@@ -235,16 +236,16 @@ public class CrazyOnline extends CrazyPlugin
 		{
 			long days = time / 60 / 24;
 			long hours = time / 60 % 24;
-			return days + " " + locale.getLocaleMessage(sender, "TIME.UNIT.DAYS") + " " + hours + " " + locale.getLocaleMessage(sender, "TIME.UNIT.HOURS");
+			return days + " " + CrazyLocale.getUnitText("TIME.DAYS", sender) + " " + hours + " " + CrazyLocale.getUnitText("TIME.HOURS", sender);
 		}
 		else if (time > 120)
 		{
 			long hours = time / 60;
 			long minutes = time % 60;
-			return hours + " " + locale.getLocaleMessage(sender, "TIME.UNIT.HOURS") + " " + minutes + " " + locale.getLocaleMessage(sender, "TIME.UNIT.MINUTES");
+			return hours + " " + CrazyLocale.getUnitText("TIME.HOURS", sender) + " " + minutes + " " + CrazyLocale.getUnitText("TIME.MINUTES", sender);
 		}
 		else
-			return time + " " + locale.getLocaleMessage(sender, "TIME.UNIT.MINUTES");
+			return time + " " + CrazyLocale.getUnitText("TIME.MINUTES", sender);
 	}
 
 	public void commandSince(Player player) throws CrazyCommandException

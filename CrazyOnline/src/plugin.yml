@@ -2,7 +2,7 @@ name: CrazyOnline
 main: de.st_ddt.crazyonline.CrazyOnline
 author: ST-DDT
 #C*=needed core version
-version: C6.3_3.3.1
+version: C7_3.4
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
