@@ -278,7 +278,7 @@ public abstract class Arena
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
 	{
-		target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+		ChatHelper.sendMessage(target, chatHeader, locale, args);
 	}
 
 	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final Object... args)
@@ -288,8 +288,7 @@ public abstract class Arena
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
 	{
-		for (final CommandSender target : targets)
-			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
 	}
 
 	public final void sendLocaleMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
@@ -299,7 +298,6 @@ public abstract class Arena
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
 	{
-		for (final CommandSender target : targets)
-			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
 	}
 }
