@@ -2,7 +2,7 @@ name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
 #C*=needed core version
-version: C6_2.1
+version: C7_2.2
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
