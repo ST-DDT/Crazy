@@ -2,7 +2,7 @@ name: CrazyAnnouncer
 main: de.st_ddt.crazyannouncer.CrazyAnnouncer
 author: ST-DDT
 #C*=needed core version
-version: C6.5_1.3
+version: C7_1.4
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
