@@ -20,12 +20,15 @@ import de.st_ddt.crazyarena.participants.ParticipantList;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.Commandable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.poly.room.Room;
 
-public abstract class Arena
+public abstract class Arena implements Commandable
 {
 
 	protected String name;
@@ -240,8 +243,15 @@ public abstract class Arena
 	}
 
 	public abstract boolean isRunning();
+	
+	public final boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
+	{
+		if (sender instanceof Player)
+			return command((Player) sender, commandLabel, args); 
+		throw new CrazyCommandExecutorException(false);
+	}
 
-	public boolean command(final Player player, final String commandLabel, final String[] args) throws CrazyCommandException
+	public boolean command(final Player player, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
 	}

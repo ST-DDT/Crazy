@@ -31,6 +31,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.PairList;
 
 public class CrazyArena extends CrazyPlugin
@@ -312,7 +313,7 @@ public class CrazyArena extends CrazyPlugin
 	}
 
 	@Override
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
 	{
 		if (command(sender, commandLabel, args))
 			return true;
