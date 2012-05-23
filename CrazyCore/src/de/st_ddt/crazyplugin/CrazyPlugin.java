@@ -25,11 +25,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.Commandable;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
+public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Commandable
 {
 
 	protected CrazyLocale locale = null;
