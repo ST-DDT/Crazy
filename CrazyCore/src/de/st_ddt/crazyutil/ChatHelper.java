@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -21,6 +22,35 @@ public class ChatHelper
 	public static void sendMessage(final CommandSender target, final Object message, final Object... args)
 	{
 		target.sendMessage(putArgsExtended(target, message, args));
+	}
+
+	public static void sendMessage(final CommandSender target, final String chatHeader, final Object message, final Object... args)
+	{
+		target.sendMessage(chatHeader + putArgsExtended(target, message, args));
+	}
+
+	public static void sendMessage(final CommandSender[] targets, final Object message, final Object... args)
+	{
+		for (final CommandSender target : targets)
+			target.sendMessage(putArgsExtended(target, message, args));
+	}
+
+	public static void sendMessage(final CommandSender[] targets, final String chatHeader, final Object message, final Object... args)
+	{
+		for (final CommandSender target : targets)
+			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
+	}
+
+	public static void sendMessage(final Collection<CommandSender> targets, final Object message, final Object... args)
+	{
+		for (final CommandSender target : targets)
+			target.sendMessage(putArgsExtended(target, message, args));
+	}
+
+	public static void sendMessage(final Collection<CommandSender> targets, final String chatHeader, final Object message, final Object... args)
+	{
+		for (final CommandSender target : targets)
+			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
 	}
 
 	public static String putArgs(final String message, final Object... args)
