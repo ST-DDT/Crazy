@@ -220,7 +220,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
 	{
-		target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+		target.sendMessage(getChatHeader() + ChatHelper.putArgsExtended(target, locale, args));
 	}
 
 	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final Object... args)
@@ -236,7 +236,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
 	{
 		for (CommandSender target : targets)
-			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+			target.sendMessage(getChatHeader() + ChatHelper.putArgsExtended(target, locale, args));
 	}
 
 	public final void sendLocaleMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
@@ -252,7 +252,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named
 	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
 	{
 		for (CommandSender target : targets)
-			target.sendMessage(getChatHeader() + ChatHelper.putArgs(locale.getLanguageText(target), args));
+			target.sendMessage(getChatHeader() + ChatHelper.putArgsExtended(target, locale, args));
 	}
 
 	public final void broadcastLocaleMessage(final String localepath, final Object... args)

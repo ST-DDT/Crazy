@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,7 +24,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	private final static PairList<String, String> userLanguages = new PairList<String, String>();
 	private final static ArrayList<String> languages = new ArrayList<String>();
 	private final String name;
-	private PairList<String, String> localeTexts;
+	private final PairList<String, String> localeTexts;
 	private final CrazyLocale parent;
 	private CrazyLocale alternative = null;
 
@@ -46,18 +47,33 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.LOADED", "Language $0$ loaded sucessfully!");
 	}
 
-	public final static CrazyLocale getPluginHead(CrazyPlugin plugin)
+	public final static CrazyLocale getPluginHead(final CrazyPlugin plugin)
 	{
 		getLocaleHead().addLanguageEntry("root", plugin.getName().toUpperCase(), plugin.getName());
 		return getLocaleHead().getLanguageEntry(plugin.getName());
 	}
 
-	public static boolean isValid(CrazyLocale locale)
+	public final static CrazyLocale getUnit(final String unit)
+	{
+		return getLocaleHead().getLanguageEntry("UNIT." + unit.toUpperCase());
+	}
+
+	public final static String getUnitText(final String unit, final CommandSender sender)
+	{
+		return getUnit(unit).getLanguageText(sender);
+	}
+
+	public final static String getUnitText(final String unit, final String language)
+	{
+		return getUnit(unit).getLanguageText(language);
+	}
+
+	public static boolean isValid(final CrazyLocale locale)
 	{
 		return locale != null && locale != getLocaleHead() && locale != getLocaleMissing();
 	}
 
-	public CrazyLocale(CrazyLocale parent, String name)
+	public CrazyLocale(final CrazyLocale parent, final String name)
 	{
 		super();
 		this.name = name;
@@ -67,14 +83,14 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 
 	private static CrazyLocale getCrazyLocaleHead()
 	{
-		CrazyLocale head = new CrazyLocale(null, "_HEAD_");
+		final CrazyLocale head = new CrazyLocale(null, "_HEAD_");
 		head.setLanguageText("en_en", "This Entry is the root!");
 		return head;
 	}
 
 	private static CrazyLocale getCrazyLocaleMissing()
 	{
-		CrazyLocale missing = new CrazyLocale(null, "_MISSING_");
+		final CrazyLocale missing = new CrazyLocale(null, "_MISSING_");
 		missing.setLanguageText("en_en", "This Entry is missing!");
 		return missing;
 	}
@@ -96,7 +112,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return alternative;
 	}
 
-	public void setAlternative(CrazyLocale alternative)
+	public void setAlternative(final CrazyLocale alternative)
 	{
 		this.alternative = alternative;
 		updateAlternative();
@@ -107,7 +123,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		if (alternative == null)
 			return;
 		CrazyLocale locale;
-		for (Pair<String, CrazyLocale> subPath : alternative)
+		for (final Pair<String, CrazyLocale> subPath : alternative)
 		{
 			locale = this.findDataVia1(subPath.getData1());
 			if (locale != null)
@@ -115,22 +131,22 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		}
 	}
 
-	public String getLocaleMessage(CommandSender sender, String localePath, Object... args)
+	public String getLocaleMessage(final CommandSender target, final String localePath, final Object... args)
 	{
-		return ChatHelper.putArgs(getLanguageEntry(localePath).getLanguageText(getUserLanguage(sender)), args);
+		return ChatHelper.putArgsExtended(target, getLanguageEntry(localePath), args);
 	}
 
-	public String getDefaultLocaleMessage(String localePath, Object... args)
+	public String getDefaultLocaleMessage(final String localePath, final Object... args)
 	{
 		return ChatHelper.putArgs(getLanguageEntry(localePath).getDefaultLanguageText(), args);
 	}
 
-	public String getLanguageText(CommandSender sender)
+	public String getLanguageText(final CommandSender sender)
 	{
 		return getLanguageText(getUserLanguage(sender));
 	}
 
-	public String getLanguageText(String language)
+	public String getLanguageText(final String language)
 	{
 		String res = localeTexts.findDataVia1(language);
 		if (res == null)
@@ -160,30 +176,30 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return res;
 	}
 
-	public void setLanguageText(String language, String text)
+	public void setLanguageText(final String language, final String text)
 	{
 		this.localeTexts.setDataVia1(language, text);
 	}
 
-	public void sendMessage(CommandSender target)
+	public void sendMessage(final CommandSender target)
 	{
 		target.sendMessage(getLanguageText(target));
 	}
 
-	public void sendMessage(CommandSender... targets)
+	public void sendMessage(final CommandSender... targets)
 	{
-		for (CommandSender target : targets)
+		for (final CommandSender target : targets)
 			sendMessage(target);
 	}
 
-	public void sendMessage(CommandSender target, Object... args)
+	public void sendMessage(final CommandSender target, final Object... args)
 	{
-		target.sendMessage(ChatHelper.putArgs(getLanguageText(target), args));
+		ChatHelper.sendMessage(target, this, args);
 	}
 
-	public void sendMessage(CommandSender[] targets, Object... args)
+	public void sendMessage(final CommandSender[] targets, final Object... args)
 	{
-		for (CommandSender target : targets)
+		for (final CommandSender target : targets)
 			sendMessage(target, args);
 	}
 
@@ -193,7 +209,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		CrazyLocale locale = this;
 		try
 		{
-			for (String section : path.split("\\."))
+			for (final String section : path.split("\\."))
 			{
 				locale = locale.findDataVia1(section);
 				if (locale == null)
@@ -205,7 +221,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			if (locale == null)
 				throw new NullPointerException();
 		}
-		catch (NullPointerException e)
+		catch (final NullPointerException e)
 		{
 			System.out.println("[CrazyLocale] Missing language entry " + this.getPath() + "." + path);
 			return missing;
@@ -218,7 +234,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		path = path.toUpperCase();
 		CrazyLocale locale = this;
 		CrazyLocale parent = this;
-		for (String section : path.split("\\."))
+		for (final String section : path.split("\\."))
 		{
 			locale = parent.findDataVia1(section);
 			if (locale == null)
@@ -228,12 +244,12 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return locale;
 	}
 
-	private void addLanguageEntry(String language, String path, String entry)
+	private void addLanguageEntry(final String language, String path, final String entry)
 	{
 		path = path.toUpperCase();
 		CrazyLocale locale = this;
 		CrazyLocale parent = this;
-		for (String section : path.split("\\."))
+		for (final String section : path.split("\\."))
 		{
 			locale = parent.findDataVia1(section);
 			if (locale == null)
@@ -247,7 +263,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		locale.setLanguageText(language, ChatHelper.colorise(entry));
 	}
 
-	public static void readFile(String language, Reader reader) throws IOException
+	public static void readFile(final String language, final Reader reader) throws IOException
 	{
 		BufferedReader bufreader = null;
 		read: try
@@ -266,7 +282,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 						if (zeile.getBytes()[2] == (byte) 191)
 							zeile = zeile.substring(3);
 			}
-			catch (IndexOutOfBoundsException e)
+			catch (final IndexOutOfBoundsException e)
 			{}
 			String[] split = null;
 			if (!zeile.equals("") && !zeile.startsWith("#"))
@@ -276,7 +292,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 				{
 					locale.addLanguageEntry(language, split[0], split[1]);
 				}
-				catch (ArrayIndexOutOfBoundsException e)
+				catch (final ArrayIndexOutOfBoundsException e)
 				{
 					System.err.println("Invalid line " + zeile);
 				}
@@ -290,7 +306,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 				{
 					locale.addLanguageEntry(language, split[0], split[1]);
 				}
-				catch (ArrayIndexOutOfBoundsException e)
+				catch (final ArrayIndexOutOfBoundsException e)
 				{
 					System.err.println("Invalid line " + zeile);
 				}
@@ -303,40 +319,40 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		}
 	}
 
-	public static void printAll(String language, CommandSender sender)
+	public static void printAll(final String language, final CommandSender sender)
 	{
 		sender.sendMessage("Complete Language Print!");
 		getLocaleHead().print(language, sender);
 	}
 
-	public static void printAll(String language)
+	public static void printAll(final String language)
 	{
 		printAll(Bukkit.getConsoleSender());
 	}
 
-	public static void printAll(CommandSender sender)
+	public static void printAll(final CommandSender sender)
 	{
 		printAll(getUserLanguage(sender), sender);
 	}
 
-	public void print(String language, CommandSender sender)
+	public void print(final String language, final CommandSender sender)
 	{
 		sender.sendMessage(getPath() + ":" + getLanguageText(language));
-		for (Pair<String, CrazyLocale> pair : this)
+		for (final Pair<String, CrazyLocale> pair : this)
 			pair.getData2().print(language, sender);
 	}
 
-	public void print(CommandSender sender)
+	public void print(final CommandSender sender)
 	{
 		print(getUserLanguage(sender), sender);
 	}
 
-	public static String getUserLanguage(CommandSender sender)
+	public static String getUserLanguage(final CommandSender sender)
 	{
 		return getUserLanguage(sender.getName());
 	}
 
-	public static String getUserLanguage(String name)
+	public static String getUserLanguage(final String name)
 	{
 		String res = userLanguages.findDataVia1(name);
 		if (res == null)
@@ -344,22 +360,22 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return res;
 	}
 
-	public static void setUserLanguage(CommandSender sender, String language)
+	public static void setUserLanguage(final CommandSender sender, final String language)
 	{
 		setUserLanguage(sender.getName(), language);
 	}
 
-	public static void setUserLanguage(String name, String language)
+	public static void setUserLanguage(final String name, final String language)
 	{
 		userLanguages.setDataVia1(name, language);
 		loadLanguage(language);
 	}
 
-	public static void loadLanguage(String language)
+	public static void loadLanguage(final String language)
 	{
 		if (!languages.contains(language))
 		{
-			for (CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
+			for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 				plugin.loadLanguage(language);
 		}
 		if (!languages.contains(language))
@@ -371,17 +387,23 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		return languages;
 	}
 
-	public static void save(ConfigurationSection config, String path)
+	public static void save(final ConfigurationSection config, final String path)
 	{
-		for (Pair<String, String> user : userLanguages)
+		for (final Pair<String, String> user : userLanguages)
 			config.set(path + user.getData1(), user.getData2());
 	}
 
-	public static void load(ConfigurationSection config)
+	public static void load(final ConfigurationSection config)
 	{
 		if (config == null)
 			return;
-		for (String name : config.getKeys(false))
+		for (final String name : config.getKeys(false))
 			setUserLanguage(name, config.getString(name));
+	}
+
+	@Override
+	public String toString()
+	{
+		return getDefaultLanguageText();
 	}
 }

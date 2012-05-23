@@ -5,44 +5,62 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class ChatHelper
 {
 
-	public static String colorise(String string)
+	public static String colorise(final String string)
 	{
 		return string.replaceAll("\\&0", ChatColor.BLACK.toString()).replaceAll("\\&1", ChatColor.DARK_BLUE.toString()).replaceAll("\\&2", ChatColor.DARK_GREEN.toString()).replaceAll("\\&3", ChatColor.DARK_AQUA.toString()).replaceAll("\\&4", ChatColor.DARK_RED.toString()).replaceAll("\\&5", ChatColor.DARK_PURPLE.toString()).replaceAll("\\&6", ChatColor.GOLD.toString()).replaceAll("\\&7", ChatColor.GRAY.toString()).replaceAll("\\&8", ChatColor.DARK_GRAY.toString()).replaceAll("\\&9", ChatColor.BLUE.toString()).replaceAll("\\&A", ChatColor.GREEN.toString()).replaceAll("\\&B", ChatColor.AQUA.toString()).replaceAll("\\&C", ChatColor.RED.toString()).replaceAll("\\&D", ChatColor.LIGHT_PURPLE.toString()).replaceAll("\\&E", ChatColor.YELLOW.toString()).replaceAll("\\&F", ChatColor.WHITE.toString()).replaceAll("\\&G", ChatColor.MAGIC.toString());
 	}
 
-	public static String putArgs(String text, Object... args)
+	public static void sendMessage(final CommandSender target, final Object message, final Object... args)
 	{
-		String res = text;
-		int length = args.length;
+		target.sendMessage(putArgsExtended(target, message, args));
+	}
+
+	public static String putArgs(final String message, final Object... args)
+	{
+		String res = message;
+		final int length = args.length;
 		for (int i = 0; i < length; i++)
 			res = res.replaceAll("\\$" + i + "\\$", args[i].toString());
 		return res;
 	}
 
-	public static String[] shiftArray(String[] array, int anz)
+	public static String putArgsExtended(final CommandSender target, final Object message, final Object... args)
+	{
+		String res = message.toString();
+		if (message instanceof CrazyLocale)
+			res = ((CrazyLocale) message).getLanguageText(target);
+		final int length = args.length;
+		for (int i = 0; i < length; i++)
+			res = res.replaceAll("\\$" + i + "\\$", (args[i] instanceof CrazyLocale ? ((CrazyLocale) args[i]).getLanguageText(target) : args[i].toString()));
+		return res;
+	}
+
+	public static String[] shiftArray(final String[] array, final int anz)
 	{
 		if (anz >= array.length)
 			return new String[0];
-		String[] res = new String[array.length - anz];
+		final String[] res = new String[array.length - anz];
 		for (int i = 0; i < array.length - anz; i++)
 			res[i] = array[i + anz];
 		return res;
 	}
 
-	public static String listToString(String[] strings)
+	public static String listToString(final String[] strings)
 	{
 		return listToString(strings, ", ");
 	}
 
-	public static String listToString(String[] strings, String seperator)
+	public static String listToString(final String[] strings, final String seperator)
 	{
-		int length = strings.length;
+		final int length = strings.length;
 		if (length == 0)
 			return "";
 		String res = strings[0];
@@ -51,23 +69,23 @@ public class ChatHelper
 		return res;
 	}
 
-	public static String listToString(ArrayList<String> strings)
+	public static String listToString(final ArrayList<String> strings)
 	{
 		return listToString(strings, ", ");
 	}
 
-	public static String listToString(ArrayList<String> strings, String seperator)
+	public static String listToString(final ArrayList<String> strings, final String seperator)
 	{
 		if (strings.size() == 0)
 			return "";
-		Iterator<String> list = strings.iterator();
+		final Iterator<String> list = strings.iterator();
 		String res = list.next();
 		while (list.hasNext())
 			res = res + seperator + list.next();
 		return res;
 	}
 
-	public static String dateToString(Date date)
+	public static String dateToString(final Date date)
 	{
 		return CrazyPlugin.DateFormat.format(date);
 	}
