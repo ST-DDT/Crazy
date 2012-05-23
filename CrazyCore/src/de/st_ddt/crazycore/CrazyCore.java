@@ -103,10 +103,10 @@ public class CrazyCore extends CrazyPlugin
 		switch (args.length)
 		{
 			case 0:
-				String languages = ChatHelper.listToString(CrazyLocale.getLoadedLanguages());
-				sendLocaleMessage("COMMAND.LANGUAGE.CURRENT", sender, CrazyLocale.getUserLanguage(sender));
-				sendLocaleMessage("COMMAND.LANGUAGE.LIST.DEFAULT", sender);
+				sendLocaleMessage("COMMAND.LANGUAGE.CURRENT", sender, CrazyLocale.getLanguageName(), CrazyLocale.getUserLanguage(sender));
+				sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT", sender, CrazyLocale.getLanguageName().getDefaultLanguageText(), getDefaultLanguage());
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.HEADER", sender);
+				String languages=ChatHelper.listingString(CrazyLocale.getActiveLanguagesNames(true));
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.ENTRY", sender, languages);
 				return;
 			case 1:

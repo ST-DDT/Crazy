@@ -170,10 +170,10 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 		try
 		{
 			writer = new FileWriter(file);
-			writer.write(ChatHelper.listToString(columnNames, "|") + System.getProperty("line.separator"));
+			writer.write(ChatHelper.listingString("|", columnNames) + System.getProperty("line.separator"));
 			for (String[] strings : entries.values())
 				if (strings != null)
-					writer.write(ChatHelper.listToString(strings, "|") + System.getProperty("line.separator"));
+					writer.write(ChatHelper.listingString("|", strings) + System.getProperty("line.separator"));
 			writer.flush();
 		}
 		catch (IOException e)

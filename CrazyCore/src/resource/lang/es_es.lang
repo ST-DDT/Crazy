@@ -1,4 +1,5 @@
 ﻿CRAZYCORE=CrazyCore
+LANGUAGE.NAME=Spanish - Español
 CRAZYCORE.COMMAND.PLUGINLIST.EMPTYPAGE=Lo sentimos, esta página $0$ está vacía. 
 CRAZYCORE.COMMAND.PLUGINLIST.HEADER=CrazyPlugin Lista (Page $0$) 
 CRAZYCORE.COMMAND.PLUGINLIST.ENTRY=$0$) $1$ - $2$ 
@@ -6,6 +7,7 @@ CRAZYCORE.COMMAND.LANGUAGE.CURRENT=El idioma actual: $0$
 CRAZYCORE.COMMAND.LANGUAGE.LIST.HEADER=Idiomas availiable: 
 CRAZYCORE.COMMAND.LANGUAGE.LIST.ENTRY=$0$ 
 CRAZYCORE.COMMAND.LANGUAGE.CHANGED=Lenguaje cambiado a: &E$0$ 
+
 CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.SET=Lenguaje por defecto cambia a: &E$0$ 
 CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.ADDED=Lenguaje por defecto añadido: &E$0$ 
 CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.REMOVED=Lenguaje por defecto eliminado: &E$0$ 
@@ -39,3 +41,10 @@ CRAZYEXCEPTION.COMMAND.PARAMETER.ERROR=No válido / Mal $0$. El parámetro, debe
 CRAZYPLUGIN.COMMAND.HELP.NOHELP=Lo sentimos, no hay ayuda disponible! 
 CRAZYPLUGIN.COMMAND.CONFIG.RELOADED=configuración de cargar! 
 CRAZYPLUGIN.COMMAND.CONFIG.SAVED=configuración guardada!
+
+
+
+
+
+
+

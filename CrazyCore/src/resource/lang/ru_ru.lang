@@ -1,12 +1,13 @@
 ﻿CRAZYCORE=CrazyCore
+LANGUAGE.NAME=Russian - русский
 CRAZYCORE.COMMAND.PLUGINLIST.EMPTYPAGE=Извините, страница $0$ пуста.
 CRAZYCORE.COMMAND.PLUGINLIST.HEADER=CrazyPlugin список (Страница $0$)
 CRAZYCORE.COMMAND.PLUGINLIST.ENTRY=$0$) $1$ - $2$
 CRAZYCORE.COMMAND.LANGUAGE.CURRENT=Текущий язык: $0$
 CRAZYCORE.COMMAND.LANGUAGE.LIST.HEADER=Доступные языки:
 CRAZYCORE.COMMAND.LANGUAGE.LIST.ENTRY=$0$
-CRAZYCORE.COMMAND.LANGUAGE.LIST.DEFAULT=по умолчанию
 CRAZYCORE.COMMAND.LANGUAGE.CHANGED=Включаем &E$0$ язык
+
 CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.SET=Язык по умолчанию теперь: &E$0$
 CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.ADDED=Добавлен язык по умолчанию: &E$0$
 CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.REMOVED=Удален язык по умолчанию: &E$0$
@@ -40,3 +41,10 @@ CRAZYEXCEPTION.COMMAND.PARAMETER.ERROR=Неправильный $0$. Парам�
 CRAZYPLUGIN.COMMAND.HELP.NOHELP=Извини, не могу помочь!
 CRAZYPLUGIN.COMMAND.CONFIG.RELOADED=Конфигурация перезагружена!
 CRAZYPLUGIN.COMMAND.CONFIG.SAVED=Конфигурация сохранена!
+
+
+
+
+UNIT.TIME.DAYS=дней
+UNIT.TIME.HOURS=часов
+UNIT.TIME.MINUTES=минут

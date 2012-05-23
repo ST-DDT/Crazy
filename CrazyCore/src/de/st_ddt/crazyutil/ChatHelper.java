@@ -1,6 +1,5 @@
 package de.st_ddt.crazyutil;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -83,12 +82,12 @@ public class ChatHelper
 		return res;
 	}
 
-	public static String listToString(final String[] strings)
+	public static String listingString(final String[] strings)
 	{
-		return listToString(strings, ", ");
+		return listingString(", ", strings);
 	}
 
-	public static String listToString(final String[] strings, final String seperator)
+	public static String listingString(final String seperator, final String... strings)
 	{
 		final int length = strings.length;
 		if (length == 0)
@@ -99,12 +98,12 @@ public class ChatHelper
 		return res;
 	}
 
-	public static String listToString(final ArrayList<String> strings)
+	public static String listingString(final Collection<String> strings)
 	{
-		return listToString(strings, ", ");
+		return listingString(", ", strings);
 	}
 
-	public static String listToString(final ArrayList<String> strings, final String seperator)
+	public static String listingString(final String seperator, final Collection<String> strings)
 	{
 		if (strings.size() == 0)
 			return "";

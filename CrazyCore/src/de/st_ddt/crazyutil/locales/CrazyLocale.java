@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -45,6 +46,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", "Failed downloading $0$ language files!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", "$0$ language files not available!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.LOADED", "Language $0$ loaded sucessfully!");
+		getLocaleHead().addLanguageEntry("en_en", "LANGUAGE.NAME", "English");
 	}
 
 	public final static CrazyLocale getPluginHead(final CrazyPlugin plugin)
@@ -66,6 +68,42 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	public final static String getUnitText(final String unit, final String language)
 	{
 		return getUnit(unit).getLanguageText(language);
+	}
+
+	public static CrazyLocale getLanguageName()
+	{
+		return getLocaleHead().getLanguageEntry("LANGUAGE.NAME");
+	}
+
+	public static String getLanguageName(String language)
+	{
+		return getLocaleHead().getLanguageEntry("LANGUAGE.NAME").getExactLanguageText(language);
+	}
+
+	public static String getLanguageName(String language, boolean appendLanguage)
+	{
+		String res = getLanguageName(language);
+		if (res == null)
+			return null;
+		return res + " (" + language + ")";
+	}
+
+	public static List<String> getActiveLanguages()
+	{
+		return getLanguageName().getData1List();
+	}
+
+	public static List<String> getActiveLanguagesNames(boolean appendLanguage)
+	{
+		List<String> res = new ArrayList<String>();
+		for (String language : getActiveLanguages())
+		{
+			String text = getLanguageName(language, appendLanguage);
+			if (text == null)
+				continue;
+			res.add(text);
+		}
+		return res;
 	}
 
 	public static boolean isValid(final CrazyLocale locale)
@@ -154,6 +192,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			res = getDefaultLanguageText();
 		}
 		return res;
+	}
+
+	public String getExactLanguageText(String language)
+	{
+		return localeTexts.findDataVia1(language);
 	}
 
 	public String getDefaultLanguageText()
