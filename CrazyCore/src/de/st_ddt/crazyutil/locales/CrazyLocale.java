@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -23,7 +27,8 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 	private final static CrazyLocale locale = getCrazyLocaleHead();
 	private final static CrazyLocale missing = getCrazyLocaleMissing();
 	private final static PairList<String, String> userLanguages = new PairList<String, String>();
-	private final static ArrayList<String> languages = new ArrayList<String>();
+	private final static HashSet<String> languages = new HashSet<String>();
+	private final static HashMap<String, HashSet<String>> languageAlternatives = new HashMap<String, HashSet<String>>();
 	private final String name;
 	private final PairList<String, String> localeTexts;
 	private final CrazyLocale parent;
@@ -77,7 +82,7 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 
 	public static String getLanguageName(final String language)
 	{
-		return getLocaleHead().getLanguageEntry("LANGUAGE.NAME").getExactLanguageText(language);
+		return getLanguageName().getExactLanguageText(language);
 	}
 
 	public static String getLanguageName(final String language, final boolean appendLanguage)
@@ -86,6 +91,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		if (res == null)
 			return null;
 		return res + " (" + language + ")";
+	}
+
+	public static boolean isActiveLanguage(final String language)
+	{
+		return getLanguageName(language) != null;
 	}
 
 	public static List<String> getActiveLanguages()
@@ -103,6 +113,17 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 				continue;
 			res.add(text);
 		}
+		return res;
+	}
+
+	public static Set<String> getLanguageAlternatives(final String language)
+	{
+		final String[] split = language.split("_");
+		HashSet<String> res = null;
+		if (split.length > 1)
+			res = languageAlternatives.get(split[1]);
+		if (res == null)
+			res = new HashSet<String>();
 		return res;
 	}
 
@@ -194,7 +215,11 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 		String res = localeTexts.findDataVia1(language);
 		if (res == null)
 		{
-			res = getDefaultLanguageText();
+			final Iterator<String> it = getLanguageAlternatives(language).iterator();
+			while (res == null && it.hasNext())
+				res = localeTexts.findDataVia1(it.next());
+			if (res == null)
+				res = getDefaultLanguageText();
 		}
 		return res;
 	}
@@ -426,11 +451,26 @@ public class CrazyLocale extends PairList<String, CrazyLocale>
 			for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 				plugin.loadLanguage(language);
 		}
-		if (!languages.contains(language))
-			languages.add(language);
+		if (!isActiveLanguage(language))
+			return;
+		languages.add(language);
+		try
+		{
+			final String[] split = language.split("_");
+			final String shortLang = split[0];
+			if (split.length > 0)
+			{
+				System.out.println(shortLang);
+				if (!languageAlternatives.containsKey(shortLang))
+					languageAlternatives.put(shortLang, new HashSet<String>());
+				languageAlternatives.get(shortLang).add(language);
+			}
+		}
+		catch (final Exception e)
+		{}
 	}
 
-	public static ArrayList<String> getLoadedLanguages()
+	public static Set<String> getLoadedLanguages()
 	{
 		return languages;
 	}
