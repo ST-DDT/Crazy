@@ -15,7 +15,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	protected final MySQLColumn[] columns;
 	protected final MySQLColumn primary;
 
-	public MySQLDatabase(Class<S> clazz, MySQLConnection connection, String table, MySQLColumn[] columns, int primaryIndex)
+	public MySQLDatabase(final Class<S> clazz, final MySQLConnection connection, final String table, final MySQLColumn[] columns, final int primaryIndex)
 	{
 		super(DatabaseType.MySQL, clazz, convertColumnNames(columns), getConstructor(clazz));
 		this.connection = connection;
@@ -24,13 +24,13 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		this.primary = columns[primaryIndex];
 	}
 
-	private static <S> Constructor<S> getConstructor(Class<S> clazz)
+	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{
 			return clazz.getConstructor(ResultSet.class, String[].class);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -47,7 +47,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			query = connection.getConnection().createStatement();
 			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" + MySQLColumn.getFullCreateString(columns) + ");");
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			e.printStackTrace();
 		}
@@ -58,28 +58,28 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					query.close();
 				}
-				catch (SQLException e)
+				catch (final SQLException e)
 				{}
 		}
 		// Create columns if not exist
 		query = null;
-		ArrayList<String> columnsNames = new ArrayList<String>();
+		final ArrayList<String> columnsNames = new ArrayList<String>();
 		try
 		{
 			query = connection.getConnection().createStatement();
 			// Vorhandene Spalten abfragen
-			ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + table);
+			final ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + table);
 			try
 			{
 				while (result.next())
 					columnsNames.add(result.getString("Field"));
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			e.printStackTrace();
 		}
@@ -90,11 +90,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					query.close();
 				}
-				catch (SQLException e)
+				catch (final SQLException e)
 				{}
 		}
 		query = null;
-		for (MySQLColumn column : columns)
+		for (final MySQLColumn column : columns)
 		{
 			// Prüfen ob Spalte vorhanden ist
 			if (columnsNames.contains(column.getName()))
@@ -107,7 +107,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				query = connection.getConnection().createStatement();
 				query.executeUpdate("ALTER TABLE " + table + " ADD " + column.getCreateString());
 			}
-			catch (SQLException e)
+			catch (final SQLException e)
 			{
 				e.printStackTrace();
 			}
@@ -118,7 +118,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 					{
 						query.close();
 					}
-					catch (SQLException e)
+					catch (final SQLException e)
 					{}
 			}
 		}
@@ -132,7 +132,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public S getEntry(String key)
+	public S getEntry(final String key)
 	{
 		S res = null;
 		Statement query = null;
@@ -145,13 +145,13 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			{
 				res = constructor.newInstance(result, columnNames);
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
 			query.close();
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -163,14 +163,14 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					result.close();
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{}
 			if (query != null)
 				try
 				{
 					query.close();
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{}
 			connection.closeConnection();
 		}
@@ -178,9 +178,9 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public List<S> getEntries(String key)
+	public List<S> getEntries(final String key)
 	{
-		List<S> list = new ArrayList<S>();
+		final List<S> list = new ArrayList<S>();
 		Statement query = null;
 		ResultSet result = null;
 		try
@@ -192,13 +192,13 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				while (result.next())
 					list.add(constructor.newInstance(result, columnNames));
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
 			query.close();
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -210,14 +210,14 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					result.close();
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{}
 			if (query != null)
 				try
 				{
 					query.close();
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{}
 			connection.closeConnection();
 		}
@@ -227,7 +227,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public List<S> getAllEntries()
 	{
-		List<S> list = new ArrayList<S>();
+		final List<S> list = new ArrayList<S>();
 		Statement query = null;
 		ResultSet result = null;
 		try
@@ -239,12 +239,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				while (result.next())
 					list.add(constructor.newInstance(result, columnNames));
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -256,14 +256,14 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					result.close();
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{}
 			if (query != null)
 				try
 				{
 					query.close();
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{}
 			connection.closeConnection();
 		}
@@ -271,7 +271,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public void delete(String key)
+	public void delete(final String key)
 	{
 		Statement query = null;
 		try
@@ -279,7 +279,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			query = connection.getConnection().createStatement();
 			query.executeUpdate("DELETE FROM " + table + " WHERE " + primary.getName() + "='" + key + "'");
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			e.printStackTrace();
 		}
@@ -290,14 +290,14 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					query.close();
 				}
-				catch (SQLException e)
+				catch (final SQLException e)
 				{}
 			connection.closeConnection();
 		}
 	}
 
 	@Override
-	public void save(S entry)
+	public void save(final S entry)
 	{
 		entry.saveToMySQLDatabase(connection, table, getColumnNames());
 	}
@@ -307,10 +307,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		return columns;
 	}
 
-	private static String[] convertColumnNames(MySQLColumn[] columns)
+	private static String[] convertColumnNames(final MySQLColumn[] columns)
 	{
-		int length = columns.length;
-		String[] names = new String[length];
+		final int length = columns.length;
+		final String[] names = new String[length];
 		for (int i = 0; i < length; i++)
 			names[i] = columns[i].getName();
 		return names;
@@ -328,7 +328,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 
 	public final int getPrimaryIndex()
 	{
-		int length = columns.length;
+		final int length = columns.length;
 		for (int i = 0; i < length; i++)
 			if (columns[i] == primary)
 				return i;

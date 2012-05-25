@@ -6,7 +6,7 @@ public class Pair<S, T>
 	protected S data1;
 	protected T data2;
 
-	public Pair(S data1, T data2)
+	public Pair(final S data1, final T data2)
 	{
 		super();
 		this.data1 = data1;
@@ -18,7 +18,7 @@ public class Pair<S, T>
 		return data1;
 	}
 
-	public void setData1(S data1)
+	public void setData1(final S data1)
 	{
 		this.data1 = data1;
 	}
@@ -28,7 +28,7 @@ public class Pair<S, T>
 		return data2;
 	}
 
-	public void setData2(T data2)
+	public void setData2(final T data2)
 	{
 		this.data2 = data2;
 	}

@@ -31,7 +31,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin
 
 	public final static CrazyLightPlugin getLightPlugin(final String name)
 	{
-		for (CrazyLightPlugin plugin : getCrazyLightPlugins())
+		for (final CrazyLightPlugin plugin : getCrazyLightPlugins())
 			if (plugin.getName().equalsIgnoreCase(name))
 				return plugin;
 		return null;
@@ -56,7 +56,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin
 		consoleLog("disabled");
 	}
 
-	public final void consoleLog(String message)
+	public final void consoleLog(final String message)
 	{
 		getServer().getConsoleSender().sendMessage(getChatHeader() + message);
 	}

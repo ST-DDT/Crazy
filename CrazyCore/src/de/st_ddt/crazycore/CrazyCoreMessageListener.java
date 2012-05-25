@@ -1,6 +1,7 @@
 package de.st_ddt.crazycore;
 
 import org.bukkit.entity.Player;
+
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.CrazyPluginMessageListener;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
@@ -8,13 +9,13 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 public class CrazyCoreMessageListener extends CrazyPluginMessageListener
 {
 
-	public CrazyCoreMessageListener(CrazyPlugin plugin)
+	public CrazyCoreMessageListener(final CrazyPlugin plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	public void pluginMessageRecieved(String channel, Player player, String message)
+	public void pluginMessageRecieved(final String channel, final Player player, String message)
 	{
 		if (message.startsWith("Q_Lang "))
 		{

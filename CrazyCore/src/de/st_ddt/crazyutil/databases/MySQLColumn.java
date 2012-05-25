@@ -10,7 +10,7 @@ public class MySQLColumn
 	protected final String defaults;
 	protected final boolean autoincrement;
 
-	public MySQLColumn(String name, String type)
+	public MySQLColumn(final String name, final String type)
 	{
 		super();
 		this.name = name;
@@ -21,7 +21,7 @@ public class MySQLColumn
 		this.autoincrement = false;
 	}
 
-	public MySQLColumn(String name, String type, boolean primary, boolean autoincrement)
+	public MySQLColumn(final String name, final String type, final boolean primary, final boolean autoincrement)
 	{
 		super();
 		this.name = name;
@@ -32,7 +32,7 @@ public class MySQLColumn
 		this.autoincrement = autoincrement;
 	}
 
-	public MySQLColumn(String name, String type, String defaults, boolean nulled, boolean autoincrement)
+	public MySQLColumn(final String name, final String type, final String defaults, final boolean nulled, final boolean autoincrement)
 	{
 		super();
 		this.name = name;
@@ -78,9 +78,9 @@ public class MySQLColumn
 		return name + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
 	}
 
-	public static String getFullCreateString(MySQLColumn... columns)
+	public static String getFullCreateString(final MySQLColumn... columns)
 	{
-		int length = columns.length;
+		final int length = columns.length;
 		if (length == 0)
 			return "";
 		String res = columns[0].getCreateString();

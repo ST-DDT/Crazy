@@ -50,10 +50,10 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	public abstract void save(S entry);
 
 	@Override
-	public final void saveAll(Collection<S> entries)
+	public final void saveAll(final Collection<S> entries)
 	{
 		bulkOperation = true;
-		for (S entry : entries)
+		for (final S entry : entries)
 			save(entry);
 		bulkOperation = false;
 		saveDatabase();

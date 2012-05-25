@@ -76,7 +76,7 @@ public class CrazyCore extends CrazyPlugin
 				{
 					page = Integer.parseInt(args[0]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(1, "Integer");
 				}
@@ -84,7 +84,7 @@ public class CrazyCore extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/crazylist [Page]");
 		}
-		ArrayList<JavaPlugin> list = new ArrayList<JavaPlugin>();
+		final ArrayList<JavaPlugin> list = new ArrayList<JavaPlugin>();
 		list.addAll(getCrazyLightPlugins());
 		int lastIndex = list.size();
 		if (lastIndex + 9 < page * 10)
@@ -106,7 +106,7 @@ public class CrazyCore extends CrazyPlugin
 				sendLocaleMessage("COMMAND.LANGUAGE.CURRENT", sender, CrazyLocale.getLanguageName(), CrazyLocale.getUserLanguage(sender));
 				sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT", sender, CrazyLocale.getLanguageName().getDefaultLanguageText(), getDefaultLanguage());
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.HEADER", sender);
-				String languages=ChatHelper.listingString(CrazyLocale.getActiveLanguagesNames(true));
+				final String languages = ChatHelper.listingString(CrazyLocale.getActiveLanguagesNames(true));
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.ENTRY", sender, languages);
 				return;
 			case 1:
@@ -149,12 +149,12 @@ public class CrazyCore extends CrazyPlugin
 				}
 				else if (args[0].equalsIgnoreCase("download"))
 				{
-					String download = args[1];
+					final String download = args[1];
 					if (download.equalsIgnoreCase("*"))
 					{
-						for (String language : CrazyLocale.getLoadedLanguages())
+						for (final String language : CrazyLocale.getLoadedLanguages())
 						{
-							for (CrazyPlugin plugin : getCrazyPlugins())
+							for (final CrazyPlugin plugin : getCrazyPlugins())
 							{
 								plugin.loadLanguage(language, sender, true);
 								plugin.checkLocale();
@@ -163,10 +163,10 @@ public class CrazyCore extends CrazyPlugin
 						}
 						return;
 					}
-					CrazyPlugin plugin = CrazyPlugin.getPlugin(download);
+					final CrazyPlugin plugin = CrazyPlugin.getPlugin(download);
 					if (plugin != null)
 					{
-						for (String language : CrazyLocale.getLoadedLanguages())
+						for (final String language : CrazyLocale.getLoadedLanguages())
 						{
 							plugin.loadLanguage(language, sender, true);
 							plugin.checkLocale();
@@ -174,7 +174,7 @@ public class CrazyCore extends CrazyPlugin
 						}
 						return;
 					}
-					for (CrazyPlugin plugin2 : getCrazyPlugins())
+					for (final CrazyPlugin plugin2 : getCrazyPlugins())
 					{
 						plugin2.loadLanguage(download, sender, true);
 						plugin2.checkLocale();
@@ -184,12 +184,12 @@ public class CrazyCore extends CrazyPlugin
 				}
 				else if (args[0].equalsIgnoreCase("reload"))
 				{
-					String reload = args[1];
+					final String reload = args[1];
 					if (reload.equalsIgnoreCase("*"))
 					{
-						for (String language : CrazyLocale.getLoadedLanguages())
+						for (final String language : CrazyLocale.getLoadedLanguages())
 						{
-							for (CrazyPlugin plugin : getCrazyPlugins())
+							for (final CrazyPlugin plugin : getCrazyPlugins())
 							{
 								plugin.loadLanguage(language, sender);
 								plugin.checkLocale();
@@ -198,10 +198,10 @@ public class CrazyCore extends CrazyPlugin
 						}
 						return;
 					}
-					CrazyPlugin plugin = getPlugin(reload);
+					final CrazyPlugin plugin = getPlugin(reload);
 					if (plugin != null)
 					{
-						for (String language : CrazyLocale.getLoadedLanguages())
+						for (final String language : CrazyLocale.getLoadedLanguages())
 						{
 							plugin.loadLanguage(language, sender);
 							plugin.checkLocale();
@@ -209,7 +209,7 @@ public class CrazyCore extends CrazyPlugin
 						}
 						return;
 					}
-					for (CrazyPlugin plugin2 : getCrazyPlugins())
+					for (final CrazyPlugin plugin2 : getCrazyPlugins())
 					{
 						plugin2.loadLanguage(reload, sender);
 						plugin2.checkLocale();
@@ -228,8 +228,8 @@ public class CrazyCore extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		ConfigurationSection config = getConfig();
-		for (String language : config.getStringList("defaultLanguages"))
+		final ConfigurationSection config = getConfig();
+		for (final String language : config.getStringList("defaultLanguages"))
 		{
 			defaultLanguages.add(language);
 			CrazyLocale.loadLanguage(language);
@@ -242,7 +242,7 @@ public class CrazyCore extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		config.set("defaultLanguage", defaultLanguage);
 		config.set("defaultLanguages", defaultLanguages);
 		CrazyLocale.save(config, "players.");

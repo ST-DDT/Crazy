@@ -20,7 +20,7 @@ public class CrazyCommandPermissionException extends CrazyCommandException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		sender.sendMessage(header + ChatColor.RED + locale.getLocaleMessage(sender, "ERROR"));

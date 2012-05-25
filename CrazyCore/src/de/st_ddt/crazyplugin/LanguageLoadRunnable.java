@@ -9,7 +9,7 @@ public class LanguageLoadRunnable implements Runnable
 	protected final String language;
 	protected final CommandSender sender;
 
-	public LanguageLoadRunnable(CrazyPlugin plugin, String language, CommandSender sender)
+	public LanguageLoadRunnable(final CrazyPlugin plugin, final String language, final CommandSender sender)
 	{
 		super();
 		this.plugin = plugin;

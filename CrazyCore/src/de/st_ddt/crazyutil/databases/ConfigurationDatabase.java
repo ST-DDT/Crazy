@@ -12,20 +12,20 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	protected final ConfigurationSection config;
 	protected String table;
 
-	public ConfigurationDatabase(Class<S> clazz, ConfigurationSection config, String table, String[] columnNames)
+	public ConfigurationDatabase(final Class<S> clazz, final ConfigurationSection config, final String table, final String[] columnNames)
 	{
 		super(DatabaseType.CONFIG, clazz, columnNames, getConstructor(clazz));
 		this.config = config;
 		this.table = table;
 	}
 
-	private static <S> Constructor<S> getConstructor(Class<S> clazz)
+	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{
 			return clazz.getConstructor(ConfigurationSection.class, String[].class);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -38,22 +38,23 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 		return;
 	}
 
+	@Override
 	public String getTableName()
 	{
 		return table;
 	}
 
 	@Override
-	public S getEntry(String key)
+	public S getEntry(final String key)
 	{
-		ConfigurationSection section = config.getConfigurationSection(table + "." + key);
+		final ConfigurationSection section = config.getConfigurationSection(table + "." + key);
 		if (section == null)
 			return null;
 		try
 		{
 			return constructor.newInstance(section, columnNames);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -61,9 +62,9 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public List<S> getEntries(String key)
+	public List<S> getEntries(final String key)
 	{
-		List<S> list = new ArrayList<S>();
+		final List<S> list = new ArrayList<S>();
 		list.add(getEntry(key));
 		return list;
 	}
@@ -71,22 +72,22 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	@Override
 	public List<S> getAllEntries()
 	{
-		List<S> list = new ArrayList<S>();
+		final List<S> list = new ArrayList<S>();
 		if (config.getConfigurationSection(table) == null)
 			return list;
-		for (String key : config.getConfigurationSection(table).getKeys(false))
+		for (final String key : config.getConfigurationSection(table).getKeys(false))
 			list.add(getEntry(key));
 		return list;
 	}
 
 	@Override
-	public void delete(String key)
+	public void delete(final String key)
 	{
 		config.set(table + "." + key, null);
 	}
 
 	@Override
-	public void save(S entry)
+	public void save(final S entry)
 	{
 		entry.saveToConfigDatabase(config, table + "." + entry.getName() + ".", columnNames);
 	}

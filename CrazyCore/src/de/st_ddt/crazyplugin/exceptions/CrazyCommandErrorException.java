@@ -8,7 +8,7 @@ public class CrazyCommandErrorException extends CrazyCommandException
 	private static final long serialVersionUID = 1755697197006991043L;
 	private final Exception exception;
 
-	public CrazyCommandErrorException(Exception exception)
+	public CrazyCommandErrorException(final Exception exception)
 	{
 		super();
 		this.exception = exception;
@@ -26,7 +26,7 @@ public class CrazyCommandErrorException extends CrazyCommandException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		if (exception != null)

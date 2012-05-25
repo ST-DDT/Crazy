@@ -9,7 +9,7 @@ public class CrazyCommandNoSuchException extends CrazyCommandException
 	private final String searched;
 	private final String type;
 
-	public CrazyCommandNoSuchException(String type, String searched)
+	public CrazyCommandNoSuchException(final String type, final String searched)
 	{
 		super();
 		this.searched = searched;
@@ -23,7 +23,7 @@ public class CrazyCommandNoSuchException extends CrazyCommandException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "ERROR", type, searched));

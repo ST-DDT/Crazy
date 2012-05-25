@@ -13,12 +13,12 @@ public class CrazyCommandCircumstanceException extends CrazyCommandException
 		this(null, null);
 	}
 
-	public CrazyCommandCircumstanceException(String mustBe)
+	public CrazyCommandCircumstanceException(final String mustBe)
 	{
 		this(mustBe, null);
 	}
 
-	public CrazyCommandCircumstanceException(String mustBe, String current)
+	public CrazyCommandCircumstanceException(final String mustBe, final String current)
 	{
 		super();
 		this.mustBe = mustBe;
@@ -32,7 +32,7 @@ public class CrazyCommandCircumstanceException extends CrazyCommandException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		if (mustBe != null)

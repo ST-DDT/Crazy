@@ -3,6 +3,7 @@ package de.st_ddt.crazyutil.databases;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 public class MySQLConnection
@@ -15,14 +16,14 @@ public class MySQLConnection
 	private final String user;
 	private final String password;
 
-	public static MySQLConnection connect(ConfigurationSection config)
+	public static MySQLConnection connect(final ConfigurationSection config)
 	{
 		if (config == null)
 			return null;
 		return new MySQLConnection(config.getString("host", "localhost"), config.getString("port", "3306"), config.getString("database"), config.getString("user"), config.getString("password"));
 	}
 
-	public MySQLConnection(ConfigurationSection config, String defaultHost, String defaultPort, String defaultDatabase, String defaultUser, String defaultPassword)
+	public MySQLConnection(final ConfigurationSection config, final String defaultHost, final String defaultPort, final String defaultDatabase, final String defaultUser, final String defaultPassword)
 	{
 		this(config.getString("database.host", defaultHost), config.getString("database.port", defaultPort), config.getString("database.dbname", defaultDatabase), config.getString("database.user", defaultUser), config.getString("database.password", defaultPassword));
 		config.set("database.host", host);
@@ -32,7 +33,7 @@ public class MySQLConnection
 		config.set("database.password", password);
 	}
 
-	public MySQLConnection(String host, String port, String database, String user, String password)
+	public MySQLConnection(final String host, final String port, final String database, final String user, final String password)
 	{
 		super();
 		this.host = host;
@@ -44,7 +45,7 @@ public class MySQLConnection
 		{
 			Class.forName("com.mysql.jdbc.Driver");
 		}
-		catch (ClassNotFoundException e)
+		catch (final ClassNotFoundException e)
 		{
 			// TODO Download and retry
 			System.err.println("JBDC-Treiber not found");
@@ -58,7 +59,7 @@ public class MySQLConnection
 		{
 			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			System.err.println("Connection failed");
 			e.printStackTrace();
@@ -72,11 +73,11 @@ public class MySQLConnection
 			if (connection.isClosed())
 				connect();
 		}
-		catch (NullPointerException e)
+		catch (final NullPointerException e)
 		{
 			connect();
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -89,7 +90,7 @@ public class MySQLConnection
 		{
 			connection.close();
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{}
 	}
 }

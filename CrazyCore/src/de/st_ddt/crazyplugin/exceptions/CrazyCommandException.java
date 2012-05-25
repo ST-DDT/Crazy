@@ -14,22 +14,23 @@ public class CrazyCommandException extends CrazyException
 		return super.getLangPath() + ".COMMAND";
 	}
 
-	public void print(CommandSender sender, String header)
+	@Override
+	public void print(final CommandSender sender, final String header)
 	{
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "Head"));
 		if (command != null)
 			sender.sendMessage(header + command);
 	}
 
-	public void setCommand(String commandLabel)
+	public void setCommand(final String commandLabel)
 	{
 		command = commandLabel;
 	}
 
-	public void setCommand(String commandLabel, String[] args)
+	public void setCommand(final String commandLabel, final String[] args)
 	{
 		String command = commandLabel;
-		for (String arg : args)
+		for (final String arg : args)
 			command += " " + arg;
 		this.command = command;
 	}
@@ -39,7 +40,7 @@ public class CrazyCommandException extends CrazyException
 		shiftCommandIndex(1);
 	}
 
-	public void shiftCommandIndex(int shift)
+	public void shiftCommandIndex(final int shift)
 	{
 	}
 }

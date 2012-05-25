@@ -11,7 +11,7 @@ public abstract class CrazyPluginMessageListener implements PluginMessageListene
 	protected final CrazyPlugin plugin;
 	protected final Charset charset = Charset.forName("UTF-8");
 
-	public CrazyPluginMessageListener(CrazyPlugin plugin)
+	public CrazyPluginMessageListener(final CrazyPlugin plugin)
 	{
 		super();
 		this.plugin = plugin;

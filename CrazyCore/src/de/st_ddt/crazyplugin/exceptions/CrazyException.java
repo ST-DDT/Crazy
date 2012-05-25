@@ -17,7 +17,7 @@ public class CrazyException extends Exception
 		this.locale = CrazyLocale.getLocaleHead().getLanguageEntry(getLangPath());
 	}
 
-	public void setPrintStackTrace(boolean printStackTrace)
+	public void setPrintStackTrace(final boolean printStackTrace)
 	{
 		this.printStackTrace = printStackTrace;
 	}
@@ -27,14 +27,14 @@ public class CrazyException extends Exception
 		return "CRAZYEXCEPTION";
 	}
 
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "Head"));
 		if (printStackTrace)
 			printStackTrace();
 	}
 
-	public final void print(CommandSender sender)
+	public final void print(final CommandSender sender)
 	{
 		print(sender, "");
 	}

@@ -11,12 +11,12 @@ public class CrazyCommandParameterException extends CrazyCommandException
 	private final String type;
 	private final String[] allowed;
 
-	public CrazyCommandParameterException(int number, String type)
+	public CrazyCommandParameterException(final int number, final String type)
 	{
 		this(number, type, new String[0]);
 	}
 
-	public CrazyCommandParameterException(int number, String type, String... allowed)
+	public CrazyCommandParameterException(final int number, final String type, final String... allowed)
 	{
 		super();
 		this.number = number;
@@ -31,16 +31,16 @@ public class CrazyCommandParameterException extends CrazyCommandException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "ERROR", number, type));
-		for (String allow : allowed)
+		for (final String allow : allowed)
 			sender.sendMessage(header + allow);
 	}
 
 	@Override
-	public void setCommand(String commandLabel, String[] args)
+	public void setCommand(final String commandLabel, final String[] args)
 	{
 		if (number <= args.length)
 			args[number - 1] = ChatColor.RED + args[number - 1] + ChatColor.WHITE;
@@ -48,7 +48,7 @@ public class CrazyCommandParameterException extends CrazyCommandException
 	}
 
 	@Override
-	public void shiftCommandIndex(int shift)
+	public void shiftCommandIndex(final int shift)
 	{
 		number += shift;
 		super.shiftCommandIndex(shift);

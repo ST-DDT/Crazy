@@ -19,6 +19,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
@@ -49,7 +50,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 
 	public final static CrazyPlugin getPlugin(final String name)
 	{
-		for (CrazyPlugin plugin : plugins.getData2List())
+		for (final CrazyPlugin plugin : plugins.getData2List())
 			if (plugin.getName().equalsIgnoreCase(name))
 				return plugin;
 		return null;
@@ -71,7 +72,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 						commandInfo(sender, new String[0]);
 						return true;
 					}
-					String[] newArgs = ChatHelper.shiftArray(args, 1);
+					final String[] newArgs = ChatHelper.shiftArray(args, 1);
 					if (commandMain(sender, args[0], newArgs))
 						return true;
 					if (args[0].equalsIgnoreCase("info"))
@@ -96,20 +97,20 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 					}
 					throw new CrazyCommandNoSuchException("Function", args[0]);
 				}
-				catch (CrazyCommandException e)
+				catch (final CrazyCommandException e)
 				{
 					e.shiftCommandIndex();
 					throw e;
 				}
 			}
 		}
-		catch (CrazyCommandException e)
+		catch (final CrazyCommandException e)
 		{
 			e.setCommand(commandLabel, args);
 			e.print(sender, getChatHeader());
 			return true;
 		}
-		catch (CrazyException e)
+		catch (final CrazyException e)
 		{
 			e.print(sender, getChatHeader());
 			return true;
@@ -117,6 +118,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		return super.onCommand(sender, command, commandLabel, args);
 	}
 
+	@Override
 	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
@@ -176,10 +178,10 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 	@Override
 	public void onEnable()
 	{
-		ConfigurationSection config = getConfig();
-		boolean updated = config.getString("version", "").equals(getDescription().getVersion());
+		final ConfigurationSection config = getConfig();
+		final boolean updated = config.getString("version", "").equals(getDescription().getVersion());
 		config.set("version", getDescription().getVersion());
-		for (String language : CrazyLocale.getLoadedLanguages())
+		for (final String language : CrazyLocale.getLoadedLanguages())
 			loadLanguage(language, updated);
 		checkLocale();
 		load();
@@ -284,7 +286,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 	{
 		if (console)
 			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
-		for (Player player : Bukkit.getOnlinePlayers())
+		for (final Player player : Bukkit.getOnlinePlayers())
 			if (permission != null)
 				if (player.hasPermission(permission))
 					sendLocaleMessage(locale, player, args);
@@ -300,7 +302,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		loadLanguage(language, Bukkit.getConsoleSender(), false);
 	}
 
-	public void loadLanguage(final String language, boolean forceDownload)
+	public void loadLanguage(final String language, final boolean forceDownload)
 	{
 		loadLanguage(language, Bukkit.getConsoleSender(), forceDownload);
 	}
@@ -315,7 +317,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		loadLanguage(language, sender, false);
 	}
 
-	public void loadLanguage(final String language, final CommandSender sender, boolean forceDownload)
+	public void loadLanguage(final String language, final CommandSender sender, final boolean forceDownload)
 	{
 		// default files
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
@@ -351,7 +353,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 					stream.close();
 			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language);
 		}
@@ -378,7 +380,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 						stream.close();
 				}
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language + " (Custom)");
 			}
@@ -399,7 +401,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 					return;
 				in = new BufferedInputStream(stream);
 				out = new BufferedOutputStream(new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang"));
-				byte data[] = new byte[1024];
+				final byte data[] = new byte[1024];
 				int count;
 				while ((count = in.read(data, 0, 1024)) != -1)
 					out.write(data, 0, count);
@@ -415,7 +417,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 					in.close();
 			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.EXPORT", getServer().getConsoleSender(), language);
 		}
@@ -431,7 +433,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		downloadLanguage(language, Bukkit.getConsoleSender());
 	}
 
-	public void downloadLanguage(final String language, CommandSender sender)
+	public void downloadLanguage(final String language, final CommandSender sender)
 	{
 		try
 		{
@@ -445,7 +447,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 					return;
 				in = new BufferedInputStream(stream);
 				out = new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang");
-				byte data[] = new byte[1024];
+				final byte data[] = new byte[1024];
 				int count;
 				while ((count = in.read(data, 0, 1024)) != -1)
 					out.write(data, 0, count);
@@ -461,7 +463,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 					out.close();
 			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", sender, language);
 		}

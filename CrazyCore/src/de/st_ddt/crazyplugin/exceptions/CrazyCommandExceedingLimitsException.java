@@ -10,7 +10,7 @@ public class CrazyCommandExceedingLimitsException extends CrazyCommandException
 	protected final boolean lowerLimit;
 	protected final Integer limit;
 
-	public CrazyCommandExceedingLimitsException(String message)
+	public CrazyCommandExceedingLimitsException(final String message)
 	{
 		super();
 		this.message = message;
@@ -18,7 +18,7 @@ public class CrazyCommandExceedingLimitsException extends CrazyCommandException
 		limit = null;
 	}
 
-	public CrazyCommandExceedingLimitsException(String message, Integer limit)
+	public CrazyCommandExceedingLimitsException(final String message, final Integer limit)
 	{
 		super();
 		this.message = message;
@@ -26,7 +26,7 @@ public class CrazyCommandExceedingLimitsException extends CrazyCommandException
 		this.limit = limit;
 	}
 
-	public CrazyCommandExceedingLimitsException(String message, boolean lowerLimit)
+	public CrazyCommandExceedingLimitsException(final String message, final boolean lowerLimit)
 	{
 		super();
 		this.message = message;
@@ -34,7 +34,7 @@ public class CrazyCommandExceedingLimitsException extends CrazyCommandException
 		limit = null;
 	}
 
-	public CrazyCommandExceedingLimitsException(String message, boolean lowerLimit, Integer limit)
+	public CrazyCommandExceedingLimitsException(final String message, final boolean lowerLimit, final Integer limit)
 	{
 		super();
 		this.message = message;
@@ -49,7 +49,7 @@ public class CrazyCommandExceedingLimitsException extends CrazyCommandException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		sender.sendMessage(header + locale.getLocaleMessage(sender, lowerLimit ? "LOWER" : "UPPER", message));

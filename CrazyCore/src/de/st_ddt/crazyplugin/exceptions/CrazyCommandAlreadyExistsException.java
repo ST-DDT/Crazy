@@ -9,7 +9,7 @@ public class CrazyCommandAlreadyExistsException extends CrazyCommandException
 	private final String creation;
 	private final String type;
 
-	public CrazyCommandAlreadyExistsException(String type, String creation)
+	public CrazyCommandAlreadyExistsException(final String type, final String creation)
 	{
 		super();
 		this.creation = creation;
@@ -23,7 +23,7 @@ public class CrazyCommandAlreadyExistsException extends CrazyCommandException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "ERROR", type, creation));

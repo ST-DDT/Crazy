@@ -20,7 +20,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	protected final File file;
 	protected HashMap<String, String[]> entries = new HashMap<String, String[]>();
 
-	public FlatDatabase(Class<S> clazz, File file, String[] columnNames)
+	public FlatDatabase(final Class<S> clazz, final File file, final String[] columnNames)
 	{
 		super(DatabaseType.FLAT, clazz, columnNames, getConstructor(clazz));
 		this.file = file;
@@ -28,13 +28,13 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		loadFile();
 	}
 
-	private static <S> Constructor<S> getConstructor(Class<S> clazz)
+	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{
 			return clazz.getConstructor(String[].class);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -54,16 +54,16 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public S getEntry(String key)
+	public S getEntry(final String key)
 	{
-		String[] data = entries.get(key);
+		final String[] data = entries.get(key);
 		if (data == null)
 			return null;
 		try
 		{
 			return constructor.newInstance(new Object[] { data });
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -71,10 +71,10 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public List<S> getEntries(String key)
+	public List<S> getEntries(final String key)
 	{
-		List<S> list = new ArrayList<S>();
-		S entry = getEntry(key);
+		final List<S> list = new ArrayList<S>();
+		final S entry = getEntry(key);
 		if (entry != null)
 			list.add(entry);
 		return list;
@@ -83,10 +83,10 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public List<S> getAllEntries()
 	{
-		List<S> list = new ArrayList<S>();
-		for (String key : entries.keySet())
+		final List<S> list = new ArrayList<S>();
+		for (final String key : entries.keySet())
 		{
-			S entry = getEntry(key);
+			final S entry = getEntry(key);
 			if (entry != null)
 				list.add(entry);
 		}
@@ -94,13 +94,13 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public void delete(String key)
+	public void delete(final String key)
 	{
 		entries.put(key, null);
 	}
 
 	@Override
-	public void save(S entry)
+	public void save(final S entry)
 	{
 		entries.put(entry.getName(), entry.saveToFlatDatabase());
 		if (!bulkOperation)
@@ -123,7 +123,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 			{
 				if (zeile.equals(""))
 					continue;
-				String[] split = zeile.split("\\|");
+				final String[] split = zeile.split("\\|");
 				if (split == null)
 					continue;
 				if (split.length == 0)
@@ -132,15 +132,15 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 				{
 					entries.put(split[0], split);
 				}
-				catch (ArrayIndexOutOfBoundsException e)
+				catch (final ArrayIndexOutOfBoundsException e)
 				{
 					System.err.println("Invalid line " + zeile);
 				}
 			}
 		}
-		catch (FileNotFoundException e)
+		catch (final FileNotFoundException e)
 		{}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -151,21 +151,21 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 				{
 					bufreader.close();
 				}
-				catch (IOException e)
+				catch (final IOException e)
 				{}
 			if (inputStreamReader != null)
 				try
 				{
 					inputStreamReader.close();
 				}
-				catch (IOException e)
+				catch (final IOException e)
 				{}
 			if (fileInputStream != null)
 				try
 				{
 					fileInputStream.close();
 				}
-				catch (IOException e)
+				catch (final IOException e)
 				{}
 		}
 	}
@@ -177,12 +177,12 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		{
 			writer = new FileWriter(file);
 			writer.write(ChatHelper.listingString("|", columnNames) + System.getProperty("line.separator"));
-			for (String[] strings : entries.values())
+			for (final String[] strings : entries.values())
 				if (strings != null)
 					writer.write(ChatHelper.listingString("|", strings) + System.getProperty("line.separator"));
 			writer.flush();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -193,7 +193,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 				{
 					writer.close();
 				}
-				catch (IOException e)
+				catch (final IOException e)
 				{
 					e.printStackTrace();
 				}
