@@ -22,6 +22,16 @@ public class MySQLConnection
 		return new MySQLConnection(config.getString("host", "localhost"), config.getString("port", "3306"), config.getString("database"), config.getString("user"), config.getString("password"));
 	}
 
+	public MySQLConnection(ConfigurationSection config, String defaultHost, String defaultPort, String defaultDatabase, String defaultUser, String defaultPassword)
+	{
+		this(config.getString("database.host", defaultHost), config.getString("database.port", defaultPort), config.getString("database.dbname", defaultDatabase), config.getString("database.user", defaultUser), config.getString("database.password", defaultPassword));
+		config.set("database.host", host);
+		config.set("database.port", port);
+		config.set("database.dbname", database);
+		config.set("database.user", user);
+		config.set("database.password", password);
+	}
+
 	public MySQLConnection(String host, String port, String database, String user, String password)
 	{
 		super();
@@ -80,7 +90,6 @@ public class MySQLConnection
 			connection.close();
 		}
 		catch (SQLException e)
-		{
-		}
+		{}
 	}
 }
