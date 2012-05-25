@@ -1,12 +1,12 @@
 package de.st_ddt.crazyarena.utils;
 
+import java.util.HashMap;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import de.st_ddt.crazyutil.PairList;
 
 public class PlayerSaver
 {
@@ -19,7 +19,7 @@ public class PlayerSaver
 	private GameMode gamemode;
 	private int health;
 	private int air;
-	private PairList<Integer, ItemStack> inventory;
+	private HashMap<Integer, ItemStack> inventory;
 	// private int slot;
 	private float exhaustion;
 	private float saturation;
@@ -42,15 +42,15 @@ public class PlayerSaver
 		this.air = player.getRemainingAir();
 		this.exhaustion = player.getExhaustion();
 		this.saturation = player.getSaturation();
-		this.inventory = new PairList<Integer, ItemStack>();
+		this.inventory = new HashMap<Integer, ItemStack>();
 		PlayerInventory inv = player.getInventory();
 		int size = inv.getSize();
 		for (int i = 0; i < size; i++)
-			inventory.add(i, inv.getItem(i).clone());
-		inventory.add(-1, inv.getBoots());
-		inventory.add(-2, inv.getLeggings());
-		inventory.add(-3, inv.getChestplate().clone());
-		inventory.add(-4, inv.getHelmet().clone());
+			inventory.put(i, inv.getItem(i).clone());
+		inventory.put(-1, inv.getBoots());
+		inventory.put(-2, inv.getLeggings());
+		inventory.put(-3, inv.getChestplate().clone());
+		inventory.put(-4, inv.getHelmet().clone());
 		// slot = inv.getHeldItemSlot();
 		backup = true;
 	}
@@ -77,11 +77,11 @@ public class PlayerSaver
 		PlayerInventory inv = player.getInventory();
 		int size = inv.getSize();
 		for (int i = 0; i < size; i++)
-			inv.setItem(i, inventory.findDataVia1(i).clone());
-		inv.setBoots(inventory.findDataVia1(-1).clone());
-		inv.setLeggings(inventory.findDataVia1(-2).clone());
-		inv.setChestplate(inventory.findDataVia1(-3).clone());
-		inv.setHelmet(inventory.findDataVia1(-4).clone());
+			inv.setItem(i, inventory.get(i).clone());
+		inv.setBoots(inventory.get(-1).clone());
+		inv.setLeggings(inventory.get(-2).clone());
+		inv.setChestplate(inventory.get(-3).clone());
+		inv.setHelmet(inventory.get(-4).clone());
 	}
 
 	public void clear()

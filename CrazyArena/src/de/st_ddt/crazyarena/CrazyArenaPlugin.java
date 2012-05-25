@@ -1,20 +1,20 @@
 package de.st_ddt.crazyarena;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.CrazyPlugin;
-import de.st_ddt.crazyutil.PairList;
 
 public abstract class CrazyArenaPlugin extends CrazyPlugin
 {
 
-	private static final PairList<Class<? extends CrazyPlugin>, CrazyPlugin> arenaPlugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> arenaPlugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 
-	public static ArrayList<CrazyPlugin> getCrazyArenaPlugins()
+	public static Collection<CrazyPlugin> getCrazyArenaPlugins()
 	{
-		return arenaPlugins.getData2List();
+		return arenaPlugins.values();
 	}
 
 	@Override

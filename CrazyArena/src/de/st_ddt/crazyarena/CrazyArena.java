@@ -32,7 +32,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.PairList;
 
 public class CrazyArena extends CrazyPlugin
 {
@@ -41,7 +40,7 @@ public class CrazyArena extends CrazyPlugin
 	private CrazyArenaPlayerListener playerListener = null;
 	private CrazyArenaBlockListener blocklistener = null;
 	private ArenaSet arenas = null;
-	private final PairList<Player, Arena> invitations = new PairList<Player, Arena>();
+	private final HashMap<Player, Arena> invitations = new HashMap<Player, Arena>();
 	private final HashMap<Player, Arena> selection = new HashMap<Player, Arena>();
 	private static HashMap<String, Class<? extends Arena>> arenaTypes = new HashMap<String, Class<? extends Arena>>();
 
@@ -169,7 +168,7 @@ public class CrazyArena extends CrazyPlugin
 		switch (args.length)
 		{
 			case 0:
-				arena = invitations.findDataVia1(player);
+				arena = invitations.get(player);
 				if (arena == null)
 					throw new CrazyCommandUsageException("/join <Arena/Player>");
 				break;
@@ -204,7 +203,7 @@ public class CrazyArena extends CrazyPlugin
 		switch (args.length)
 		{
 			case 0:
-				arena = invitations.findDataVia1(player);
+				arena = invitations.get(player);
 				if (arena == null)
 					throw new CrazyCommandUsageException("/spectate <Arena/Player>");
 				break;
@@ -276,7 +275,7 @@ public class CrazyArena extends CrazyPlugin
 					if (arenas.getArena(invited) == null)
 					{
 						anz++;
-						invitations.setDataVia1(invited, arena);
+						invitations.put(invited, arena);
 						sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 					}
 				sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());
@@ -294,7 +293,7 @@ public class CrazyArena extends CrazyPlugin
 			if (invited == null)
 				continue;
 			anz++;
-			invitations.setDataVia1(invited, arena);
+			invitations.put(invited, arena);
 			sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 		}
 		sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());
