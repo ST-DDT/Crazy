@@ -22,7 +22,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 
 	public FlatDatabase(Class<S> clazz, File file, String[] columnNames)
 	{
-		super(DatabaseTypes.FLAT, clazz, columnNames, getConstructor(clazz));
+		super(DatabaseType.FLAT, clazz, columnNames, getConstructor(clazz));
 		this.file = file;
 		checkTable();
 		loadFile();

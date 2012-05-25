@@ -7,13 +7,13 @@ import java.util.List;
 public abstract class Database<S extends DatabaseEntry>
 {
 
-	private final DatabaseTypes type;
+	private final DatabaseType type;
 	protected final Class<S> clazz;
 	protected final String[] columnNames;
 	protected final Constructor<S> constructor;
 	protected boolean bulkOperation = false;
 
-	public Database(final DatabaseTypes type, final Class<S> clazz, final String[] columnNames, final Constructor<S> constructor)
+	public Database(final DatabaseType type, final Class<S> clazz, final String[] columnNames, final Constructor<S> constructor)
 	{
 		super();
 		this.type = type;
@@ -22,7 +22,7 @@ public abstract class Database<S extends DatabaseEntry>
 		this.constructor = constructor;
 	}
 
-	public DatabaseTypes getType()
+	public DatabaseType getType()
 	{
 		return type;
 	}

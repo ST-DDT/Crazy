@@ -1,6 +1,6 @@
 package de.st_ddt.crazyutil.databases;
 
-public enum DatabaseTypes
+public enum DatabaseType
 {
 	CONFIG(), MySQL(), FLAT();
 }

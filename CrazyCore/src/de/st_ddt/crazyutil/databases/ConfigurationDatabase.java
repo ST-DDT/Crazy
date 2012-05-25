@@ -14,7 +14,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 
 	public ConfigurationDatabase(Class<S> clazz, ConfigurationSection config, String table, String[] columnNames)
 	{
-		super(DatabaseTypes.CONFIG, clazz, columnNames, getConstructor(clazz));
+		super(DatabaseType.CONFIG, clazz, columnNames, getConstructor(clazz));
 		this.config = config;
 		this.table = table;
 	}
