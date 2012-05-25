@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
@@ -23,6 +25,7 @@ public class CrazyCore extends CrazyPlugin
 	protected static final ArrayList<String> defaultLanguages = new ArrayList<String>();
 	protected static String defaultLanguage;
 	private CrazyCoreMessageListener messageListener;
+	private CrazyCoreCrazyListener crazylistener;
 
 	public static CrazyCore getPlugin()
 	{
@@ -40,6 +43,9 @@ public class CrazyCore extends CrazyPlugin
 
 	private void registerHooks()
 	{
+		this.crazylistener = new CrazyCoreCrazyListener(this);
+		final PluginManager pm = this.getServer().getPluginManager();
+		pm.registerEvents(crazylistener, this);
 		messageListener = new CrazyCoreMessageListener(this);
 		final Messenger ms = getServer().getMessenger();
 		ms.registerIncomingPluginChannel(this, "CrazyCore", messageListener);
@@ -222,6 +228,32 @@ public class CrazyCore extends CrazyPlugin
 			default:
 				throw new CrazyCommandUsageException("/crazylanguage [Language]");
 		}
+	}
+
+	@Override
+	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	{
+		if (commandLabel.equalsIgnoreCase("delete"))
+		{
+			commanMainDelete(sender, args);
+			return true;
+		}
+		return false;
+	}
+
+	private void commanMainDelete(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (args.length != 1)
+			throw new CrazyCommandUsageException("/crazycore delete <Player>");
+		String player = args[0];
+		if (getServer().getPlayer(player) != null)
+			player = getServer().getPlayer(player).getName();
+		CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, player);
+		getServer().getPluginManager().callEvent(event);
+		sendLocaleMessage("COMMAND.DELETE.HEAD", sender, player);
+		sendLocaleMessage("COMMAND.DELETE.AMOUNT", sender, event.getDeletionsCount());
+		sendLocaleMessage("COMMAND.DELETE.LISTHEAD", sender, event.getDeletionsList());
+		sendLocaleMessage("COMMAND.DELETE.LIST", sender, event.getDeletionsList());
 	}
 
 	@Override

@@ -431,6 +431,11 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		loadLanguage(language);
 	}
 
+	public static boolean removeUserLanguage(final String name)
+	{
+		return userLanguages.remove(name) != null;
+	}
+
 	public static void loadLanguage(final String language)
 	{
 		if (!languages.contains(language))
