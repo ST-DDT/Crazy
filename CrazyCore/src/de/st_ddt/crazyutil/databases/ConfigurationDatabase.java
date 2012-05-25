@@ -38,6 +38,11 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 		return;
 	}
 
+	public String getTableName()
+	{
+		return table;
+	}
+
 	@Override
 	public S getEntry(String key)
 	{

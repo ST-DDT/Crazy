@@ -48,6 +48,12 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
 	}
 
 	@Override
+	public String getTableName()
+	{
+		return file.getPath();
+	}
+
+	@Override
 	public S getEntry(String key)
 	{
 		String[] data = entries.get(key);

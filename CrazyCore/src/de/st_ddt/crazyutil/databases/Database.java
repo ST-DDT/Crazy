@@ -27,6 +27,8 @@ public abstract class Database<S extends DatabaseEntry>
 		return type;
 	}
 
+	public abstract String getTableName();
+
 	public abstract void checkTable();
 
 	public abstract S getEntry(String key);

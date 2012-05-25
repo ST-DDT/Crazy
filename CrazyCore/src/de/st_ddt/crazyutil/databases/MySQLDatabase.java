@@ -126,6 +126,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
 	}
 
 	@Override
+	public String getTableName()
+	{
+		return table;
+	}
+
+	@Override
 	public S getEntry(String key)
 	{
 		S res = null;
