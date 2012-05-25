@@ -11,8 +11,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -28,7 +28,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Commandable;
 import de.st_ddt.crazyutil.Named;
-import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Commandable
@@ -36,21 +35,21 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 
 	protected CrazyLocale locale = null;
 	public final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-	private static final PairList<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new PairList<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 
-	public static ArrayList<CrazyPlugin> getCrazyPlugins()
+	public static Collection<CrazyPlugin> getCrazyPlugins()
 	{
-		return plugins.getData2List();
+		return plugins.values();
 	}
 
 	public final static CrazyPlugin getPlugin(final Class<? extends CrazyPlugin> plugin)
 	{
-		return plugins.findDataVia1(plugin);
+		return plugins.get(plugin);
 	}
 
 	public final static CrazyPlugin getPlugin(final String name)
 	{
-		for (final CrazyPlugin plugin : plugins.getData2List())
+		for (final CrazyPlugin plugin : plugins.values())
 			if (plugin.getName().equalsIgnoreCase(name))
 				return plugin;
 		return null;
@@ -169,7 +168,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 	@Override
 	public void onLoad()
 	{
-		plugins.setDataVia1(this.getClass(), this);
+		plugins.put(this.getClass(), this);
 		getDataFolder().mkdir();
 		new File(getDataFolder().getPath() + "/lang").mkdirs();
 		super.onLoad();
