@@ -1,0 +1,18 @@
+name: CrazyLoginFilter
+main: de.st_ddt.crazyloginfilter.CrazyLoginFilter
+author: ST-DDT
+#C*=needed core version
+version: C7.1_5
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore]
+commands:
+  crazyloginfilter:
+    description: Plugin Main Menu
+    usage: /<command> [Subcommands...]
+    alias: [clf]
+permissions:
+  crazyloginfilter.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazyloginfilter.admin: true
