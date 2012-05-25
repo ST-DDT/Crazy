@@ -3,6 +3,8 @@ package de.st_ddt.crazypunisher;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -14,7 +16,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -33,8 +34,6 @@ import de.st_ddt.crazypunisher.events.CrazyPunisherJailEvent;
 import de.st_ddt.crazypunisher.events.CrazyPunisherUnjailEvent;
 import de.st_ddt.crazypunisher.events.CrazyPunisherVisibilityChangeEvent;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
-import de.st_ddt.crazyutil.Pair;
-import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.poly.room.Room;
 import de.st_ddt.crazyutil.poly.room.Sphere;
 
@@ -42,8 +41,8 @@ public class CrazyPunisher extends CrazyPlugin
 {
 
 	private static CrazyPunisher plugin;
-	private final ArrayList<OfflinePlayer> banned = new ArrayList<OfflinePlayer>();
-	private final PairList<OfflinePlayer, Date> jailed = new PairList<OfflinePlayer, Date>();
+	private final ArrayList<String> banned = new ArrayList<String>();
+	private final HashMap<String, Date> jailed = new HashMap<String, Date>();
 	private final ArrayList<String> hidden = new ArrayList<String>();
 	private CrazyPunisherPlayerListener playerListener = null;
 	public RealRoom<Sphere> jailsphere = null;
@@ -77,7 +76,7 @@ public class CrazyPunisher extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		FileConfiguration config = getConfig();
+		ConfigurationSection config = getConfig();
 		jailworld = getServer().getWorld(config.getString("jail.world", "world"));
 		if (jailworld == null)
 		{
@@ -103,24 +102,27 @@ public class CrazyPunisher extends CrazyPlugin
 			else
 				dynmap = null;
 		}
-		Set<String> list = null;
+		// Banned
 		if (config.getConfigurationSection("player.banned") != null)
-			list = config.getConfigurationSection("player.banned").getKeys(false);
-		if (list != null)
-			for (String ban : list)
+		{
+			if (config.isList("player.banned"))
+				banned.addAll(config.getStringList("player.banned"));
+			else
+				for (String name : config.getConfigurationSection("player.banned").getKeys(false))
+					banned.add(name.toLowerCase());
+		}
+		for (String ban : banned)
+		{
+			Player player = getServer().getPlayer(ban);
+			if (player != null)
 			{
-				if (!config.getBoolean("player.banned." + ban, false))
-					continue;
-				OfflinePlayer player = getServer().getOfflinePlayer(ban);
-				if (player != null)
-				{
-					banned.add(player);
-					player.setBanned(true);
-					if (player instanceof Player)
-						((Player) player).kickPlayer("You are banned on this server!");
-				}
+				player.setBanned(true);
+				player.kickPlayer("You are banned on this server!");
 			}
+		}
+		// Jailed
 		Date now = new Date();
+		Set<String> list = null;
 		if (config.getConfigurationSection("player.jailed") != null)
 			list = config.getConfigurationSection("player.jailed").getKeys(false);
 		if (list != null)
@@ -147,7 +149,7 @@ public class CrazyPunisher extends CrazyPlugin
 					until = now;
 				}
 				if (until.after(now))
-					jailed.setDataVia1(player, until);
+					jailed.put(player.getName().toLowerCase(), until);
 			}
 	}
 
@@ -155,16 +157,14 @@ public class CrazyPunisher extends CrazyPlugin
 	public void save()
 	{
 		ConfigurationSection config = getConfig();
-		config.set("player.banned", null);
 		ObjectSaveLoadHelper.saveLocation(config, "jail.", jailcenter);
 		config.set("jail.range", jailrange);
 		config.set("autoBanIP", autoBanIP);
 		if (dynmap != null)
 			config.set("dynmapEnabled", dynmapEnabled);
-		for (OfflinePlayer player : banned)
-			config.set("player.banned." + player.getName(), true);
-		for (Pair<OfflinePlayer, Date> pair : jailed)
-			config.set("player.jailed." + pair.getData1().getName(), DateFormat.format(pair.getData2()));
+		config.set("player.banned", banned);
+		for (Entry<String, Date> entry : jailed.entrySet())
+			config.set("player.jailed." + entry.getKey(), DateFormat.format(entry.getValue()));
 		super.save();
 	}
 
@@ -258,7 +258,7 @@ public class CrazyPunisher extends CrazyPlugin
 		if (player == null)
 			return;
 		jail(player, 60 * 60 * 24 * 365 * 10);
-		banned.add(player);
+		banned.add(player.getName().toLowerCase());
 		save();
 		player.setBanned(true);
 		player.setOp(false);
@@ -310,7 +310,7 @@ public class CrazyPunisher extends CrazyPlugin
 	{
 		if (player == null)
 			return;
-		banned.add(player);
+		banned.add(player.getName().toLowerCase());
 		save();
 		player.setBanned(true);
 		if (player instanceof Player)
@@ -430,7 +430,7 @@ public class CrazyPunisher extends CrazyPlugin
 	{
 		if (player == null)
 			return;
-		jailed.setDataVia1(player, date);
+		jailed.put(player.getName().toLowerCase(), date);
 		save();
 		if (player instanceof Player)
 			keepJailed((Player) player);
@@ -470,7 +470,7 @@ public class CrazyPunisher extends CrazyPlugin
 	{
 		if (player == null)
 			return;
-		jailed.removeDataVia1(player);
+		jailed.remove(player);
 		getConfig().set("player.jailed." + player.getName(), DateFormat.format(new Date()));
 		save();
 		if (player instanceof Player)
@@ -781,7 +781,7 @@ public class CrazyPunisher extends CrazyPlugin
 
 	public boolean isJailed(final Player player)
 	{
-		Date time = jailed.findDataVia1(player);
+		Date time = jailed.get(player.getName().toLowerCase());
 		if (time == null)
 			return false;
 		return time.after(new Date());
@@ -794,7 +794,7 @@ public class CrazyPunisher extends CrazyPlugin
 
 	public String getJailTime(final Player player)
 	{
-		return DateFormat.format(jailed.findDataVia1(player));
+		return DateFormat.format(jailed.get(player.getName().toLowerCase()));
 	}
 
 	public boolean isInsideJail(final Location loc)
