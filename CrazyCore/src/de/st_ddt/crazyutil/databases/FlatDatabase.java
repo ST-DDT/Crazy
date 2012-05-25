@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.st_ddt.crazyutil.ChatHelper;
 
-public class FlatDatabase<S extends FlatDatabaseEntry> extends Database<S>
+public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final File file;

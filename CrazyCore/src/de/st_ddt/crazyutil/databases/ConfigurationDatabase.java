@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends Database<S>
+public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final ConfigurationSection config;

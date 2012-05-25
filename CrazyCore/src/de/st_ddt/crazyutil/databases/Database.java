@@ -1,31 +1,12 @@
 package de.st_ddt.crazyutil.databases;
 
-import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class Database<S extends DatabaseEntry>
+public interface Database<S extends DatabaseEntry>
 {
 
-	private final DatabaseType type;
-	protected final Class<S> clazz;
-	protected final String[] columnNames;
-	protected final Constructor<S> constructor;
-	protected boolean bulkOperation = false;
-
-	public Database(final DatabaseType type, final Class<S> clazz, final String[] columnNames, final Constructor<S> constructor)
-	{
-		super();
-		this.type = type;
-		this.clazz = clazz;
-		this.columnNames = columnNames;
-		this.constructor = constructor;
-	}
-
-	public DatabaseType getType()
-	{
-		return type;
-	}
+	public abstract DatabaseType getType();
 
 	public abstract String getTableName();
 
@@ -41,24 +22,9 @@ public abstract class Database<S extends DatabaseEntry>
 
 	public abstract void save(S entry);
 
-	public final void saveAll(Collection<S> entries)
-	{
-		bulkOperation = true;
-		for (S entry : entries)
-			save(entry);
-		bulkOperation = false;
-		saveDatabase();
-	}
+	public abstract void saveAll(Collection<S> entries);
 
-	protected abstract void saveDatabase();
+	public abstract String[] getColumnNames();
 
-	public String[] getColumnNames()
-	{
-		return columnNames;
-	}
-
-	public Class<S> getEntryClazz()
-	{
-		return clazz;
-	}
+	public abstract Class<S> getEntryClazz();
 }

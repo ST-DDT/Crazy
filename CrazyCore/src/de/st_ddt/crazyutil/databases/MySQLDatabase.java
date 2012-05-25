@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLDatabase<S extends MySQLDatabaseEntry> extends Database<S>
+public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final MySQLConnection connection;
