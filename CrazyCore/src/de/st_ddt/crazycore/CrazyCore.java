@@ -2,8 +2,11 @@ package de.st_ddt.crazycore;
 
 import java.util.ArrayList;
 
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
@@ -245,15 +248,46 @@ public class CrazyCore extends CrazyPlugin
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazycore delete <Player>");
-		String player = args[0];
-		if (getServer().getPlayer(player) != null)
-			player = getServer().getPlayer(player).getName();
-		CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, player);
+		String name = args[0];
+		Player player = getServer().getPlayer(name);
+		OfflinePlayer plr = getServer().getOfflinePlayer(name);
+		if (player != null)
+			name = player.getName();
+		if (sender.getName().equalsIgnoreCase(name))
+			if (!sender.hasPermission("crazycore.deleteplayer.self"))
+				throw new CrazyCommandPermissionException();
+			else if (!sender.hasPermission("crazycore.deleteplayer.other"))
+				throw new CrazyCommandPermissionException();
+		CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, name);
 		getServer().getPluginManager().callEvent(event);
-		sendLocaleMessage("COMMAND.DELETE.HEAD", sender, player);
+		sendLocaleMessage("COMMAND.DELETE.HEAD", sender, name);
 		sendLocaleMessage("COMMAND.DELETE.AMOUNT", sender, event.getDeletionsCount());
 		sendLocaleMessage("COMMAND.DELETE.LISTHEAD", sender, event.getDeletionsList());
 		sendLocaleMessage("COMMAND.DELETE.LIST", sender, event.getDeletionsList());
+		if (player != null)
+			if (player.isOnline())
+			{
+				player.leaveVehicle();
+				player.getInventory().clear();
+				player.setGameMode(getServer().getDefaultGameMode());
+				player.setExp(0);
+				player.setFoodLevel(20);
+				player.setHealth(20);
+				player.setFireTicks(0);
+				player.resetPlayerTime();
+				Location spawn = getServer().getWorlds().get(0).getSpawnLocation();
+				player.setCompassTarget(spawn);
+				player.teleport(spawn);
+				player.setBedSpawnLocation(spawn);
+				player.saveData();
+				player.kickPlayer(locale.getLocaleMessage(player, "COMMAND.DELETE.KICK"));
+			}
+		if (plr != null)
+		{
+			plr.setBanned(false);
+			plr.setOp(false);
+			plr.setWhitelisted(false);
+		}
 	}
 
 	@Override
