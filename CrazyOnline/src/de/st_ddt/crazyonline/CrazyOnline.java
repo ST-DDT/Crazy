@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
@@ -26,7 +28,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.PairList;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.MySQLConnection;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
@@ -35,7 +36,7 @@ public class CrazyOnline extends CrazyPlugin
 {
 
 	private static CrazyOnline plugin;
-	protected PairList<String, OnlinePlayerData> datas = new PairList<String, OnlinePlayerData>();
+	protected HashMap<String, OnlinePlayerData> datas = new HashMap<String, OnlinePlayerData>();
 	private CrazyOnlinePlayerListener playerListener = null;
 	protected String saveType;
 	protected String tableName;
@@ -64,7 +65,7 @@ public class CrazyOnline extends CrazyPlugin
 		setupDatabase();
 		if (database != null)
 			for (OnlinePlayerData data : database.getAllEntries())
-				datas.setDataVia1(data.getName().toLowerCase(), data);
+				datas.put(data.getName().toLowerCase(), data);
 	}
 
 	public void setupDatabase()
@@ -114,7 +115,7 @@ public class CrazyOnline extends CrazyPlugin
 		config.set("database.saveType", saveType);
 		config.set("database.tableName", tableName);
 		if (database != null)
-			database.saveAll(datas.getData2List());
+			database.saveAll(datas.values());
 		super.save();
 	}
 
@@ -272,7 +273,7 @@ public class CrazyOnline extends CrazyPlugin
 		if (!sender.hasPermission("crazyonline.since"))
 			throw new CrazyCommandPermissionException();
 		ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
-		for (OnlinePlayerData data : datas.getData2List())
+		for (OnlinePlayerData data : datas.values())
 			if (data.getLastLogin().after(date))
 				list.add(data);
 		Collections.sort(list, new OnlinePlayerDataLoginComperator());
@@ -304,7 +305,7 @@ public class CrazyOnline extends CrazyPlugin
 		if (!sender.hasPermission("crazyonline.before"))
 			throw new CrazyCommandPermissionException();
 		ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
-		for (OnlinePlayerData data : datas.getData2List())
+		for (OnlinePlayerData data : datas.values())
 			if (data.getLastLogin().after(date))
 				list.add(data);
 		Collections.sort(list, new OnlinePlayerDataLoginComperator());
@@ -368,10 +369,10 @@ public class CrazyOnline extends CrazyPlugin
 
 	public OnlinePlayerData getPlayerData(OfflinePlayer player)
 	{
-		return datas.findDataVia1(player.getName().toLowerCase());
+		return datas.get(player.getName().toLowerCase());
 	}
 
-	public PairList<String, OnlinePlayerData> getDatas()
+	public HashMap<String, OnlinePlayerData> getDatas()
 	{
 		return datas;
 	}

@@ -26,7 +26,7 @@ public class CrazyOnlinePlayerListener implements Listener
 		if (data == null)
 		{
 			data = new OnlinePlayerData(player);
-			plugin.getDatas().add(player.getName().toLowerCase(), data);
+			plugin.getDatas().put(player.getName().toLowerCase(), data);
 		}
 		data.login();
 		if (player.hasPermission("crazyonline.since.auto"))
