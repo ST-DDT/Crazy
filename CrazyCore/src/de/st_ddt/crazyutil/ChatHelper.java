@@ -3,6 +3,7 @@ package de.st_ddt.crazyutil;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,10 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class ChatHelper
 {
+
+	private ChatHelper()
+	{
+	}
 
 	public static String colorise(final String string)
 	{
@@ -50,6 +55,39 @@ public class ChatHelper
 	{
 		for (final CommandSender target : targets)
 			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
+	}
+
+	public static <E> void sendListMessage(final CommandSender target, CrazyPlugin plugin, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	{
+		sendListMessage(target, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry(headLocale), seperator == null ? null : plugin.getLocale().getLanguageEntry(seperator), entry == null ? null : plugin.getLocale().getLanguageEntry(entry), emptyPage == null ? null : plugin.getLocale().getLanguageEntry(emptyPage), page, datas, getter);
+	}
+
+	public static <E> void sendListMessage(final CommandSender target, String chatHeader, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	{
+		sendListMessage(target, chatHeader, CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), page, datas, getter);
+	}
+
+	public static <E> void sendListMessage(final CommandSender target, String chatHeader, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	{
+		if (chatHeader == null)
+			chatHeader = "";
+		sendMessage(target, headLocale, page, (datas.size() + 9) / 10);
+		if (seperator == null)
+			emptyPage = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.SEPERATOR");
+		sendMessage(target, seperator);
+		int lastIndex = datas.size();
+		if (lastIndex + 9 < page * 10)
+		{
+			if (emptyPage == null)
+				emptyPage = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.EMPTYPAGE");
+			sendMessage(target, emptyPage, page);
+			return;
+		}
+		if (entry == null)
+			entry = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.ENTRY");
+		lastIndex = Math.min(lastIndex, page * 10);
+		for (int i = page * 10 - 10; i < lastIndex; i++)
+			sendMessage(target, entry, i + 1, getter.getEntryData(datas.get(i)));
 	}
 
 	public static String putArgs(final String message, final Object... args)

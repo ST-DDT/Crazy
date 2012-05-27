@@ -13,6 +13,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -27,6 +28,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Commandable;
+import de.st_ddt.crazyutil.EntryDataGetter;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
@@ -255,6 +257,26 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
 	{
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
+	}
+
+	public <E> void sendListMessage(final CommandSender target, String headLocale, int page, List<E> datas, EntryDataGetter<E> getter)
+	{
+		ChatHelper.sendListMessage(target, this, headLocale, null, null, null, page, datas, getter);
+	}
+
+	public <E> void sendListMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	{
+		ChatHelper.sendListMessage(target, this, headLocale, seperator, entry, emptyPage, page, datas, getter);
+	}
+
+	public <E> void sendListRootMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	{
+		ChatHelper.sendListMessage(target, this.getChatHeader(), CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), page, datas, getter);
+	}
+
+	public <E> void sendListMessage(final CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	{
+		ChatHelper.sendListMessage(target, this.getChatHeader(), headLocale, seperator, entry, emptyPage, page, datas, getter);
 	}
 
 	public final void broadcastLocaleMessage(final String localepath, final Object... args)
