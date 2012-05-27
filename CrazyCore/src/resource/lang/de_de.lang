@@ -43,6 +43,7 @@ CRAZYEXCEPTION.COMMAND.PERMISSION.HEAD=Fehler bei der Ausführung:
 CRAZYEXCEPTION.COMMAND.PERMISSION.ERROR=Du darfst diesen Befehl nicht ausführen!
 CRAZYEXCEPTION.COMMAND.PARAMETER.HEAD=Fehler bei der Ausführung:
 CRAZYEXCEPTION.COMMAND.PARAMETER.ERROR=Fehlerhafter $0$. Parameter, muss vom Typ $1$ sein!
+CRAZYPLUGIN.UPDATED=$0$ wurde aktualisiert. Downloade neue Übersetzungen. 
 CRAZYPLUGIN.COMMAND.HELP.NOHELP=Leider ist keine Hilfe vorhanden!
 CRAZYPLUGIN.COMMAND.CONFIG.RELOADED=Einstellungen neugeladen!
 CRAZYPLUGIN.COMMAND.CONFIG.SAVED=Einstellungen gespeichert!

@@ -178,8 +178,10 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 	public void onEnable()
 	{
 		final ConfigurationSection config = getConfig();
-		final boolean updated = config.getString("version", "").equals(getDescription().getVersion());
+		final boolean updated = !config.getString("version", "").equals(getDescription().getVersion());
 		config.set("version", getDescription().getVersion());
+		if (updated)
+			broadcastLocaleRootMessage("CRAZYPLUGIN.UPDATED", getName(), getDescription().getVersion());
 		for (final String language : CrazyLocale.getLoadedLanguages())
 			loadLanguage(language, updated);
 		checkLocale();
