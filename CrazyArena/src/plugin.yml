@@ -1,9 +1,9 @@
 name: CrazyArena
 main: de.st_ddt.crazyarena.CrazyArena
 author: ST-DDT
-version: C7_G0.1_A0.1
+version: C7.1_G0.1_A0.1
 softdepend: [PermissionsBukkit]
-depend: [CrazyCore]
+depend: [CrazyCore,CrazyGeo]
 description: >
             Arena Plugin
 commands:
