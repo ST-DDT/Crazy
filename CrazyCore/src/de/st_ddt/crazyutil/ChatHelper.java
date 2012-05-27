@@ -73,7 +73,7 @@ public class ChatHelper
 			chatHeader = "";
 		sendMessage(target, headLocale, page, (datas.size() + 9) / 10);
 		if (seperator == null)
-			emptyPage = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.SEPERATOR");
+			seperator = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.SEPERATOR");
 		sendMessage(target, seperator);
 		int lastIndex = datas.size();
 		if (lastIndex + 9 < page * 10)
