@@ -40,6 +40,7 @@ public class CrazyCore extends CrazyPlugin
 	{
 		plugin = this;
 		registerHooks();
+		defaultLanguage = getConfig().getString("defaultLanguage", "en_en");
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
 		super.onEnable();
 	}
