@@ -2,13 +2,16 @@ name: CrazyOnline
 main: de.st_ddt.crazyonline.CrazyOnline
 author: ST-DDT
 #C*=needed core version
-version: C7.1_3.5
+version: C7.1_4
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
   pinfo:
     description: Show information about player
     usage: /<command> <Player>
+  ptop10:
+    description: Show Top10 online players
+    usage: /<command>
   ponlines:
     description: Show information about online player
     usage: /<command>
@@ -28,6 +31,7 @@ permissions:
       crazyonline.since: true
       crazyonline.since.auto: true
       crazyonline.till: true
+      crazyonline.top10: true
   crazyonline.info.self:
     description: Show information about yourself
     default: true
@@ -36,6 +40,9 @@ permissions:
     default: op
   crazyonline.online:
     description: Show information about online player
+    default: op
+  crazyonline.top10:
+    description: Show Top10 online players.
     default: op
   crazyonline.since:
     description: Shows which players has been online
