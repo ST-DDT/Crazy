@@ -24,7 +24,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	protected Date firstLogin;
 	protected Date lastLogin;
 	protected Date lastLogout;
-	protected int onlineTime;
+	protected long onlineTime;
 	private static final SimpleDateFormat DateFormat = CrazyOnline.DateFormat;
 
 	public OnlinePlayerData(String name)
@@ -234,19 +234,19 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		return DateFormat.format(lastLogout);
 	}
 
-	public int getTimeLast()
+	public long getTimeLast()
 	{
 		long past;
 		if (lastLogin.after(lastLogout))
 			past = new Date().getTime() - lastLogin.getTime();
 		else
 			past = lastLogout.getTime() - lastLogin.getTime();
-		return (int) past / 1000 / 60;
+		return past / 1000 / 60;
 	}
 
-	public int getTimeTotal()
+	public long getTimeTotal()
 	{
-		int time = onlineTime;
+		long time = onlineTime;
 		if (lastLogin.after(lastLogout))
 			time += (int) ((new Date().getTime() - lastLogin.getTime()) / 1000 / 60);
 		return time;

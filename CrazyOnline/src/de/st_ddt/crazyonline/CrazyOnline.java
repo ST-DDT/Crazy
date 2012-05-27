@@ -197,6 +197,11 @@ public class CrazyOnline extends CrazyPlugin
 					throw new CrazyCommandUsageException("/pbefore <yyyy.MM.dd>", "/pbefore <yyyy.MM.dd HH:mm:ss>");
 			}
 		}
+		if (commandLabel.equalsIgnoreCase("ptop10"))
+		{
+			commandTop10(sender, args);
+			return true;
+		}
 		return false;
 	}
 
@@ -313,6 +318,35 @@ public class CrazyOnline extends CrazyPlugin
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
 		for (OnlinePlayerData data : list)
 			sendLocaleMessage("MESSAGE.LIST", sender, data.getName(), data.getLastLoginString());
+	}
+
+	private void commandTop10(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazyonline.top10"))
+			throw new CrazyCommandPermissionException();
+		int page;
+		switch (args.length)
+		{
+			case 0:
+				page = 1;
+				break;
+			case 1:
+				try
+				{
+					page = Integer.parseInt(args[0]);
+				}
+				catch (final NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(1, "Integer");
+				}
+				break;
+			default:
+				throw new CrazyCommandUsageException("/crazylist [Page]");
+		}
+		final ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
+		list.addAll(datas.values());
+		Collections.sort(list, new OnlinePlayerDataOnlineComperator());
+		sendListMessage(sender, "COMMAND.TOP10.HEADER", page, list, new OnlineTimeDataGetter(sender));
 	}
 
 	@Override
