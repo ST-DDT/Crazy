@@ -9,7 +9,12 @@ import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyloginfilter.databases.CrazyLoginFilterConfigurationDatabase;
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ToStringDataGetter;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 
@@ -136,9 +141,57 @@ public class CrazyLoginFilter extends CrazyPlugin
 		// EDIT Auto-generated method stub
 	}
 
-	private void commandMainIP(CommandSender sender, String[] args)
+	private void commandMainIP(CommandSender sender, String[] args) throws CrazyCommandException
 	{
-		// EDIT Auto-generated method stub
+		PlayerAccessFilter data = datas.get(sender.getName().toLowerCase());
+		if (data == null)
+			throw new CrazyCommandCircumstanceException("when AccessFilter is created!");
+		switch (args.length)
+		{
+			case 1:
+				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
+				{
+					sendListMessage(sender, "COMMMAND.IP.LISTHEAD", 1, data.getIPs(), new ToStringDataGetter());
+					return;
+				}
+				break;
+			case 2:
+				String regex = args[1];
+				if (args[0].equalsIgnoreCase("add"))
+				{
+					data.addIP(regex);
+					sendLocaleMessage("COMMAND.IP.ADDED", sender, regex);
+					return;
+				}
+				if (args[0].equalsIgnoreCase("remove"))
+				{
+					try
+					{
+						int index = Integer.parseInt(regex);
+						regex = data.removeIP(index);
+					}
+					catch (NumberFormatException e)
+					{
+						data.removeIP(regex);
+					}
+					sendLocaleMessage("COMMAND.IP.REMOVED", sender, regex);
+					return;
+				}
+				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
+				{
+					try
+					{
+						int page = Integer.parseInt(args[1]);
+						sendListMessage(sender, "COMMMAND.IP.LISTHEAD", page, data.getIPs(), new ToStringDataGetter());
+					}
+					catch (NumberFormatException e)
+					{
+						throw new CrazyCommandParameterException(1, "Integer");
+					}
+					return;
+				}
+		}
+		throw new CrazyCommandUsageException("/crazyloginfilter ip show [Page]", "/crazloginfilter ip <add/remove> <Value>");
 	}
 
 	private void commandMainConnection(CommandSender sender, String[] args)
@@ -185,5 +238,15 @@ public class CrazyLoginFilter extends CrazyPlugin
 	public PlayerAccessFilter getPlayerAccessFilter(String player)
 	{
 		return datas.get(player.toLowerCase());
+	}
+
+	public boolean deletePlayerData(String player)
+	{
+		PlayerAccessFilter data = datas.remove(player.toLowerCase());
+		if (data == null)
+			return false;
+		if (database != null)
+			database.delete(data.getName());
+		return true;
 	}
 }
