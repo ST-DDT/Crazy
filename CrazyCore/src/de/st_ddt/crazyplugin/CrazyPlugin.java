@@ -259,22 +259,22 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
 	}
 
-	public <E> void sendListMessage(final CommandSender target, String headLocale, int page, List<E> datas, EntryDataGetter<E> getter)
+	public <E> void sendListMessage(final CommandSender target, String headLocale, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this, headLocale, null, null, null, page, datas, getter);
 	}
 
-	public <E> void sendListMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	public <E> void sendListMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this, headLocale, seperator, entry, emptyPage, page, datas, getter);
 	}
 
-	public <E> void sendListRootMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	public <E> void sendListRootMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this.getChatHeader(), CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), page, datas, getter);
 	}
 
-	public <E> void sendListMessage(final CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	public <E> void sendListMessage(final CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this.getChatHeader(), headLocale, seperator, entry, emptyPage, page, datas, getter);
 	}

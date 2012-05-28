@@ -57,17 +57,17 @@ public class ChatHelper
 			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
 	}
 
-	public static <E> void sendListMessage(final CommandSender target, CrazyPlugin plugin, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	public static <E> void sendListMessage(final CommandSender target, CrazyPlugin plugin, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		sendListMessage(target, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry(headLocale), seperator == null ? null : plugin.getLocale().getLanguageEntry(seperator), entry == null ? null : plugin.getLocale().getLanguageEntry(entry), emptyPage == null ? null : plugin.getLocale().getLanguageEntry(emptyPage), page, datas, getter);
 	}
 
-	public static <E> void sendListMessage(final CommandSender target, String chatHeader, String headLocale, String seperator, String entry, String emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	public static <E> void sendListMessage(final CommandSender target, String chatHeader, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		sendListMessage(target, chatHeader, CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), page, datas, getter);
 	}
 
-	public static <E> void sendListMessage(final CommandSender target, String chatHeader, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<E> datas, EntryDataGetter<E> getter)
+	public static <E> void sendListMessage(final CommandSender target, String chatHeader, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		if (chatHeader == null)
 			chatHeader = "";
