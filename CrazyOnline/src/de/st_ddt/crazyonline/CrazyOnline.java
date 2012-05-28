@@ -12,7 +12,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 
@@ -29,6 +28,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.databases.Database;
+import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.databases.MySQLConnection;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
@@ -38,8 +38,6 @@ public class CrazyOnline extends CrazyPlugin
 	private static CrazyOnline plugin;
 	protected HashMap<String, OnlinePlayerData> datas = new HashMap<String, OnlinePlayerData>();
 	private CrazyOnlinePlayerListener playerListener = null;
-	protected String saveType;
-	protected String tableName;
 	protected Database<OnlinePlayerData> database;
 
 	public static CrazyOnline getPlugin()
@@ -59,9 +57,6 @@ public class CrazyOnline extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		ConfigurationSection config = getConfig();
-		saveType = config.getString("database.saveType", "flat").toLowerCase();
-		tableName = config.getString("database.tableName", "players");
 		setupDatabase();
 		if (database != null)
 			for (OnlinePlayerData data : database.getAllEntries())
@@ -71,6 +66,19 @@ public class CrazyOnline extends CrazyPlugin
 	public void setupDatabase()
 	{
 		ConfigurationSection config = getConfig();
+		String saveType = config.getString("database.saveType", "flat").toUpperCase();
+		DatabaseType type = null;
+		try
+		{
+			type = DatabaseType.valueOf(saveType);
+		}
+		catch (Exception e)
+		{
+			System.out.println("NO SUCH SAVETYPE " + saveType);
+			type = null;
+		}
+		final String tableName = config.getString("database.tableName", "players");
+		config.set("database.tableName", tableName);
 		// Columns
 		String colName = config.getString("database.columns.name", "name");
 		config.set("database.columns.name", colName);
@@ -82,26 +90,16 @@ public class CrazyOnline extends CrazyPlugin
 		config.set("database.columns.lastlogout", colLastLogout);
 		String colOnlineTime = config.getString("database.columns.onlinetime", "OnlineTime");
 		config.set("database.columns.onlinetime", colOnlineTime);
-		if (saveType.equals("config"))
+		if (type == DatabaseType.CONFIG)
 		{
 			database = new CrazyOnlineConfigurationDatabase(config, tableName, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
 		}
-		else if (saveType.equals("mysql"))
+		else if (type == DatabaseType.MYSQL)
 		{
-			String host = config.getString("database.host", "localhost");
-			config.set("database.host", host);
-			String port = config.getString("database.port", "3306");
-			config.set("database.port", port);
-			String databasename = config.getString("database.dbname", "Crazy");
-			config.set("database.dbname", databasename);
-			String user = config.getString("database.user", "root");
-			config.set("database.user", user);
-			String password = config.getString("database.password", "");
-			config.set("database.password", password);
-			MySQLConnection connection = new MySQLConnection(host, port, databasename, user, password);
+			final MySQLConnection connection = new MySQLConnection(config, "localhost", "3306", "Crazy", "root", "");
 			database = new CrazyOnlineMySQLDatabase(connection, tableName, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
 		}
-		else if (saveType.equals("flat"))
+		else if (type == DatabaseType.FLAT)
 		{
 			File file = new File(getDataFolder().getPath() + "/" + tableName + ".db");
 			database = new CrazyOnlineFlatDatabase(file, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
@@ -111,9 +109,9 @@ public class CrazyOnline extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		FileConfiguration config = getConfig();
-		config.set("database.saveType", saveType);
-		config.set("database.tableName", tableName);
+		final ConfigurationSection config = getConfig();
+		if (database != null)
+			config.set("database.saveType", database.getType().toString());
 		if (database != null)
 			database.saveAll(datas.values());
 		super.save();
@@ -370,20 +368,22 @@ public class CrazyOnline extends CrazyPlugin
 			case 2:
 				if (args[0].equalsIgnoreCase("saveType"))
 				{
-					String newValue = args[1];
-					boolean changed = saveType.equals(newValue);
-					if (newValue.equalsIgnoreCase("config"))
-						saveType = "config";
-					else if (newValue.equalsIgnoreCase("mysql"))
-						saveType = "mysql";
-					else if (newValue.equalsIgnoreCase("flat"))
-						saveType = "flat";
-					else
-						throw new CrazyCommandNoSuchException("SaveType", newValue);
+					final String saveType = args[1];
+					DatabaseType type = null;
+					try
+					{
+						type = DatabaseType.valueOf(saveType.toUpperCase());
+					}
+					catch (Exception e)
+					{
+						type = null;
+					}
+					if (type == null)
+						throw new CrazyCommandNoSuchException("SaveType", saveType);
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
-					if (changed)
+					if (type == database.getType())
 						return;
-					getConfig().set("database.saveType", saveType);
+					getConfig().set("database.saveType", type.toString());
 					setupDatabase();
 					save();
 					return;
@@ -392,7 +392,7 @@ public class CrazyOnline extends CrazyPlugin
 			case 1:
 				if (args[0].equalsIgnoreCase("saveType"))
 				{
-					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
+					sendLocaleMessage("MODE.CHANGE", sender, "saveType", database.getType().toString());
 					return;
 				}
 				throw new CrazyCommandNoSuchException("Mode", args[0]);
