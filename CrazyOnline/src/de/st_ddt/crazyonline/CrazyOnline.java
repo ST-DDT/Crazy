@@ -66,7 +66,7 @@ public class CrazyOnline extends CrazyPlugin
 	public void setupDatabase()
 	{
 		ConfigurationSection config = getConfig();
-		String saveType = config.getString("database.saveType", "flat").toUpperCase();
+		String saveType = config.getString("database.saveType", "FLAT").toUpperCase();
 		DatabaseType type = null;
 		try
 		{
