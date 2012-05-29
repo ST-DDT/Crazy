@@ -1,75 +1,74 @@
 package de.st_ddt.crazyutil.conditions;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.ConfigurationSaveable;
-import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
-
-public abstract class Condition<T> implements ConfigurationSaveable
+public interface Condition<T>
 {
 
-	@SuppressWarnings("unchecked")
-	public static <T> Condition<T> load(ConfigurationSection config)
-	{
-		return (Condition<T>) ObjectSaveLoadHelper.load(config, null, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
-	}
+	// public ConditionBase(ConfigurationSection config)
+	// public ConditionBase()
+	/**
+	 * Save this Condition to config
+	 * 
+	 * @param config
+	 *            The Config to save to
+	 * @param path
+	 *            The path in the config to save the data (path should end with ".")
+	 */
+	public abstract void save(ConfigurationSection config, String path);
 
-	public Condition(ConfigurationSection config)
-	{
-		super();
-	}
+	/**
+	 * A name used when saving (extended with index)
+	 * 
+	 * @return The name used for saving.
+	 */
+	public abstract String getTypeIdentifier();
 
-	public Condition()
-	{
-		super();
-	}
-
-	public void save(ConfigurationSection config, String path)
-	{
-		config.set(path + "type", getClass().getName());
-	}
-
-	public String getTypeIdentifier()
-	{
-		return "Condition";
-	}
-
+	/**
+	 * Check whether tester matches this conditions.
+	 * 
+	 * @param tester
+	 *            The testers to check this condition.
+	 * @return whether the tester matches this condition
+	 */
 	public abstract boolean match(T tester);
 
-	public final boolean match(T[] testers)
-	{
-		for (T tester : testers)
-			if (!match(tester))
-				return false;
-		return true;
-	}
+	/**
+	 * Check whether tester matches this conditions.
+	 * 
+	 * @param testers
+	 *            The tester to check this condition.
+	 * @return whether all of the testers matches this condition
+	 */
+	public abstract boolean match(T[] testers);
 
-	public final boolean match(List<? extends T> testers)
-	{
-		for (T tester : testers)
-			if (!match(tester))
-				return false;
-		return true;
-	}
+	/**
+	 * Check whether tester matches this conditions.
+	 * 
+	 * @param testers
+	 *            The testers to check this condition.
+	 * @return whether all of the testers matches this condition
+	 */
+	public abstract boolean match(List<? extends T> testers);
 
-	public final List<T> getMatching(T[] testers)
-	{
-		ArrayList<T> list = new ArrayList<T>();
-		for (T tester : testers)
-			if (match(tester))
-				list.add(tester);
-		return list;
-	}
+	/**
+	 * Returns a Collection containing all testers matching the condition.
+	 * 
+	 * @param testers
+	 *            Testers to check the conditions.
+	 * @return A Collection containing all testers matching the condition.
+	 */
+	public abstract Collection<T> getMatching(T[] testers);
 
-	public final List<T> getMatching(List<? extends T> testers)
-	{
-		ArrayList<T> list = new ArrayList<T>();
-		for (T tester : testers)
-			if (match(tester))
-				list.add(tester);
-		return list;
-	}
+	/**
+	 * Returns a Collection containing all testers matching the condition.
+	 * 
+	 * @param testers
+	 *            Testers to check the conditions.
+	 * @return A Collection containing all testers matching the condition.
+	 */
+	public abstract Collection<T> getMatching(Collection<? extends T> testers);
 }

@@ -3,10 +3,10 @@ package de.st_ddt.crazyutil.conditions;
 import java.util.ArrayList;
 import org.bukkit.configuration.ConfigurationSection;
 
-public abstract class ConditionList<T> extends Condition<T>
+public abstract class ConditionList<T> extends ConditionBase<T>
 {
 
-	protected final ArrayList<Condition<T>> conditions = new ArrayList<Condition<T>>();
+	protected final ArrayList<ConditionBase<T>> conditions = new ArrayList<ConditionBase<T>>();
 
 	public ConditionList(ConfigurationSection config)
 	{
@@ -19,7 +19,7 @@ public abstract class ConditionList<T> extends Condition<T>
 			try
 			{
 				@SuppressWarnings("unchecked")
-				Condition<T> condition = (Condition<T>) Condition.load(config.getConfigurationSection(name));
+				ConditionBase<T> condition = (ConditionBase<T>) ConditionBase.load(config.getConfigurationSection(name));
 				if (condition != null)
 					conditions.add(condition);
 			}
@@ -42,11 +42,11 @@ public abstract class ConditionList<T> extends Condition<T>
 		super.save(config, path);
 		int a = 0;
 		config.set(path + "conditions", null);
-		for (Condition<? extends T> condition : conditions)
+		for (ConditionBase<? extends T> condition : conditions)
 			condition.save(config, path + "conditions." + condition.getTypeIdentifier() + (a++) + ".");
 	}
 
-	public final ArrayList<Condition<T>> getConditions()
+	public final ArrayList<ConditionBase<T>> getConditions()
 	{
 		return conditions;
 	}

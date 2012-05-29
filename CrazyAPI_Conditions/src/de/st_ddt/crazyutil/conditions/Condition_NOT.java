@@ -2,16 +2,16 @@ package de.st_ddt.crazyutil.conditions;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class Condition_NOT<T> extends Condition<T>
+public class Condition_NOT<T> extends ConditionBase<T>
 {
 
-	protected Condition<T> condition = null;
+	protected ConditionBase<T> condition = null;
 
 	@SuppressWarnings("unchecked")
 	public Condition_NOT(ConfigurationSection config)
 	{
 		super(config);
-		condition = (Condition<T>) Condition.load(config.getConfigurationSection("condition"));
+		condition = (ConditionBase<T>) ConditionBase.load(config.getConfigurationSection("condition"));
 	}
 
 	public Condition_NOT()

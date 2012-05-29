@@ -2,7 +2,7 @@ package de.st_ddt.crazyutil.conditions;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class Condition_FALSE<T> extends Condition<T>
+public class Condition_FALSE<T> extends ConditionBase<T>
 {
 
 	public Condition_FALSE(ConfigurationSection config)
