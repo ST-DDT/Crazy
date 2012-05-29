@@ -12,12 +12,13 @@ import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.conditions.Condition;
+import de.st_ddt.crazyutil.conditions.ConditionBase;
 
 public class Promotion
 {
 
 	protected String name;
-	protected Condition<Player> condition;
+	protected ConditionBase<Player> condition;
 	protected List<String> commands;
 	protected final PermissionsPlugin permissionsPlugin = ((PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit"));
 
@@ -26,7 +27,7 @@ public class Promotion
 		super();
 		name = config.getString("name");
 		commands = config.getStringList("commands");
-		condition = Condition.load(config.getConfigurationSection("condition"));
+		condition = ConditionBase.load(config.getConfigurationSection("condition"));
 	}
 
 	public Promotion(String name)
@@ -66,7 +67,7 @@ public class Promotion
 		return condition;
 	}
 
-	public void setCondition(Condition<Player> condition)
+	public void setCondition(ConditionBase<Player> condition)
 	{
 		this.condition = condition;
 	}

@@ -2,7 +2,7 @@ name: CrazyPromoter
 main: de.st_ddt.crazypromoter.CrazyPromoter
 author: ST-DDT
 #C*=needed core version
-version: C7.1_2.6
+version: C7.1_2.7
 depend: [CrazyCore]
 softdepend: [CrazyOnline]
 commands:
