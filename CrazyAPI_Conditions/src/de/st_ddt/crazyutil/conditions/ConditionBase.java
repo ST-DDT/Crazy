@@ -13,9 +13,9 @@ public abstract class ConditionBase<T> implements ConfigurationSaveable, Conditi
 {
 
 	@SuppressWarnings("unchecked")
-	public static <T> Condition<T> load(ConfigurationSection config)
+	public static <T> ConditionBase<T> load(ConfigurationSection config)
 	{
-		return (Condition<T>) ObjectSaveLoadHelper.load(config, null, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
+		return (ConditionBase<T>) ObjectSaveLoadHelper.load(config, null, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
 	}
 
 	public ConditionBase(ConfigurationSection config)
