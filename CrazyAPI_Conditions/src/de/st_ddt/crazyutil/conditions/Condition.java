@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public interface Condition<T>
+import de.st_ddt.crazyutil.ConfigurationSaveable;
+
+public interface Condition<T> extends ConfigurationSaveable
 {
 
 	// public ConditionBase(ConfigurationSection config)
