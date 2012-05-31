@@ -28,10 +28,9 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Commandable;
 import de.st_ddt.crazyutil.EntryDataGetter;
-import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Commandable, CrazyPluginInterface
+public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandable, CrazyPluginInterface
 {
 
 	protected CrazyLocale locale = null;

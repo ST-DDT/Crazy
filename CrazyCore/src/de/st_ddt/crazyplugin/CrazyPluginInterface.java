@@ -7,9 +7,10 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyutil.EntryDataGetter;
+import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public interface CrazyPluginInterface extends CrazyLightPluginInterface
+public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface
 {
 
 	public final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
