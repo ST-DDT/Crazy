@@ -14,6 +14,8 @@ public interface CrazyPluginInterface extends CrazyLightPluginInterface
 
 	public final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
+	public abstract boolean isUpdated();
+
 	public abstract void sendLocaleMessage(final String localepath, final CommandSender target, final Object... args);
 
 	public abstract void sendLocaleRootMessage(final String localepath, final CommandSender target, final Object... args);

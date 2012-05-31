@@ -35,6 +35,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 {
 
 	protected CrazyLocale locale = null;
+	protected boolean isUpdated = false;
 	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 
 	public static Collection<CrazyPlugin> getCrazyPlugins()
@@ -53,6 +54,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 			if (plugin.getName().equalsIgnoreCase(name))
 				return plugin;
 		return null;
+	}
+
+	public boolean isUpdated()
+	{
+		return isUpdated;
 	}
 
 	@Override
@@ -171,22 +177,20 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		plugins.put(this.getClass(), this);
 		getDataFolder().mkdir();
 		new File(getDataFolder().getPath() + "/lang").mkdirs();
+		final ConfigurationSection config = getConfig();
+		isUpdated = !config.getString("version", "").equals(getDescription().getVersion());
+		config.set("version", getDescription().getVersion());
 		super.onLoad();
 	}
 
 	@Override
 	public void onEnable()
 	{
-		final ConfigurationSection config = getConfig();
-		final boolean updated = !config.getString("version", "").equals(getDescription().getVersion());
-		config.set("version", getDescription().getVersion());
-		if (updated)
+		if (isUpdated)
 			broadcastLocaleRootMessage("CRAZYPLUGIN.UPDATED", getName(), getDescription().getVersion());
-		for (final String language : CrazyLocale.getLoadedLanguages())
-			loadLanguage(language, updated);
 		checkLocale();
 		load();
-		if (updated)
+		if (isUpdated)
 			save();
 		super.onEnable();
 	}
@@ -339,12 +343,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 
 	public void loadLanguage(final String language)
 	{
-		loadLanguage(language, Bukkit.getConsoleSender(), false);
-	}
-
-	public void loadLanguage(final String language, final boolean forceDownload)
-	{
-		loadLanguage(language, Bukkit.getConsoleSender(), forceDownload);
+		loadLanguage(language, Bukkit.getConsoleSender());
 	}
 
 	public void loadLanguageDelayed(final String language, final CommandSender sender)
@@ -354,14 +353,9 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 
 	public void loadLanguage(final String language, final CommandSender sender)
 	{
-		loadLanguage(language, sender, false);
-	}
-
-	public void loadLanguage(final String language, final CommandSender sender, final boolean forceDownload)
-	{
 		// default files
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
-		if (!file.exists() || forceDownload)
+		if (!file.exists())
 		{
 			downloadLanguage(language);
 			if (!file.exists())
@@ -376,22 +370,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		}
 		try
 		{
-			InputStream stream = null;
-			InputStreamReader reader = null;
-			try
-			{
-				stream = new FileInputStream(file);
-				reader = new InputStreamReader(stream, "UTF-8");
-				CrazyLocale.readFile(language, reader);
-				// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
-			}
-			finally
-			{
-				if (reader != null)
-					reader.close();
-				if (stream != null)
-					stream.close();
-			}
+			loadLanguageFile(language, file);
 		}
 		catch (final IOException e)
 		{
@@ -403,28 +382,62 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		{
 			try
 			{
-				InputStream stream = null;
-				InputStreamReader reader = null;
-				try
-				{
-					stream = new FileInputStream(file);
-					reader = new InputStreamReader(stream, "UTF-8");
-					CrazyLocale.readFile(language, reader);
-					// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language + " (Custom)");
-				}
-				finally
-				{
-					if (reader != null)
-						reader.close();
-					if (stream != null)
-						stream.close();
-				}
+				loadLanguageFile(language, file);
 			}
 			catch (final IOException e)
 			{
 				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language + " (Custom)");
 			}
 		}
+	}
+
+	public void loadLanguageFile(String language, File file) throws IOException
+	{
+		InputStream stream = null;
+		InputStreamReader reader = null;
+		try
+		{
+			stream = new FileInputStream(file);
+			reader = new InputStreamReader(stream, "UTF-8");
+			CrazyLocale.readFile(language, reader);
+			// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
+		}
+		finally
+		{
+			if (reader != null)
+				reader.close();
+			if (stream != null)
+				stream.close();
+		}
+	}
+
+	public void updateLanguage(String language, boolean reload)
+	{
+		updateLanguage(language, Bukkit.getConsoleSender(), reload);
+	}
+
+	public void updateLanguage(String language, CommandSender sender, boolean reload)
+	{
+		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
+		downloadLanguage(language);
+		if (!file.exists())
+		{
+			unpackLanguage(language);
+			if (!file.exists())
+			{
+				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", sender, language);
+				return;
+			}
+		}
+		if (reload)
+			try
+			{
+				loadLanguageFile(language, file);
+			}
+			catch (final IOException e)
+			{
+				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language);
+			}
 	}
 
 	public void unpackLanguage(final String language)

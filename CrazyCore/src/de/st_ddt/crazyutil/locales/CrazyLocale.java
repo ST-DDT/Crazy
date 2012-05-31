@@ -442,7 +442,10 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		if (!languages.contains(language))
 		{
 			for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
-				plugin.loadLanguage(language);
+				if (plugin.isUpdated())
+					plugin.updateLanguage(language, true);
+				else
+					plugin.loadLanguage(language);
 			if (!isActiveLanguage(language))
 				return;
 			try
@@ -451,7 +454,6 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 				final String shortLang = split[0];
 				if (split.length > 0)
 				{
-					System.out.println(shortLang);
 					if (!languageAlternatives.containsKey(shortLang))
 						languageAlternatives.put(shortLang, new HashSet<String>());
 					languageAlternatives.get(shortLang).add(language);

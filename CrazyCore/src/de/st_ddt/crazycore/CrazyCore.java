@@ -36,11 +36,17 @@ public class CrazyCore extends CrazyPlugin
 	}
 
 	@Override
+	public void onLoad()
+	{
+		defaultLanguage = getConfig().getString("defaultLanguage", "en_en");
+		super.onLoad();
+	}
+
+	@Override
 	public void onEnable()
 	{
 		plugin = this;
 		registerHooks();
-		defaultLanguage = getConfig().getString("defaultLanguage", "en_en");
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
 		super.onEnable();
 	}
@@ -157,7 +163,7 @@ public class CrazyCore extends CrazyPlugin
 						{
 							for (final CrazyPlugin plugin : getCrazyPlugins())
 							{
-								plugin.loadLanguage(language, sender, true);
+								plugin.updateLanguage(language, sender, true);
 								plugin.checkLocale();
 							}
 							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED", sender, language);
@@ -169,7 +175,7 @@ public class CrazyCore extends CrazyPlugin
 					{
 						for (final String language : CrazyLocale.getLoadedLanguages())
 						{
-							plugin.loadLanguage(language, sender, true);
+							plugin.updateLanguage(language, sender, true);
 							plugin.checkLocale();
 							sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.RELOADED.PLUGIN", sender, language, plugin.getName());
 						}
@@ -177,7 +183,7 @@ public class CrazyCore extends CrazyPlugin
 					}
 					for (final CrazyPlugin plugin2 : getCrazyPlugins())
 					{
-						plugin2.loadLanguage(download, sender, true);
+						plugin2.updateLanguage(download, sender, true);
 						plugin2.checkLocale();
 					}
 					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.DOWNLOADED", sender, download);
@@ -226,7 +232,7 @@ public class CrazyCore extends CrazyPlugin
 	}
 
 	@Override
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (commandLabel.equalsIgnoreCase("delete"))
 		{
@@ -236,13 +242,13 @@ public class CrazyCore extends CrazyPlugin
 		return false;
 	}
 
-	private void commanMainDelete(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commanMainDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazycore delete <Player>");
 		String name = args[0];
-		Player player = getServer().getPlayer(name);
-		OfflinePlayer plr = getServer().getOfflinePlayer(name);
+		final Player player = getServer().getPlayer(name);
+		final OfflinePlayer plr = getServer().getOfflinePlayer(name);
 		if (player != null)
 			name = player.getName();
 		if (sender.getName().equalsIgnoreCase(name))
@@ -250,7 +256,7 @@ public class CrazyCore extends CrazyPlugin
 				throw new CrazyCommandPermissionException();
 			else if (!sender.hasPermission("crazycore.deleteplayer.other"))
 				throw new CrazyCommandPermissionException();
-		CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, name);
+		final CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, name);
 		getServer().getPluginManager().callEvent(event);
 		sendLocaleMessage("COMMAND.DELETE.HEAD", sender, name);
 		sendLocaleMessage("COMMAND.DELETE.AMOUNT", sender, event.getDeletionsCount());
@@ -267,7 +273,7 @@ public class CrazyCore extends CrazyPlugin
 				player.setHealth(20);
 				player.setFireTicks(0);
 				player.resetPlayerTime();
-				Location spawn = getServer().getWorlds().get(0).getSpawnLocation();
+				final Location spawn = getServer().getWorlds().get(0).getSpawnLocation();
 				player.setCompassTarget(spawn);
 				player.teleport(spawn);
 				player.setBedSpawnLocation(spawn);
