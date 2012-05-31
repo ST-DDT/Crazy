@@ -154,7 +154,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	private static CrazyLocale getCrazyLocaleMissing()
 	{
 		final CrazyLocale missing = new CrazyLocale(null, "_MISSING_");
-		missing.setLanguageText("en_en", "This Entry is missing!");
+		missing.setLanguageText("en_en", "This Language-Entry is missing!");
 		return missing;
 	}
 
