@@ -2,16 +2,16 @@ package de.st_ddt.crazylogin.events;
 
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazylogin.CrazyLogin;
-import de.st_ddt.crazylogin.LoginPlayerData;
+import de.st_ddt.crazylogin.LoginData;
+import de.st_ddt.crazylogin.LoginPlugin;
 
 public class CrazyLoginLoginEvent extends CrazyLoginEvent
 {
 
 	protected final Player player;
-	protected final LoginPlayerData data;
+	protected final LoginData data;
 
-	public CrazyLoginLoginEvent(final CrazyLogin plugin, final LoginPlayerData data, final Player player)
+	public CrazyLoginLoginEvent(final LoginPlugin plugin, final LoginData data, final Player player)
 	{
 		super(plugin);
 		this.player = player;
@@ -23,7 +23,7 @@ public class CrazyLoginLoginEvent extends CrazyLoginEvent
 		return player;
 	}
 
-	public LoginPlayerData getData()
+	public LoginData getData()
 	{
 		return data;
 	}

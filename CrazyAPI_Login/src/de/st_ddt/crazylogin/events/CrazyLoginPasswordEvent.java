@@ -2,7 +2,7 @@ package de.st_ddt.crazylogin.events;
 
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazylogin.CrazyLogin;
+import de.st_ddt.crazylogin.LoginPlugin;
 
 public class CrazyLoginPasswordEvent extends CrazyLoginEvent
 {
@@ -10,7 +10,7 @@ public class CrazyLoginPasswordEvent extends CrazyLoginEvent
 	protected final Player player;
 	protected final String password;
 
-	public CrazyLoginPasswordEvent(final CrazyLogin plugin, final Player player, final String password)
+	public CrazyLoginPasswordEvent(final LoginPlugin plugin, final Player player, final String password)
 	{
 		super(plugin);
 		this.player = player;
