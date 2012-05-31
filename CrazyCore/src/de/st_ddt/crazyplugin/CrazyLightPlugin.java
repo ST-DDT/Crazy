@@ -6,12 +6,13 @@ import java.util.HashMap;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class CrazyLightPlugin extends JavaPlugin
+public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightPluginInterface
 {
 
 	private String chatHeader = null;
 	private static final HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin> plugins = new HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin>();
 
+	@Override
 	public final String getChatHeader()
 	{
 		if (chatHeader == null)

@@ -2,9 +2,9 @@ package de.st_ddt.crazyplugin.events;
 
 import org.bukkit.event.Event;
 
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.CrazyPluginInterface;
 
-public abstract class CrazyEvent<T extends CrazyPlugin> extends Event
+public abstract class CrazyEvent<T extends CrazyPluginInterface> extends Event
 {
 
 	protected final T plugin;

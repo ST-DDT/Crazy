@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -32,11 +31,10 @@ import de.st_ddt.crazyutil.EntryDataGetter;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Commandable
+public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Commandable, CrazyPluginInterface
 {
 
 	protected CrazyLocale locale = null;
-	public final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 
 	public static Collection<CrazyPlugin> getCrazyPlugins()
@@ -214,97 +212,116 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Named, Com
 		locale = CrazyLocale.getPluginHead(this);
 	}
 
+	@Override
 	public final void sendLocaleMessage(final String localepath, final CommandSender target, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), target, args);
 	}
 
+	@Override
 	public final void sendLocaleRootMessage(final String localepath, final CommandSender target, final Object... args)
 	{
 		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), target, args);
 	}
 
+	@Override
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
 	{
 		ChatHelper.sendMessage(target, getChatHeader(), locale, args);
 	}
 
+	@Override
 	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
 	}
 
+	@Override
 	public final void sendLocaleRootMessage(final String localepath, final CommandSender[] targets, final Object... args)
 	{
 		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), targets, args);
 	}
 
+	@Override
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
 	{
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
 	}
 
+	@Override
 	public final void sendLocaleMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
 	}
 
+	@Override
 	public final void sendLocaleRootMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
 	{
 		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), targets, args);
 	}
 
+	@Override
 	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
 	{
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
 	}
 
+	@Override
 	public <E> void sendListMessage(final CommandSender target, String headLocale, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this, headLocale, null, null, null, page, datas, getter);
 	}
 
+	@Override
 	public <E> void sendListMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this, headLocale, seperator, entry, emptyPage, page, datas, getter);
 	}
 
+	@Override
 	public <E> void sendListRootMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this.getChatHeader(), CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), page, datas, getter);
 	}
 
+	@Override
 	public <E> void sendListMessage(final CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this.getChatHeader(), headLocale, seperator, entry, emptyPage, page, datas, getter);
 	}
 
+	@Override
 	public final void broadcastLocaleMessage(final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(getLocale().getLanguageEntry(localepath), args);
 	}
 
+	@Override
 	public final void broadcastLocaleRootMessage(final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
 	}
 
+	@Override
 	public final void broadcastLocaleMessage(final CrazyLocale locale, final Object... args)
 	{
 		sendLocaleMessage(locale, getServer().getConsoleSender(), args);
 		sendLocaleMessage(locale, getServer().getOnlinePlayers(), args);
 	}
 
+	@Override
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(console, permission, getLocale().getLanguageEntry(localepath), args);
 	}
 
+	@Override
 	public final void broadcastLocaleRootMessage(final boolean console, final String permission, final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(console, permission, CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
 	}
 
+	@Override
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final CrazyLocale locale, final Object... args)
 	{
 		if (console)
