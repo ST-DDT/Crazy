@@ -83,6 +83,7 @@ public class CrazyArena extends CrazyPlugin
 			names.add(arena.getName());
 		}
 		config.set("arenas", names);
+		super.save();
 	}
 
 	public void registerHooks()
