@@ -76,7 +76,7 @@ public class CrazyPromoter extends CrazyPlugin
 	public void saveConfiguration()
 	{
 		ConfigurationSection config = getConfig();
-		config.set("checkInterval", "checkInterval");
+		config.set("checkInterval", checkInterval);
 		saveConfig();
 	}
 
