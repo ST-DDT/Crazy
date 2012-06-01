@@ -2,6 +2,7 @@ package de.st_ddt.crazyloginfilter;
 
 import java.util.ArrayList;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
@@ -16,6 +17,11 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 	protected boolean whitelistConnection;
 	protected boolean checkConnection;
 	protected final ArrayList<String> connections = new ArrayList<String>();
+
+	public PlayerAccessFilter(OfflinePlayer player)
+	{
+		this(player.toString());
+	}
 
 	public PlayerAccessFilter(String name)
 	{
@@ -58,6 +64,26 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 	public void setWhitelistConnection(boolean whitelistConnection)
 	{
 		this.whitelistConnection = whitelistConnection;
+	}
+
+	public boolean isCheckIP()
+	{
+		return checkIP;
+	}
+
+	public void setCheckIP(boolean checkIP)
+	{
+		this.checkIP = checkIP;
+	}
+
+	public boolean isCheckConnection()
+	{
+		return checkConnection;
+	}
+
+	public void setCheckConnection(boolean checkConnection)
+	{
+		this.checkConnection = checkConnection;
 	}
 
 	public boolean checkIP(String IP)
