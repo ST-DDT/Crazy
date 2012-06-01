@@ -119,7 +119,7 @@ public class CrazyCore extends CrazyPlugin
 			case 1:
 				CrazyLocale.setUserLanguage(sender, args[0]);
 				save();
-				sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, args[0]);
+				sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getLanguageName(), args[0]);
 				return;
 			case 2:
 				if (!sender.hasPermission("crazylanguage.advanced"))
