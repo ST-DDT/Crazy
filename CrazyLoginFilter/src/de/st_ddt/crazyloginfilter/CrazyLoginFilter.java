@@ -105,7 +105,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 		finally
 		{
 			if (database == null)
-				broadcastLocaleMessage(true, "crazyloginfilter.warndatabase", "CRAZYLOGINFILTER.DATABASE.ACCESSWARN", saveType);
+				broadcastLocaleMessage(true, "crazyloginfilter.warndatabase", "DATABASE.ACCESSWARN", saveType);
 		}
 	}
 
@@ -188,14 +188,14 @@ public class CrazyLoginFilter extends CrazyPlugin
 					sendListMessage(sender, "COMMMAND.IP.LISTHEAD", 1, data.getIPs(), new ToStringDataGetter());
 					return;
 				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					sendLocaleMessage("COMMMAND.IP.WHITELIST", sender, data.isWhitelistIP() ? "True" : "False");
-					return;
-				}
 				if (args[0].equalsIgnoreCase("check"))
 				{
 					sendLocaleMessage("COMMMAND.IP.CHECK", sender, data.isCheckIP() ? "True" : "False");
+					return;
+				}
+				if (args[0].equalsIgnoreCase("whitelist"))
+				{
+					sendLocaleMessage("COMMMAND.IP.WHITELIST", sender, data.isWhitelistIP() ? "True" : "False");
 					return;
 				}
 				break;
@@ -236,16 +236,6 @@ public class CrazyLoginFilter extends CrazyPlugin
 					}
 					return;
 				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					data.setWhitelistIP(newValue);
-					sendLocaleMessage("COMMMAND.IP.WHITELIST", sender, data.isWhitelistIP() ? "True" : "False");
-					database.save(data);
-					return;
-				}
 				if (args[0].equalsIgnoreCase("check"))
 				{
 					boolean newValue = false;
@@ -253,6 +243,16 @@ public class CrazyLoginFilter extends CrazyPlugin
 						newValue = true;
 					data.setCheckIP(newValue);
 					sendLocaleMessage("COMMMAND.IP.CHECK", sender, data.isWhitelistIP() ? "True" : "False");
+					database.save(data);
+					return;
+				}
+				if (args[0].equalsIgnoreCase("whitelist"))
+				{
+					boolean newValue = false;
+					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
+						newValue = true;
+					data.setWhitelistIP(newValue);
+					sendLocaleMessage("COMMMAND.IP.WHITELIST", sender, data.isWhitelistIP() ? "True" : "False");
 					database.save(data);
 					return;
 				}
@@ -280,14 +280,14 @@ public class CrazyLoginFilter extends CrazyPlugin
 					sendListMessage(sender, "COMMMAND.CONNECTION.LISTHEAD", 1, data.getConnections(), new ToStringDataGetter());
 					return;
 				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					sendLocaleMessage("COMMMAND.CONNECTION.WHITELIST", sender, data.isWhitelistConnection() ? "True" : "False");
-					return;
-				}
 				if (args[0].equalsIgnoreCase("check"))
 				{
 					sendLocaleMessage("COMMMAND.CONNECTION.CHECK", sender, data.isCheckConnection() ? "True" : "False");
+					return;
+				}
+				if (args[0].equalsIgnoreCase("whitelist"))
+				{
+					sendLocaleMessage("COMMMAND.CONNECTION.WHITELIST", sender, data.isWhitelistConnection() ? "True" : "False");
 					return;
 				}
 				break;
@@ -328,16 +328,6 @@ public class CrazyLoginFilter extends CrazyPlugin
 					}
 					return;
 				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					data.setWhitelistConnection(newValue);
-					sendLocaleMessage("COMMMAND.CONNECTION.WHITELIST", sender, data.isWhitelistConnection() ? "True" : "False");
-					database.save(data);
-					return;
-				}
 				if (args[0].equalsIgnoreCase("check"))
 				{
 					boolean newValue = false;
@@ -345,6 +335,16 @@ public class CrazyLoginFilter extends CrazyPlugin
 						newValue = true;
 					data.setCheckConnection(newValue);
 					sendLocaleMessage("COMMMAND.CONNECTION.CHECK", sender, data.isWhitelistConnection() ? "True" : "False");
+					database.save(data);
+					return;
+				}
+				if (args[0].equalsIgnoreCase("whitelist"))
+				{
+					boolean newValue = false;
+					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
+						newValue = true;
+					data.setWhitelistConnection(newValue);
+					sendLocaleMessage("COMMMAND.CONNECTION.WHITELIST", sender, data.isWhitelistConnection() ? "True" : "False");
 					database.save(data);
 					return;
 				}
