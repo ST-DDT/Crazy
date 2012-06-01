@@ -8,8 +8,8 @@ import de.st_ddt.crazyutil.databases.ConfigurationDatabase;
 public class CrazyLoginFilterConfigurationDatabase extends ConfigurationDatabase<PlayerAccessFilter>
 {
 
-	public CrazyLoginFilterConfigurationDatabase(ConfigurationSection config, String table, String colName, String colCheckIPs, String colCheckConnections, String colWhitelistIPs, String colWhitelistConnections, String colIPs, String colConnections)
+	public CrazyLoginFilterConfigurationDatabase(ConfigurationSection config, String table, String colName, String colCheckIPs, String colWhitelistIPs, String colIPs, String colCheckConnections, String colWhitelistConnections, String colConnections)
 	{
-		super(PlayerAccessFilter.class, config, table, new String[] { colName, colCheckIPs, colCheckConnections, colWhitelistIPs, colWhitelistConnections, colIPs, colConnections });
+		super(PlayerAccessFilter.class, config, table, new String[] { colName, colCheckIPs, colWhitelistIPs, colIPs, colCheckConnections, colWhitelistConnections, colConnections });
 	}
 }

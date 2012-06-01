@@ -37,6 +37,12 @@ public class CrazyLoginFilter extends CrazyPlugin
 	}
 
 	@Override
+	protected String getShortPluginName()
+	{
+		return "clf";
+	}
+
+	@Override
 	public void onEnable()
 	{
 		plugin = this;
@@ -356,6 +362,11 @@ public class CrazyLoginFilter extends CrazyPlugin
 		return checkIP(player.getName(), player.getAddress().getAddress().getHostAddress());
 	}
 
+	public boolean checkIP(Player player, String IP)
+	{
+		return checkIP(player.getName(), IP);
+	}
+
 	public boolean checkIP(String player, String IP)
 	{
 		PlayerAccessFilter filter = getPlayerAccessFilter(player);
@@ -367,6 +378,11 @@ public class CrazyLoginFilter extends CrazyPlugin
 	public boolean checkConnection(Player player)
 	{
 		return checkConnection(player.getName(), player.getAddress().getHostName());
+	}
+
+	public boolean checkConnection(Player player, String connection)
+	{
+		return checkConnection(player.getName(), connection);
 	}
 
 	public boolean checkConnection(String player, String connection)

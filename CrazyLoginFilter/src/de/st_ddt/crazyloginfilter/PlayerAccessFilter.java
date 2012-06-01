@@ -20,7 +20,7 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 
 	public PlayerAccessFilter(OfflinePlayer player)
 	{
-		this(player.toString());
+		this(player.getName());
 	}
 
 	public PlayerAccessFilter(String name)

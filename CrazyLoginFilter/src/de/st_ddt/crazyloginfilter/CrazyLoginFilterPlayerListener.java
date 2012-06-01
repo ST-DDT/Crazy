@@ -21,7 +21,7 @@ public class CrazyLoginFilterPlayerListener implements Listener
 	public void PlayerLogin(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
-		if (!plugin.checkIP(player) || !plugin.checkConnection(player))
+		if (!plugin.checkIP(player, event.getAddress().getHostAddress()) || !plugin.checkConnection(player, event.getHostname()))
 		{
 			event.setResult(Result.KICK_OTHER);
 			event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "ACCESS.DENIED"));
