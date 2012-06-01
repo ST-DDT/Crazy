@@ -19,7 +19,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.conditions.ConditionList;
 import de.st_ddt.crazyutil.conditions.Condition_AND;
 import de.st_ddt.crazyutil.conditions.Condition_FALSE;
-import de.st_ddt.crazyutil.conditions.player.ConditionPlayerPermissionGroup;
+import de.st_ddt.crazyutil.conditions.player.ConditionPlayerPermBukkitGroup;
 
 public class CrazyPromoter extends CrazyPlugin
 {
@@ -57,7 +57,7 @@ public class CrazyPromoter extends CrazyPlugin
 			ConditionList<Player> condition = new Condition_AND<Player>();
 			promotion.setCondition(condition);
 			condition.getConditions().add(new Condition_FALSE<Player>());
-			condition.getConditions().add(new ConditionPlayerPermissionGroup("default"));
+			condition.getConditions().add(new ConditionPlayerPermBukkitGroup("default"));
 		}
 		else
 			for (String name : config.getKeys(false))

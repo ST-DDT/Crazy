@@ -8,19 +8,19 @@ import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
 //requires PermissionsBukkit (PermBukkit)
-public class ConditionPlayerPermissionGroup extends ConditionPlayer
+public class ConditionPlayerPermBukkitGroup extends ConditionPlayer
 {
 
 	protected String groupname;
 	protected Group group;
 
-	public ConditionPlayerPermissionGroup(ConfigurationSection config)
+	public ConditionPlayerPermBukkitGroup(ConfigurationSection config)
 	{
 		super(config);
 		this.groupname = config.getString("group", "default");
 	}
 
-	public ConditionPlayerPermissionGroup(String groupname)
+	public ConditionPlayerPermBukkitGroup(String groupname)
 	{
 		super();
 		this.groupname = groupname;
