@@ -28,7 +28,7 @@ public class ConditionDate<T> extends ConditionBase<T>
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			this.date = new Date();
 		}
 		this.before = config.getBoolean("before", true);
 	}
@@ -44,15 +44,15 @@ public class ConditionDate<T> extends ConditionBase<T>
 	@Override
 	public String getTypeIdentifier()
 	{
-		return "Time";
+		return "Date";
 	}
 
 	@Override
 	public boolean match(T tester)
 	{
 		if (before)
-			return date.before(new Date());
-		else
 			return date.after(new Date());
+		else
+			return date.before(new Date());
 	}
 }
