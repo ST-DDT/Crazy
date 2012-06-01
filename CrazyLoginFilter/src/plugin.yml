@@ -9,7 +9,7 @@ commands:
   crazyloginfilter:
     description: Plugin Main Menu
     usage: /<command> [Subcommands...]
-    alias: [clf]
+    aliases: [clf]
 permissions:
   crazyloginfilter.*:
     description: Access to all commands
