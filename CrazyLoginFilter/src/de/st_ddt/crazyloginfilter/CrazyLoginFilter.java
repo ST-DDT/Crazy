@@ -17,6 +17,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyplugin.exceptions.CrazyNotImplementedException;
 import de.st_ddt.crazyutil.ToStringDataGetter;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.DatabaseType;
@@ -156,9 +157,9 @@ public class CrazyLoginFilter extends CrazyPlugin
 		sendLocaleMessage("COMMMAND.CREATED", sender, player.getName());
 	}
 
-	private void commandMainShow(CommandSender sender, String[] args)
+	private void commandMainShow(CommandSender sender, String[] args) throws CrazyException
 	{
-		// EDIT Auto-generated method stub
+		throw new CrazyNotImplementedException();
 	}
 
 	private void commandMainIP(CommandSender sender, String[] args) throws CrazyCommandException
@@ -345,9 +346,9 @@ public class CrazyLoginFilter extends CrazyPlugin
 		throw new CrazyCommandUsageException("/crazyloginfilter connection show [Page]", "/crazloginfilter connection <add/remove> <Value>", "/crazloginfilter connection whitelist [True/False]");
 	}
 
-	private void commandMainDelete(CommandSender sender, String[] args)
+	private void commandMainDelete(CommandSender sender, String[] args) throws CrazyException
 	{
-		// EDIT Auto-generated method stub
+		throw new CrazyNotImplementedException();
 	}
 
 	public boolean checkIP(Player player)
