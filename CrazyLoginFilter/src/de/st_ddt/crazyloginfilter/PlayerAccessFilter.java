@@ -163,12 +163,12 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 	@Override
 	public void saveToConfigDatabase(ConfigurationSection config, String table, String[] columnNames)
 	{
-		config.set(columnNames[0], name);
-		config.set(columnNames[1], checkIP);
-		config.set(columnNames[2], whitelistIP);
-		config.set(columnNames[3], IPs);
-		config.set(columnNames[4], checkConnection);
-		config.set(columnNames[5], whitelistConnection);
-		config.set(columnNames[6], connections);
+		config.set(table + "." + columnNames[0], name);
+		config.set(table + "." + columnNames[1], checkIP);
+		config.set(table + "." + columnNames[2], whitelistIP);
+		config.set(table + "." + columnNames[3], IPs);
+		config.set(table + "." + columnNames[4], checkConnection);
+		config.set(table + "." + columnNames[5], whitelistConnection);
+		config.set(table + "." + columnNames[6], connections);
 	}
 }

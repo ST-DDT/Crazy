@@ -242,7 +242,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
 						newValue = true;
 					data.setCheckIP(newValue);
-					sendLocaleMessage("COMMMAND.IP.CHECK", sender, data.isWhitelistIP() ? "True" : "False");
+					sendLocaleMessage("COMMMAND.IP.CHECK", sender, data.isCheckIP() ? "True" : "False");
 					database.save(data);
 					return;
 				}
@@ -334,7 +334,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
 						newValue = true;
 					data.setCheckConnection(newValue);
-					sendLocaleMessage("COMMMAND.CONNECTION.CHECK", sender, data.isWhitelistConnection() ? "True" : "False");
+					sendLocaleMessage("COMMMAND.CONNECTION.CHECK", sender, data.isCheckConnection() ? "True" : "False");
 					database.save(data);
 					return;
 				}
