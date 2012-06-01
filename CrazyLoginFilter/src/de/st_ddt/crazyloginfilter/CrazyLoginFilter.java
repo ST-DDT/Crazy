@@ -65,8 +65,8 @@ public class CrazyLoginFilter extends CrazyPlugin
 	public void setupDatabase()
 	{
 		final ConfigurationSection config = getConfig();
-		String saveType = config.getString("database.saveType", "flat").toLowerCase();
-		DatabaseType type = DatabaseType.valueOf(saveType.toUpperCase());
+		String saveType = config.getString("database.saveType", "CONFIG").toUpperCase();
+		DatabaseType type = DatabaseType.valueOf(saveType);
 		final String tableName = config.getString("database.tableName", "accessfilter");
 		config.set("database.tableName", tableName);
 		// Columns
@@ -74,21 +74,21 @@ public class CrazyLoginFilter extends CrazyPlugin
 		config.set("database.columns.name", colName);
 		final String colCheckIPs = config.getString("database.columns.checkIPs", "checkIPs");
 		config.set("database.columns.checkIPs", colCheckIPs);
-		final String colCheckConnections = config.getString("database.columns.checkConnections", "checkConnections");
-		config.set("database.columns.checkConnections", colCheckConnections);
 		final String colWhitelistIPs = config.getString("database.columns.whitelistIPs", "whitelistIPs");
 		config.set("database.columns.whitelistIPs", colWhitelistIPs);
-		final String colWhitelistConnections = config.getString("database.columns.whitelistConnections", "whitelistConnections");
-		config.set("database.columns.whitelistConnections", colWhitelistConnections);
 		final String colIPs = config.getString("database.columns.IPs", "IPs");
 		config.set("database.columns.IPs", colIPs);
+		final String colCheckConnections = config.getString("database.columns.checkConnections", "checkConnections");
+		config.set("database.columns.checkConnections", colCheckConnections);
+		final String colWhitelistConnections = config.getString("database.columns.whitelistConnections", "whitelistConnections");
+		config.set("database.columns.whitelistConnections", colWhitelistConnections);
 		final String colConnections = config.getString("database.columns.connections", "connections");
 		config.set("database.columns.connections", colConnections);
 		try
 		{
 			if (type == DatabaseType.CONFIG)
 			{
-				database = new CrazyLoginFilterConfigurationDatabase(config, tableName, colName, colCheckIPs, colCheckConnections, colWhitelistIPs, colWhitelistConnections, colIPs, colConnections);
+				database = new CrazyLoginFilterConfigurationDatabase(config, tableName, colName, colCheckIPs, colWhitelistIPs, colIPs, colCheckConnections, colWhitelistConnections, colConnections);
 			}
 		}
 		catch (final Exception e)

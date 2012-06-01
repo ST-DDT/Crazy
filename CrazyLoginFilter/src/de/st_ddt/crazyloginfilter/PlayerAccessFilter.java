@@ -11,11 +11,11 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 {
 
 	protected final String name;
-	protected boolean whitelistIP;
 	protected boolean checkIP;
+	protected boolean whitelistIP;
 	protected final ArrayList<String> IPs = new ArrayList<String>();
-	protected boolean whitelistConnection;
 	protected boolean checkConnection;
+	protected boolean whitelistConnection;
 	protected final ArrayList<String> connections = new ArrayList<String>();
 
 	public PlayerAccessFilter(OfflinePlayer player)
@@ -41,29 +41,21 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 		connections.addAll(config.getStringList("connections"));
 	}
 
+	public PlayerAccessFilter(ConfigurationSection rawData, String[] columnNames)
+	{
+		super();
+		this.name = rawData.getString(columnNames[0]).toLowerCase();
+		whitelistIP = rawData.getBoolean(columnNames[2]);
+		whitelistConnection = rawData.getBoolean(columnNames[5]);
+		checkIP = rawData.getBoolean(columnNames[1]);
+		checkConnection = rawData.getBoolean(columnNames[4]);
+		IPs.addAll(rawData.getStringList(columnNames[3]));
+		connections.addAll(rawData.getStringList(columnNames[6]));
+	}
+
 	public String getName()
 	{
 		return name;
-	}
-
-	public boolean isWhitelistIP()
-	{
-		return whitelistIP;
-	}
-
-	public void setWhitelistIP(boolean whitelistIP)
-	{
-		this.whitelistIP = whitelistIP;
-	}
-
-	public boolean isWhitelistConnection()
-	{
-		return whitelistConnection;
-	}
-
-	public void setWhitelistConnection(boolean whitelistConnection)
-	{
-		this.whitelistConnection = whitelistConnection;
 	}
 
 	public boolean isCheckIP()
@@ -76,14 +68,14 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 		this.checkIP = checkIP;
 	}
 
-	public boolean isCheckConnection()
+	public boolean isWhitelistIP()
 	{
-		return checkConnection;
+		return whitelistIP;
 	}
 
-	public void setCheckConnection(boolean checkConnection)
+	public void setWhitelistIP(boolean whitelistIP)
 	{
-		this.checkConnection = checkConnection;
+		this.whitelistIP = whitelistIP;
 	}
 
 	public boolean checkIP(String IP)
@@ -115,6 +107,26 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 	public String removeIP(int index)
 	{
 		return IPs.remove(index);
+	}
+
+	public boolean isCheckConnection()
+	{
+		return checkConnection;
+	}
+
+	public void setCheckConnection(boolean checkConnection)
+	{
+		this.checkConnection = checkConnection;
+	}
+
+	public boolean isWhitelistConnection()
+	{
+		return whitelistConnection;
+	}
+
+	public void setWhitelistConnection(boolean whitelistConnection)
+	{
+		this.whitelistConnection = whitelistConnection;
 	}
 
 	public boolean checkConnection(String connection)
@@ -151,12 +163,12 @@ public class PlayerAccessFilter implements ConfigurationDatabaseEntry
 	@Override
 	public void saveToConfigDatabase(ConfigurationSection config, String table, String[] columnNames)
 	{
-		config.set("name", name);
-		config.set("whitelistIP", whitelistIP);
-		config.set("whitelistConnection", whitelistConnection);
-		config.set("checkIP", checkIP);
-		config.set("checkConnection", checkConnection);
-		config.set("ips", IPs);
-		config.set("connections", connections);
+		config.set(columnNames[0], name);
+		config.set(columnNames[1], checkIP);
+		config.set(columnNames[2], whitelistIP);
+		config.set(columnNames[3], IPs);
+		config.set(columnNames[4], checkConnection);
+		config.set(columnNames[5], whitelistConnection);
+		config.set(columnNames[6], connections);
 	}
 }
