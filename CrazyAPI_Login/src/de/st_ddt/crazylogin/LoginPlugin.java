@@ -36,6 +36,8 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract boolean isBlockingGuestCommandsEnabled();
 
+	public abstract boolean isResettingGuestLocationsEnabled();
+
 	public abstract String getUniqueIDKey();
 
 	public abstract Encryptor getEncryptor();
