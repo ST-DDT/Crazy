@@ -1,5 +1,6 @@
 package de.st_ddt.crazylogin;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,28 +21,6 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract boolean hasAccount(final String player);
 
-	public abstract boolean isAlwaysNeedPassword();
-
-	public abstract int getAutoLogoutTime();
-
-	public abstract boolean isInstantAutoLogoutEnabled();
-
-	public abstract int getAutoKick();
-
-	public abstract int getAutoKickUnregistered();
-
-	public abstract List<String> getCommandWhiteList();
-
-	public abstract boolean isAutoKickCommandUsers();
-
-	public abstract boolean isBlockingGuestCommandsEnabled();
-
-	public abstract boolean isResettingGuestLocationsEnabled();
-
-	public abstract String getUniqueIDKey();
-
-	public abstract Encryptor getEncryptor();
-
 	public abstract HashMap<String, LoginData> getPlayerData();
 
 	public abstract LoginData getPlayerData(final OfflinePlayer player);
@@ -50,11 +29,55 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract boolean deletePlayerData(final String player);
 
+	public abstract List<LoginData> getRegistrationsPerIP(final String ip);
+
+	public abstract boolean isAlwaysNeedPassword();
+
+	public abstract boolean isAutoLogoutEnabled();
+
+	public abstract boolean isInstantAutoLogoutEnabled();
+
+	public abstract int getAutoLogoutTime();
+
+	public abstract int getAutoKick();
+
+	public abstract long getAutoTempBan();
+
+	public abstract int getAutoKickUnregistered();
+
+	public abstract int getAutoKickLoginFailer();
+
+	public abstract long getAutoTempBanLoginFailer();
+
+	public abstract boolean isAutoKickCommandUsers();
+
+	public abstract boolean isBlockingGuestCommandsEnabled();
+
+	public abstract boolean isResettingGuestLocationsEnabled();
+
+	public abstract boolean isTempBanned(final String IP);
+
+	public abstract Date getTempBanned(final String IP);
+
+	public abstract List<String> getCommandWhiteList();
+
 	public abstract boolean isForceSingleSessionEnabled();
+
+	public abstract boolean isForceSingleSessionSameIPBypassEnabled();
+
+	public abstract Encryptor getEncryptor();
+
+	public abstract int getAutoDelete();
+
+	public abstract int getMaxRegistrationsPerIP();
+
+	public abstract int getMoveRange();
 
 	public abstract int getMinNameLength();
 
 	public abstract int getMaxNameLength();
 
 	public abstract boolean checkNameLength(final String name);
+
+	public abstract String getUniqueIDKey();
 }
