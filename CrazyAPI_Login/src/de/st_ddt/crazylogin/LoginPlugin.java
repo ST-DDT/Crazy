@@ -59,6 +59,8 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract Date getTempBanned(final String IP);
 
+	public abstract String getTempBannedString(final String IP);
+
 	public abstract List<String> getCommandWhiteList();
 
 	public abstract boolean isForceSingleSessionEnabled();
