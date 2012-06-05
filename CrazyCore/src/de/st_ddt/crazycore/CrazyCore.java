@@ -289,6 +289,7 @@ public class CrazyCore extends CrazyPlugin
 			plr.setOp(false);
 			plr.setWhitelisted(false);
 		}
+		save();
 	}
 
 	@Override
