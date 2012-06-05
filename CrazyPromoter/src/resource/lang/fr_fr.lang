@@ -1,0 +1,3 @@
+CRAZYPROMOTER=CrazyPromoter
+CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ a été promu (Rang: $1$)
+CRAZYPROMOTER.COMMAND.CHECK.FAIL=Désolé, aucune promotion applicable!
