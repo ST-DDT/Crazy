@@ -260,8 +260,11 @@ public class CrazyCore extends CrazyPlugin
 		getServer().getPluginManager().callEvent(event);
 		sendLocaleMessage("COMMAND.DELETE.HEAD", sender, name);
 		sendLocaleMessage("COMMAND.DELETE.AMOUNT", sender, event.getDeletionsCount());
-		sendLocaleMessage("COMMAND.DELETE.LISTHEAD", sender, event.getDeletionsList());
-		sendLocaleMessage("COMMAND.DELETE.LIST", sender, event.getDeletionsList());
+		if (event.getDeletionsCount() != 0)
+		{
+			sendLocaleMessage("COMMAND.DELETE.LISTHEAD", sender, event.getDeletionsList());
+			sendLocaleMessage("COMMAND.DELETE.LIST", sender, event.getDeletionsList());
+		}
 		if (player != null)
 			if (player.isOnline())
 			{
