@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil.action;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +17,18 @@ public class ActionList_RANDOM extends ActionList
 		super(config);
 		amount = config.getInt("amount", 1);
 		amount = Math.max(amount, actions.size());
+	}
+
+	public ActionList_RANDOM(String name, Collection<? extends Action> actions)
+	{
+		super(name, actions);
+		this.amount = 1;
+	}
+
+	public ActionList_RANDOM(String name)
+	{
+		super(name);
+		this.amount = 1;
 	}
 
 	@Override

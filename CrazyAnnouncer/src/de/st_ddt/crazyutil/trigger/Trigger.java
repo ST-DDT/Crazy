@@ -1,7 +1,9 @@
 package de.st_ddt.crazyutil.trigger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,18 +15,18 @@ public abstract class Trigger implements NamedRunnable
 {
 
 	public String name;
-	public List<NamedRunnable> actions = new ArrayList<NamedRunnable>();
+	public Set<NamedRunnable> actions = new HashSet<NamedRunnable>();
 	public boolean enabled;
 	protected final JavaPlugin plugin;
 
-	public static Trigger load(final ConfigurationSection config, final List<? extends NamedRunnable> actionlist, final JavaPlugin plugin)
+	public static Trigger load(final ConfigurationSection config, final Set<? extends NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		if (config == null)
 			return null;
-		return ObjectSaveLoadHelper.load(config, Trigger.class, new Class[] { ConfigurationSection.class, List.class, JavaPlugin.class }, new Object[] { config, actionlist, plugin });
+		return ObjectSaveLoadHelper.load(config, Trigger.class, new Class[] { ConfigurationSection.class, Set.class, JavaPlugin.class }, new Object[] { config, actionlist, plugin });
 	}
 
-	public Trigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
+	public Trigger(final String name, final Set<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super();
 		this.name = name;
@@ -33,7 +35,7 @@ public abstract class Trigger implements NamedRunnable
 		this.plugin = plugin;
 	}
 
-	public Trigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
+	public Trigger(final ConfigurationSection config, final Set<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super();
 		this.name = config.getName();

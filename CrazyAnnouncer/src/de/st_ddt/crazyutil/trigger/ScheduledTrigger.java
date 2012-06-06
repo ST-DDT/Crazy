@@ -2,7 +2,7 @@ package de.st_ddt.crazyutil.trigger;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,7 +16,7 @@ public class ScheduledTrigger extends Trigger
 	protected Date date;
 	protected int taskID = -1;
 
-	public ScheduledTrigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
+	public ScheduledTrigger(final ConfigurationSection config, final Set<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super(config, actionlist, plugin);
 		final String datesString = config.getString("date");
@@ -30,7 +30,7 @@ public class ScheduledTrigger extends Trigger
 		}
 	}
 
-	public ScheduledTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date)
+	public ScheduledTrigger(final String name, final Set<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date)
 	{
 		super(name, actionlist, plugin);
 		this.date = date;

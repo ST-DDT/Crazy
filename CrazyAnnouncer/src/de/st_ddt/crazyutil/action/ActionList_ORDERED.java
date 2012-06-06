@@ -1,5 +1,7 @@
 package de.st_ddt.crazyutil.action;
 
+import java.util.Collection;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ActionList_ORDERED extends ActionList
@@ -13,6 +15,18 @@ public class ActionList_ORDERED extends ActionList
 		currentIndex = config.getInt("currentIndex", 0);
 		if (currentIndex >= actions.size())
 			currentIndex = 0;
+	}
+
+	public ActionList_ORDERED(String name, Collection<? extends Action> actions)
+	{
+		super(name, actions);
+		currentIndex = 0;
+	}
+
+	public ActionList_ORDERED(String name)
+	{
+		super(name);
+		currentIndex = 0;
 	}
 
 	@Override

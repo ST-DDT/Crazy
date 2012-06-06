@@ -1,7 +1,7 @@
 package de.st_ddt.crazyutil.trigger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
@@ -13,14 +13,14 @@ public class EventTrigger extends Trigger
 {
 
 	TriggerEventListener listener;
-	List<Class<? extends Event>> events;
+	Set<Class<? extends Event>> events;
 
 	@SuppressWarnings("unchecked")
-	public EventTrigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final TriggerEventListener listener)
+	public EventTrigger(final ConfigurationSection config, final Set<NamedRunnable> actionlist, final JavaPlugin plugin, final TriggerEventListener listener)
 	{
 		super(config, actionlist, plugin);
 		this.listener = listener;
-		this.events = new ArrayList<Class<? extends Event>>();
+		this.events = new HashSet<Class<? extends Event>>();
 		for (final String clazz : config.getStringList("events"))
 			try
 			{
@@ -36,7 +36,7 @@ public class EventTrigger extends Trigger
 			}
 	}
 
-	public EventTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final List<Class<? extends Event>> events, final TriggerEventListener listener)
+	public EventTrigger(final String name, final Set<NamedRunnable> actionlist, final JavaPlugin plugin, final Set<Class<? extends Event>> events, final TriggerEventListener listener)
 	{
 		super(name, actionlist, plugin);
 		this.listener = listener;
@@ -61,7 +61,7 @@ public class EventTrigger extends Trigger
 		listener.removeTrigger(this);
 	}
 
-	public List<Class<? extends Event>> getEventList()
+	public Set<Class<? extends Event>> getEventList()
 	{
 		return events;
 	}

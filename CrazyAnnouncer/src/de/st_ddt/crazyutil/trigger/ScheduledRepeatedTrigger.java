@@ -1,7 +1,7 @@
 package de.st_ddt.crazyutil.trigger;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,7 +14,7 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 	protected long interval;
 	protected int repeat;
 
-	public ScheduledRepeatedTrigger(final ConfigurationSection config, final List<NamedRunnable> actionlist, final JavaPlugin plugin)
+	public ScheduledRepeatedTrigger(final ConfigurationSection config, final Set<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super(config, actionlist, plugin);
 		this.interval = config.getInt("interval", 1000);
@@ -26,11 +26,16 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 			this.date.setTime((now.getTime() - date.getTime()) % interval + now.getTime());
 	}
 
-	public ScheduledRepeatedTrigger(final String name, final List<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date, final long interval, final int repeat)
+	public ScheduledRepeatedTrigger(final String name, final Set<NamedRunnable> actionlist, final JavaPlugin plugin, final Date date, final long interval, final int repeat)
 	{
 		super(name, actionlist, plugin, date);
 		this.interval = interval;
 		this.repeat = repeat;
+		Date now = new Date();
+		if (repeat > 0)
+			this.repeat = (int) Math.max((repeat - date.getTime() - now.getTime()) / interval, 0);
+		if (repeat != 0)
+			this.date.setTime((now.getTime() - date.getTime()) % interval + now.getTime());
 	}
 
 	@Override

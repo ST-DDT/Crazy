@@ -1,6 +1,8 @@
 package de.st_ddt.crazyutil.action;
 
 import java.util.ArrayList;
+import java.util.Collection;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class ActionList extends Action
@@ -30,12 +32,38 @@ public abstract class ActionList extends Action
 		}
 	}
 
+	public ActionList(String name)
+	{
+		super(name);
+	}
+
+	public ActionList(String name, Collection<? extends Action> actions)
+	{
+		super(name);
+		this.actions.addAll(actions);
+	}
+
+	public void addAction(Action action)
+	{
+		this.actions.add(action);
+	}
+
+	public void addAllAction(Collection<? extends Action> actions)
+	{
+		this.actions.addAll(actions);
+	}
+
+	public ArrayList<Action> getActions()
+	{
+		return actions;
+	}
+
 	@Override
 	public void save(ConfigurationSection config, String path)
 	{
 		super.save(config, path);
 		config.set(path + "actions", null);
 		for (Action action : actions)
-			action.save(config, path + action.getName() + ".");
+			action.save(config, path + "actions." + action.getName() + ".");
 	}
 }
