@@ -21,7 +21,7 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract boolean hasAccount(final String player);
 
-	public abstract HashMap<String, LoginData> getPlayerData();
+	public abstract HashMap<String, ? extends LoginData> getPlayerData();
 
 	public abstract LoginData getPlayerData(final OfflinePlayer player);
 
@@ -29,7 +29,7 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract boolean deletePlayerData(final String player);
 
-	public abstract List<LoginData> getRegistrationsPerIP(final String ip);
+	public abstract List<? extends LoginData> getRegistrationsPerIP(final String ip);
 
 	public abstract boolean isAlwaysNeedPassword();
 
