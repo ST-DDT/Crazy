@@ -71,23 +71,24 @@ public class ChatHelper
 	{
 		if (chatHeader == null)
 			chatHeader = "";
-		sendMessage(target, headLocale, page, (datas.size() + 9) / 10);
+		page = Math.max(1, page);
+		sendMessage(target, chatHeader, headLocale, page, (datas.size() + 9) / 10);
 		if (seperator == null)
 			seperator = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.SEPERATOR");
-		sendMessage(target, seperator);
+		sendMessage(target, chatHeader, seperator);
 		int lastIndex = datas.size();
 		if (lastIndex + 9 < page * 10)
 		{
 			if (emptyPage == null)
 				emptyPage = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.EMPTYPAGE");
-			sendMessage(target, emptyPage, page);
+			sendMessage(target, chatHeader, emptyPage, page);
 			return;
 		}
 		if (entry == null)
 			entry = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.ENTRY");
 		lastIndex = Math.min(lastIndex, page * 10);
 		for (int i = page * 10 - 10; i < lastIndex; i++)
-			sendMessage(target, entry, i + 1, getter.getEntryData(datas.get(i)));
+			sendMessage(target, chatHeader, entry, i + 1, getter.getEntryData(datas.get(i)));
 	}
 
 	public static String putArgs(final String message, final Object... args)

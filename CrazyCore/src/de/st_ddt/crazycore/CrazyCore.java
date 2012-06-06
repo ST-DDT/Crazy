@@ -246,7 +246,11 @@ public class CrazyCore extends CrazyPlugin
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazycore delete <Player>");
-		String name = args[0];
+		commanMainDelete(sender, args[0]);
+	}
+
+	private void commanMainDelete(final CommandSender sender, String name) throws CrazyCommandException
+	{
 		final Player player = getServer().getPlayer(name);
 		final OfflinePlayer plr = getServer().getOfflinePlayer(name);
 		if (player != null)
