@@ -98,14 +98,19 @@ public class CrazyCore extends CrazyPlugin
 					throw new CrazyCommandParameterException(i, "page:Integer");
 				}
 			else if (args[i].toLowerCase().startsWith("amount:"))
-				try
-				{
-					amount = Integer.parseInt(args[i].substring(7));
-				}
-				catch (NumberFormatException e)
-				{
-					throw new CrazyCommandParameterException(i, "amount:Integer");
-				}
+			{
+				if (args[i].substring(7).equals("*"))
+					amount = -1;
+				else
+					try
+					{
+						amount = Integer.parseInt(args[i].substring(7));
+					}
+					catch (NumberFormatException e)
+					{
+						throw new CrazyCommandParameterException(i, "amount:Integer");
+					}
+			}
 			else
 				try
 				{
