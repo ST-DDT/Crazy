@@ -1,6 +1,7 @@
 package de.st_ddt.crazycore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -19,6 +20,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.DepenciesComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class CrazyCore extends CrazyPlugin
@@ -81,28 +83,43 @@ public class CrazyCore extends CrazyPlugin
 	{
 		if (!sender.hasPermission("crazycore.list"))
 			throw new CrazyCommandPermissionException();
-		int page;
-		switch (args.length)
+		int page = 1;
+		int amount = 10;
+		int length = args.length;
+		for (int i = 0; i < length; i++)
 		{
-			case 0:
-				page = 1;
-				break;
-			case 1:
+			if (args[i].toLowerCase().startsWith("page:"))
 				try
 				{
-					page = Integer.parseInt(args[0]);
+					page = Integer.parseInt(args[i].substring(5));
 				}
-				catch (final NumberFormatException e)
+				catch (NumberFormatException e)
 				{
-					throw new CrazyCommandParameterException(1, "Integer");
+					throw new CrazyCommandParameterException(i, "page:Integer");
 				}
-				break;
-			default:
-				throw new CrazyCommandUsageException("/crazylist [Page]");
+			else if (args[i].toLowerCase().startsWith("amount:"))
+				try
+				{
+					amount = Integer.parseInt(args[i].substring(7));
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(i, "amount:Integer");
+				}
+			else
+				try
+				{
+					page = Integer.parseInt(args[i]);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new CrazyCommandUsageException("/crazylist [amount:Integer] [[page:]Integer]");
+				}
 		}
 		final ArrayList<JavaPlugin> list = new ArrayList<JavaPlugin>();
 		list.addAll(getCrazyLightPlugins());
-		sendListMessage(sender, "COMMAND.PLUGINLIST.HEADER", page, list, new PluginDataGetter());
+		Collections.sort(list, new DepenciesComparator());
+		sendListMessage(sender, "COMMAND.PLUGINLIST.HEADER", amount, page, list, new PluginDataGetter());
 	}
 
 	private void commandLanguage(final CommandSender sender, final String[] args) throws CrazyCommandException

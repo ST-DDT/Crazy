@@ -35,13 +35,13 @@ public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface
 
 	public abstract void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args);
 
-	public abstract <E> void sendListMessage(final CommandSender target, String headLocale, int page, List<? extends E> datas, EntryDataGetter<E> getter);
+	public abstract <E> void sendListMessage(final CommandSender target, String headLocale, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter);
 
-	public abstract <E> void sendListMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter);
+	public abstract <E> void sendListMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter);
 
-	public abstract <E> void sendListRootMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter);
+	public abstract <E> void sendListRootMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter);
 
-	public abstract <E> void sendListMessage(final CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter);
+	public abstract <E> void sendListMessage(final CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter);
 
 	public abstract void broadcastLocaleMessage(final String localepath, final Object... args);
 

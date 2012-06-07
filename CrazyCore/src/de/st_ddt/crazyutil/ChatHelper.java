@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -57,27 +58,31 @@ public class ChatHelper
 			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
 	}
 
-	public static <E> void sendListMessage(final CommandSender target, CrazyPlugin plugin, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
+	public static <E> void sendListMessage(final CommandSender target, CrazyPlugin plugin, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
-		sendListMessage(target, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry(headLocale), seperator == null ? null : plugin.getLocale().getLanguageEntry(seperator), entry == null ? null : plugin.getLocale().getLanguageEntry(entry), emptyPage == null ? null : plugin.getLocale().getLanguageEntry(emptyPage), page, datas, getter);
+		sendListMessage(target, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry(headLocale), seperator == null ? null : plugin.getLocale().getLanguageEntry(seperator), entry == null ? null : plugin.getLocale().getLanguageEntry(entry), emptyPage == null ? null : plugin.getLocale().getLanguageEntry(emptyPage), amount, page, datas, getter);
 	}
 
-	public static <E> void sendListMessage(final CommandSender target, String chatHeader, String headLocale, String seperator, String entry, String emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
+	public static <E> void sendListMessage(final CommandSender target, String chatHeader, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
-		sendListMessage(target, chatHeader, CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), page, datas, getter);
+		sendListMessage(target, chatHeader, CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), amount, page, datas, getter);
 	}
 
-	public static <E> void sendListMessage(final CommandSender target, String chatHeader, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int page, List<? extends E> datas, EntryDataGetter<E> getter)
+	public static <E> void sendListMessage(final CommandSender target, String chatHeader, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
 	{
 		if (chatHeader == null)
 			chatHeader = "";
+		int lastIndex = datas.size();
 		page = Math.max(1, page);
-		sendMessage(target, chatHeader, headLocale, page, (datas.size() + 9) / 10);
+		if (amount == 0)
+			amount = 10;
+		if (amount < 0)
+			amount = lastIndex;
+		sendMessage(target, chatHeader, headLocale, page, (datas.size() + amount - 1) / amount);
 		if (seperator == null)
 			seperator = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.SEPERATOR");
 		sendMessage(target, chatHeader, seperator);
-		int lastIndex = datas.size();
-		if (lastIndex + 9 < page * 10)
+		if (lastIndex + amount - 1 < page * amount)
 		{
 			if (emptyPage == null)
 				emptyPage = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.EMPTYPAGE");
@@ -86,9 +91,14 @@ public class ChatHelper
 		}
 		if (entry == null)
 			entry = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.ENTRY");
-		lastIndex = Math.min(lastIndex, page * 10);
-		for (int i = page * 10 - 10; i < lastIndex; i++)
-			sendMessage(target, chatHeader, entry, i + 1, getter.getEntryData(datas.get(i)));
+		
+		StringBuilder formatString=new StringBuilder();
+		for (int i=lastIndex;i>0;i/=10)
+			formatString.append("0");
+		DecimalFormat format=new DecimalFormat(formatString.toString());
+			lastIndex = Math.min(lastIndex, page * amount);
+		for (int i = page * amount - amount; i < lastIndex; i++)
+			sendMessage(target, chatHeader, entry, format.format(i + 1), getter.getEntryData(datas.get(i)));
 	}
 
 	public static String putArgs(final String message, final Object... args)
