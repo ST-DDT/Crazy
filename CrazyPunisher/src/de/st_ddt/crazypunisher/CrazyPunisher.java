@@ -274,7 +274,7 @@ public class CrazyPunisher extends CrazyPlugin
 			p.setHealth(0);
 			kick(p, locale.getLocaleMessage(p, "MESSAGE.HARDBAN"));
 		}
-		broadcastLocaleMessage("BROADCAST.HARDBAN", player.getName());
+		broadcastLocaleMessage(true, "crazypunisher.notifyHardBan","BROADCAST.HARDBAN", player.getName());
 		if (dynmap != null)
 			dynmap.getDynmapApi().sendBroadcastToWeb(getName(), getLocale().getDefaultLocaleMessage("BROADCAST.HARDBAN", player.getName()));
 		getServer().getPluginManager().callEvent(new CrazyPunisherHardbanEvent(player));
@@ -320,7 +320,7 @@ public class CrazyPunisher extends CrazyPlugin
 				getServer().banIP(p.getAddress().getAddress().getHostAddress());
 			kick(p, locale.getLocaleMessage(p, "MESSAGE.BAN"));
 		}
-		broadcastLocaleMessage("BROADCAST.BAN", player.getName());
+		broadcastLocaleMessage(true, "crazypunisher.notifyBan","BROADCAST.BAN", player.getName());
 		if (dynmap != null)
 			dynmap.getDynmapApi().sendBroadcastToWeb(getName(), getLocale().getDefaultLocaleMessage("BROADCAST.BAN", player.getName()));
 	}
@@ -358,7 +358,7 @@ public class CrazyPunisher extends CrazyPlugin
 		banned.remove(player);
 		save();
 		player.setBanned(false);
-		broadcastLocaleMessage("BROADCAST.UNBAN", player.getName());
+		broadcastLocaleMessage(true, "crazypunisher.notifyUnban","BROADCAST.UNBAN", player.getName());
 		if (dynmap != null)
 			dynmap.getDynmapApi().sendBroadcastToWeb(getName(), getLocale().getDefaultLocaleMessage("BROADCAST.UNBAN", player.getName()));
 	}
@@ -434,7 +434,7 @@ public class CrazyPunisher extends CrazyPlugin
 		save();
 		if (player instanceof Player)
 			keepJailed((Player) player);
-		broadcastLocaleMessage("BROADCAST.JAIL", player.getName());
+		broadcastLocaleMessage(true, "crazypunisher.notifyJail","BROADCAST.JAIL", player.getName());
 		if (dynmap != null)
 			dynmap.getDynmapApi().sendBroadcastToWeb(getName(), getLocale().getDefaultLocaleMessage("BROADCAST.JAIL", player.getName()));
 		getServer().getPluginManager().callEvent(new CrazyPunisherJailEvent(player, date));
@@ -482,7 +482,7 @@ public class CrazyPunisher extends CrazyPlugin
 			if (target != null)
 				p.teleport(target, TeleportCause.PLUGIN);
 		}
-		broadcastLocaleMessage("BROADCAST.UNJAIL", player.getName());
+		broadcastLocaleMessage(true, "crazypunisher.notifyUnjail","BROADCAST.UNJAIL", player.getName());
 		if (dynmap != null)
 			dynmap.getDynmapApi().sendBroadcastToWeb(getName(), getLocale().getDefaultLocaleMessage("BROADCAST.UNJAIL", player.getName()));
 		getServer().getPluginManager().callEvent(new CrazyPunisherUnjailEvent(player));
@@ -565,7 +565,7 @@ public class CrazyPunisher extends CrazyPlugin
 		if (player == null)
 			return;
 		player.kickPlayer(message);
-		broadcastLocaleMessage("BROADCAST.KICK", player.getName());
+		broadcastLocaleMessage(true, "crazypunisher.notifyKick","BROADCAST.KICK", player.getName());
 		if (dynmap != null)
 			dynmap.getDynmapApi().sendBroadcastToWeb(getName(), getLocale().getDefaultLocaleMessage("BROADCAST.KICK", player.getName()));
 	}

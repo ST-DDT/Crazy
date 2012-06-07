@@ -2,7 +2,7 @@ name: CrazyPunisher
 main: de.st_ddt.crazypunisher.CrazyPunisher
 author: ST-DDT
 #C*=needed core version
-version: C7.4.2_G0.1_3.9
+version: C7.5_G0.1_3.10
 softdepend: [PermissionsBukkit,dynmap]
 depend: [CrazyCore,CrazyGeo]
 commands:
@@ -94,6 +94,23 @@ permissions:
   crazypunisher.show:
     description: Allow hideing/unhideing
     default: op
+  crazypunisher.notifyJail:
+    description: Get informed when player is jailed
+    default: true
+  crazypunisher.notifyUnjail:
+    description: Get informed when player is unjailed
+    default: true
+  crazypunisher.notifyKick:
+    description: Get informed when player is kicked
+    default: true
+  crazypunisher.notifyBan:
+    description: Get informed when player is banned
+    default: true
+    children:
+      crazypunisher.notifyHardban: true
+  crazypunisher.notifyHardban:
+    description: Get informed when player is hardbanned
+    default: true
   crazypunisher.admin.jail:
     description: Show/set jail location
     default: op
