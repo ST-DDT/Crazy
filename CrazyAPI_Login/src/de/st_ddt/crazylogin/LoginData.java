@@ -17,6 +17,8 @@ public interface LoginData
 
 	public abstract boolean hasIP(final String ip);
 
+	public abstract String getLatestIP();
+
 	public abstract Date getLastActionTime();
 
 	public abstract boolean isOnline();
