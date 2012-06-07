@@ -185,7 +185,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 			case 1:
 				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
 				{
-					sendListMessage(sender, "COMMMAND.IP.LISTHEAD", 1, data.getIPs(), new ToStringDataGetter());
+					sendListMessage(sender, "COMMMAND.IP.LISTHEAD", 10, 1, data.getIPs(), new ToStringDataGetter());
 					return;
 				}
 				if (args[0].equalsIgnoreCase("check"))
@@ -228,7 +228,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 					try
 					{
 						int page = Integer.parseInt(args[1]);
-						sendListMessage(sender, "COMMMAND.IP.LISTHEAD", page, data.getIPs(), new ToStringDataGetter());
+						sendListMessage(sender, "COMMMAND.IP.LISTHEAD", 10, page, data.getIPs(), new ToStringDataGetter());
 					}
 					catch (NumberFormatException e)
 					{
@@ -277,7 +277,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 			case 1:
 				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
 				{
-					sendListMessage(sender, "COMMMAND.CONNECTION.LISTHEAD", 1, data.getConnections(), new ToStringDataGetter());
+					sendListMessage(sender, "COMMMAND.CONNECTION.LISTHEAD", 10, 1, data.getConnections(), new ToStringDataGetter());
 					return;
 				}
 				if (args[0].equalsIgnoreCase("check"))
@@ -320,7 +320,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 					try
 					{
 						int page = Integer.parseInt(args[1]);
-						sendListMessage(sender, "COMMMAND.CONNECTION.LISTHEAD", page, data.getConnections(), new ToStringDataGetter());
+						sendListMessage(sender, "COMMMAND.CONNECTION.LISTHEAD", 10, page, data.getConnections(), new ToStringDataGetter());
 					}
 					catch (NumberFormatException e)
 					{
