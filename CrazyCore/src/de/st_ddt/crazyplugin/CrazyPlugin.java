@@ -55,7 +55,8 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		return null;
 	}
 
-	public boolean isUpdated()
+	@Override
+	public final boolean isUpdated()
 	{
 		return isUpdated;
 	}
@@ -270,25 +271,25 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 	}
 
 	@Override
-	public <E> void sendListMessage(final CommandSender target, String headLocale, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
+	public final <E> void sendListMessage(final CommandSender target, final String headLocale, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this, headLocale, null, null, null, amount, page, datas, getter);
 	}
 
 	@Override
-	public <E> void sendListMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
+	public final <E> void sendListMessage(final CommandSender target, final String headLocale, final String seperator, final String entry, final String emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this, headLocale, seperator, entry, emptyPage, amount, page, datas, getter);
 	}
 
 	@Override
-	public <E> void sendListRootMessage(final CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
+	public final <E> void sendListRootMessage(final CommandSender target, final String headLocale, final String seperator, final String entry, final String emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this.getChatHeader(), CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), amount, page, datas, getter);
 	}
 
 	@Override
-	public <E> void sendListMessage(final CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
+	public final <E> void sendListMessage(final CommandSender target, final CrazyLocale headLocale, final CrazyLocale seperator, final CrazyLocale entry, final CrazyLocale emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this.getChatHeader(), headLocale, seperator, entry, emptyPage, amount, page, datas, getter);
 	}
@@ -340,7 +341,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		return locale;
 	}
 
-	public void loadLanguage(final String language)
+	public final void loadLanguage(final String language)
 	{
 		loadLanguage(language, Bukkit.getConsoleSender());
 	}
@@ -390,7 +391,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		}
 	}
 
-	public void loadLanguageFile(String language, File file) throws IOException
+	public void loadLanguageFile(final String language, final File file) throws IOException
 	{
 		InputStream stream = null;
 		InputStreamReader reader = null;
@@ -410,14 +411,14 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		}
 	}
 
-	public void updateLanguage(String language, boolean reload)
+	public final void updateLanguage(final String language, final boolean reload)
 	{
 		updateLanguage(language, Bukkit.getConsoleSender(), reload);
 	}
 
-	public void updateLanguage(String language, CommandSender sender, boolean reload)
+	public void updateLanguage(final String language, final CommandSender sender, final boolean reload)
 	{
-		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
+		final File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		downloadLanguage(language);
 		if (!file.exists())
 		{
@@ -480,7 +481,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src/resource";
 	}
 
-	public void downloadLanguage(final String language)
+	public final void downloadLanguage(final String language)
 	{
 		downloadLanguage(language, Bukkit.getConsoleSender());
 	}
