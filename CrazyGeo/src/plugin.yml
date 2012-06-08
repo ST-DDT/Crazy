@@ -2,11 +2,11 @@ name: CrazyGeo
 main: de.st_ddt.crazygeo.CrazyGeo
 author: ST-DDT
 #C*=needed core version
-version: C7_0.1
-softdepend: [WorldEdit,PermissionsBukkit]
+version: C7_0.2
+softdepend: [WorldEdit]
 depend: [CrazyCore]
 description: >
-            CrazyPlugin Core needed for all CrazyPlugins
+            CrazyGeo needed for all CrazyPlugins using region containers
 commands:
   crazygeo:
     description: Region selection

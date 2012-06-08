@@ -27,7 +27,7 @@ import de.st_ddt.crazyutil.poly.room.FuncRoom;
 import de.st_ddt.crazyutil.poly.room.PrismRoom;
 import de.st_ddt.crazyutil.poly.room.Room;
 
-public class WorldEditBridge
+public final class WorldEditBridge
 {
 
 	protected static WorldEditPlugin plugin;
@@ -35,9 +35,16 @@ public class WorldEditBridge
 
 	public static WorldEditPlugin getWorldEditPlugin()
 	{
-		if (plugin == null)
-			plugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-		return plugin;
+		try
+		{
+			if (plugin == null)
+				plugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+			return plugin;
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
 	}
 
 	public static WorldEditBridge getWorldEditBridge()

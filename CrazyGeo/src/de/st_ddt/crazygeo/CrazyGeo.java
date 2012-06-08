@@ -2,6 +2,7 @@ package de.st_ddt.crazygeo;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -42,7 +43,8 @@ public class CrazyGeo extends CrazyPlugin
 	public void onEnable()
 	{
 		plugin = this;
-		this.weBridge = WorldEditBridge.getWorldEditBridge();
+		if (Bukkit.getServer().getPluginManager().getPlugin("WorldEdit") != null)
+			this.weBridge = WorldEditBridge.getWorldEditBridge();
 		super.onEnable();
 	}
 
