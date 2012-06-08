@@ -341,6 +341,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		return locale;
 	}
 
+	protected boolean isSupportingLanguages()
+	{
+		return true;
+	}
+
 	public final void loadLanguage(final String language)
 	{
 		loadLanguage(language, Bukkit.getConsoleSender());
@@ -353,6 +358,8 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 
 	public void loadLanguage(final String language, final CommandSender sender)
 	{
+		if (!isSupportingLanguages())
+			return;
 		// default files
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		if (!file.exists())
@@ -391,23 +398,49 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		}
 	}
 
-	public void loadLanguageFile(final String language, final File file) throws IOException
+	public String getMainDownloadLocation()
 	{
-		InputStream stream = null;
-		InputStreamReader reader = null;
+		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src/resource";
+	}
+
+	public final void downloadLanguage(final String language)
+	{
+		downloadLanguage(language, Bukkit.getConsoleSender());
+	}
+
+	public void downloadLanguage(final String language, final CommandSender sender)
+	{
 		try
 		{
-			stream = new FileInputStream(file);
-			reader = new InputStreamReader(stream, "UTF-8");
-			CrazyLocale.readFile(language, reader);
-			// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
+			InputStream stream = null;
+			BufferedInputStream in = null;
+			FileOutputStream out = null;
+			try
+			{
+				stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
+				if (stream == null)
+					return;
+				in = new BufferedInputStream(stream);
+				out = new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang");
+				final byte data[] = new byte[1024];
+				int count;
+				while ((count = in.read(data, 0, 1024)) != -1)
+					out.write(data, 0, count);
+				out.flush();
+			}
+			finally
+			{
+				if (in != null)
+					in.close();
+				if (stream != null)
+					stream.close();
+				if (out != null)
+					out.close();
+			}
 		}
-		finally
+		catch (final IOException e)
 		{
-			if (reader != null)
-				reader.close();
-			if (stream != null)
-				stream.close();
+			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", sender, language);
 		}
 	}
 
@@ -418,6 +451,8 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 
 	public void updateLanguage(final String language, final CommandSender sender, final boolean reload)
 	{
+		if (!isSupportingLanguages())
+			return;
 		final File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		downloadLanguage(language);
 		if (!file.exists())
@@ -476,49 +511,23 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		}
 	}
 
-	public String getMainDownloadLocation()
+	public void loadLanguageFile(final String language, final File file) throws IOException
 	{
-		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src/resource";
-	}
-
-	public final void downloadLanguage(final String language)
-	{
-		downloadLanguage(language, Bukkit.getConsoleSender());
-	}
-
-	public void downloadLanguage(final String language, final CommandSender sender)
-	{
+		InputStream stream = null;
+		InputStreamReader reader = null;
 		try
 		{
-			InputStream stream = null;
-			BufferedInputStream in = null;
-			FileOutputStream out = null;
-			try
-			{
-				stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
-				if (stream == null)
-					return;
-				in = new BufferedInputStream(stream);
-				out = new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang");
-				final byte data[] = new byte[1024];
-				int count;
-				while ((count = in.read(data, 0, 1024)) != -1)
-					out.write(data, 0, count);
-				out.flush();
-			}
-			finally
-			{
-				if (in != null)
-					in.close();
-				if (stream != null)
-					stream.close();
-				if (out != null)
-					out.close();
-			}
+			stream = new FileInputStream(file);
+			reader = new InputStreamReader(stream, "UTF-8");
+			CrazyLocale.readFile(language, reader);
+			// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
 		}
-		catch (final IOException e)
+		finally
 		{
-			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", sender, language);
+			if (reader != null)
+				reader.close();
+			if (stream != null)
+				stream.close();
 		}
 	}
 }
