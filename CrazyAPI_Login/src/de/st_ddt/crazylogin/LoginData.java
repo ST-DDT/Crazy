@@ -2,12 +2,19 @@ package de.st_ddt.crazylogin;
 
 import java.util.Date;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 
 public interface LoginData
 {
 
 	public abstract String getName();
+
+	public abstract Player getPlayer();
+
+	public abstract OfflinePlayer getOfflinePlayer();
 
 	public abstract void setPassword(final String password) throws CrazyCommandException;
 
@@ -22,6 +29,8 @@ public interface LoginData
 	public abstract Date getLastActionTime();
 
 	public abstract boolean isOnline();
+
+	public abstract boolean isPlayerOnline();
 
 	public abstract boolean login(final String password);
 
