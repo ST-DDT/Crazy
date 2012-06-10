@@ -67,6 +67,8 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract boolean isForceSingleSessionSameIPBypassEnabled();
 
+	public abstract boolean isForceSaveLoginEnabled();
+
 	public abstract Encryptor getEncryptor();
 
 	public abstract int getAutoDelete();
