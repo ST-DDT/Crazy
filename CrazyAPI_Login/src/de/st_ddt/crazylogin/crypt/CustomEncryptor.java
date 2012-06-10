@@ -22,7 +22,7 @@ public abstract class CustomEncryptor implements Encryptor
 	public abstract boolean match(String name, String password, String encrypted);
 
 	@Override
-	public String getAlgorithm()
+	public final String getAlgorithm()
 	{
 		return "Custom";
 	}
