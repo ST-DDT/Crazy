@@ -1,0 +1,8 @@
+name: CrazyCompass
+main: de.st_ddt.crazycompass.CrazyCompass
+author: ST-DDT
+#C*=needed core version
+version: C7.5.1_1.2.1
+depend: [CrazyCore]
+description: >
+            CrazyCompass point to the center of your attention.
