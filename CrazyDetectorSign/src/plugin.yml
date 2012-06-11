@@ -1,0 +1,16 @@
+name: CrazyDetectorSign
+main: de.st_ddt.crazydetectorsign.CrazyDetectorSign
+author: ST-DDT
+#C*=needed core version
+version: C7.5.1_1.1.1
+softdepend: [CrazyCore,PermissionsBukkit]
+description: >
+            Use Detector Signs to trigger redstone.
+commands:
+  crazydetectorsign:
+    description: Plugin Main Menu
+    usage: /<command> [Subcommands...]
+permissions:
+  crazydetectorsign.*:
+    description: Access to all commands
+    default: false
