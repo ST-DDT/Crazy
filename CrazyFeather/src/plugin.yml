@@ -1,0 +1,13 @@
+name: CrazyFeather
+main: de.st_ddt.crazyfeather.CrazyFeather
+author: ST-DDT
+#C*=needed core version
+version: C7.5.1_1.2.1
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore]
+description: >
+            CrazyFeather collect more feathers from chickens.
+permissions:
+  crazyfeather.*:
+    description: Access to all commands
+    default: false
