@@ -1,6 +1,5 @@
 package de.st_ddt.crazyutil;
 
-import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -8,7 +7,9 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
+import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
@@ -31,31 +32,37 @@ public class ChatHelper
 
 	public static void sendMessage(final CommandSender target, final String chatHeader, final Object message, final Object... args)
 	{
+		if (target instanceof Player)
+			if (!CrazyCore.getShowChatHeaders())
+			{
+				target.sendMessage(putArgsExtended(target, message, args));
+				return;
+			}
 		target.sendMessage(chatHeader + putArgsExtended(target, message, args));
 	}
 
 	public static void sendMessage(final CommandSender[] targets, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
-			target.sendMessage(putArgsExtended(target, message, args));
+			sendMessage(target, message, args);
 	}
 
 	public static void sendMessage(final CommandSender[] targets, final String chatHeader, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
-			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
+			sendMessage(target, message, args);
 	}
 
 	public static void sendMessage(final Collection<CommandSender> targets, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
-			target.sendMessage(putArgsExtended(target, message, args));
+			sendMessage(target, message, args);
 	}
 
 	public static void sendMessage(final Collection<CommandSender> targets, final String chatHeader, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
-			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
+			sendMessage(target, message, args);
 	}
 
 	public static <E> void sendListMessage(final CommandSender target, CrazyPlugin plugin, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter)
@@ -91,14 +98,20 @@ public class ChatHelper
 		}
 		if (entry == null)
 			entry = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.ENTRY");
-		
-		StringBuilder formatString=new StringBuilder();
-		for (int i=lastIndex;i>0;i/=10)
-			formatString.append("0");
-		DecimalFormat format=new DecimalFormat(formatString.toString());
-			lastIndex = Math.min(lastIndex, page * amount);
+		StringBuilder formatString = new StringBuilder();
+		for (int i = lastIndex; i > 0; i /= 10)
+			formatString.append("  ");
+		String format = formatString.toString();
+		int length = format.length() / 2;
+		lastIndex = Math.min(lastIndex, page * amount);
 		for (int i = page * amount - amount; i < lastIndex; i++)
-			sendMessage(target, chatHeader, entry, format.format(i + 1), getter.getEntryData(datas.get(i)));
+			sendMessage(target, chatHeader, entry, listShiftHelper(String.valueOf(i + 1), length, format), getter.getEntryData(datas.get(i)));
+	}
+
+	private static String listShiftHelper(String number, int length, String filler)
+	{
+		String res = filler + number;
+		return res.substring(number.length() * 2);
 	}
 
 	public static String putArgs(final String message, final Object... args)

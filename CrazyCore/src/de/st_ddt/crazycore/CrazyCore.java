@@ -31,6 +31,7 @@ public class CrazyCore extends CrazyPlugin
 	protected static String defaultLanguage;
 	private CrazyCoreMessageListener messageListener;
 	private CrazyCoreCrazyListener crazylistener;
+	protected static boolean showChatHeaders = true;
 
 	public static CrazyCore getPlugin()
 	{
@@ -323,6 +324,7 @@ public class CrazyCore extends CrazyPlugin
 	{
 		super.load();
 		final ConfigurationSection config = getConfig();
+		showChatHeaders = config.getBoolean("showChatHeaders", true);
 		for (final String language : config.getStringList("defaultLanguages"))
 		{
 			defaultLanguages.add(language);
@@ -337,6 +339,7 @@ public class CrazyCore extends CrazyPlugin
 	public void save()
 	{
 		final ConfigurationSection config = getConfig();
+		config.set("showChatHeaders", showChatHeaders);
 		config.set("defaultLanguage", defaultLanguage);
 		config.set("defaultLanguages", defaultLanguages);
 		CrazyLocale.save(config, "players.");
@@ -351,5 +354,10 @@ public class CrazyCore extends CrazyPlugin
 	public static ArrayList<String> getDefaultlanguages()
 	{
 		return defaultLanguages;
+	}
+
+	public static boolean getShowChatHeaders()
+	{
+		return showChatHeaders;
 	}
 }
