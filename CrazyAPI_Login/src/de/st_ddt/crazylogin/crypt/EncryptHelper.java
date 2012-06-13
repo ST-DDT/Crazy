@@ -8,9 +8,9 @@ public final class EncryptHelper
 		super();
 	}
 
-	public static String convertToHex(byte[] data)
+	public static String convertToHex(final byte[] data)
 	{
-		StringBuffer buf = new StringBuffer();
+		final StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < data.length; i++)
 		{
 			int halfbyte = (data[i] >>> 4) & 0x0F;

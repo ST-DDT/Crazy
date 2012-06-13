@@ -75,7 +75,7 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract int getMaxRegistrationsPerIP();
 
-	public abstract int getMoveRange();
+	public abstract double getMoveRange();
 
 	public abstract int getMinNameLength();
 

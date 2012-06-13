@@ -20,6 +20,8 @@ public interface LoginData
 
 	public abstract boolean isPassword(final String password);
 
+	public abstract boolean isPasswordHash(final String passwordHash);
+
 	public abstract void addIP(final String ip);
 
 	public abstract boolean hasIP(final String ip);
@@ -39,4 +41,6 @@ public interface LoginData
 	public abstract void logout(final boolean removeIPs);
 
 	public abstract void notifyAction();
+
+	public abstract boolean equals(LoginData data);
 }
