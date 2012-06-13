@@ -2,7 +2,6 @@ package de.st_ddt.crazyonline;
 
 import java.io.File;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -10,10 +9,9 @@ import java.util.HashMap;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyonline.databases.CrazyOnlineConfigurationDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineFlatDatabase;
@@ -39,6 +37,7 @@ public class CrazyOnline extends CrazyPlugin
 	protected HashMap<String, OnlinePlayerData> datas = new HashMap<String, OnlinePlayerData>();
 	private CrazyOnlinePlayerListener playerListener = null;
 	protected Database<OnlinePlayerData> database;
+	protected boolean showOnlineInfo;
 
 	public static CrazyOnline getPlugin()
 	{
@@ -57,22 +56,25 @@ public class CrazyOnline extends CrazyPlugin
 	public void load()
 	{
 		super.load();
+		final ConfigurationSection config = getConfig();
+		showOnlineInfo = config.getBoolean("showOnlineInfo", true);
+		datas.clear();
 		setupDatabase();
 		if (database != null)
-			for (OnlinePlayerData data : database.getAllEntries())
+			for (final OnlinePlayerData data : database.getAllEntries())
 				datas.put(data.getName().toLowerCase(), data);
 	}
 
 	public void setupDatabase()
 	{
-		ConfigurationSection config = getConfig();
-		String saveType = config.getString("database.saveType", "FLAT").toUpperCase();
+		final ConfigurationSection config = getConfig();
+		final String saveType = config.getString("database.saveType", "FLAT").toUpperCase();
 		DatabaseType type = null;
 		try
 		{
 			type = DatabaseType.valueOf(saveType);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			System.out.println("NO SUCH SAVETYPE " + saveType);
 			type = null;
@@ -80,15 +82,15 @@ public class CrazyOnline extends CrazyPlugin
 		final String tableName = config.getString("database.tableName", "players");
 		config.set("database.tableName", tableName);
 		// Columns
-		String colName = config.getString("database.columns.name", "name");
+		final String colName = config.getString("database.columns.name", "name");
 		config.set("database.columns.name", colName);
-		String colFirstLogin = config.getString("database.columns.firstlogin", "FirstLogin");
+		final String colFirstLogin = config.getString("database.columns.firstlogin", "FirstLogin");
 		config.set("database.columns.firstlogin", colFirstLogin);
-		String colLastLogin = config.getString("database.columns.lastlogin", "LastLogin");
+		final String colLastLogin = config.getString("database.columns.lastlogin", "LastLogin");
 		config.set("database.columns.lastlogin", colLastLogin);
-		String colLastLogout = config.getString("database.columns.lastlogout", "LastLogout");
+		final String colLastLogout = config.getString("database.columns.lastlogout", "LastLogout");
 		config.set("database.columns.lastlogout", colLastLogout);
-		String colOnlineTime = config.getString("database.columns.onlinetime", "OnlineTime");
+		final String colOnlineTime = config.getString("database.columns.onlinetime", "OnlineTime");
 		config.set("database.columns.onlinetime", colOnlineTime);
 		if (type == DatabaseType.CONFIG)
 		{
@@ -101,7 +103,7 @@ public class CrazyOnline extends CrazyPlugin
 		}
 		else if (type == DatabaseType.FLAT)
 		{
-			File file = new File(getDataFolder().getPath() + "/" + tableName + ".db");
+			final File file = new File(getDataFolder().getPath() + "/" + tableName + ".db");
 			database = new CrazyOnlineFlatDatabase(file, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
 		}
 	}
@@ -114,18 +116,25 @@ public class CrazyOnline extends CrazyPlugin
 			config.set("database.saveType", database.getType().toString());
 		if (database != null)
 			database.saveAll(datas.values());
+		saveConfiguration();
+	}
+
+	public void saveConfiguration()
+	{
+		final ConfigurationSection config = getConfig();
+		config.set("showOnlineInfo", showOnlineInfo);
 		super.save();
 	}
 
 	public void registerHooks()
 	{
 		this.playerListener = new CrazyOnlinePlayerListener(this);
-		PluginManager pm = this.getServer().getPluginManager();
+		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
 	}
 
 	@Override
-	public boolean command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
 		if (commandLabel.equalsIgnoreCase("pinfo"))
 		{
@@ -203,17 +212,17 @@ public class CrazyOnline extends CrazyPlugin
 		return false;
 	}
 
-	private void commandOnlines(CommandSender sender) throws CrazyCommandException
+	private void commandOnlines(final CommandSender sender) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.online"))
 			throw new CrazyCommandPermissionException();
 		sendLocaleMessage("MESSAGE.ONLINES.HEADER", sender);
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
-		for (Player player : getServer().getOnlinePlayers())
+		for (final Player player : getServer().getOnlinePlayers())
 			sendLocaleMessage("MESSAGE.LIST", sender, player.getName(), getPlayerData(player).getLastLoginString());
 	}
 
-	public void commandInfo(CommandSender sender, OfflinePlayer player) throws CrazyCommandException
+	public void commandInfo(final CommandSender sender, final OfflinePlayer player) throws CrazyCommandException
 	{
 		if (sender == player)
 		{
@@ -222,7 +231,7 @@ public class CrazyOnline extends CrazyPlugin
 		}
 		else if (!sender.hasPermission("crazyonline.info.other"))
 			throw new CrazyCommandPermissionException();
-		OnlinePlayerData data = getPlayerData(player);
+		final OnlinePlayerData data = getPlayerData(player);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("PlayerData", player.getName());
 		sendLocaleMessage("MESSAGE.INFO.HEADER", sender, data.getName());
@@ -234,91 +243,91 @@ public class CrazyOnline extends CrazyPlugin
 		sendLocaleMessage("MESSAGE.INFO.TIME.TOTAL", sender, timeOutputConverter(data.getTimeTotal(), sender));
 	}
 
-	public String timeOutputConverter(long time, CommandSender sender)
+	public String timeOutputConverter(final long time, final CommandSender sender)
 	{
 		if (time > 2880)
 		{
-			long days = time / 60 / 24;
-			long hours = time / 60 % 24;
+			final long days = time / 60 / 24;
+			final long hours = time / 60 % 24;
 			return days + " " + CrazyLocale.getUnitText("TIME.DAYS", sender) + " " + hours + " " + CrazyLocale.getUnitText("TIME.HOURS", sender);
 		}
 		else if (time > 120)
 		{
-			long hours = time / 60;
-			long minutes = time % 60;
+			final long hours = time / 60;
+			final long minutes = time % 60;
 			return hours + " " + CrazyLocale.getUnitText("TIME.HOURS", sender) + " " + minutes + " " + CrazyLocale.getUnitText("TIME.MINUTES", sender);
 		}
 		else
 			return time + " " + CrazyLocale.getUnitText("TIME.MINUTES", sender);
 	}
 
-	public void commandSince(Player player) throws CrazyCommandException
+	public void commandSince(final Player player) throws CrazyCommandException
 	{
 		if (getPlayerData(player) == null)
 			throw new CrazyCommandCircumstanceException("when joined at least for the second time!");
 		commandSince(player, getPlayerData(player).getLastLogout());
 	}
 
-	public void commandSince(CommandSender sender, String date) throws CrazyCommandException
+	public void commandSince(final CommandSender sender, final String date) throws CrazyCommandException
 	{
 		try
 		{
 			commandSince(sender, DateFormat.parse(date));
 		}
-		catch (ParseException e)
+		catch (final ParseException e)
 		{
 			throw new CrazyCommandParameterException(1, "Date");
 		}
 	}
 
-	public void commandSince(CommandSender sender, Date date) throws CrazyCommandException
+	public void commandSince(final CommandSender sender, final Date date) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.since"))
 			throw new CrazyCommandPermissionException();
-		ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
-		for (OnlinePlayerData data : datas.values())
+		final ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
+		for (final OnlinePlayerData data : datas.values())
 			if (data.getLastLogin().after(date))
 				list.add(data);
 		Collections.sort(list, new OnlinePlayerDataLoginComperator());
 		sendLocaleMessage("MESSAGE.SINCE.HEADER", sender, DateFormat.format(date));
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
-		for (OnlinePlayerData data : list)
+		for (final OnlinePlayerData data : list)
 			sendLocaleMessage("MESSAGE.LIST", sender, data.getName(), data.getLastLoginString());
 	}
 
-	public void commandBefore(Player player) throws CrazyCommandException
+	public void commandBefore(final Player player) throws CrazyCommandException
 	{
 		commandSince(player, getPlayerData(player).getLastLogin());
 	}
 
-	public void commandBefore(CommandSender sender, String date) throws CrazyCommandException
+	public void commandBefore(final CommandSender sender, final String date) throws CrazyCommandException
 	{
 		try
 		{
 			commandBefore(sender, DateFormat.parse(date));
 		}
-		catch (ParseException e)
+		catch (final ParseException e)
 		{
 			throw new CrazyCommandParameterException(1, "Date");
 		}
 	}
 
-	public void commandBefore(CommandSender sender, Date date) throws CrazyCommandException
+	public void commandBefore(final CommandSender sender, final Date date) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.before"))
 			throw new CrazyCommandPermissionException();
-		ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
-		for (OnlinePlayerData data : datas.values())
+		final ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
+		for (final OnlinePlayerData data : datas.values())
 			if (data.getLastLogin().after(date))
 				list.add(data);
 		Collections.sort(list, new OnlinePlayerDataLoginComperator());
 		sendLocaleMessage("MESSAGE.BEFORE.HEADER", sender, DateFormat.format(date));
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
-		for (OnlinePlayerData data : list)
+		for (final OnlinePlayerData data : list)
 			sendLocaleMessage("MESSAGE.LIST", sender, data.getName(), data.getLastLoginString());
 	}
 
-	private void commandTop10(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandTop10(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.top10"))
 			throw new CrazyCommandPermissionException();
@@ -344,13 +353,13 @@ public class CrazyOnline extends CrazyPlugin
 		final ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
 		list.addAll(datas.values());
 		Collections.sort(list, new OnlinePlayerDataOnlineComperator());
-		sendListMessage(sender, "COMMAND.TOP10.HEADER", page, list, new OnlineTimeDataGetter(sender));
+		sendListMessage(sender, "COMMAND.TOP10.HEADER", 0, page, list, new OnlineTimeDataGetter(sender));
 	}
 
 	@Override
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
-		String[] newArgs = ChatHelper.shiftArray(args, 1);
+		final String[] newArgs = ChatHelper.shiftArray(args, 1);
 		if (commandLabel.equalsIgnoreCase("mode"))
 		{
 			commandMainMode(sender, newArgs);
@@ -359,14 +368,24 @@ public class CrazyOnline extends CrazyPlugin
 		return false;
 	}
 
-	private void commandMainMode(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandMainMode(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.mode"))
 			throw new CrazyCommandPermissionException();
 		switch (args.length)
 		{
 			case 2:
-				if (args[0].equalsIgnoreCase("saveType"))
+				if (args[0].equalsIgnoreCase("showOnlineInfo"))
+				{
+					boolean newValue = false;
+					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
+						newValue = true;
+					showOnlineInfo = newValue;
+					sendLocaleMessage("MODE.CHANGE", sender, "showOnlineInfo", showOnlineInfo ? "True" : "False");
+					saveConfiguration();
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("saveType"))
 				{
 					final String saveType = args[1];
 					DatabaseType type = null;
@@ -374,7 +393,7 @@ public class CrazyOnline extends CrazyPlugin
 					{
 						type = DatabaseType.valueOf(saveType.toUpperCase());
 					}
-					catch (Exception e)
+					catch (final Exception e)
 					{
 						type = null;
 					}
@@ -390,7 +409,12 @@ public class CrazyOnline extends CrazyPlugin
 				}
 				throw new CrazyCommandNoSuchException("Mode", args[0]);
 			case 1:
-				if (args[0].equalsIgnoreCase("saveType"))
+				if (args[0].equalsIgnoreCase("showOnlineInfo"))
+				{
+					sendLocaleMessage("MODE.CHANGE", sender, "showOnlineInfo", showOnlineInfo ? "True" : "False");
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("saveType"))
 				{
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", database.getType().toString());
 					return;
@@ -401,7 +425,7 @@ public class CrazyOnline extends CrazyPlugin
 		}
 	}
 
-	public OnlinePlayerData getPlayerData(OfflinePlayer player)
+	public OnlinePlayerData getPlayerData(final OfflinePlayer player)
 	{
 		return datas.get(player.getName().toLowerCase());
 	}
@@ -411,8 +435,8 @@ public class CrazyOnline extends CrazyPlugin
 		return datas;
 	}
 
-	public static SimpleDateFormat getDateFormat()
+	public boolean isShowOnlineInfoEnabled()
 	{
-		return DateFormat;
+		return showOnlineInfo;
 	}
 }

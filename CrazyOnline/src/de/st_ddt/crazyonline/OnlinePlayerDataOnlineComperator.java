@@ -6,7 +6,7 @@ public class OnlinePlayerDataOnlineComperator implements Comparator<OnlinePlayer
 {
 
 	@Override
-	public int compare(OnlinePlayerData data1, OnlinePlayerData data2)
+	public int compare(final OnlinePlayerData data1, final OnlinePlayerData data2)
 	{
 		return -(new Long(data1.getTimeTotal()).compareTo(data2.getTimeTotal()));
 	}

@@ -13,15 +13,15 @@ public class CrazyOnlinePlayerListener implements Listener
 
 	protected final CrazyOnline plugin;
 
-	public CrazyOnlinePlayerListener(CrazyOnline plugin)
+	public CrazyOnlinePlayerListener(final CrazyOnline plugin)
 	{
 		this.plugin = plugin;
 	}
 
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event)
+	@EventHandler(ignoreCancelled = true)
+	public void PlayerJoin(final PlayerJoinEvent event)
 	{
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		OnlinePlayerData data = plugin.getPlayerData(player);
 		if (data == null)
 		{
@@ -29,23 +29,22 @@ public class CrazyOnlinePlayerListener implements Listener
 			plugin.getDatas().put(player.getName().toLowerCase(), data);
 		}
 		data.login();
-		if (player.hasPermission("crazyonline.since.auto"))
-			if (CrazyOnline.getPlugin() != null)
+		if (plugin.isShowOnlineInfoEnabled())
+			if (player.hasPermission("crazyonline.since.auto"))
 				try
 				{
-					CrazyOnline.getPlugin().commandSince(player);
+					plugin.commandSince(player);
 				}
-				catch (CrazyCommandException e)
+				catch (final CrazyCommandException e)
 				{
 					e.printStackTrace();
 				}
 	}
 
 	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event)
+	public void PlayerQuit(final PlayerQuitEvent event)
 	{
-		Player player = event.getPlayer();
-		OnlinePlayerData data = plugin.getPlayerData(player);
+		final OnlinePlayerData data = plugin.getPlayerData(event.getPlayer());
 		if (data == null)
 			return;
 		data.logout();

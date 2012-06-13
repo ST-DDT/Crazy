@@ -8,7 +8,7 @@ import de.st_ddt.crazyutil.databases.FlatDatabase;
 public class CrazyOnlineFlatDatabase extends FlatDatabase<OnlinePlayerData>
 {
 
-	public CrazyOnlineFlatDatabase(File file, String colName, String colFirstLogin, String colLastLogin, String colLastLogout, String colOnlineTime)
+	public CrazyOnlineFlatDatabase(final File file, final String colName, final String colFirstLogin, final String colLastLogin, final String colLastLogout, final String colOnlineTime)
 	{
 		super(OnlinePlayerData.class, file, new String[] { colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime });
 	}

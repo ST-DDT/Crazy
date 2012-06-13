@@ -27,7 +27,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	protected long onlineTime;
 	private static final SimpleDateFormat DateFormat = CrazyOnline.DateFormat;
 
-	public OnlinePlayerData(String name)
+	public OnlinePlayerData(final String name)
 	{
 		super();
 		this.name = name.toLowerCase();
@@ -37,20 +37,20 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		this.onlineTime = 0;
 	}
 
-	public OnlinePlayerData(Player player)
+	public OnlinePlayerData(final Player player)
 	{
 		this(player.getName());
 	}
 
 	// aus Config-Datenbank laden
-	public OnlinePlayerData(ConfigurationSection rawData, String[] columnNames)
+	public OnlinePlayerData(final ConfigurationSection rawData, final String[] columnNames)
 	{
 		super();
-		String colName = columnNames[0];
-		String colFirstLogin = columnNames[1];
-		String colLastLogin = columnNames[2];
-		String colLastLogout = columnNames[3];
-		String colOnlineTime = columnNames[4];
+		final String colName = columnNames[0];
+		final String colFirstLogin = columnNames[1];
+		final String colLastLogin = columnNames[2];
+		final String colLastLogout = columnNames[3];
+		final String colOnlineTime = columnNames[4];
 		this.name = rawData.getString(colName, rawData.getName());
 		this.firstLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colFirstLogin), new Date());
 		this.lastLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colLastLogin), new Date());
@@ -60,13 +60,13 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 
 	// in Config-Datenbank speichern
 	@Override
-	public void saveToConfigDatabase(ConfigurationSection config, String path, String[] columnNames)
+	public void saveToConfigDatabase(final ConfigurationSection config, final String path, final String[] columnNames)
 	{
-		String colName = columnNames[0];
-		String colFirstLogin = columnNames[1];
-		String colLastLogin = columnNames[2];
-		String colLastLogout = columnNames[3];
-		String colOnlineTime = columnNames[4];
+		final String colName = columnNames[0];
+		final String colFirstLogin = columnNames[1];
+		final String colLastLogin = columnNames[2];
+		final String colLastLogout = columnNames[3];
+		final String colOnlineTime = columnNames[4];
 		config.set(path + colName, name);
 		config.set(path + colFirstLogin, DateFormat.format(firstLogin));
 		config.set(path + colLastLogin, DateFormat.format(lastLogin));
@@ -75,20 +75,20 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	}
 
 	// aus MySQL-Datenbank laden
-	public OnlinePlayerData(ResultSet rawData, String[] columnNames)
+	public OnlinePlayerData(final ResultSet rawData, final String[] columnNames)
 	{
 		super();
-		String colName = columnNames[0];
-		String colFirstLogin = columnNames[1];
-		String colLastLogin = columnNames[2];
-		String colLastLogout = columnNames[3];
-		String colOnlineTime = columnNames[4];
+		final String colName = columnNames[0];
+		final String colFirstLogin = columnNames[1];
+		final String colLastLogin = columnNames[2];
+		final String colLastLogout = columnNames[3];
+		final String colOnlineTime = columnNames[4];
 		String name = null;
 		try
 		{
 			name = rawData.getString(colName);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			name = "ERROR";
 			e.printStackTrace();
@@ -101,7 +101,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		{
 			firstLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colFirstLogin), new Date());
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			firstLogin = new Date();
 			e.printStackTrace();
@@ -110,7 +110,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		{
 			lastLogin = ObjectSaveLoadHelper.StringToDate(rawData.getString(colLastLogin), new Date());
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			lastLogin = new Date();
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		{
 			lastLogout = ObjectSaveLoadHelper.StringToDate(rawData.getString(colLastLogout), new Date());
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			lastLogout = new Date();
 			e.printStackTrace();
@@ -128,7 +128,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		{
 			onlineTime = rawData.getInt(colOnlineTime);
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			onlineTime = 0;
 			e.printStackTrace();
@@ -137,20 +137,20 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 
 	// in MySQL-Datenbank speichern
 	@Override
-	public void saveToMySQLDatabase(MySQLConnection connection, String table, String[] columnNames)
+	public void saveToMySQLDatabase(final MySQLConnection connection, final String table, final String[] columnNames)
 	{
-		String colName = columnNames[0];
-		String colFirstLogin = columnNames[1];
-		String colLastLogin = columnNames[2];
-		String colLastLogout = columnNames[3];
-		String colOnlineTime = columnNames[4];
+		final String colName = columnNames[0];
+		final String colFirstLogin = columnNames[1];
+		final String colLastLogin = columnNames[2];
+		final String colLastLogout = columnNames[3];
+		final String colOnlineTime = columnNames[4];
 		Statement query = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
 			query.executeUpdate("INSERT INTO " + table + " (" + colName + "," + colFirstLogin + "," + colLastLogin + "," + colLastLogout + "," + colOnlineTime + ") VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "') " + "ON DUPLICATE KEY UPDATE " + colFirstLogin + "='" + getFirstLoginString() + "', " + colLastLogin + "='" + getLastLoginString() + "', " + colLastLogout + "='" + getLastLogoutString() + "', " + colOnlineTime + "='" + onlineTime + "'");
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			e.printStackTrace();
 		}
@@ -161,14 +161,14 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 				{
 					query.close();
 				}
-				catch (SQLException e)
+				catch (final SQLException e)
 				{}
 			connection.closeConnection();
 		}
 	}
 
 	// aus Flat-Datenbank laden
-	public OnlinePlayerData(String[] rawData)
+	public OnlinePlayerData(final String[] rawData)
 	{
 		super();
 		this.name = rawData[0];
@@ -182,7 +182,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	@Override
 	public String[] saveToFlatDatabase()
 	{
-		String[] strings = new String[5];
+		final String[] strings = new String[5];
 		strings[0] = getName();
 		strings[1] = getFirstLoginString();
 		strings[2] = getLastLoginString();
@@ -196,9 +196,10 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 		return Bukkit.getOfflinePlayer(name);
 	}
 
+	@Override
 	public String getName()
 	{
-		OfflinePlayer player = getPlayer();
+		final OfflinePlayer player = getPlayer();
 		if (player != null)
 			return player.getName();
 		return name;
@@ -265,7 +266,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	public void logout()
 	{
 		lastLogout = new Date();
-		long past = lastLogout.getTime() - lastLogin.getTime();
+		final long past = lastLogout.getTime() - lastLogin.getTime();
 		onlineTime += (int) past / 1000 / 60;
 	}
 }

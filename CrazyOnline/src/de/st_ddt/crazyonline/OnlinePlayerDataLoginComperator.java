@@ -6,7 +6,7 @@ public class OnlinePlayerDataLoginComperator implements Comparator<OnlinePlayerD
 {
 
 	@Override
-	public int compare(OnlinePlayerData data1, OnlinePlayerData data2)
+	public int compare(final OnlinePlayerData data1, final OnlinePlayerData data2)
 	{
 		return data1.getLastLogin().compareTo(data2.getLastLogin());
 	}
