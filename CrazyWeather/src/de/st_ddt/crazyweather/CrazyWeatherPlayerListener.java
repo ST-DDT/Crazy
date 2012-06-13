@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class CrazyWeatherPlayerListener implements Listener
 {
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR))
@@ -20,6 +20,7 @@ public class CrazyWeatherPlayerListener implements Listener
 			if (!event.getPlayer().hasPermission("crazyweather.thunder.tool"))
 				return;
 			event.getPlayer().getWorld().strikeLightning(event.getPlayer().getTargetBlock(null, 1024).getLocation());
+			event.setCancelled(true);
 		}
 	}
 }
