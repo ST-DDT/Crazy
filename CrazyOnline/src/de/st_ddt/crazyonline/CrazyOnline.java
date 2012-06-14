@@ -35,7 +35,8 @@ public class CrazyOnline extends CrazyPlugin
 
 	private static CrazyOnline plugin;
 	protected HashMap<String, OnlinePlayerData> datas = new HashMap<String, OnlinePlayerData>();
-	private CrazyOnlinePlayerListener playerListener = null;
+	protected CrazyOnlinePlayerListener playerListener = null;
+	protected CrazyOnlineCrazyListener crazyListener = null;
 	protected Database<OnlinePlayerData> database;
 	protected boolean showOnlineInfo;
 
@@ -129,8 +130,10 @@ public class CrazyOnline extends CrazyPlugin
 	public void registerHooks()
 	{
 		this.playerListener = new CrazyOnlinePlayerListener(this);
+		this.crazyListener = new CrazyOnlineCrazyListener(this);
 		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
+		pm.registerEvents(crazyListener, this);
 	}
 
 	@Override
@@ -438,5 +441,10 @@ public class CrazyOnline extends CrazyPlugin
 	public boolean isShowOnlineInfoEnabled()
 	{
 		return showOnlineInfo;
+	}
+
+	public boolean deletePlayerData(String player)
+	{
+		return datas.remove(player.toLowerCase()) != null;
 	}
 }
