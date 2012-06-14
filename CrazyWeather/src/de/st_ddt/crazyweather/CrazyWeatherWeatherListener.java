@@ -9,35 +9,41 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 public class CrazyWeatherWeatherListener implements Listener
 {
 
-	@EventHandler
-	public void onWeatherChange(final WeatherChangeEvent event)
+	protected final CrazyWeather plugin;
+
+	public CrazyWeatherWeatherListener(CrazyWeather plugin)
+	{
+		super();
+		this.plugin = plugin;
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void WeatherChange(final WeatherChangeEvent event)
 	{
 		final WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
 		if (weather != null)
-			if (weather.isStatic())
+			if (weather.isStaticWeatherEnabled())
 				event.setCancelled(true);
 	}
 
-	@EventHandler
-	public void onThunderChange(final ThunderChangeEvent event)
+	@EventHandler(ignoreCancelled = true)
+	public void ThunderChange(final ThunderChangeEvent event)
 	{
 		final WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
 		if (weather != null)
-			if (weather.isStatic())
+			if (weather.isStaticWeatherEnabled())
 				event.setCancelled(true);
 	}
 
-	@EventHandler
-	public void onLightningStrike(final LightningStrikeEvent event)
+	@EventHandler(ignoreCancelled = true)
+	public void LightningStrike(final LightningStrikeEvent event)
 	{
-		if (CrazyWeather.getPlugin() == null)
-			return;
-		if (CrazyWeather.getPlugin().isLightningdisabled())
+		if (plugin.isLightningDisabled())
 		{
 			event.setCancelled(true);
 			return;
 		}
-		if (CrazyWeather.getPlugin().isLightningdamagedisabled())
+		if (plugin.isLightningDamageDisabled())
 		{
 			event.setCancelled(true);
 			event.getWorld().strikeLightningEffect(event.getLightning().getLocation());

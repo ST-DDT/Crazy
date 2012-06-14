@@ -4,87 +4,81 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class WorldWeather
+import de.st_ddt.crazyutil.ConfigurationSaveable;
+
+public class WorldWeather implements ConfigurationSaveable, WeatherData
 {
 
-	private String staticWeather = "none";
+	private final CrazyWeather plugin = CrazyWeather.getPlugin();
+	private Weather staticWeather = null;
 	private boolean onLoad = false;
 	private final World world;
-
-	public boolean equals(final World world)
-	{
-		return this.world == world;
-	}
-
-	public String getName()
-	{
-		return world.getName();
-	}
-
-	public boolean isStatic()
-	{
-		return !staticWeather.equalsIgnoreCase("none");
-	}
-
-	public boolean getOnLoad()
-	{
-		return onLoad;
-	}
-
-	public void load(final ConfigurationSection config)
-	{
-		if (config == null)
-			return;
-		staticWeather = config.getString("static", "none");
-		onLoad = config.getBoolean("onLoad", false);
-		if (onLoad)
-		{
-			setWeather(staticWeather, true, true);
-		}
-	}
-
-	public void save(final ConfigurationSection config, final String worldData)
-	{
-		config.set(worldData + ".static", staticWeather);
-		config.set(worldData + ".onLoad", onLoad);
-	}
 
 	public WorldWeather(final World world)
 	{
 		this.world = world;
 	}
 
-	public void setWeather(final String weather, final boolean keepStatic, final boolean keepLoad)
+	public void load(final ConfigurationSection config)
 	{
-		staticWeather = "none";
+		if (config == null)
+			return;
+		staticWeather = Weather.getWeather(config.getString("static"));
+		onLoad = config.getBoolean("onLoad", false);
+		if (onLoad)
+			setWeather(staticWeather, true, true, 0);
+	}
+
+	@Override
+	public String getWorldName()
+	{
+		return world.getName();
+	}
+
+	@Override
+	public World getWorld()
+	{
+		return world;
+	}
+
+	@Override
+	public boolean isStaticWeatherEnabled()
+	{
+		return staticWeather != null;
+	}
+
+	@Override
+	public boolean isOnLoadEnabled()
+	{
+		return onLoad;
+	}
+
+	@Override
+	public void setWeather(final Weather weather, final boolean keepStatic, final boolean keepLoad, int duration)
+	{
+		staticWeather = null;
 		onLoad = keepLoad;
-		final int duration = (int) (20 * 60 * Math.round(10 + Math.random() * 20));
-		if (weather.equals("sun"))
-		{
-			world.setThundering(false);
-			world.setStorm(false);
-			if (CrazyWeather.getPlugin().getLocale() != null)
-				CrazyWeather.getPlugin().sendLocaleMessage("WEATHER.SUN", Bukkit.getConsoleSender(), world.getName());
-		}
-		else if (weather.equals("rain"))
-		{
-			world.setThundering(false);
-			world.setStorm(true);
-			if (CrazyWeather.getPlugin().getLocale() != null)
-				CrazyWeather.getPlugin().sendLocaleMessage("WEATHER.SUN", Bukkit.getConsoleSender(), world.getName());
-		}
-		else if (weather.equals("thunder"))
-		{
-			world.setThundering(true);
-			world.setStorm(true);
-			world.setThunderDuration(duration);
-			if (CrazyWeather.getPlugin().getLocale() != null)
-				CrazyWeather.getPlugin().sendLocaleMessage("WEATHER.SUN", Bukkit.getConsoleSender(), world.getName());
-		}
+		if (weather == null)
+			return;
+		duration *= 20;
+		if (keepStatic)
+			duration = Integer.MAX_VALUE;
+		world.setStorm(weather.isRainEnabled());
+		world.setThundering(weather.isThunderEnabled());
 		world.setWeatherDuration(duration);
+		if (weather.isThunderEnabled())
+			world.setThunderDuration(duration);
+		plugin.sendLocaleMessage("WEATHER." + weather.toString(), Bukkit.getConsoleSender(), world.getName());
 		if (keepStatic)
 			staticWeather = weather;
 		else
-			staticWeather = "none";
+			staticWeather = null;
+	}
+
+	@Override
+	public void save(final ConfigurationSection config, final String path)
+	{
+		config.set(path + "static", staticWeather);
+		config.set(path + "onLoad", onLoad);
 	}
 }

@@ -2,13 +2,13 @@ name: CrazyWeather
 main: de.st_ddt.crazyweather.CrazyWeather
 author: ST-DDT
 #C*=needed core version
-version: C7_3.1.2
+version: C7.5_4
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
   weather: 
     description: Change weather
-    usage: /<command> [World] <Weather> [static] [onLoad]
+    usage: /<command> <[weather:]Weather> [world:World] [static:True/False] [load:True/False] [duration:Seconds]
   sun:
     description: Cast sun
     usage: /<command>

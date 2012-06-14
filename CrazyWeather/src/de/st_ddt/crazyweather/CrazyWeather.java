@@ -1,6 +1,6 @@
 package de.st_ddt.crazyweather;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,14 +21,14 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class CrazyWeather extends CrazyPlugin
+public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 {
 
 	private static CrazyWeather plugin;
 	private int tool = 280;
 	private boolean lightningdisabled = false;
 	private boolean lightningdamagedisabled = false;
-	private ArrayList<WorldWeather> worldWeather;
+	private final HashSet<WorldWeather> worldWeather = new HashSet<WorldWeather>();
 	private CrazyWeatherPlayerListener playerListener = null;
 	private CrazyWeatherWeatherListener weatherListener = null;
 
@@ -50,7 +50,7 @@ public class CrazyWeather extends CrazyPlugin
 	{
 		super.load();
 		final ConfigurationSection config = getConfig();
-		worldWeather = new ArrayList<WorldWeather>();
+		worldWeather.clear();
 		for (final World world : getServer().getWorlds())
 		{
 			final WorldWeather weather = new WorldWeather(world);
@@ -67,7 +67,13 @@ public class CrazyWeather extends CrazyPlugin
 	{
 		final ConfigurationSection config = getConfig();
 		for (final WorldWeather world : worldWeather)
-			world.save(config, "worlds." + world.getName());
+			world.save(config, "worlds." + world.getWorldName() + ".");
+		saveConfiguration();
+	}
+
+	public void saveConfiguration()
+	{
+		final ConfigurationSection config = getConfig();
 		config.set("tool", tool);
 		config.set("lightningdisabled", lightningdisabled);
 		config.set("lightningdamagedisabled", lightningdamagedisabled);
@@ -76,8 +82,8 @@ public class CrazyWeather extends CrazyPlugin
 
 	public void registerHooks()
 	{
-		this.playerListener = new CrazyWeatherPlayerListener();
-		this.weatherListener = new CrazyWeatherWeatherListener();
+		this.playerListener = new CrazyWeatherPlayerListener(this);
+		this.weatherListener = new CrazyWeatherWeatherListener(this);
 		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(weatherListener, this);
 		pm.registerEvents(playerListener, this);
@@ -106,100 +112,102 @@ public class CrazyWeather extends CrazyPlugin
 
 	private void commandWeather(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
+		Weather weather = null;
 		World world = null;
 		if (sender instanceof Player)
 			world = ((Player) sender).getWorld();
-		if (sender instanceof ConsoleCommandSender && args.length < 2)
-			throw new CrazyCommandUsageException("/weather <World> <Weather> [static] [onLoad]");
-		else if (args.length < 1)
-			throw new CrazyCommandUsageException("/weather [World] <Weather> [static] [onLoad]");
-		String weather = null;
-		boolean keepStatic = false;
-		boolean keepLoad = false;
-		switch (args.length)
+		Boolean keepStatic = false;
+		Boolean keepLoad = false;
+		int duration = getRandomDuration();
+		final int length = args.length;
+		for (int i = 0; i < length; i++)
 		{
-			case 4:
-				if (args[3].equalsIgnoreCase("static"))
-					keepStatic = true;
-				else if (args[3].equalsIgnoreCase("onLoad"))
-					keepLoad = true;
-			case 3:
-				if (args[2].equalsIgnoreCase("static"))
-					keepStatic = true;
-				else if (args[2].equalsIgnoreCase("onLoad"))
-					keepLoad = true;
-			case 2:
-				if (args[1].equalsIgnoreCase("sun") || args[1].equalsIgnoreCase("sunny") || args[1].equalsIgnoreCase("dry") || args[1].equalsIgnoreCase("clear") || args[1].equalsIgnoreCase("false") || args[1].equalsIgnoreCase("none"))
-					weather = "sun";
-				else if (args[1].equalsIgnoreCase("rain") || args[1].equalsIgnoreCase("rainy") || args[1].equalsIgnoreCase("wet") || args[1].equalsIgnoreCase("snow") || args[1].equalsIgnoreCase("storm"))
-					weather = "rain";
-				else if (args[1].equalsIgnoreCase("thunder") || args[1].equalsIgnoreCase("lightning"))
-					weather = "thunder";
-				else if (args[1].equalsIgnoreCase("static"))
-					keepStatic = true;
-				else if (args[1].equalsIgnoreCase("onLoad"))
-					keepLoad = true;
-			case 1:
-				if (weather == null && world != null)
+			final String arg = args[i].toLowerCase();
+			if (arg.startsWith("weather:"))
+			{
+				weather = Weather.getWeather(arg.substring(8));
+				if (weather == null)
+					throw new CrazyCommandParameterException(i, "Weather", "weather:SUN/RAIN/THUNDER/THUNDERRAIN");
+			}
+			else if (arg.startsWith("world:"))
+			{
+				world = Bukkit.getWorld(arg.substring(6));
+				if (world == null)
+					throw new CrazyCommandNoSuchException("World", arg.substring(6));
+			}
+			else if (arg.startsWith("duration:"))
+			{
+				try
 				{
-					if (args[0].equalsIgnoreCase("sun") || args[0].equalsIgnoreCase("sunny") || args[0].equalsIgnoreCase("dry") || args[0].equalsIgnoreCase("clear") || args[0].equalsIgnoreCase("false") || args[0].equalsIgnoreCase("none"))
-						weather = "sun";
-					else if (args[0].equalsIgnoreCase("rain") || args[0].equalsIgnoreCase("rainy") || args[0].equalsIgnoreCase("wet") || args[0].equalsIgnoreCase("snow") || args[0].equalsIgnoreCase("storm"))
-						weather = "rain";
-					else if (args[0].equalsIgnoreCase("thunder") || args[0].equalsIgnoreCase("lightning"))
-						weather = "thunder";
-					else
-					{
-						world = Bukkit.getWorld(args[0]);
-						if (world == null)
-							throw new CrazyCommandParameterException(1, "Weather / World", "sun", "rain", "thunder", Bukkit.getWorlds().get(0).getName());
-					}
+					duration = Integer.parseInt(arg.substring(9));
 				}
-				else
+				catch (final NumberFormatException e)
 				{
-					world = Bukkit.getWorld(args[0]);
-					if (world == null)
-						throw new CrazyCommandNoSuchException("World", args[0]);
+					throw new CrazyCommandParameterException(i, "Integer", "duration:0", "duration:100 (seconds)");
 				}
-				if (world != null && weather != null)
-					break;
-			default:
-				if (sender instanceof ConsoleCommandSender)
-					throw new CrazyCommandUsageException("/weather <World> <Weather> [static] [onLoad]");
+				finally
+				{
+					duration = Math.max(0, duration);
+				}
+			}
+			else if (arg.startsWith("static:"))
+			{
+				final String temp = arg.substring(7);
+				if (temp.equalsIgnoreCase("true") || temp.equals("1"))
+					keepStatic = true;
 				else
-					throw new CrazyCommandUsageException("/weather [World] <Weather> [static] [onLoad]");
+					keepStatic = false;
+			}
+			else if (arg.startsWith("load:"))
+			{
+				final String temp = arg.substring(5);
+				if (temp.equalsIgnoreCase("true") || temp.equals("1"))
+					keepLoad = true;
+				else
+					keepLoad = false;
+			}
+			else
+				weather = Weather.getWeather(arg.substring(8));
 		}
-		changeWeather(sender, weather, world, keepStatic, keepLoad);
+		changeWeather(sender, weather, world, keepStatic, keepLoad, duration);
 	}
 
-	private void commandWeather(final CommandSender sender, final String weather, final String[] args) throws CrazyCommandException
+	private void commandWeather(final CommandSender sender, final String weatherString, final String[] args) throws CrazyCommandException
 	{
 		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
 		final World world = player.getWorld();
-		changeWeather(player, weather, world, false, false);
+		changeWeather(player, Weather.getWeather(weatherString), world, false, false, getRandomDuration());
 	}
 
-	protected void changeWeather(final CommandSender sender, final String weather, final World world, final boolean keepStatic, final boolean keepLoad) throws CrazyCommandPermissionException
+	protected void changeWeather(final CommandSender sender, final Weather weather, final World world, final boolean keepStatic, final boolean keepLoad, final int duration) throws CrazyCommandPermissionException
 	{
 		if (!hasWeatherPermission(sender, world, keepStatic || keepLoad, weather))
 			throw new CrazyCommandPermissionException();
 		final WorldWeather worldWeather = getWorldWeather(world);
 		if (worldWeather != null)
 		{
-			worldWeather.setWeather(weather, keepStatic, keepLoad);
+			worldWeather.setWeather(weather, keepStatic, keepLoad, duration);
+			if (weather != null)
+				sendLocaleMessage("WEATHER." + weather.toString(), Bukkit.getConsoleSender(), world.getName());
 			sendLocaleMessage("COMMAND.WEATHER.SUCCESS", sender);
 		}
 		else
 			sendLocaleMessage("COMMAND.WEATHER.ERROR", sender);
 	}
 
-	public void setWeather(final String weather, final World world, final boolean keepStatic, final boolean keepLoad)
+	protected int getRandomDuration()
+	{
+		return (int) Math.round(Math.random() * 10 * 60) + 20 * 60;
+	}
+
+	@Override
+	public void setWeather(final Weather weather, final World world, final boolean keepStatic, final boolean keepLoad, final int duration)
 	{
 		final WorldWeather worldWeather = getWorldWeather(world);
 		if (worldWeather != null)
-			worldWeather.setWeather(weather, keepStatic, keepLoad);
+			worldWeather.setWeather(weather, keepStatic, keepLoad, duration);
 	}
 
 	private void commandThunder(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -233,9 +241,16 @@ public class CrazyWeather extends CrazyPlugin
 		strikeTarget(sender, target);
 	}
 
+	@Override
 	public void strikeTarget(final CommandSender sender, final Location target)
 	{
 		target.getWorld().strikeLightning(target);
+	}
+
+	@Override
+	public void strikeTarget(final CommandSender sender, final Player player)
+	{
+		player.getWorld().strikeLightning(player.getLocation());
 	}
 
 	@Override
@@ -287,7 +302,7 @@ public class CrazyWeather extends CrazyPlugin
 		}
 	}
 
-	private boolean hasWeatherPermission(final CommandSender sender, final World world, final boolean set, final String weather)
+	private boolean hasWeatherPermission(final CommandSender sender, final World world, final boolean set, final Weather weather)
 	{
 		if (sender.hasPermission("crazyweather.set.*"))
 			return true;
@@ -295,7 +310,7 @@ public class CrazyWeather extends CrazyPlugin
 		{
 			if (sender.hasPermission("crazyweather." + world.getName() + ".set.*"))
 				return true;
-			if (sender.hasPermission("crazyweather." + world.getName() + ".set." + weather))
+			if (sender.hasPermission("crazyweather." + world.getName() + ".set." + weather.toString()))
 				return true;
 		}
 		if (set)
@@ -306,31 +321,35 @@ public class CrazyWeather extends CrazyPlugin
 		{
 			if (sender.hasPermission("crazyweather." + world.getName() + ".change.*"))
 				return true;
-			if (sender.hasPermission("crazyweather." + world.getName() + ".change." + weather))
+			if (sender.hasPermission("crazyweather." + world.getName() + ".change." + weather.toString()))
 				return true;
 		}
 		return false;
 	}
 
-	public int getTool()
+	@Override
+	public int getThunderTool()
 	{
 		return tool;
 	}
 
-	public boolean isLightningdisabled()
+	@Override
+	public boolean isLightningDisabled()
 	{
 		return lightningdisabled;
 	}
 
-	public boolean isLightningdamagedisabled()
+	@Override
+	public boolean isLightningDamageDisabled()
 	{
 		return lightningdamagedisabled;
 	}
 
+	@Override
 	public WorldWeather getWorldWeather(final World world)
 	{
 		for (final WorldWeather temp : worldWeather)
-			if (temp.equals(world))
+			if (temp.getWorld().equals(world))
 				return temp;
 		return null;
 	}
