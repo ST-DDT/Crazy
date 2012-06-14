@@ -11,7 +11,7 @@ public class WorldWeather
 	private boolean onLoad = false;
 	private final World world;
 
-	public boolean equals(World world)
+	public boolean equals(final World world)
 	{
 		return this.world == world;
 	}
@@ -31,7 +31,7 @@ public class WorldWeather
 		return onLoad;
 	}
 
-	public void load(ConfigurationSection config)
+	public void load(final ConfigurationSection config)
 	{
 		if (config == null)
 			return;
@@ -43,22 +43,22 @@ public class WorldWeather
 		}
 	}
 
-	public void save(ConfigurationSection config, String worldData)
+	public void save(final ConfigurationSection config, final String worldData)
 	{
 		config.set(worldData + ".static", staticWeather);
 		config.set(worldData + ".onLoad", onLoad);
 	}
 
-	public WorldWeather(World world)
+	public WorldWeather(final World world)
 	{
 		this.world = world;
 	}
 
-	public void setWeather(String weather, boolean keepStatic, boolean keepLoad)
+	public void setWeather(final String weather, final boolean keepStatic, final boolean keepLoad)
 	{
 		staticWeather = "none";
 		onLoad = keepLoad;
-		int duration = (int) (20 * 60 * Math.round(10 + Math.random() * 20));
+		final int duration = (int) (20 * 60 * Math.round(10 + Math.random() * 20));
 		if (weather.equals("sun"))
 		{
 			world.setThundering(false);

@@ -10,25 +10,25 @@ public class CrazyWeatherWeatherListener implements Listener
 {
 
 	@EventHandler
-	public void onWeatherChange(WeatherChangeEvent event)
+	public void onWeatherChange(final WeatherChangeEvent event)
 	{
-		WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
+		final WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
 		if (weather != null)
 			if (weather.isStatic())
 				event.setCancelled(true);
 	}
 
 	@EventHandler
-	public void onThunderChange(ThunderChangeEvent event)
+	public void onThunderChange(final ThunderChangeEvent event)
 	{
-		WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
+		final WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
 		if (weather != null)
 			if (weather.isStatic())
 				event.setCancelled(true);
 	}
 
 	@EventHandler
-	public void onLightningStrike(LightningStrikeEvent event)
+	public void onLightningStrike(final LightningStrikeEvent event)
 	{
 		if (CrazyWeather.getPlugin() == null)
 			return;

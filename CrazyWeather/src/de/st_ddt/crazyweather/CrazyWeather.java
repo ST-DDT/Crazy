@@ -287,7 +287,7 @@ public class CrazyWeather extends CrazyPlugin
 		}
 	}
 
-	private boolean hasWeatherPermission(CommandSender sender, World world, boolean set, String weather)
+	private boolean hasWeatherPermission(final CommandSender sender, final World world, final boolean set, final String weather)
 	{
 		if (sender.hasPermission("crazyweather.set.*"))
 			return true;
@@ -329,7 +329,7 @@ public class CrazyWeather extends CrazyPlugin
 
 	public WorldWeather getWorldWeather(final World world)
 	{
-		for (WorldWeather temp : worldWeather)
+		for (final WorldWeather temp : worldWeather)
 			if (temp.equals(world))
 				return temp;
 		return null;

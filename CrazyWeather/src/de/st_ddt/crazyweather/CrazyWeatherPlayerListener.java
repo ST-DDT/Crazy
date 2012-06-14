@@ -8,12 +8,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class CrazyWeatherPlayerListener implements Listener
 {
 
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerInteract(PlayerInteractEvent event)
+	@EventHandler
+	public void onPlayerInteract(final PlayerInteractEvent event)
 	{
-		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR))
+		if ((event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.isCancelled()) || event.getAction().equals(Action.RIGHT_CLICK_AIR))
 		{
-			int tool = CrazyWeather.getPlugin().getTool();
+			final int tool = CrazyWeather.getPlugin().getTool();
 			if (tool != -1)
 				if (tool != event.getPlayer().getItemInHand().getTypeId())
 					return;
