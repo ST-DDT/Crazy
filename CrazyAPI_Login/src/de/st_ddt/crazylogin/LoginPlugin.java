@@ -29,6 +29,8 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public abstract boolean deletePlayerData(final String player);
 
+	public abstract List<Player> getOnlinesPerIP(final String ip);
+
 	public abstract List<? extends LoginData> getRegistrationsPerIP(final String ip);
 
 	public abstract boolean isAlwaysNeedPassword();
@@ -72,6 +74,8 @@ public interface LoginPlugin extends CrazyPluginInterface
 	public abstract Encryptor getEncryptor();
 
 	public abstract int getAutoDelete();
+
+	public abstract int getMaxOnlinesPerIP();
 
 	public abstract int getMaxRegistrationsPerIP();
 
