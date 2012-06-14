@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
@@ -100,18 +101,33 @@ public class ChatHelper
 			entry = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.ENTRY");
 		StringBuilder formatString = new StringBuilder();
 		for (int i = lastIndex; i > 0; i /= 10)
-			formatString.append("  ");
+			formatString.append(" ");
 		String format = formatString.toString();
-		int length = format.length() / 2;
+		int length = format.length();
 		lastIndex = Math.min(lastIndex, page * amount);
-		for (int i = page * amount - amount; i < lastIndex; i++)
-			sendMessage(target, chatHeader, entry, listShiftHelper(String.valueOf(i + 1), length, format), getter.getEntryData(datas.get(i)));
+		if (target instanceof ConsoleCommandSender)
+		{
+			for (int i = page * amount - amount; i < lastIndex; i++)
+				sendMessage(target, chatHeader, entry, listShiftHelperConsole(String.valueOf(i + 1), length, format), getter.getEntryData(datas.get(i)));
+		}
+		else
+		{
+			format += format;
+			for (int i = page * amount - amount; i < lastIndex; i++)
+				sendMessage(target, chatHeader, entry, listShiftHelper(String.valueOf(i + 1), length, format), getter.getEntryData(datas.get(i)));
+		}
 	}
 
 	private static String listShiftHelper(String number, int length, String filler)
 	{
 		String res = filler + number;
 		return res.substring(number.length() * 2);
+	}
+
+	private static String listShiftHelperConsole(String number, int length, String filler)
+	{
+		String res = filler + number;
+		return res.substring(number.length());
 	}
 
 	public static String putArgs(final String message, final Object... args)
