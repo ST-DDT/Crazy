@@ -167,7 +167,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 					keepLoad = false;
 			}
 			else
-				weather = Weather.getWeather(arg.substring(8));
+				weather = Weather.getWeather(arg);
 		}
 		changeWeather(sender, weather, world, keepStatic, keepLoad, duration);
 	}
@@ -189,8 +189,8 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 		if (worldWeather != null)
 		{
 			worldWeather.setWeather(weather, keepStatic, keepLoad, duration);
-			if (weather != null)
-				sendLocaleMessage("WEATHER." + weather.toString(), Bukkit.getConsoleSender(), world.getName());
+			if ((weather != null) && (sender instanceof Player))
+				sendLocaleMessage("WEATHER." + weather.toString(), sender, world.getName());
 			sendLocaleMessage("COMMAND.WEATHER.SUCCESS", sender);
 		}
 		else
