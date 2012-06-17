@@ -78,6 +78,8 @@ public class WorldWeather implements ConfigurationSaveable, WeatherData
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
+		if (staticWeather == null)
+			return;
 		config.set(path + "static", staticWeather.toString());
 		config.set(path + "onLoad", onLoad);
 	}
