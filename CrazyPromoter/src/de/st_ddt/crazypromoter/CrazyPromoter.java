@@ -69,6 +69,7 @@ public class CrazyPromoter extends CrazyPlugin
 	public void save()
 	{
 		ConfigurationSection config = getConfig();
+		config.set("promotions", null);
 		for (Promotion promotion : promotions)
 			promotion.save(config, "promotions." + promotion.getName() + ".");
 		saveConfiguration();
