@@ -25,7 +25,7 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
-		Player player = (Player) sender;
+		final Player player = (Player) sender;
 		if (commandLabel.equalsIgnoreCase("cms") || commandLabel.equalsIgnoreCase("crazymobs") || commandLabel.equalsIgnoreCase("crazyspawn"))
 		{
 			commandSpawn(player, args);
@@ -45,7 +45,7 @@ public class CrazySpawner extends CrazyPlugin
 					{
 						range = Integer.parseInt(args[0]);
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						throw new CrazyCommandParameterException(1, "Integer/Number");
 					}
@@ -53,7 +53,7 @@ public class CrazySpawner extends CrazyPlugin
 						throw new CrazyCommandParameterException(1, "positive Numbers");
 				case 0:
 					int anz = 0;
-					for (Entity entity : player.getWorld().getEntitiesByClass(Monster.class))
+					for (final Entity entity : player.getWorld().getEntitiesByClass(Monster.class))
 						if (entity.getLocation().distance(player.getLocation()) < range)
 						{
 							entity.remove();
@@ -63,7 +63,7 @@ public class CrazySpawner extends CrazyPlugin
 					anz = 0;
 					if (killpets)
 					{
-						for (Entity entity : player.getWorld().getEntitiesByClass(Animals.class))
+						for (final Entity entity : player.getWorld().getEntitiesByClass(Animals.class))
 							if (entity.getLocation().distance(player.getLocation()) < range)
 							{
 								entity.remove();
@@ -77,7 +77,7 @@ public class CrazySpawner extends CrazyPlugin
 		return false;
 	}
 
-	private void commandSpawn(Player player, String[] args) throws CrazyCommandException
+	private void commandSpawn(final Player player, final String[] args) throws CrazyCommandException
 	{
 		if (!player.hasPermission("crazyspawner.spawn"))
 			throw new CrazyCommandPermissionException();
@@ -93,7 +93,7 @@ public class CrazySpawner extends CrazyPlugin
 		{
 			type = CreatureType.valueOf(args[0].toUpperCase());// .fromName(args[0]);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			type = null;
 		}
@@ -101,7 +101,7 @@ public class CrazySpawner extends CrazyPlugin
 			throw new CrazyCommandParameterException(1, "Monstername", "sheep", "creeper", "zombie");
 		for (int i = 1; i < length; i++)
 		{
-			String arg = args[i];
+			final String arg = args[i];
 			if (arg.startsWith("amount:"))
 				try
 				{
@@ -149,7 +149,7 @@ public class CrazySpawner extends CrazyPlugin
 		}
 		try
 		{
-			Location location = player.getLocation();
+			final Location location = player.getLocation();
 			while (location.add(0, -1, 0).getBlock().isEmpty() && location.getBlockZ() > 0)
 				;
 			location.add(0, 1, 0);
@@ -159,7 +159,7 @@ public class CrazySpawner extends CrazyPlugin
 			for (int i = 0; i <= repeat; i++)
 				Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new CrazySpawnerSpawnTask(location, type, amount), delay += interval);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			throw new CrazyCommandException();
 		}

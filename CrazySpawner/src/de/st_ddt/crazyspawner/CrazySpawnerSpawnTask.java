@@ -11,7 +11,7 @@ public class CrazySpawnerSpawnTask implements Runnable
 	protected CreatureType creature;
 	protected int amount;
 
-	public CrazySpawnerSpawnTask(Location location, CreatureType creature, int amount)
+	public CrazySpawnerSpawnTask(final Location location, final CreatureType creature, final int amount)
 	{
 		super();
 		this.location = location;
