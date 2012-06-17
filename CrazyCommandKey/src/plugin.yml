@@ -1,0 +1,31 @@
+name: CrazyCommandKey
+main: de.st_ddt.crazycommandkey.CrazyCommandKey
+author: ST-DDT
+#C*=needed core version
+version: C7.5_1.0
+depend: [CrazyCore]
+commands:
+  key:
+    description: Use a key and activate command.
+    usage: /<command> <Key>
+  gkey:
+    description: Generate a key with a given command.
+    usage: /<command> <Command...>
+    aliases: [genkey]
+  crazycommandkey:
+    descrition: Plugin Main Menu
+    usage: /<command> ...
+    aliases: [cckey]
+permissions:
+  crazycommandkey.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazycommandkey.keyuse: true
+      crazycommandkey.keygen: true
+  crazycommandkey.keyuse:
+    description: Allow useing a key.
+    default: true
+  crazycommandkey.keygen:
+    description: Allow generating a key.
+    default: op
