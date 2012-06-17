@@ -101,7 +101,7 @@ public class CrazySpawner extends CrazyPlugin
 			throw new CrazyCommandParameterException(1, "Monstername", "sheep", "creeper", "zombie");
 		for (int i = 1; i < length; i++)
 		{
-			final String arg = args[i];
+			final String arg = args[i].toLowerCase();
 			if (arg.startsWith("amount:"))
 				try
 				{
