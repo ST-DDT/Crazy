@@ -48,7 +48,7 @@ public class CrazyPromoter extends CrazyPlugin
 		super.load();
 		ConfigurationSection config = getConfig();
 		checkInterval = config.getInt("checkInterval", 60);
-		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new ScheduledCheckTask(plugin), 100, checkInterval * 20 * 60);
+		promotions.clear();
 		config = config.getConfigurationSection("promotions");
 		if (config == null)
 		{
@@ -62,6 +62,7 @@ public class CrazyPromoter extends CrazyPlugin
 		else
 			for (String name : config.getKeys(false))
 				promotions.add(new Promotion(config.getConfigurationSection(name)));
+		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new ScheduledCheckTask(plugin), 100, checkInterval * 20 * 60);
 	}
 
 	@Override
