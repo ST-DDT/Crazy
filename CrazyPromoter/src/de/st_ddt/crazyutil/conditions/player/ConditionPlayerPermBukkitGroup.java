@@ -8,53 +8,24 @@ import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
 //requires PermissionsBukkit (PermBukkit)
-public class ConditionPlayerPermBukkitGroup extends ConditionPlayer
+public class ConditionPlayerPermBukkitGroup extends ConditionPlayerGroup
 {
 
-	protected String groupname;
 	protected Group group;
 
 	public ConditionPlayerPermBukkitGroup(ConfigurationSection config)
 	{
 		super(config);
-		this.groupname = config.getString("group", "default");
 	}
 
 	public ConditionPlayerPermBukkitGroup(String groupname)
 	{
-		super();
-		this.groupname = groupname;
-	}
-
-	@Override
-	public void save(ConfigurationSection config, String path)
-	{
-		super.save(config, path);
-		config.set(path + "group", groupname);
-	}
-
-	@Override
-	public String getTypeIdentifier()
-	{
-		return "PermissionsGroup";
-	}
-
-	@Override
-	public boolean match(Player tester)
-	{
-		if (getGroup() == null)
-			return false;
-		return getGroup().getOnlinePlayers().contains(tester);
-	}
-
-	public String getGroupname()
-	{
-		return groupname;
+		super(groupname);
 	}
 
 	public void setGroupname(String groupname)
 	{
-		this.groupname = groupname;
+		super.setGroupname(groupname);
 		group = null;
 	}
 
@@ -68,5 +39,13 @@ public class ConditionPlayerPermBukkitGroup extends ConditionPlayer
 			group = plugin.getGroup(groupname);
 		}
 		return group;
+	}
+
+	@Override
+	public boolean match(Player tester)
+	{
+		if (getGroup() == null)
+			return false;
+		return getGroup().getOnlinePlayers().contains(tester);
 	}
 }
