@@ -146,6 +146,17 @@ public class CrazySpawner extends CrazyPlugin
 				{
 					throw new CrazyCommandParameterException(i, "interval:Integer");
 				}
+			else
+				try
+				{
+					amount = Integer.parseInt(arg);
+					if (amount < 0)
+						throw new CrazyCommandParameterException(i, "positive Integer");
+				}
+				catch (final NumberFormatException e)
+				{
+					throw new CrazyCommandUsageException("/cms <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer]");
+				}
 		}
 		try
 		{

@@ -22,7 +22,6 @@ public class CrazySpawnerSpawnTask implements Runnable
 	@Override
 	public void run()
 	{
-		System.out.println("Test");
 		for (int i = 0; i < amount; i++)
 			location.getWorld().spawnCreature(location, creature);
 	}
