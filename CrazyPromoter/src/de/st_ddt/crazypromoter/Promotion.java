@@ -8,8 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import com.platymuus.bukkit.permissions.PermissionsPlugin;
-
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.conditions.Condition;
 import de.st_ddt.crazyutil.conditions.ConditionBase;
@@ -20,7 +18,6 @@ public class Promotion
 	protected String name;
 	protected ConditionBase<Player> condition;
 	protected List<String> commands;
-	protected final PermissionsPlugin permissionsPlugin = ((PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit"));
 
 	public Promotion(ConfigurationSection config)
 	{
@@ -47,7 +44,7 @@ public class Promotion
 	{
 		CommandSender console = Bukkit.getConsoleSender();
 		for (String command : commands)
-			permissionsPlugin.getServer().dispatchCommand(console, ChatHelper.putArgs(command, player.getName()));
+			Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, player.getName()));
 	}
 
 	public String getName()
