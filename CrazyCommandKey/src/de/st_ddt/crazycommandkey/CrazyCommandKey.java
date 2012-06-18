@@ -1,5 +1,6 @@
 package de.st_ddt.crazycommandkey;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -9,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -47,20 +49,20 @@ public class CrazyCommandKey extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		keys.clear();
-		ConfigurationSection keySection = config.getConfigurationSection("keys");
+		final ConfigurationSection keySection = config.getConfigurationSection("keys");
 		if (keySection != null)
-			for (String key : keySection.getKeys(false))
+			for (final String key : keySection.getKeys(false))
 				keys.put(key, keySection.getString(key));
 	}
 
 	@Override
 	public void save()
 	{
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		config.set("keys", null);
-		for (Entry<String, String> entry : keys.entrySet())
+		for (final Entry<String, String> entry : keys.entrySet())
 			config.set("keys." + entry.getKey(), entry.getValue());
 		super.save();
 	}
@@ -81,23 +83,42 @@ public class CrazyCommandKey extends CrazyPlugin
 		return false;
 	}
 
-	private void commandKeyGen(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandKeyGen(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazycommandkey.keygen"))
 			throw new CrazyCommandPermissionException();
 		if (args.length < 1)
 			throw new CrazyCommandUsageException("/genkey <Command>");
-		String key=Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE))+Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
-		while (!getConfig().getString("keys." + key, "").equals(""))
-			key = Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE))+Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
-		key = key.substring(0, 13);
-		sender.sendMessage("Key created: " + key);
-		String command = ChatHelper.listingString(" ", args);
-		keys.put(key, command);
+		int amount = 1;
+		int startIndex = 0;
+		if (args[0].toLowerCase().startsWith("amount:"))
+		{
+			startIndex++;
+			try
+			{
+				amount = Integer.parseInt(args[0].substring(7));
+			}
+			catch (final NumberFormatException e)
+			{
+				throw new CrazyCommandParameterException(0, "Integer");
+			}
+		}
+		final ArrayList<String> genKeys = new ArrayList<String>();
+		final String command = ChatHelper.listingString(" ", ChatHelper.shiftArray(args, startIndex));
+		for (int i = 0; i < amount; i++)
+		{
+			String key = Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE)) + Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
+			while (!getConfig().getString("keys." + key, "").equals(""))
+				key = Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE)) + Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
+			key = key.substring(0, 13);
+			keys.put(key, command);
+			genKeys.add(key);
+		}
+		sender.sendMessage("Keys created: " + ChatHelper.listingString(genKeys));
 		save();
 	}
 
-	private void commandKeyUse(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandKeyUse(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazycommandkey.keyuse"))
 			throw new CrazyCommandPermissionException();
@@ -109,7 +130,7 @@ public class CrazyCommandKey extends CrazyPlugin
 			sender.sendMessage("Key not found");
 			return;
 		}
-		command=ChatHelper.putArgs(command, sender.getName());
+		command = ChatHelper.putArgs(command, sender.getName());
 		sender.sendMessage("Done");
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 		save();
