@@ -90,7 +90,7 @@ public class CrazyCommandKey extends CrazyPlugin
 		String key=Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE))+Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
 		while (!getConfig().getString("keys." + key, "").equals(""))
 			key = Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE))+Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
-		key = key.substring(0, 10);
+		key = key.substring(0, 13);
 		sender.sendMessage("Key created: " + key);
 		String command = ChatHelper.listingString(" ", args);
 		keys.put(key, command);
