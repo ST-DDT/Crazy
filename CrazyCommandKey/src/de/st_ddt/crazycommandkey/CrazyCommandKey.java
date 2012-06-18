@@ -109,6 +109,7 @@ public class CrazyCommandKey extends CrazyPlugin
 			sender.sendMessage("Key not found");
 			return;
 		}
+		command=ChatHelper.putArgs(command, sender.getName());
 		sender.sendMessage("Done");
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 		save();
