@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
@@ -30,12 +31,6 @@ public class CrazyCommandKey extends CrazyPlugin
 	protected String getShortPluginName()
 	{
 		return "cckey";
-	}
-
-	@Override
-	protected boolean isSupportingLanguages()
-	{
-		return false;
 	}
 
 	@Override
@@ -114,7 +109,7 @@ public class CrazyCommandKey extends CrazyPlugin
 			keys.put(key, command);
 			genKeys.add(key);
 		}
-		sender.sendMessage("Keys created: " + ChatHelper.listingString(genKeys));
+		sendLocaleMessage("COMMAND.KEYGEN", sender, ChatHelper.listingString(genKeys));
 		save();
 	}
 
@@ -126,12 +121,9 @@ public class CrazyCommandKey extends CrazyPlugin
 			throw new CrazyCommandUsageException("/key <Key>");
 		String command = keys.remove(args[0]);
 		if (command == null)
-		{
-			sender.sendMessage("Key not found");
-			return;
-		}
+			throw new CrazyCommandNoSuchException("Key", args[0]);
 		command = ChatHelper.putArgs(command, sender.getName());
-		sender.sendMessage("Done");
+		sendLocaleMessage("COMMAND.KEYUSE", sender, args[0]);
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 		save();
 	}

@@ -2,7 +2,7 @@ name: CrazyCommandKey
 main: de.st_ddt.crazycommandkey.CrazyCommandKey
 author: ST-DDT
 #C*=needed core version
-version: C7.5_1.2
+version: C7.5_1.3
 depend: [CrazyCore]
 commands:
   key:
