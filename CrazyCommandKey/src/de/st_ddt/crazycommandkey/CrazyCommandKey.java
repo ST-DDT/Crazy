@@ -87,10 +87,10 @@ public class CrazyCommandKey extends CrazyPlugin
 			throw new CrazyCommandPermissionException();
 		if (args.length < 1)
 			throw new CrazyCommandUsageException("/genkey <Command>");
-		String key = String.valueOf(Math.round(Math.random() * Long.MAX_VALUE));
+		String key=Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE))+Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
 		while (!getConfig().getString("keys." + key, "").equals(""))
-			key = String.valueOf(Math.round(Math.random() * Long.MAX_VALUE));
-		key = key.substring(0, 6);
+			key = Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE))+Long.toHexString(Math.round(Math.random() * Long.MAX_VALUE));
+		key = key.substring(0, 10);
 		sender.sendMessage("Key created: " + key);
 		String command = ChatHelper.listingString(" ", args);
 		keys.put(key, command);
