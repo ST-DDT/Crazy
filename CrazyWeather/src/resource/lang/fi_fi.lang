@@ -1,0 +1,8 @@
+CRAZYWEATHER=CrazyWeather
+CRAZYWEATHER.COMMAND.WEATHER.ERROR=Maailma virhe (Ei voitu ladata maailmaa)
+CRAZYWEATHER.COMMAND.WEATHER.SUCCESS=Sää vaihdettu onnistuneesti
+CRAZYWEATHER.WEATHER.SUN=Maailmassa, $0$ on nyt &Eaurinkoinen &Fsää!
+CRAZYWEATHER.WEATHER.RAIN=Maailmassa, $0$ on nyt &9sateinen &Fsää!
+CRAZYWEATHER.WEATHER.STORM=Maailmassa, $0$ on nyt &8myrskyinen &Fsää!
+CRAZYWEATHER.THUNDERTOOL.GET=Salamatyökalu = &D$0$ ($1$)
+CRAZYWEATHER.THUNDERTOOL.SET=Salamatyökalu on vaihdettu &D$0$ ($1$)
