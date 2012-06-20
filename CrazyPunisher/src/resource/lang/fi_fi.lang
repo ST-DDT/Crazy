@@ -1,0 +1,20 @@
+CRAZYPUNISHER=CrazyPunisher
+CRAZYPUNISHER.MESSAGE.HARDBAN=&CSinut on vasaroitu ja langetettu ikuinen porttikielto serverille!
+CRAZYPUNISHER.MESSAGE.HARDBAN=&CSinulle on annettu porttikielto tälle serverille!
+CRAZYPUNISHER.MESSAGE.JAILED=Sinut on &Cvangittu!
+CRAZYPUNISHER.MESSAGE.JAILEDUNTIL=Sinut on &Cvangittu! &F$0$
+CRAZYPUNISHER.MESSAGE.KICK=Sinut on potkittu serveriltä!
+CRAZYPUNISHER.BROADCAST.HARDBAN=&5$0$ on bannivasaroitu ja langetettu porttikieltoon serveriltä!
+CRAZYPUNISHER.BROADCAST.BAN=&5$0$ on langetettu porttikieltoon serverille!
+CRAZYPUNISHER.BROADCAST.UNBAN=&5$0$ on päästetty pois porttikiellosta serveriltä!
+CRAZYPUNISHER.BROADCAST.JAIL=&5$0$ on heitetty vankilaan!
+CRAZYPUNISHER.BROADCAST.UNJAIL=&5$0$ on otettu pois vankilasta!
+CRAZYPUNISHER.BROADCAST.KICK=&5$0$ on potkittu pois serveriltä!
+CRAZYPUNISHER.COMMAND.SHOW=Olet nyt näkyvillä!
+CRAZYPUNISHER.COMMAND.SHOW.DONE=Näkyvyys vaihdettu onnistuneesti!
+CRAZYPUNISHER.COMMAND.HIDDEN=Olet näkymätön!
+CRAZYPUNISHER.COMMAND.HIDDEN.DONE=Näkyvyys vaihdettu onnistuneesti!
+CRAZYPUNISHER.JAILLOCATION=Vankilan sijainti = $0$ $1$ $2$ $3$
+CRAZYPUNISHER.JAILLOCATION.CHANGED=Vankilan sijainti vaihdettu
+CRAZYPUNISHER.JAILRANGE=Vankila-alueen kantama = $0$
+CRAZYPUNISHER.JAILRANGE.CHANGED=Vankila-alueen kantama vaihdettu

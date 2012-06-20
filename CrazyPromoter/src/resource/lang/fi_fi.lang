@@ -1,0 +1,3 @@
+CRAZYPROMOTER=CrazyPromoter
+CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ on nyt ylennetty (Arvo: $1$)
+CRAZYPROMOTER.COMMAND.CHECK.FAIL=Harmi, ei ylennyksiä saatavilla!
