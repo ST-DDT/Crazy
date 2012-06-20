@@ -44,7 +44,12 @@ public class Promotion
 	{
 		CommandSender console = Bukkit.getConsoleSender();
 		for (String command : commands)
-			Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, player.getName()));
+			if (command.startsWith("§"))
+				Bukkit.broadcastMessage(ChatHelper.colorise(command.substring(1)));
+			else if (command.startsWith("$"))
+				CrazyPromoter.getPlugin().broadcastLocaleRootMessage(command.substring(1), player.getName());
+			else
+				Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, player.getName()));
 	}
 
 	public String getName()
