@@ -80,7 +80,7 @@ public class CrazyOnline extends CrazyPlugin
 			System.out.println("NO SUCH SAVETYPE " + saveType);
 			type = null;
 		}
-		final String tableName = config.getString("database.tableName", "players");
+		final String tableName = config.getString("database.tableName", "CrazyOnline_players");
 		config.set("database.tableName", tableName);
 		// Columns
 		final String colName = config.getString("database.columns.name", "name");

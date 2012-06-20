@@ -11,6 +11,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
 import de.st_ddt.crazyutil.databases.FlatDatabaseEntry;
@@ -25,7 +26,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	protected Date lastLogin;
 	protected Date lastLogout;
 	protected long onlineTime;
-	private static final SimpleDateFormat DateFormat = CrazyOnline.DateFormat;
+	private static final SimpleDateFormat DateFormat = CrazyPlugin.DateFormat;
 
 	public OnlinePlayerData(final String name)
 	{
