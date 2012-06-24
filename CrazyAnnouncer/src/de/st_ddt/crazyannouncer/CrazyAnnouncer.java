@@ -50,6 +50,8 @@ public class CrazyAnnouncer extends CrazyPlugin
 	public void load()
 	{
 		super.load();
+		//EDIT eventListener.clearEventRegistrations();
+		EventTrigger.setTriggerEventListener(eventListener);
 		ConfigurationSection config = getConfig().getConfigurationSection("actions");
 		if (config != null)
 		{
@@ -58,7 +60,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 		}
 		else
 		{
-			actions.add(new Action_MESSAGE("example", "This is a default message", "Welcome to the minecraft server of " + getServer().getServerName()));
+			actions.add(new Action_MESSAGE("example", "This is a default message", "Welcome to the minecraft server of &E" + getServer().getServerName()));
 			ActionList_ORDERED action = new ActionList_ORDERED("example123");
 			actions.add(action);
 			action.addAction(new Action_MESSAGE("a1", "Message1"));
@@ -70,6 +72,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 		{
 			for (String name : config.getKeys(false))
 				triggers.add(Trigger.load(config.getConfigurationSection(name), actions, this));
+			triggers.remove(null);
 			for (Trigger trigger : triggers)
 				trigger.register();
 		}
@@ -77,8 +80,8 @@ public class CrazyAnnouncer extends CrazyPlugin
 		{
 			final Set<Class<? extends Event>> events = new HashSet<Class<? extends Event>>();
 			events.add(PlayerJoinEvent.class);
-			triggers.add(new EventTrigger("exampleEvent", actions, plugin, events, eventListener));
-			triggers.add(new ScheduledRepeatedTrigger("exampleEvent", actions, plugin, new Date(new Date().getTime() + 20000), 60000, -1));
+			triggers.add(new EventTrigger("exampleEvent", actions, plugin, events));
+			triggers.add(new ScheduledRepeatedTrigger("exampleEvent2", actions, plugin, new Date(new Date().getTime() + 20000), 60000, -1));
 		}
 	}
 
@@ -93,5 +96,23 @@ public class CrazyAnnouncer extends CrazyPlugin
 		for (final NamedRunnable action : actions)
 			action.save(config, "actions." + action.getName() + ".");
 		super.save();
+	}
+
+	public Set<Trigger> getTriggers()
+	{
+		return triggers;
+	}
+
+	public Set<NamedRunnable> getActions()
+	{
+		return actions;
+	}
+
+	public NamedRunnable getAction(String actionname)
+	{
+		for (NamedRunnable action : actions)
+			if (action.getName().equals(actionname))
+				return action;
+		return null;
 	}
 }

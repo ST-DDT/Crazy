@@ -12,14 +12,23 @@ import de.st_ddt.crazyutil.NamedRunnable;
 public class EventTrigger extends Trigger
 {
 
-	TriggerEventListener listener;
+	protected static TriggerEventListener listener;
 	Set<Class<? extends Event>> events;
 
+	public static TriggerEventListener getTriggerEventListener()
+	{
+		return listener;
+	}
+
+	public static void setTriggerEventListener(TriggerEventListener listener)
+	{
+		EventTrigger.listener = listener;
+	}
+
 	@SuppressWarnings("unchecked")
-	public EventTrigger(final ConfigurationSection config, final Set<NamedRunnable> actionlist, final JavaPlugin plugin, final TriggerEventListener listener)
+	public EventTrigger(final ConfigurationSection config, final Set<NamedRunnable> actionlist, final JavaPlugin plugin)
 	{
 		super(config, actionlist, plugin);
-		this.listener = listener;
 		this.events = new HashSet<Class<? extends Event>>();
 		for (final String clazz : config.getStringList("events"))
 			try
@@ -36,10 +45,9 @@ public class EventTrigger extends Trigger
 			}
 	}
 
-	public EventTrigger(final String name, final Set<NamedRunnable> actionlist, final JavaPlugin plugin, final Set<Class<? extends Event>> events, final TriggerEventListener listener)
+	public EventTrigger(final String name, final Set<NamedRunnable> actionlist, final JavaPlugin plugin, final Set<Class<? extends Event>> events)
 	{
 		super(name, actionlist, plugin);
-		this.listener = listener;
 		this.events = events;
 	}
 
