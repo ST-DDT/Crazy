@@ -13,79 +13,81 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 public interface LoginPlugin extends CrazyPluginInterface
 {
 
-	public abstract int dropInactiveAccounts();
+	public int dropInactiveAccounts();
 
-	public abstract boolean isLoggedIn(final Player player);
+	public boolean isLoggedIn(Player player);
 
-	public abstract boolean hasAccount(final OfflinePlayer player);
+	public boolean hasAccount(OfflinePlayer player);
 
-	public abstract boolean hasAccount(final String player);
+	public boolean hasAccount(String name);
 
-	public abstract HashMap<String, ? extends LoginData> getPlayerData();
+	public HashMap<String, ? extends LoginData> getPlayerData();
 
-	public abstract LoginData getPlayerData(final OfflinePlayer player);
+	public LoginData getPlayerData(OfflinePlayer player);
 
-	public abstract LoginData getPlayerData(final String name);
+	public LoginData getPlayerData(String name);
 
-	public abstract boolean deletePlayerData(final String player);
+	public void updateAccount(String name);
 
-	public abstract List<Player> getOnlinesPerIP(final String ip);
+	public boolean deletePlayerData(String name);
 
-	public abstract List<? extends LoginData> getRegistrationsPerIP(final String ip);
+	public List<Player> getOnlinesPerIP(String ip);
 
-	public abstract boolean isAlwaysNeedPassword();
+	public List<? extends LoginData> getRegistrationsPerIP(String ip);
 
-	public abstract boolean isAutoLogoutEnabled();
+	public boolean isAlwaysNeedPassword();
 
-	public abstract boolean isInstantAutoLogoutEnabled();
+	public boolean isAutoLogoutEnabled();
 
-	public abstract int getAutoLogoutTime();
+	public boolean isInstantAutoLogoutEnabled();
 
-	public abstract int getAutoKick();
+	public int getAutoLogoutTime();
 
-	public abstract long getAutoTempBan();
+	public int getAutoKick();
 
-	public abstract int getAutoKickUnregistered();
+	public long getAutoTempBan();
 
-	public abstract int getAutoKickLoginFailer();
+	public int getAutoKickUnregistered();
 
-	public abstract long getAutoTempBanLoginFailer();
+	public int getAutoKickLoginFailer();
 
-	public abstract boolean isAutoKickCommandUsers();
+	public long getAutoTempBanLoginFailer();
 
-	public abstract boolean isBlockingGuestCommandsEnabled();
+	public boolean isAutoKickCommandUsers();
 
-	public abstract boolean isResettingGuestLocationsEnabled();
+	public boolean isBlockingGuestCommandsEnabled();
 
-	public abstract boolean isTempBanned(final String IP);
+	public boolean isResettingGuestLocationsEnabled();
 
-	public abstract Date getTempBanned(final String IP);
+	public boolean isTempBanned(String IP);
 
-	public abstract String getTempBannedString(final String IP);
+	public Date getTempBanned(String IP);
 
-	public abstract List<String> getCommandWhiteList();
+	public String getTempBannedString(String IP);
 
-	public abstract boolean isForceSingleSessionEnabled();
+	public List<String> getCommandWhiteList();
 
-	public abstract boolean isForceSingleSessionSameIPBypassEnabled();
+	public boolean isForceSingleSessionEnabled();
 
-	public abstract boolean isForceSaveLoginEnabled();
+	public boolean isForceSingleSessionSameIPBypassEnabled();
 
-	public abstract Encryptor getEncryptor();
+	public boolean isForceSaveLoginEnabled();
 
-	public abstract int getAutoDelete();
+	public Encryptor getEncryptor();
 
-	public abstract int getMaxOnlinesPerIP();
+	public int getAutoDelete();
 
-	public abstract int getMaxRegistrationsPerIP();
+	public int getMaxOnlinesPerIP();
 
-	public abstract double getMoveRange();
+	public int getMaxRegistrationsPerIP();
 
-	public abstract int getMinNameLength();
+	public double getMoveRange();
 
-	public abstract int getMaxNameLength();
+	public int getMinNameLength();
 
-	public abstract boolean checkNameLength(final String name);
+	public int getMaxNameLength();
 
-	public abstract String getUniqueIDKey();
+	public boolean checkNameLength(String name);
+
+	public String getUniqueIDKey();
 }

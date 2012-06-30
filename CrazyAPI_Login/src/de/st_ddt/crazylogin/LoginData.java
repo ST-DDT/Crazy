@@ -10,37 +10,37 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 public interface LoginData
 {
 
-	public abstract String getName();
+	public String getName();
 
-	public abstract Player getPlayer();
+	public Player getPlayer();
 
-	public abstract OfflinePlayer getOfflinePlayer();
+	public OfflinePlayer getOfflinePlayer();
 
-	public abstract void setPassword(final String password) throws CrazyCommandException;
+	public void setPassword(String password) throws CrazyCommandException;
 
-	public abstract boolean isPassword(final String password);
+	public boolean isPassword(String password);
 
-	public abstract boolean isPasswordHash(final String passwordHash);
+	public boolean isPasswordHash(String passwordHash);
 
-	public abstract void addIP(final String ip);
+	public void addIP(String ip);
 
-	public abstract boolean hasIP(final String ip);
+	public boolean hasIP(String ip);
 
-	public abstract String getLatestIP();
+	public String getLatestIP();
 
-	public abstract Date getLastActionTime();
+	public Date getLastActionTime();
 
-	public abstract boolean isOnline();
+	public boolean isOnline();
 
-	public abstract boolean isPlayerOnline();
+	public boolean isPlayerOnline();
 
-	public abstract boolean login(final String password);
+	public boolean login(String password);
 
-	public abstract void logout();
+	public void logout();
 
-	public abstract void logout(final boolean removeIPs);
+	public void logout(boolean removeIPs);
 
-	public abstract void notifyAction();
+	public void notifyAction();
 
-	public abstract boolean equals(LoginData data);
+	public boolean equals(LoginData data);
 }
