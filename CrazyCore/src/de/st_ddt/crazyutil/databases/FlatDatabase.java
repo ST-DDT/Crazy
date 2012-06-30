@@ -54,7 +54,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public S getEntry(final String key)
+	public synchronized S getEntry(final String key)
 	{
 		final String[] data = entries.get(key);
 		if (data == null)
@@ -71,7 +71,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public List<S> getEntries(final String key)
+	public synchronized List<S> getEntries(final String key)
 	{
 		final List<S> list = new ArrayList<S>();
 		final S entry = getEntry(key);
@@ -81,7 +81,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public List<S> getAllEntries()
+	public synchronized List<S> getAllEntries()
 	{
 		final List<S> list = new ArrayList<S>();
 		for (final String key : entries.keySet())
@@ -94,20 +94,26 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public void delete(final String key)
+	public boolean isStaticDatabase()
+	{
+		return true;
+	}
+
+	@Override
+	public synchronized void delete(final String key)
 	{
 		entries.put(key, null);
 	}
 
 	@Override
-	public void save(final S entry)
+	public synchronized void save(final S entry)
 	{
 		entries.put(entry.getName(), entry.saveToFlatDatabase());
 		if (!bulkOperation)
 			saveFile();
 	}
 
-	private void loadFile()
+	private synchronized void loadFile()
 	{
 		FileInputStream fileInputStream = null;
 		InputStreamReader inputStreamReader = null;
@@ -170,7 +176,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		}
 	}
 
-	private void saveFile()
+	private synchronized void saveFile()
 	{
 		FileWriter writer = null;
 		try
@@ -201,7 +207,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	protected void saveDatabase()
+	protected synchronized void saveDatabase()
 	{
 		saveFile();
 	}

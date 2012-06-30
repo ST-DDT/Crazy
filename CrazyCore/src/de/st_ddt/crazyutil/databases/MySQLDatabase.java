@@ -132,7 +132,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public S getEntry(final String key)
+	public synchronized S getEntry(final String key)
 	{
 		S res = null;
 		Statement query = null;
@@ -178,7 +178,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public List<S> getEntries(final String key)
+	public synchronized List<S> getEntries(final String key)
 	{
 		final List<S> list = new ArrayList<S>();
 		Statement query = null;
@@ -225,7 +225,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public List<S> getAllEntries()
+	public synchronized List<S> getAllEntries()
 	{
 		final List<S> list = new ArrayList<S>();
 		Statement query = null;
@@ -271,7 +271,13 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public void delete(final String key)
+	public boolean isStaticDatabase()
+	{
+		return false;
+	}
+
+	@Override
+	public synchronized void delete(final String key)
 	{
 		Statement query = null;
 		try
@@ -297,7 +303,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public void save(final S entry)
+	public synchronized void save(final S entry)
 	{
 		entry.saveToMySQLDatabase(connection, table, getColumnNames());
 	}

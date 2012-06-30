@@ -45,7 +45,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public S getEntry(final String key)
+	public synchronized S getEntry(final String key)
 	{
 		final ConfigurationSection section = config.getConfigurationSection(table + "." + key);
 		if (section == null)
@@ -62,7 +62,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public List<S> getEntries(final String key)
+	public synchronized List<S> getEntries(final String key)
 	{
 		final List<S> list = new ArrayList<S>();
 		list.add(getEntry(key));
@@ -70,7 +70,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public List<S> getAllEntries()
+	public synchronized List<S> getAllEntries()
 	{
 		final List<S> list = new ArrayList<S>();
 		if (config.getConfigurationSection(table) == null)
@@ -81,13 +81,19 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public void delete(final String key)
+	public boolean isStaticDatabase()
+	{
+		return true;
+	}
+
+	@Override
+	public synchronized void delete(final String key)
 	{
 		config.set(table + "." + key, null);
 	}
 
 	@Override
-	public void save(final S entry)
+	public synchronized void save(final S entry)
 	{
 		entry.saveToConfigDatabase(config, table + "." + entry.getName() + ".", columnNames);
 	}

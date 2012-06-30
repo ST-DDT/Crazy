@@ -17,6 +17,8 @@ public interface Database<S extends DatabaseEntry>
 	public abstract List<S> getEntries(String key);
 
 	public abstract List<S> getAllEntries();
+	
+	public abstract boolean isStaticDatabase();
 
 	public abstract void delete(String key);
 

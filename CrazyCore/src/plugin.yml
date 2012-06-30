@@ -2,7 +2,7 @@ name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
 #C*=needed core version
-version: C7.5.2
+version: C7.6
 softdepend: [PermissionsBukkit]
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
