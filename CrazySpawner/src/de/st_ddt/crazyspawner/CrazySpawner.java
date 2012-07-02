@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 
@@ -16,7 +16,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 
-@SuppressWarnings("deprecation")
 public class CrazySpawner extends CrazyPlugin
 {
 
@@ -81,17 +80,19 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		if (!player.hasPermission("crazyspawner.spawn"))
 			throw new CrazyCommandPermissionException();
-		if (args.length < 2)
-			throw new CrazyCommandUsageException("/cms <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer]");
+		if (args.length == 0)
+			throw new CrazyCommandUsageException("/cms <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer] [playercount:Integer [playerradius:Double]]");
 		final int length = args.length;
-		CreatureType type = null;
+		EntityType type = null;
 		int amount = 1;
 		int delay = 0;
 		int repeat = 0;
 		int interval = 1;
+		double playerradius = 12;
+		int playercount = 0;
 		try
 		{
-			type = CreatureType.valueOf(args[0].toUpperCase());// .fromName(args[0]);
+			type = EntityType.valueOf(args[0].toUpperCase());// .fromName(args[0]);
 		}
 		catch (final Exception e)
 		{
@@ -146,6 +147,28 @@ public class CrazySpawner extends CrazyPlugin
 				{
 					throw new CrazyCommandParameterException(i, "interval:Integer");
 				}
+			else if (arg.startsWith("playercount:"))
+				try
+				{
+					playercount = Integer.parseInt(arg.substring(12));
+					if (playercount < 0)
+						throw new CrazyCommandParameterException(i, "playercount:positive Integer");
+				}
+				catch (final NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(i, "playercount:Integer");
+				}
+			else if (arg.startsWith("playerradius:"))
+				try
+				{
+					playerradius = Double.parseDouble(arg.substring(13));
+					if (playerradius < 0)
+						throw new CrazyCommandParameterException(i, "playerradius:positive Double");
+				}
+				catch (final NumberFormatException e)
+				{
+					throw new CrazyCommandParameterException(i, "playerradius:Double");
+				}
 			else
 				try
 				{
@@ -155,7 +178,7 @@ public class CrazySpawner extends CrazyPlugin
 				}
 				catch (final NumberFormatException e)
 				{
-					throw new CrazyCommandUsageException("/cms <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer]");
+					throw new CrazyCommandUsageException("/cms <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer] [playercount:Integer [playerradius:Double]]");
 				}
 		}
 		try
@@ -164,17 +187,13 @@ public class CrazySpawner extends CrazyPlugin
 			while (location.add(0, -1, 0).getBlock().isEmpty() && location.getBlockZ() > 0)
 				;
 			location.add(0, 1, 0);
-			delay -= interval;
-			delay *= 20;
-			interval *= 20;
-			for (int i = 0; i <= repeat; i++)
-				Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new CrazySpawnerSpawnTask(location, type, amount), delay += interval);
+			Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new CrazySpawnerSpawnTask(this, location, type, amount, interval * 20, repeat, playerradius, playercount), delay * 20);
+			sendLocaleMessage("COMMAND.SPAWN", player, String.valueOf(amount), type.getName());
 		}
 		catch (final Exception e)
 		{
 			throw new CrazyCommandException();
 		}
-		sendLocaleMessage("COMMAND.SPAWN", player, String.valueOf(amount), type.getName());
 	}
 
 	@Override
