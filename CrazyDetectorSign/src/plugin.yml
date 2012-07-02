@@ -3,7 +3,7 @@ main: de.st_ddt.crazydetectorsign.CrazyDetectorSign
 author: ST-DDT
 #C*=needed core version
 version: C7.5.1_1.1.1
-softdepend: [CrazyCore,PermissionsBukkit]
+depend: [CrazyCore]
 description: >
             Use Detector Signs to trigger redstone.
 commands:
