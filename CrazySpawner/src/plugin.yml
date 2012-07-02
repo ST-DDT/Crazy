@@ -8,7 +8,7 @@ depend: [CrazyCore]
 commands:
   crazyspawn:
     description: Spawn Monster and Animals
-    usage: /<command> <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer]
+    usage: /<command> <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer] [playercount:Integer [playerradius:Double]]
     aliases: [crazymobs, cms]
   crazykill:
     description: Kill monsters (and animals if true)
