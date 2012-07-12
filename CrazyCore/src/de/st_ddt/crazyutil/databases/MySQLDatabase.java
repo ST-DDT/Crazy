@@ -141,6 +141,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		{
 			query = connection.getConnection().createStatement();
 			result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "' LIMIT 1");
+			result.next();
 			try
 			{
 				res = constructor.newInstance(result, columnNames);
