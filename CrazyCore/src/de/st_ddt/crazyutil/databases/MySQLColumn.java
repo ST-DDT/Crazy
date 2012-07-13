@@ -75,7 +75,7 @@ public class MySQLColumn
 
 	public String getCreateString()
 	{
-		return name + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
+		return name + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL ")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
 	}
 
 	public static String getFullCreateString(final MySQLColumn... columns)
