@@ -3,7 +3,7 @@ package de.st_ddt.crazyonline.databases;
 import java.util.Date;
 
 import de.st_ddt.crazyonline.OnlinePlayerData;
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyutil.databases.MySQLColumn;
 import de.st_ddt.crazyutil.databases.MySQLConnection;
 import de.st_ddt.crazyutil.databases.MySQLDatabase;
@@ -20,7 +20,7 @@ public class CrazyOnlineMySQLDatabase extends MySQLDatabase<OnlinePlayerData>
 	private static MySQLColumn[] getColumns(final String colName, final String colFirstLogin, final String colLastLogin, final String colLastLogout, final String colOnlineTime)
 	{
 		final MySQLColumn[] columns = new MySQLColumn[5];
-		String defaultDate=CrazyPlugin.DateFormat.format(new Date(0));
+		final String defaultDate = "'" + CrazyPluginInterface.DateFormat.format(new Date(0)) + "'";
 		columns[0] = new MySQLColumn(colName, "CHAR(50)", true, false);
 		columns[1] = new MySQLColumn(colFirstLogin, "CHAR(19)", defaultDate, false, false);
 		columns[2] = new MySQLColumn(colLastLogin, "CHAR(19)", defaultDate, false, false);
