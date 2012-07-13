@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
+import de.st_ddt.crazycore.CrazyPage;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
@@ -86,48 +86,13 @@ public class ChatHelper
 			amount = 10;
 		if (amount < 0)
 			amount = lastIndex;
-		sendMessage(target, chatHeader, headLocale, page, (datas.size() + amount - 1) / amount);
 		if (seperator == null)
 			seperator = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.SEPERATOR");
-		sendMessage(target, chatHeader, seperator);
-		if (lastIndex + amount - 1 < page * amount)
-		{
-			if (emptyPage == null)
-				emptyPage = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.EMPTYPAGE");
-			sendMessage(target, chatHeader, emptyPage, page);
-			return;
-		}
+		if (emptyPage == null)
+			emptyPage = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.EMPTYPAGE");
 		if (entry == null)
 			entry = CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.ENTRY");
-		StringBuilder formatString = new StringBuilder();
-		for (int i = lastIndex; i > 0; i /= 10)
-			formatString.append(" ");
-		String format = formatString.toString();
-		int length = format.length();
-		lastIndex = Math.min(lastIndex, page * amount);
-		if (target instanceof ConsoleCommandSender)
-		{
-			for (int i = page * amount - amount; i < lastIndex; i++)
-				sendMessage(target, chatHeader, entry, listShiftHelperConsole(String.valueOf(i + 1), length, format), getter.getEntryData(datas.get(i)));
-		}
-		else
-		{
-			format += format;
-			for (int i = page * amount - amount; i < lastIndex; i++)
-				sendMessage(target, chatHeader, entry, listShiftHelper(String.valueOf(i + 1), length, format), getter.getEntryData(datas.get(i)));
-		}
-	}
-
-	private static String listShiftHelper(String number, int length, String filler)
-	{
-		String res = filler + number;
-		return res.substring(number.length() * 2);
-	}
-
-	private static String listShiftHelperConsole(String number, int length, String filler)
-	{
-		String res = filler + number;
-		return res.substring(number.length());
+		CrazyPage.storePagedData(target, chatHeader, headLocale, seperator, entry, emptyPage, amount, page, datas, getter).show(target);
 	}
 
 	public static String putArgs(final String message, final Object... args)
