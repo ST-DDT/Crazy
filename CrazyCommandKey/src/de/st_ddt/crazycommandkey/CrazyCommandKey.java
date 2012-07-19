@@ -15,12 +15,14 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.CrazyLogger;
 
 public class CrazyCommandKey extends CrazyPlugin
 {
 
 	private static CrazyCommandKey plugin;
 	protected final HashMap<String, String> keys = new HashMap<String, String>();
+	protected final CrazyLogger logger = new CrazyLogger(this);
 
 	public static CrazyCommandKey getPlugin()
 	{
@@ -45,6 +47,7 @@ public class CrazyCommandKey extends CrazyPlugin
 	{
 		super.load();
 		final ConfigurationSection config = getConfig();
+		logger.createLogChannels(config.getConfigurationSection("logs"), "KeyUse", "KeyGen");
 		keys.clear();
 		final ConfigurationSection keySection = config.getConfigurationSection("keys");
 		if (keySection != null)
@@ -56,6 +59,7 @@ public class CrazyCommandKey extends CrazyPlugin
 	public void save()
 	{
 		final ConfigurationSection config = getConfig();
+		logger.save(config, "logs.");
 		config.set("keys", null);
 		for (final Entry<String, String> entry : keys.entrySet())
 			config.set("keys." + entry.getKey(), entry.getValue());
@@ -110,6 +114,7 @@ public class CrazyCommandKey extends CrazyPlugin
 			genKeys.add(key);
 		}
 		sendLocaleMessage("COMMAND.KEYGEN", sender, ChatHelper.listingString(genKeys));
+		logger.log("KeyGen", sender.getName() + " created " + amount + " keys for Command: " + command, "Keys: " + ChatHelper.listingString(genKeys));
 		save();
 	}
 
@@ -125,6 +130,7 @@ public class CrazyCommandKey extends CrazyPlugin
 		command = ChatHelper.putArgs(command, sender.getName());
 		sendLocaleMessage("COMMAND.KEYUSE", sender, args[0]);
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+		logger.log("KeyUse", sender.getName() + " used key: " + args[0], "Command: " + command);
 		save();
 	}
 }
