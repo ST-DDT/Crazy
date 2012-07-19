@@ -1,4 +1,4 @@
-package de.st_ddt.crazycore;
+package de.st_ddt.crazyutil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +8,6 @@ import org.bukkit.command.ConsoleCommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.EntryDataGetter;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class CrazyPage<S>

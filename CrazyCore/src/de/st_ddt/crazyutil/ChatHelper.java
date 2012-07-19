@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
-import de.st_ddt.crazycore.CrazyPage;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
