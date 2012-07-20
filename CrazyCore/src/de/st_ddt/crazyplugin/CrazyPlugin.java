@@ -27,15 +27,17 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Commandable;
+import de.st_ddt.crazyutil.CrazyLogger;
 import de.st_ddt.crazyutil.EntryDataGetter;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandable, CrazyPluginInterface
 {
 
+	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	protected final CrazyLogger logger = new CrazyLogger(this);
 	protected CrazyLocale locale = null;
 	protected boolean isUpdated = false;
-	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 
 	public static Collection<CrazyPlugin> getCrazyPlugins()
 	{
@@ -334,6 +336,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 			if (permission != null)
 				if (player.hasPermission(permission))
 					sendLocaleMessage(locale, player, args);
+	}
+
+	public final CrazyLogger getCrazyLogger()
+	{
+		return logger;
 	}
 
 	public final CrazyLocale getLocale()

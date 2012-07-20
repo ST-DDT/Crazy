@@ -159,22 +159,25 @@ public class CrazyLogger
 		return log;
 	}
 
+	public boolean isRootLogChannel(String channel)
+	{
+		return logPathsByName.get(channel).startsWith("$");
+	}
+
+	public void log(final String channel, final String... message)
+	{
+		log(channel, level, message);
+	}
+
 	public void log(final String channel, final Level level, final String... message)
 	{
 		final Logger log = getLogChannel(channel);
 		if (log == null)
 			return;
-		for (final String msg : message)
-			log.log(level, msg);
-	}
-
-	public void log(final String channel, final String... message)
-	{
-		final Logger log = getLogChannel(channel);
-		if (log == null)
-			return;
-		for (final String msg : message)
-			log.log(level, msg);
+		if (isRootLogChannel(channel))
+			log.log(level, "[" + plugin.getName() + "." + channel + "]" + ChatHelper.listingString("\n\t", message));
+		else
+			log.log(level, "[" + channel + "]" + ChatHelper.listingString("\n\t", message));
 	}
 
 	public void save(final ConfigurationSection config, final String path)
