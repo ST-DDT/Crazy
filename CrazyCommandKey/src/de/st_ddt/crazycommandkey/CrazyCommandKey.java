@@ -15,14 +15,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.CrazyLogger;
 
 public class CrazyCommandKey extends CrazyPlugin
 {
 
 	private static CrazyCommandKey plugin;
 	protected final HashMap<String, String> keys = new HashMap<String, String>();
-	protected final CrazyLogger logger = new CrazyLogger(this);
 
 	public static CrazyCommandKey getPlugin()
 	{
