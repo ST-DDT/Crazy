@@ -82,10 +82,9 @@ public class CrazyLogger
 
 	public Logger createLogChannel(final String channel, final String path)
 	{
-		System.out.println(channel);
 		if (path == null)
 			return logChannelsByName.get(channel);
-		if (path.startsWith("@"))
+		if (path.startsWith("$"))
 			return createRootLogChannel(channel, path.substring(1));
 		Logger log = logChannelsByPath.get(path);
 		if (log == null)
@@ -156,7 +155,7 @@ public class CrazyLogger
 			logChannelsByPath.put(path, log);
 		}
 		logChannelsByName.put(channel, log);
-		logPathsByName.put(channel, "@" + path);
+		logPathsByName.put(channel, "$" + path);
 		return log;
 	}
 
