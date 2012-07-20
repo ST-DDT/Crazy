@@ -19,44 +19,57 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 public class CrazyLogger
 {
 
+	protected static final Formatter formater = new CrazyLogFormat();
 	protected final HashMap<String, Logger> logChannelsByName = new HashMap<String, Logger>();
 	protected final HashMap<String, String> logPathsByName = new HashMap<String, String>();
 	protected final HashMap<String, Logger> logChannelsByPath = new HashMap<String, Logger>();
-	protected final Formatter formater = new CrazyLogFormat();
 	protected final CrazyPlugin plugin;
-	protected Level level = Level.FINE;
+	protected Level level;
 
 	public CrazyLogger(final CrazyPlugin plugin)
 	{
 		this.plugin = plugin;
+		this.level = Level.FINE;
+	}
+
+	public CrazyLogger(final CrazyPlugin plugin, final Level level)
+	{
+		this.plugin = plugin;
+		this.level = level;
+	}
+
+	public CrazyPlugin getPlugin()
+	{
+		return plugin;
+	}
+
+	public Level getLevel()
+	{
+		return level;
+	}
+
+	public void setLevel(final Level level)
+	{
+		this.level = level;
+	}
+
+	public Logger getLogChannel(final String channel)
+	{
+		return logChannelsByName.get(channel);
+	}
+
+	public Collection<Logger> getLoggers()
+	{
+		return logChannelsByPath.values();
 	}
 
 	public void createEmptyLogChannels(final String... channels)
 	{
-		for (String channel : channels)
+		for (final String channel : channels)
 			logChannelsByName.put(channel, null);
 	}
 
-	public void createLogChannels(ConfigurationSection config, final String... channels)
-	{
-		if (config == null)
-		{
-			createEmptyLogChannels(channels);
-			return;
-		}
-		for (String channel : channels)
-		{
-			logChannelsByName.put(channel, null);
-			if (!config.getBoolean(channel, true))
-				logChannelsByName.put(channel, null);
-			else if (config.getBoolean(channel, false))
-				createLogChannel(channel, "logs/plugin.log");
-			else
-				createLogChannel(channel, config.getString(channel, null));
-		}
-	}
-
-	public Logger createLogChannel(final String channel, ConfigurationSection config, String defaulPath)
+	public Logger createLogChannel(final String channel, final ConfigurationSection config, final String defaulPath)
 	{
 		if (config == null)
 			return createLogChannel(channel, defaulPath);
@@ -99,6 +112,25 @@ public class CrazyLogger
 		return log;
 	}
 
+	public void createLogChannels(final ConfigurationSection config, final String... channels)
+	{
+		if (config == null)
+		{
+			createEmptyLogChannels(channels);
+			return;
+		}
+		for (final String channel : channels)
+		{
+			logChannelsByName.put(channel, null);
+			if (!config.getBoolean(channel, true))
+				logChannelsByName.put(channel, null);
+			else if (config.getBoolean(channel, false))
+				createLogChannel(channel, "logs/plugin.log");
+			else
+				createLogChannel(channel, config.getString(channel, null));
+		}
+	}
+
 	public Logger createRootLogChannel(final String channel, final String path)
 	{
 		if (path == null)
@@ -128,18 +160,13 @@ public class CrazyLogger
 		return log;
 	}
 
-	public Logger getLogChannel(final String channel)
+	public void log(final String channel, final Level level, final String... message)
 	{
-		return logChannelsByName.get(channel);
-	}
-
-	// public void removeLogChannel(String channel)
-	// {
-	// logChannelsByName.remove(channel);
-	// }
-	public Collection<Logger> getLoggers()
-	{
-		return logChannelsByPath.values();
+		final Logger log = getLogChannel(channel);
+		if (log == null)
+			return;
+		for (final String msg : message)
+			log.log(level, msg);
 	}
 
 	public void log(final String channel, final String... message)
@@ -151,40 +178,16 @@ public class CrazyLogger
 			log.log(level, msg);
 	}
 
-	public void log(final String channel, final Level level, final String... message)
+	public void save(final ConfigurationSection config, final String path)
 	{
-		final Logger log = getLogChannel(channel);
-		if (log == null)
-			return;
-		for (final String msg : message)
-			log.log(level, msg);
-	}
-
-	public Level getLevel()
-	{
-		return level;
-	}
-
-	public void setLevel(final Level level)
-	{
-		this.level = level;
-	}
-
-	public CrazyPlugin getPlugin()
-	{
-		return plugin;
-	}
-
-	public void save(ConfigurationSection config, String path)
-	{
-		for (Entry<String, Logger> entry : logChannelsByName.entrySet())
+		for (final Entry<String, Logger> entry : logChannelsByName.entrySet())
 			if (entry.getValue() == null)
 				config.set(path + entry.getKey(), false);
 			else
 				config.set(path + entry.getKey(), logPathsByName.get(entry.getKey()));
 	}
 
-	protected class CrazyLogFormat extends Formatter
+	protected static class CrazyLogFormat extends Formatter
 	{
 
 		@Override
