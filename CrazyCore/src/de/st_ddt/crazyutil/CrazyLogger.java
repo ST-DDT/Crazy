@@ -175,9 +175,9 @@ public class CrazyLogger
 		if (log == null)
 			return;
 		if (isRootLogChannel(channel))
-			log.log(level, "[" + plugin.getName() + "." + channel + "]" + ChatHelper.listingString("\n\t", message));
+			log.log(level, "[" + plugin.getName() + "." + channel + "] " + ChatHelper.listingString("\n\t", message));
 		else
-			log.log(level, "[" + channel + "]" + ChatHelper.listingString("\n\t", message));
+			log.log(level, "[" + channel + "] " + ChatHelper.listingString("\n\t", message));
 	}
 
 	public void save(final ConfigurationSection config, final String path)
