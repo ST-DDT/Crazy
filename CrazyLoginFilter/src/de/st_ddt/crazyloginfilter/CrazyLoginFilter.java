@@ -90,6 +90,12 @@ public class CrazyLoginFilter extends CrazyPlugin
 				System.out.println("Invalid Server Access Filter config!");
 				serverFilter = new PlayerAccessFilter("serverFilter");
 			}
+		if (filterNames.equals("false"))
+			filterNames = ".";
+		else if (filterNames.equals("true"))
+			filterNames = "[a-zA-Z0-9_]";
+		minNameLength = Math.min(Math.max(config.getInt("minNameLength", 3), 1), 16);
+		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 16);
 		setupDatabase();
 		datas.clear();
 		if (database != null)
