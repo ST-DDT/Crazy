@@ -16,3 +16,12 @@ permissions:
     default: false
     children:
       crazyloginfilter.admin: true
+      crazyloginfilter.mode: true
+  crazyloginfilter.admin:
+    description: Allow changing account data for other players
+    default: op
+    children: 
+      crazyloginfilter.mode: true
+  crazyloginfilter.mode:
+    description: Allow changing plugin mode
+    default: op

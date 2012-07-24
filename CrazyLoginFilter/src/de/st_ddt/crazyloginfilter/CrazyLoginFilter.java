@@ -20,6 +20,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyplugin.exceptions.CrazyNotImplementedException;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ToStringDataGetter;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.DatabaseType;
@@ -29,6 +30,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 
 	private static CrazyLoginFilter plugin;
 	protected final HashMap<String, PlayerAccessFilter> datas = new HashMap<String, PlayerAccessFilter>();
+	protected PlayerAccessFilter serverFilter;
 	private CrazyLoginFilterPlayerListener playerListener;
 	protected String filterNames;
 	protected int minNameLength;
@@ -75,6 +77,19 @@ public class CrazyLoginFilter extends CrazyPlugin
 	public void load()
 	{
 		super.load();
+		final ConfigurationSection config = getConfig();
+		if (config.getConfigurationSection("serverFilter") == null)
+			serverFilter = new PlayerAccessFilter("serverFilter");
+		else
+			try
+			{
+				serverFilter = new PlayerAccessFilter(config.getConfigurationSection("serverFilter"));
+			}
+			catch (final Exception e)
+			{
+				System.out.println("Invalid Server Access Filter config!");
+				serverFilter = new PlayerAccessFilter("serverFilter");
+			}
 		setupDatabase();
 		datas.clear();
 		if (database != null)
@@ -142,6 +157,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
+		serverFilter.saveToConfigDatabase(config, "serverFilter", new String[] { "name", "checkIP", "whitelistIP", "ips", "checkConnection", "whitelistConnection", "connections" });
 		if (filterNames.equals("."))
 			config.set("filterNames", false);
 		else
@@ -181,12 +197,36 @@ public class CrazyLoginFilter extends CrazyPlugin
 			commandMainDelete(sender, args);
 			return true;
 		}
+		if (commandLabel.equalsIgnoreCase("serverfilter"))
+		{
+			final String[] newArgs = ChatHelper.shiftArray(args, 1);
+			commandMainServerFilter(sender, args[0], newArgs);
+			return true;
+		}
 		if (commandLabel.equalsIgnoreCase("mode"))
 		{
 			commandMainMode(sender, args);
 			return true;
 		}
 		return false;
+	}
+
+	private void commandMainServerFilter(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
+	{
+		if (!sender.hasPermission("crazyloginfilter.admin"))
+			throw new CrazyCommandPermissionException();
+		if (commandLabel.equalsIgnoreCase("show"))
+		{
+			commandMainShow(sender, args, serverFilter);
+		}
+		else if (commandLabel.equalsIgnoreCase("ip") || commandLabel.equalsIgnoreCase("ips"))
+		{
+			commandMainIP(sender, args, serverFilter);
+		}
+		else if (commandLabel.equalsIgnoreCase("connection") || commandLabel.equalsIgnoreCase("connections"))
+		{
+			commandMainConnection(sender, args, serverFilter);
+		}
 	}
 
 	private void commandMainCreate(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -202,6 +242,14 @@ public class CrazyLoginFilter extends CrazyPlugin
 	}
 
 	private void commandMainShow(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (sender instanceof ConsoleCommandSender)
+			throw new CrazyCommandExecutorException(false);
+		final Player player = (Player) sender;
+		commandMainShow(sender, args, getPlayerAccessFilter(player));
+	}
+
+	private void commandMainShow(final CommandSender sender, final String[] args, final PlayerAccessFilter data) throws CrazyException
 	{
 		throw new CrazyNotImplementedException();
 	}
@@ -397,7 +445,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 
 	private void commandMainMode(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
-		if (!sender.hasPermission("crazylogin.mode"))
+		if (!sender.hasPermission("crazyloginfilter.mode"))
 			throw new CrazyCommandPermissionException();
 		switch (args.length)
 		{
