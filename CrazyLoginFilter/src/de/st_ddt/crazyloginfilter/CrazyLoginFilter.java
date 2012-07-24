@@ -90,6 +90,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 				System.out.println("Invalid Server Access Filter config!");
 				serverFilter = new PlayerAccessFilter("serverFilter");
 			}
+		filterNames = config.getString("filterNames", "false");
 		if (filterNames.equals("false"))
 			filterNames = ".";
 		else if (filterNames.equals("true"))
