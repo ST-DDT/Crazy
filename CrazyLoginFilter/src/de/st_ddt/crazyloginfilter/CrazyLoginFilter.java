@@ -28,8 +28,12 @@ public class CrazyLoginFilter extends CrazyPlugin
 	private static CrazyLoginFilter plugin;
 	protected final HashMap<String, PlayerAccessFilter> datas = new HashMap<String, PlayerAccessFilter>();
 	private CrazyLoginFilterPlayerListener playerListener;
+	protected String filterNames;
+	protected int minNameLength;
+	protected int maxNameLength;
 	// Database
 	protected Database<PlayerAccessFilter> database;
+	protected boolean saveDatabaseOnShutdown;
 
 	public static CrazyLoginFilter getPlugin()
 	{
@@ -48,6 +52,14 @@ public class CrazyLoginFilter extends CrazyPlugin
 		plugin = this;
 		registerHooks();
 		super.onEnable();
+	}
+
+	@Override
+	public void onDisable()
+	{
+		if (saveDatabaseOnShutdown)
+			saveDatabase();
+		saveConfiguration();
 	}
 
 	public void registerHooks()
@@ -112,12 +124,31 @@ public class CrazyLoginFilter extends CrazyPlugin
 	@Override
 	public void save()
 	{
+		saveDatabase();
+		saveConfiguration();
+	}
+
+	public void saveDatabase()
+	{
 		final ConfigurationSection config = getConfig();
 		if (database != null)
 			config.set("database.saveType", database.getType().toString());
 		if (database != null)
 			database.saveAll(datas.values());
-		super.save();
+	}
+
+	public void saveConfiguration()
+	{
+		final ConfigurationSection config = getConfig();
+		if (filterNames.equals("."))
+			config.set("filterNames", false);
+		else
+			config.set("filterNames", filterNames);
+		config.set("minNameLength", minNameLength);
+		config.set("maxNameLength", maxNameLength);
+		config.set("database.saveOnShutdown", saveDatabaseOnShutdown);
+		logger.save(config, "logs.");
+		saveConfig();
 	}
 
 	@Override
@@ -410,6 +441,31 @@ public class CrazyLoginFilter extends CrazyPlugin
 			return false;
 		if (database != null)
 			database.delete(data.getName());
+		return true;
+	}
+
+	public boolean checkNameChars(String name)
+	{
+		return name.matches(filterNames + "*");
+	}
+
+	public int getMinNameLength()
+	{
+		return minNameLength;
+	}
+
+	public int getMaxNameLength()
+	{
+		return maxNameLength;
+	}
+
+	public boolean checkNameLength(final String name)
+	{
+		final int length = name.length();
+		if (length < minNameLength)
+			return false;
+		if (length > maxNameLength)
+			return false;
 		return true;
 	}
 }
