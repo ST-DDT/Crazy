@@ -3,15 +3,19 @@ package de.st_ddt.crazypunisher;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -38,10 +42,43 @@ public class CrazyPunisherPlayerListener implements Listener
 		plugin.sendLocaleMessage("MESSAGE.JAILED", event.getPlayer());
 	}
 
-	@EventHandler
-	public void PlayerDropItem(PlayerDropItemEvent event)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+	public void PlayerInventoryOpen(final InventoryOpenEvent event)
 	{
-		if (!plugin.isJailed(event.getPlayer()))
+		if (!(event.getPlayer() instanceof Player))
+			return;
+		final Player player = (Player) event.getPlayer();
+		if (plugin.isJailed(player))
+			return;
+		event.setCancelled(true);
+		plugin.sendLocaleMessage("MESSAGE.JAILED", player);
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+	public void PlayerInventoryClick(final InventoryClickEvent event)
+	{
+		if (!(event.getWhoClicked() instanceof Player))
+			return;
+		final Player player = (Player) event.getWhoClicked();
+		if (plugin.isJailed(player))
+			return;
+		event.setCancelled(true);
+		plugin.sendLocaleMessage("MESSAGE.JAILED", player);
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+	public void PlayerPickupItem(final PlayerPickupItemEvent event)
+	{
+		if (plugin.isJailed(event.getPlayer()))
+			return;
+		event.setCancelled(true);
+		plugin.sendLocaleMessage("MESSAGE.JAILED", event.getPlayer());
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+	public void PlayerDropItem(final PlayerDropItemEvent event)
+	{
+		if (plugin.isJailed(event.getPlayer()))
 			return;
 		event.setCancelled(true);
 		plugin.sendLocaleMessage("MESSAGE.JAILED", event.getPlayer());
