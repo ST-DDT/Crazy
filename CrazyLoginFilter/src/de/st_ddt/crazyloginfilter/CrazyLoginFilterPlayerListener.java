@@ -44,8 +44,8 @@ public class CrazyLoginFilterPlayerListener implements Listener
 		}
 	}
 
-	@EventHandler
-	public void PlayerLoginConnectionCheck(final PlayerLoginEvent event)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void PlayerLoginAccessCheck(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
 		if (!plugin.checkIP(player, event.getAddress().getHostAddress()) || !plugin.checkConnection(player, event.getHostname()))

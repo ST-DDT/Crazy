@@ -550,6 +550,8 @@ public class CrazyLoginFilter extends CrazyPlugin
 
 	public boolean checkIP(final String player, final String IP)
 	{
+		if (!serverFilter.checkIP(IP))
+			return false;
 		final PlayerAccessFilter filter = getPlayerAccessFilter(player);
 		if (filter == null)
 			return true;
@@ -568,6 +570,8 @@ public class CrazyLoginFilter extends CrazyPlugin
 
 	public boolean checkConnection(final String player, final String connection)
 	{
+		if (!serverFilter.checkConnection(connection))
+			return false;
 		final PlayerAccessFilter filter = getPlayerAccessFilter(player);
 		if (filter == null)
 			return true;
@@ -582,6 +586,11 @@ public class CrazyLoginFilter extends CrazyPlugin
 	public PlayerAccessFilter getPlayerAccessFilter(final String player)
 	{
 		return datas.get(player.toLowerCase());
+	}
+
+	public PlayerAccessFilter getServerAccessFilter()
+	{
+		return serverFilter;
 	}
 
 	public boolean deletePlayerData(final String player)
