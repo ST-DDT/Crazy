@@ -48,7 +48,7 @@ public class CrazyPunisherPlayerListener implements Listener
 		if (!(event.getPlayer() instanceof Player))
 			return;
 		final Player player = (Player) event.getPlayer();
-		if (plugin.isJailed(player))
+		if (!plugin.isJailed(player))
 			return;
 		event.setCancelled(true);
 		plugin.sendLocaleMessage("MESSAGE.JAILED", player);
@@ -60,7 +60,7 @@ public class CrazyPunisherPlayerListener implements Listener
 		if (!(event.getWhoClicked() instanceof Player))
 			return;
 		final Player player = (Player) event.getWhoClicked();
-		if (plugin.isJailed(player))
+		if (!plugin.isJailed(player))
 			return;
 		event.setCancelled(true);
 		plugin.sendLocaleMessage("MESSAGE.JAILED", player);
@@ -69,7 +69,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
 	public void PlayerPickupItem(final PlayerPickupItemEvent event)
 	{
-		if (plugin.isJailed(event.getPlayer()))
+		if (!plugin.isJailed(event.getPlayer()))
 			return;
 		event.setCancelled(true);
 		plugin.sendLocaleMessage("MESSAGE.JAILED", event.getPlayer());
@@ -78,7 +78,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
 	public void PlayerDropItem(final PlayerDropItemEvent event)
 	{
-		if (plugin.isJailed(event.getPlayer()))
+		if (!plugin.isJailed(event.getPlayer()))
 			return;
 		event.setCancelled(true);
 		plugin.sendLocaleMessage("MESSAGE.JAILED", event.getPlayer());
