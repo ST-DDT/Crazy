@@ -2,7 +2,7 @@ name: CrazyLoginFilter
 main: de.st_ddt.crazyloginfilter.CrazyLoginFilter
 author: ST-DDT
 #C*=needed core version
-version: C7.5_0.2
+version: C7.6_0.3
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
