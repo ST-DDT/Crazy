@@ -31,7 +31,7 @@ public class ConditionPlayerTimeSinceLastJoin extends ConditionPlayer
 	@Override
 	public String getTypeIdentifier()
 	{
-		return "TimeSinceFirstJoin";
+		return "TimeSinceLastJoin";
 	}
 
 	@Override
