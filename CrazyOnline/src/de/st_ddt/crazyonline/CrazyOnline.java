@@ -59,6 +59,7 @@ public class CrazyOnline extends CrazyPlugin
 		super.load();
 		final ConfigurationSection config = getConfig();
 		showOnlineInfo = config.getBoolean("showOnlineInfo", true);
+		logger.createLogChannels(config.getConfigurationSection("logs"), "Join", "Quit");
 		datas.clear();
 		setupDatabase();
 		if (database != null)
@@ -112,19 +113,25 @@ public class CrazyOnline extends CrazyPlugin
 	@Override
 	public void save()
 	{
+		saveDatabase();
+		saveConfiguration();
+	}
+
+	public void saveDatabase()
+	{
 		final ConfigurationSection config = getConfig();
 		if (database != null)
 			config.set("database.saveType", database.getType().toString());
 		if (database != null)
 			database.saveAll(datas.values());
-		saveConfiguration();
 	}
 
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("showOnlineInfo", showOnlineInfo);
-		super.save();
+		logger.save(config, "logs.");
+		saveConfig();
 	}
 
 	public void registerHooks()

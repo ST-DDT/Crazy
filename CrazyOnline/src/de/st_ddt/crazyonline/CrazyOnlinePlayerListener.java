@@ -39,12 +39,15 @@ public class CrazyOnlinePlayerListener implements Listener
 				{
 					e.printStackTrace();
 				}
+		plugin.getCrazyLogger().log("Join", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " joined the server");
 	}
 
 	@EventHandler
 	public void PlayerQuit(final PlayerQuitEvent event)
 	{
-		final OnlinePlayerData data = plugin.getPlayerData(event.getPlayer());
+		final Player player = event.getPlayer();
+		plugin.getCrazyLogger().log("Quit", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " left the server");
+		final OnlinePlayerData data = plugin.getPlayerData(player);
 		if (data == null)
 			return;
 		data.logout();
