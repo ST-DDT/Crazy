@@ -26,12 +26,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.Commandable;
 import de.st_ddt.crazyutil.CrazyLogger;
 import de.st_ddt.crazyutil.EntryDataGetter;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandable, CrazyPluginInterface
+public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPluginInterface
 {
 
 	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
@@ -131,18 +130,19 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 		return false;
 	}
 
+	@Override
 	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
 	}
 
-	public void commandInfo(final CommandSender sender, final String[] newArgs)
+	private void commandInfo(final CommandSender sender, final String[] newArgs)
 	{
 		sender.sendMessage(getChatHeader() + "Version " + getDescription().getVersion());
 		sender.sendMessage(getChatHeader() + "Authors " + getDescription().getAuthors().toString());
 	}
 
-	public final void commandReload(final CommandSender sender, final String[] args) throws CrazyCommandException
+	private final void commandReload(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission(getDescription().getName().toLowerCase() + ".reload"))
 			throw new CrazyCommandPermissionException();
@@ -338,11 +338,13 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements Commandabl
 					sendLocaleMessage(locale, player, args);
 	}
 
+	@Override
 	public final CrazyLogger getCrazyLogger()
 	{
 		return logger;
 	}
 
+	@Override
 	public final CrazyLocale getLocale()
 	{
 		return locale;
