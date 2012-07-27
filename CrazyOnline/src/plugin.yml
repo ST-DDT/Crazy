@@ -30,6 +30,17 @@ permissions:
     description: Access to all commands
     default: false
     children:
+      crazyonline.admin: true
+      crazyonline.info: true
+      crazyonline.online: true
+      crazyonline.since: true
+      crazyonline.since.auto: true
+      crazyonline.till: true
+      crazyonline.top10: true
+  crazyonline.admin:
+    description: Access to admit commands
+    default: op
+    children:
       crazyonline.info: true
       crazyonline.online: true
       crazyonline.since: true
