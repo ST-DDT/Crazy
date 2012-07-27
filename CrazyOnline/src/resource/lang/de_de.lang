@@ -12,3 +12,5 @@ CRAZYONLINE.MESSAGE.INFO.TIME.TOTAL=Gesamte Onlinezeit: $0$
 CRAZYONLINE.MESSAGE.SEPERATOR=--------------------------------------
 CRAZYONLINE.MESSAGE.LIST=$0$ - $1$
 CRAZYONLINE.MODE.CHANGE=Modus "$0$"="$1$" gesetzt
+CRAZYONLINE.COMMAND.DELETE=Spielerdaten von $0$ gelöscht.
+CRAZYONLINE.COMMAND.RESET=Onlinezeit von $0$ zurückgesetzt.

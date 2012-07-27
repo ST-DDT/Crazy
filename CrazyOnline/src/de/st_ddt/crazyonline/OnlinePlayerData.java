@@ -31,7 +31,7 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	public OnlinePlayerData(final String name)
 	{
 		super();
-		this.name = name.toLowerCase();
+		this.name = name;
 		this.firstLogin = new Date();
 		this.lastLogin = new Date();
 		this.lastLogout = new Date();
@@ -250,8 +250,15 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	{
 		long time = onlineTime;
 		if (lastLogin.after(lastLogout))
-			time += (int) ((new Date().getTime() - lastLogin.getTime()) / 1000 / 60);
+			time += Math.round((new Date().getTime() - lastLogin.getTime()) / 1000 / 60);
 		return time;
+	}
+
+	public void resetOnlineTime()
+	{
+		onlineTime = 0;
+		if (lastLogin.after(lastLogout))
+			lastLogin = new Date();
 	}
 
 	public static SimpleDateFormat getDateFormat()

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,7 +25,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.databases.MySQLConnection;
@@ -369,10 +369,19 @@ public class CrazyOnline extends CrazyPlugin
 	@Override
 	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
-		final String[] newArgs = ChatHelper.shiftArray(args, 1);
 		if (commandLabel.equalsIgnoreCase("mode"))
 		{
-			commandMainMode(sender, newArgs);
+			commandMainMode(sender, args);
+			return true;
+		}
+		if (commandLabel.equalsIgnoreCase("delete"))
+		{
+			commandMainDelete(sender, args);
+			return true;
+		}
+		if (commandLabel.equalsIgnoreCase("reset"))
+		{
+			commandMainReset(sender, args);
 			return true;
 		}
 		return false;
@@ -435,9 +444,46 @@ public class CrazyOnline extends CrazyPlugin
 		}
 	}
 
+	private void commandMainDelete(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazyonline.admin"))
+			throw new CrazyCommandPermissionException();
+		if (args.length != 1)
+			throw new CrazyCommandUsageException("/crazyonline delete <Name>");
+		final String name = args[0];
+		OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+		if (player == null)
+			throw new CrazyCommandNoSuchException("Player", name);
+		OnlinePlayerData data = getPlayerData(name);
+		if (data == null)
+			throw new CrazyCommandNoSuchException("Player", name);
+		datas.remove(name.toLowerCase());
+		database.delete(player.getName());
+		sendLocaleMessage("COMMAND.DELETE", sender, name);
+	}
+
+	private void commandMainReset(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazyonline.admin"))
+			throw new CrazyCommandPermissionException();
+		if (args.length != 1)
+			throw new CrazyCommandUsageException("/crazyonline delete <Name>");
+		final String name = args[0];
+		OnlinePlayerData data = getPlayerData(name);
+		if (data == null)
+			throw new CrazyCommandNoSuchException("Player", name);
+		data.resetOnlineTime();
+		sendLocaleMessage("COMMAND.RESET", sender, name);
+	}
+
 	public OnlinePlayerData getPlayerData(final OfflinePlayer player)
 	{
 		return datas.get(player.getName().toLowerCase());
+	}
+
+	public OnlinePlayerData getPlayerData(final String name)
+	{
+		return datas.get(name.toLowerCase());
 	}
 
 	public HashMap<String, OnlinePlayerData> getDatas()

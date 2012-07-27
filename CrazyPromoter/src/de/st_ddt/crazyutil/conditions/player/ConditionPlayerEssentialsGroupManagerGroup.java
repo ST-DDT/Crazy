@@ -26,8 +26,12 @@ public class ConditionPlayerEssentialsGroupManagerGroup extends ConditionPlayerG
 	public boolean match(final Player tester)
 	{
 		final User user = getGroupManager().getWorldsHolder().getWorldData(tester).getUser(tester.getName());
+		System.out.println("CRAZYDEBUG");
+		System.out.println("Match " + tester.getName());
 		if (user == null)
 			return false;
+		System.out.println("CRAZYDEBUG");
+		System.out.println("groupname " + user.getGroupName());
 		return user.getGroupName().equals(groupname);
 	}
 
@@ -40,6 +44,8 @@ public class ConditionPlayerEssentialsGroupManagerGroup extends ConditionPlayerG
 		}
 		catch (final Exception e)
 		{
+			System.out.println("CRAZYDEBUG");
+			e.printStackTrace();
 			plugin = null;
 		}
 		return plugin;
