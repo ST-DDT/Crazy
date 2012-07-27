@@ -200,9 +200,6 @@ public class OnlinePlayerData implements ConfigurationDatabaseEntry, MySQLDataba
 	@Override
 	public String getName()
 	{
-		final OfflinePlayer player = getPlayer();
-		if (player != null)
-			return player.getName();
 		return name;
 	}
 

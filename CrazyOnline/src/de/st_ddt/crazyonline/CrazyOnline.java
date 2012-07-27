@@ -71,6 +71,7 @@ public class CrazyOnline extends CrazyPlugin
 		if (database != null)
 			for (final OnlinePlayerData data : database.getAllEntries())
 				datas.put(data.getName().toLowerCase(), data);
+		System.out.println(datas.values().iterator().next().getName());
 	}
 
 	public void setupDatabase()
@@ -479,7 +480,8 @@ public class CrazyOnline extends CrazyPlugin
 		if (data == null)
 			throw new CrazyCommandNoSuchException("Player", name);
 		data.resetOnlineTime();
-		sendLocaleMessage("COMMAND.RESET", sender, name);
+		sendLocaleMessage("COMMAND.RESET", sender, data.getName());
+		database.save(data);
 	}
 
 	public OnlinePlayerData getPlayerData(final OfflinePlayer player)
