@@ -38,8 +38,8 @@ public class ConditionPlayerTimeSinceLastLogout extends ConditionPlayer
 	public boolean match(final Player tester)
 	{
 		if (above)
-			return CrazyOnline.getPlugin().getPlayerData(tester).getLastLogout().getTime() - new Date().getTime() >= time;
+			return new Date().getTime() - CrazyOnline.getPlugin().getPlayerData(tester).getLastLogout().getTime() >= time;
 		else
-			return CrazyOnline.getPlugin().getPlayerData(tester).getLastLogout().getTime() - new Date().getTime() < time;
+			return new Date().getTime() - CrazyOnline.getPlugin().getPlayerData(tester).getLastLogout().getTime() < time;
 	}
 }
