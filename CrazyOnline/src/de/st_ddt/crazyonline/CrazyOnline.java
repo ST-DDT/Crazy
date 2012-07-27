@@ -46,6 +46,12 @@ public class CrazyOnline extends CrazyPlugin
 	}
 
 	@Override
+	protected String getShortPluginName()
+	{
+		return "co";
+	}
+
+	@Override
 	public void onEnable()
 	{
 		plugin = this;
