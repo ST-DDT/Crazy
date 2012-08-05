@@ -27,8 +27,8 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		for (int i = 0; i < columnNames.length; i++)
 		{
 			final String column = columnNames[i];
-			columnNames[i] = config.getString("column." + column, column);
-			config.set("column." + column, column);
+			columnNames[i] = config.getString("database.column." + column, column);
+			config.set("database.column." + column, column);
 		}
 		this.constructor = constructor;
 	}
@@ -75,12 +75,6 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	}
 
 	@Override
-	public boolean deleteEntry(final String key)
-	{
-		return datas.remove(key.toLowerCase()) != null;
-	}
-
-	@Override
 	public void save(S entry)
 	{
 		datas.put(entry.getName().toLowerCase(), entry);
@@ -97,6 +91,18 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	}
 
 	public abstract void saveDatabase();
+
+	@Override
+	public boolean deleteEntry(final String key)
+	{
+		return datas.remove(key.toLowerCase()) != null;
+	}
+
+	@Override
+	public void deleteAllEntries()
+	{
+		datas.clear();
+	}
 
 	@Override
 	public String[] getColumnNames()

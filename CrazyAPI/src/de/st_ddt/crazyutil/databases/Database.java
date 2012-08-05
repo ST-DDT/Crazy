@@ -34,4 +34,6 @@ public interface Database<S extends DatabaseEntry>
 	public void saveAll(Collection<S> entries);
 
 	public boolean deleteEntry(String key);
+	
+	public void deleteAllEntries();
 }
