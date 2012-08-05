@@ -4,7 +4,7 @@ public class ToStringDataGetter implements EntryDataGetter<Object>
 {
 
 	@Override
-	public String getEntryData(Object entry)
+	public String getEntryData(final Object entry)
 	{
 		return entry.toString();
 	}

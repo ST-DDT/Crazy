@@ -8,9 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
+import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.ChatHelper;
 
@@ -20,9 +20,9 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	protected final File file;
 	protected HashMap<String, String[]> entries = new HashMap<String, String[]>();
 
-	public FlatDatabase(final Class<S> clazz, final File file, final String[] columnNames)
+	public FlatDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final String[] columnNames, final File file)
 	{
-		super(DatabaseType.FLAT, clazz, columnNames, getConstructor(clazz));
+		super(DatabaseType.FLAT, clazz, tableName, config, columnNames, getConstructor(clazz));
 		this.file = file;
 		checkTable();
 		loadFile();
@@ -45,72 +45,6 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	public void checkTable()
 	{
 		file.getAbsoluteFile().getParentFile().mkdirs();
-	}
-
-	@Override
-	public String getTableName()
-	{
-		return file.getPath();
-	}
-
-	@Override
-	public synchronized S getEntry(final String key)
-	{
-		final String[] data = entries.get(key);
-		if (data == null)
-			return null;
-		try
-		{
-			return constructor.newInstance(new Object[] { data });
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	@Override
-	public synchronized List<S> getEntries(final String key)
-	{
-		final List<S> list = new ArrayList<S>();
-		final S entry = getEntry(key);
-		if (entry != null)
-			list.add(entry);
-		return list;
-	}
-
-	@Override
-	public synchronized List<S> getAllEntries()
-	{
-		final List<S> list = new ArrayList<S>();
-		for (final String key : entries.keySet())
-		{
-			final S entry = getEntry(key);
-			if (entry != null)
-				list.add(entry);
-		}
-		return list;
-	}
-
-	@Override
-	public boolean isStaticDatabase()
-	{
-		return true;
-	}
-
-	@Override
-	public synchronized void delete(final String key)
-	{
-		entries.put(key, null);
-	}
-
-	@Override
-	public synchronized void save(final S entry)
-	{
-		entries.put(entry.getName(), entry.saveToFlatDatabase());
-		if (!bulkOperation)
-			saveFile();
 	}
 
 	private synchronized void loadFile()
@@ -136,7 +70,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 					continue;
 				try
 				{
-					entries.put(split[0], split);
+					entries.put(split[0].toLowerCase(), split);
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
@@ -207,8 +141,52 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	protected synchronized void saveDatabase()
+	public void saveDatabase()
 	{
 		saveFile();
+	}
+
+	@Override
+	public S loadEntry(final String key)
+	{
+		final String[] rawData = entries.get(key.toLowerCase());
+		if (rawData == null)
+			return null;
+		try
+		{
+			final S data = constructor.newInstance(new Object[] { rawData });
+			datas.put(key.toLowerCase(), data);
+			return data;
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public void loadAllEntries()
+	{
+		for (final String key : entries.keySet())
+			loadEntry(key);
+	}
+
+	@Override
+	public boolean deleteEntry(final String key)
+	{
+		entries.put(key.toLowerCase(), null);
+		if (!bulkOperation)
+			saveDatabase();
+		return super.deleteEntry(key);
+	}
+
+	@Override
+	public void save(final S entry)
+	{
+		super.save(entry);
+		entries.put(entry.getName().toLowerCase(), entry.saveToFlatDatabase());
+		if (!bulkOperation)
+			saveFile();
 	}
 }

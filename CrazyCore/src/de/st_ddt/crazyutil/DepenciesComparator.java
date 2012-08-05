@@ -8,7 +8,7 @@ public class DepenciesComparator implements Comparator<JavaPlugin>
 {
 
 	@Override
-	public int compare(JavaPlugin o1, JavaPlugin o2)
+	public int compare(final JavaPlugin o1, final JavaPlugin o2)
 	{
 		if (isDependent(o1, o2))
 			return 1;
@@ -27,7 +27,7 @@ public class DepenciesComparator implements Comparator<JavaPlugin>
 		return o1s.compareTo(o2s);
 	}
 
-	public static boolean isDependent(JavaPlugin o1, JavaPlugin o2)
+	public static boolean isDependent(final JavaPlugin o1, final JavaPlugin o2)
 	{
 		if (o1.getDescription().getDepend() == null)
 			return false;

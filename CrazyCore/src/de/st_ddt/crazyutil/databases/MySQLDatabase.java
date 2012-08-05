@@ -4,24 +4,24 @@ import java.lang.reflect.Constructor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+
+import org.bukkit.configuration.ConfigurationSection;
 
 public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final MySQLConnection connection;
-	protected String table;
 	protected final MySQLColumn[] columns;
 	protected final MySQLColumn primary;
 
-	public MySQLDatabase(final Class<S> clazz, final MySQLConnection connection, final String table, final MySQLColumn[] columns, final int primaryIndex)
+	public MySQLDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final MySQLColumn[] columns, final int primaryIndex)
 	{
-		super(DatabaseType.MYSQL, clazz, convertColumnNames(columns), getConstructor(clazz));
-		this.connection = connection;
-		this.table = table;
+		super(DatabaseType.MYSQL, clazz, tableName, config, convertColumnNames(columns), getConstructor(clazz));
+		this.connection = new MySQLConnection(config);
 		this.columns = columns;
 		this.primary = columns[primaryIndex];
+		checkTable();
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -45,7 +45,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		try
 		{
 			query = connection.getConnection().createStatement();
-			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" + MySQLColumn.getFullCreateString(columns) + ");");
+			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + tableName + " (" + MySQLColumn.getFullCreateString(columns) + ");");
 		}
 		catch (final SQLException e)
 		{
@@ -63,12 +63,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		}
 		// Create columns if not exist
 		query = null;
-		final ArrayList<String> columnsNames = new ArrayList<String>();
+		final HashSet<String> columnsNames = new HashSet<String>();
 		try
 		{
 			query = connection.getConnection().createStatement();
 			// Vorhandene Spalten abfragen
-			final ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + table);
+			final ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + tableName);
 			try
 			{
 				while (result.next())
@@ -99,13 +99,13 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			// Prüfen ob Spalte vorhanden ist
 			if (columnsNames.contains(column.getName()))
 				continue;
-			System.out.println("ADDED COLUMN " + column.getName() + " TO TABLE " + table);
+			System.out.println("ADDED COLUMN " + column.getName() + " TO TABLE " + tableName);
 			query = null;
 			try
 			{
 				// Spalte hinzufügen
 				query = connection.getConnection().createStatement();
-				query.executeUpdate("ALTER TABLE " + table + " ADD " + column.getCreateString());
+				query.executeUpdate("ALTER TABLE " + tableName + " ADD " + column.getCreateString());
 			}
 			catch (final SQLException e)
 			{
@@ -125,14 +125,49 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		connection.closeConnection();
 	}
 
-	@Override
-	public String getTableName()
+	private static String[] convertColumnNames(final MySQLColumn[] columns)
 	{
-		return table;
+		final int length = columns.length;
+		final String[] names = new String[length];
+		for (int i = 0; i < length; i++)
+			names[i] = columns[i].getName();
+		return names;
+	}
+
+	public final MySQLColumn[] getColumns()
+	{
+		return columns;
+	}
+
+	public final MySQLColumn getPrimary()
+	{
+		return primary;
+	}
+
+	public final String getPrimaryName()
+	{
+		return primary.getName();
+	}
+
+	public final int getPrimaryIndex()
+	{
+		final int length = columns.length;
+		for (int i = 0; i < length; i++)
+			if (columns[i] == primary)
+				return i;
+		return -1;
 	}
 
 	@Override
-	public synchronized S getEntry(final String key)
+	public boolean hasEntry(final String key)
+	{
+		if (datas.containsKey(key.toLowerCase()))
+			return true;
+		return loadEntry(key) != null;
+	}
+
+	@Override
+	public S loadEntry(final String key)
 	{
 		S res = null;
 		Statement query = null;
@@ -140,7 +175,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		try
 		{
 			query = connection.getConnection().createStatement();
-			result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "' LIMIT 1");
+			result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE " + primary.getName() + "='" + key + "' LIMIT 1");
 			if (result.next())
 				try
 				{
@@ -175,34 +210,35 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{}
 			connection.closeConnection();
 		}
+		datas.put(key.toLowerCase(), res);
 		return res;
 	}
 
 	@Override
-	public synchronized List<S> getEntries(final String key)
+	public void loadAllEntries()
 	{
-		final List<S> list = new ArrayList<S>();
 		Statement query = null;
 		ResultSet result = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
-			result = query.executeQuery("SELECT * FROM `" + table + "` WHERE " + primary.getName() + "='" + key + "'");
+			result = query.executeQuery("SELECT * FROM " + tableName + " WHERE 1=1");
 			try
 			{
 				while (result.next())
-					list.add(constructor.newInstance(result, columnNames));
+				{
+					final S data = constructor.newInstance(result, columnNames);
+					datas.put(data.getName().toLowerCase(), data);
+				}
 			}
 			catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
-			query.close();
 		}
 		catch (final SQLException e)
 		{
 			e.printStackTrace();
-			return null;
 		}
 		finally
 		{
@@ -222,69 +258,16 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{}
 			connection.closeConnection();
 		}
-		return list;
 	}
 
 	@Override
-	public synchronized List<S> getAllEntries()
-	{
-		final List<S> list = new ArrayList<S>();
-		Statement query = null;
-		ResultSet result = null;
-		try
-		{
-			query = connection.getConnection().createStatement();
-			result = query.executeQuery("SELECT * FROM " + table + " WHERE 1=1");
-			try
-			{
-				while (result.next())
-					list.add(constructor.newInstance(result, columnNames));
-			}
-			catch (final Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		catch (final SQLException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		finally
-		{
-			if (result != null)
-				try
-				{
-					result.close();
-				}
-				catch (final Exception e)
-				{}
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final Exception e)
-				{}
-			connection.closeConnection();
-		}
-		return list;
-	}
-
-	@Override
-	public boolean isStaticDatabase()
-	{
-		return false;
-	}
-
-	@Override
-	public synchronized void delete(final String key)
+	public boolean deleteEntry(final String key)
 	{
 		Statement query = null;
 		try
 		{
 			query = connection.getConnection().createStatement();
-			query.executeUpdate("DELETE FROM " + table + " WHERE " + primary.getName() + "='" + key + "'");
+			query.executeUpdate("DELETE FROM " + tableName + " WHERE " + primary.getName() + "='" + key + "'");
 		}
 		catch (final SQLException e)
 		{
@@ -301,49 +284,31 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{}
 			connection.closeConnection();
 		}
+		return super.deleteEntry(key);
 	}
 
 	@Override
 	public synchronized void save(final S entry)
 	{
-		entry.saveToMySQLDatabase(connection, table, getColumnNames());
-	}
-
-	public final MySQLColumn[] getColumns()
-	{
-		return columns;
-	}
-
-	private static String[] convertColumnNames(final MySQLColumn[] columns)
-	{
-		final int length = columns.length;
-		final String[] names = new String[length];
-		for (int i = 0; i < length; i++)
-			names[i] = columns[i].getName();
-		return names;
-	}
-
-	public final MySQLColumn getPrimary()
-	{
-		return primary;
-	}
-
-	public final String getPrimaryName()
-	{
-		return primary.getName();
-	}
-
-	public final int getPrimaryIndex()
-	{
-		final int length = columns.length;
-		for (int i = 0; i < length; i++)
-			if (columns[i] == primary)
-				return i;
-		return -1;
+		super.save(entry);
+		entry.saveToMySQLDatabase(connection, tableName, getColumnNames());
 	}
 
 	@Override
-	protected void saveDatabase()
+	public void saveDatabase()
 	{
+	}
+
+	public static String readName(final ResultSet rawData, final String colName)
+	{
+		try
+		{
+			return rawData.getString(colName);
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			return "ERROR";
+		}
 	}
 }

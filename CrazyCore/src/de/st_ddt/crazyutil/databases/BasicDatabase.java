@@ -2,52 +2,89 @@ package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+
+import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class BasicDatabase<S extends DatabaseEntry> implements Database<S>
 {
 
 	private final DatabaseType type;
 	protected final Class<S> clazz;
+	protected final String tableName;
 	protected final String[] columnNames;
 	protected final Constructor<S> constructor;
 	protected boolean bulkOperation = false;
+	protected final HashMap<String, S> datas = new HashMap<String, S>();
 
-	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final String[] columnNames, final Constructor<S> constructor)
+	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final String tableName, final ConfigurationSection config, final String[] columnNames, final Constructor<S> constructor)
 	{
 		super();
 		this.type = type;
 		this.clazz = clazz;
+		this.tableName = tableName;
 		this.columnNames = columnNames;
+		for (int i = 0; i < columnNames.length; i++)
+		{
+			final String column = columnNames[i];
+			columnNames[i] = config.getString("column." + column, column);
+			config.set("column." + column, column);
+		}
 		this.constructor = constructor;
 	}
 
 	@Override
-	public DatabaseType getType()
+	public final DatabaseType getType()
 	{
 		return type;
 	}
 
 	@Override
-	public abstract String getTableName();
+	public final boolean isStaticDatabase()
+	{
+		return type.isStaticDatabase();
+	}
 
 	@Override
-	public abstract void checkTable();
+	public final String getTableName()
+	{
+		return tableName;
+	}
 
 	@Override
-	public abstract S getEntry(String key);
+	public void checkTable()
+	{
+	}
 
 	@Override
-	public abstract List<S> getEntries(String key);
+	public boolean hasEntry(final String key)
+	{
+		return datas.containsKey(key.toLowerCase());
+	}
 
 	@Override
-	public abstract List<S> getAllEntries();
+	public final S getEntry(final String key)
+	{
+		return datas.get(key.toLowerCase());
+	}
 
 	@Override
-	public abstract void delete(String key);
+	public final Collection<S> getAllEntries()
+	{
+		return datas.values();
+	}
 
 	@Override
-	public abstract void save(S entry);
+	public boolean deleteEntry(final String key)
+	{
+		return datas.remove(key.toLowerCase()) != null;
+	}
+
+	@Override
+	public void save(S entry)
+	{
+		datas.put(entry.getName().toLowerCase(), entry);
+	}
 
 	@Override
 	public final void saveAll(final Collection<S> entries)
@@ -59,12 +96,8 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		saveDatabase();
 	}
 
-	protected abstract void saveDatabase();
+	public abstract void saveDatabase();
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.st_ddt.crazyutil.databases.Database#getColumnNames()
-	 */
 	@Override
 	public String[] getColumnNames()
 	{

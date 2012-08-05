@@ -2,17 +2,21 @@ package de.st_ddt.crazycore;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
+import de.st_ddt.crazycore.listener.CrazyCoreCrazyListener;
+import de.st_ddt.crazycore.listener.CrazyCoreMessageListener;
+import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
+import de.st_ddt.crazyplugin.CrazyLightPlugin;
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.PluginDataGetter;
+import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
@@ -20,6 +24,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.DepenciesComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
@@ -27,11 +32,11 @@ public class CrazyCore extends CrazyPlugin
 {
 
 	protected static CrazyCore plugin;
-	protected static final ArrayList<String> defaultLanguages = new ArrayList<String>();
-	protected static String defaultLanguage;
+	protected final HashSet<String> preloadedLanguages = new HashSet<String>();
+	protected final HashSet<String> loadedLanguages = new HashSet<String>();
 	private CrazyCoreMessageListener messageListener;
 	private CrazyCoreCrazyListener crazylistener;
-	protected static boolean showChatHeaders = true;
+	protected boolean wipePlayerFiles;
 
 	public static CrazyCore getPlugin()
 	{
@@ -41,7 +46,7 @@ public class CrazyCore extends CrazyPlugin
 	@Override
 	public void onLoad()
 	{
-		defaultLanguage = getConfig().getString("defaultLanguage", "en_en");
+		CrazyLocale.setDefaultLanguage(getConfig().getString("defaultLanguage", "en_en"));
 		super.onLoad();
 	}
 
@@ -86,63 +91,84 @@ public class CrazyCore extends CrazyPlugin
 			throw new CrazyCommandPermissionException();
 		int page = 1;
 		int amount = 10;
-		int length = args.length;
+		String[] pipe = null;
+		final int length = args.length;
 		for (int i = 0; i < length; i++)
 		{
-			if (args[i].toLowerCase().startsWith("page:"))
+			String arg = args[i].toLowerCase();
+			if (arg.startsWith("page:"))
 				try
 				{
-					page = Integer.parseInt(args[i].substring(5));
+					page = Integer.parseInt(arg.substring(5));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(i, "page:Integer");
 				}
-			else if (args[i].toLowerCase().startsWith("amount:"))
+			else if (arg.toLowerCase().startsWith("amount:"))
 			{
-				if (args[i].substring(7).equals("*"))
+				if (arg.substring(7).equals("*"))
 					amount = -1;
 				else
 					try
 					{
-						amount = Integer.parseInt(args[i].substring(7));
+						amount = Integer.parseInt(arg.substring(7));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						throw new CrazyCommandParameterException(i, "amount:Integer");
 					}
 			}
+			else if (arg.equals(">"))
+			{
+				pipe = ChatHelper.shiftArray(args, i + 1);
+				break;
+			}
+			else if (arg.equals("*"))
+			{
+				page = Integer.MIN_VALUE;
+			}
 			else
 				try
 				{
-					page = Integer.parseInt(args[i]);
+					page = Integer.parseInt(arg);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandUsageException("/crazylist [amount:Integer] [[page:]Integer]");
 				}
 		}
-		final ArrayList<JavaPlugin> list = new ArrayList<JavaPlugin>();
-		list.addAll(getCrazyLightPlugins());
-		Collections.sort(list, new DepenciesComparator());
-		sendListMessage(sender, "COMMAND.PLUGINLIST.HEADER", amount, page, list, new PluginDataGetter());
+		final ArrayList<CrazyLightPlugin> dataList = new ArrayList<CrazyLightPlugin>();
+		dataList.addAll(getCrazyPlugins());
+		Collections.sort(dataList, new DepenciesComparator());
+		if (pipe != null)
+		{
+			final ArrayList<ParameterData> datas = new ArrayList<ParameterData>(dataList);
+			CrazyPipe.pipe(sender, datas, pipe);
+			return;
+		}
+		sendListMessage(sender, "COMMAND.PLUGINLIST.HEADER", amount, page, dataList, new PluginDataGetter());
 	}
 
 	private void commandLanguage(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		switch (args.length)
 		{
+			case 1:
+				if (!args[0].equalsIgnoreCase("list"))
+				{
+					loadLanguageFiles(args[0], false);
+					CrazyLocale.setUserLanguage(sender, args[0]);
+					save();
+					sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getLanguageName(), args[0]);
+					return;
+				}
 			case 0:
 				sendLocaleMessage("COMMAND.LANGUAGE.CURRENT", sender, CrazyLocale.getLanguageName(), CrazyLocale.getUserLanguage(sender));
-				sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT", sender, CrazyLocale.getLanguageName().getDefaultLanguageText(), getDefaultLanguage());
+				sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT", sender, CrazyLocale.getLanguageName().getDefaultLanguageText(), CrazyLocale.getDefaultLanguage());
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.HEADER", sender);
 				final String languages = ChatHelper.listingString(CrazyLocale.getActiveLanguagesNames(true));
 				sendLocaleMessage("COMMAND.LANGUAGE.LIST.ENTRY", sender, languages);
-				return;
-			case 1:
-				CrazyLocale.setUserLanguage(sender, args[0]);
-				save();
-				sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getLanguageName(), args[0]);
 				return;
 			case 2:
 				if (!sender.hasPermission("crazylanguage.advanced"))
@@ -159,21 +185,25 @@ public class CrazyCore extends CrazyPlugin
 				}
 				else if (args[0].equalsIgnoreCase("setdefault"))
 				{
-					defaultLanguage = args[1];
-					CrazyLocale.loadLanguage(defaultLanguage);
-					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.SET", sender, defaultLanguage);
+					final String newDefault = args[1].toLowerCase();
+					if (!CrazyLocale.getDefaultLanguage().equals(newDefault))
+					{
+						CrazyLocale.setDefaultLanguage(args[1]);
+						loadLanguageFiles(args[1], true);
+					}
+					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.SET", sender, args[1]);
 					return;
 				}
-				else if (args[0].equalsIgnoreCase("adddefault"))
+				else if (args[0].equalsIgnoreCase("addpreloaded"))
 				{
-					defaultLanguages.add(args[1]);
-					CrazyLocale.loadLanguage(args[1]);
+					if (preloadedLanguages.add(args[1].toLowerCase()))
+						loadLanguageFiles(args[1], true);
 					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.ADDED", sender, args[1]);
 					return;
 				}
-				else if (args[0].equalsIgnoreCase("removedefault"))
+				else if (args[0].equalsIgnoreCase("removepreloaded"))
 				{
-					defaultLanguages.remove(args[1]);
+					preloadedLanguages.remove(args[1]);
 					sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.REMOVED", sender, args[1]);
 					return;
 				}
@@ -275,7 +305,6 @@ public class CrazyCore extends CrazyPlugin
 	private void commanMainDelete(final CommandSender sender, String name) throws CrazyCommandException
 	{
 		final Player player = getServer().getPlayer(name);
-		final OfflinePlayer plr = getServer().getOfflinePlayer(name);
 		if (player != null)
 			name = player.getName();
 		if (sender.getName().equalsIgnoreCase(name))
@@ -292,30 +321,6 @@ public class CrazyCore extends CrazyPlugin
 			sendLocaleMessage("COMMAND.DELETE.LISTHEAD", sender, event.getDeletionsList());
 			sendLocaleMessage("COMMAND.DELETE.LIST", sender, event.getDeletionsList());
 		}
-		if (player != null)
-			if (player.isOnline())
-			{
-				player.leaveVehicle();
-				player.getInventory().clear();
-				player.setGameMode(getServer().getDefaultGameMode());
-				player.setExp(0);
-				player.setFoodLevel(20);
-				player.setHealth(20);
-				player.setFireTicks(0);
-				player.resetPlayerTime();
-				final Location spawn = getServer().getWorlds().get(0).getSpawnLocation();
-				player.setCompassTarget(spawn);
-				player.teleport(spawn);
-				player.setBedSpawnLocation(spawn);
-				player.saveData();
-				player.kickPlayer(locale.getLocaleMessage(player, "COMMAND.DELETE.KICK"));
-			}
-		if (plr != null)
-		{
-			plr.setBanned(false);
-			plr.setOp(false);
-			plr.setWhitelisted(false);
-		}
 		save();
 	}
 
@@ -324,40 +329,44 @@ public class CrazyCore extends CrazyPlugin
 	{
 		super.load();
 		final ConfigurationSection config = getConfig();
-		showChatHeaders = config.getBoolean("showChatHeaders", true);
-		for (final String language : config.getStringList("defaultLanguages"))
-		{
-			defaultLanguages.add(language);
-			CrazyLocale.loadLanguage(language);
-		}
-		defaultLanguage = config.getString("defaultLanguage", "en_en");
-		CrazyLocale.loadLanguage(defaultLanguage);
+		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
+		ChatHelper.setShowChatHeaders(config.getBoolean("showChatHeaders", true));
+		final String defaultLanguage = config.getString("defaultLanguage", "en_en");
+		CrazyLocale.setDefaultLanguage(defaultLanguage);
+		preloadedLanguages.add(defaultLanguage);
+		for (final String language : config.getStringList("preloadedLanguages"))
+			preloadedLanguages.add(language);
+		for (final String language : preloadedLanguages)
+			loadLanguageFiles(language, false);
 		CrazyLocale.load(config.getConfigurationSection("players"));
+	}
+
+	private void loadLanguageFiles(final String language, final boolean forceUpdate)
+	{
+		if (!loadedLanguages.add(language))
+			return;
+		CrazyLocale.loadLanguage(language);
+		for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
+			if (plugin.isUpdated() || forceUpdate)
+				plugin.updateLanguage(language, true);
+			else
+				plugin.loadLanguage(language);
 	}
 
 	@Override
 	public void save()
 	{
 		final ConfigurationSection config = getConfig();
-		config.set("showChatHeaders", showChatHeaders);
-		config.set("defaultLanguage", defaultLanguage);
-		config.set("defaultLanguages", defaultLanguages);
+		config.set("wipePlayerFiles", wipePlayerFiles);
+		config.set("showChatHeaders", ChatHelper.isShowingChatHeadersEnabled());
+		config.set("defaultLanguage", CrazyLocale.getDefaultLanguage());
+		config.set("defaultLanguages", new ArrayList<String>(preloadedLanguages));
 		CrazyLocale.save(config, "players.");
 		super.save();
 	}
 
-	public static String getDefaultLanguage()
+	public boolean isWipingPlayerFilesEnabled()
 	{
-		return defaultLanguage;
-	}
-
-	public static ArrayList<String> getDefaultlanguages()
-	{
-		return defaultLanguages;
-	}
-
-	public static boolean getShowChatHeaders()
-	{
-		return showChatHeaders;
+		return wipePlayerFiles;
 	}
 }

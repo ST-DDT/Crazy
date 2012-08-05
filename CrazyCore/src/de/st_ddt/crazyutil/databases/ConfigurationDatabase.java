@@ -1,8 +1,6 @@
 package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -10,13 +8,11 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 {
 
 	protected final ConfigurationSection config;
-	protected String table;
 
-	public ConfigurationDatabase(final Class<S> clazz, final ConfigurationSection config, final String table, final String[] columnNames)
+	public ConfigurationDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final String[] columnNames)
 	{
-		super(DatabaseType.CONFIG, clazz, columnNames, getConstructor(clazz));
+		super(DatabaseType.CONFIG, clazz, tableName, config, columnNames, getConstructor(clazz));
 		this.config = config;
-		this.table = table;
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -33,26 +29,27 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public void checkTable()
+	public S loadEntry(final String key)
 	{
-		return;
-	}
-
-	@Override
-	public String getTableName()
-	{
-		return table;
-	}
-
-	@Override
-	public synchronized S getEntry(final String key)
-	{
-		final ConfigurationSection section = config.getConfigurationSection(table + "." + key);
+		ConfigurationSection section = config.getConfigurationSection(tableName + "." + key.toLowerCase());
+		boolean nameCase = false;
+		if (section == null)
+		{
+			section = config.getConfigurationSection(tableName + "." + key);
+			nameCase = true;
+		}
 		if (section == null)
 			return null;
 		try
 		{
-			return constructor.newInstance(section, columnNames);
+			final S data = constructor.newInstance(section, columnNames);
+			datas.put(key.toLowerCase(), data);
+			if (nameCase)
+			{
+				config.set(tableName + "." + key, null);
+				save(data);
+			}
+			return data;
 		}
 		catch (final Exception e)
 		{
@@ -62,44 +59,30 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public synchronized List<S> getEntries(final String key)
+	public void loadAllEntries()
 	{
-		final List<S> list = new ArrayList<S>();
-		list.add(getEntry(key));
-		return list;
+		if (config.getConfigurationSection(tableName) == null)
+			return;
+		for (final String key : config.getConfigurationSection(tableName).getKeys(false))
+			loadEntry(key);
 	}
 
 	@Override
-	public synchronized List<S> getAllEntries()
+	public boolean deleteEntry(final String key)
 	{
-		final List<S> list = new ArrayList<S>();
-		if (config.getConfigurationSection(table) == null)
-			return list;
-		for (final String key : config.getConfigurationSection(table).getKeys(false))
-			list.add(getEntry(key));
-		return list;
-	}
-
-	@Override
-	public boolean isStaticDatabase()
-	{
-		return true;
-	}
-
-	@Override
-	public synchronized void delete(final String key)
-	{
-		config.set(table + "." + key, null);
+		config.set(tableName + "." + key.toLowerCase(), null);
+		return super.deleteEntry(key);
 	}
 
 	@Override
 	public synchronized void save(final S entry)
 	{
-		entry.saveToConfigDatabase(config, table + "." + entry.getName() + ".", columnNames);
+		super.save(entry);
+		entry.saveToConfigDatabase(config, tableName + "." + entry.getName().toLowerCase() + ".", columnNames);
 	}
 
 	@Override
-	protected void saveDatabase()
+	public void saveDatabase()
 	{
 	}
 }

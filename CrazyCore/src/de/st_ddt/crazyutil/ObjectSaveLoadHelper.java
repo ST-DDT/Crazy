@@ -16,7 +16,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.CrazyPluginInterface;
 
 public final class ObjectSaveLoadHelper
 {
@@ -66,7 +66,7 @@ public final class ObjectSaveLoadHelper
 			return defaultDate;
 		try
 		{
-			return CrazyPlugin.DateFormat.parse(date);
+			return CrazyPluginInterface.DateFormat.parse(date);
 		}
 		catch (final ParseException e)
 		{
@@ -76,7 +76,7 @@ public final class ObjectSaveLoadHelper
 
 	public static String DateToString(final Date date)
 	{
-		return CrazyPlugin.DateFormat.format(date);
+		return CrazyPluginInterface.DateFormat.format(date);
 	}
 
 	// ItemStack

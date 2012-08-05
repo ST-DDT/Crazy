@@ -25,6 +25,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyplugin.tasks.LanguageLoadTask;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyLogger;
 import de.st_ddt.crazyutil.EntryDataGetter;
@@ -150,7 +151,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			throw new CrazyCommandUsageException("/" + getDescription().getName().toLowerCase() + " reload");
 		reloadConfig();
 		load();
-		sendLocaleRootMessage("CRAZYPLUGIN.COMMAND.CONFIG.RELOADED", sender);
+		sendLocaleMessage("COMMAND.CONFIG.RELOADED", sender);
 	}
 
 	private final void commandSave(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -160,12 +161,12 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		if (args.length != 0)
 			throw new CrazyCommandUsageException("/" + getDescription().getName().toLowerCase() + " save");
 		save();
-		sendLocaleRootMessage("CRAZYPLUGIN.COMMAND.CONFIG.SAVED", sender);
+		sendLocaleMessage("COMMAND.CONFIG.SAVED", sender);
 	}
 
 	public void commandHelp(final CommandSender sender, final String[] args)
 	{
-		sendLocaleRootMessage("CRAZYPLUGIN.COMMAND.HELP.NOHELP", sender);
+		sendLocaleMessage("COMMAND.HELP.NOHELP", sender);
 	}
 
 	protected String getShortPluginName()
@@ -179,6 +180,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		plugins.put(this.getClass(), this);
 		getDataFolder().mkdir();
 		new File(getDataFolder().getPath() + "/lang").mkdirs();
+		checkLocale();
 		final ConfigurationSection config = getConfig();
 		isUpdated = !config.getString("version", "").equals(getDescription().getVersion());
 		config.set("version", getDescription().getVersion());
@@ -190,7 +192,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	{
 		if (isUpdated)
 			broadcastLocaleRootMessage("CRAZYPLUGIN.UPDATED", getName(), getDescription().getVersion());
-		checkLocale();
 		load();
 		if (isUpdated)
 			save();
@@ -216,6 +217,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	public void checkLocale()
 	{
 		locale = CrazyLocale.getPluginHead(this);
+		locale.setAlternative(CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN"));
 	}
 
 	@Override
@@ -362,7 +364,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 
 	public void loadLanguageDelayed(final String language, final CommandSender sender)
 	{
-		getServer().getScheduler().scheduleAsyncDelayedTask(this, new LanguageLoadRunnable(this, language, sender));
+		getServer().getScheduler().scheduleAsyncDelayedTask(this, new LanguageLoadTask(this, language, sender));
 	}
 
 	public void loadLanguage(final String language, final CommandSender sender)
@@ -379,7 +381,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 				unpackLanguage(language);
 				if (!file.exists())
 				{
-					sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", sender, language);
+					sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language);
 					return;
 				}
 			}
@@ -390,7 +392,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		catch (final IOException e)
 		{
-			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language);
+			sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language);
 		}
 		// Custom files:
 		file = new File(getDataFolder().getPath() + "/lang/custom_" + language + ".lang");
@@ -402,7 +404,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			}
 			catch (final IOException e)
 			{
-				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language + " (Custom)");
+				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language + " (Custom)");
 			}
 		}
 	}
@@ -449,7 +451,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		catch (final IOException e)
 		{
-			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", sender, language);
+			sendLocaleMessage("LANGUAGE.ERROR.DOWNLOAD", sender, language);
 		}
 	}
 
@@ -469,7 +471,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			unpackLanguage(language);
 			if (!file.exists())
 			{
-				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", sender, language);
+				sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language);
 				return;
 			}
 		}
@@ -480,7 +482,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			}
 			catch (final IOException e)
 			{
-				sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.READ", sender, language);
+				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language);
 			}
 	}
 
@@ -516,7 +518,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		catch (final IOException e)
 		{
-			sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.ERROR.EXPORT", getServer().getConsoleSender(), language);
+			sendLocaleMessage("LANGUAGE.ERROR.EXPORT", getServer().getConsoleSender(), language);
 		}
 	}
 
@@ -529,7 +531,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			stream = new FileInputStream(file);
 			reader = new InputStreamReader(stream, "UTF-8");
 			CrazyLocale.readFile(language, reader);
-			// sendLocaleRootMessage("CRAZYPLUGIN.LANGUAGE.LOADED", sender, language);
+			// sendLocaleMessage("LANGUAGE.LOADED", sender, language);
 		}
 		finally
 		{
@@ -538,5 +540,17 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			if (stream != null)
 				stream.close();
 		}
+	}
+
+	@Override
+	public void show(CommandSender target)
+	{
+		commandInfo(target, new String[0]);
+	}
+
+	@Override
+	public void show(CommandSender target, String... args)
+	{
+		commandInfo(target, args);
 	}
 }

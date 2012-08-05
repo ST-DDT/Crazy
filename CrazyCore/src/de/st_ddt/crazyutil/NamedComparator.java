@@ -6,7 +6,7 @@ public class NamedComparator implements Comparator<Named>
 {
 
 	@Override
-	public int compare(Named o1, Named o2)
+	public int compare(final Named o1, final Named o2)
 	{
 		return o1.getName().compareTo(o2.getName());
 	}

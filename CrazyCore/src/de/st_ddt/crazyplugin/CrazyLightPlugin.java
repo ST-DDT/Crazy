@@ -4,13 +4,14 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightPluginInterface
 {
 
+	private static final HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin> lightplugins = new HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin>();
 	private String chatHeader = null;
-	private static final HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin> plugins = new HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin>();
 
 	@Override
 	public final String getChatHeader()
@@ -22,12 +23,12 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 
 	public static Collection<CrazyLightPlugin> getCrazyLightPlugins()
 	{
-		return plugins.values();
+		return lightplugins.values();
 	}
 
 	public final static CrazyLightPlugin getLightPlugin(final Class<? extends CrazyLightPlugin> plugin)
 	{
-		return plugins.get(plugin);
+		return lightplugins.get(plugin);
 	}
 
 	public final static CrazyLightPlugin getLightPlugin(final String name)
@@ -41,7 +42,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	@Override
 	public void onLoad()
 	{
-		plugins.put(this.getClass(), this);
+		lightplugins.put(this.getClass(), this);
 		super.onLoad();
 	}
 
@@ -60,5 +61,45 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	public final void consoleLog(final String message)
 	{
 		getServer().getConsoleSender().sendMessage(getChatHeader() + message);
+	}
+
+	@Override
+	public String getParameter(int index)
+	{
+		switch (index)
+		{
+			case 0:
+				return getName();
+			case 1:
+				return getChatHeader();
+			case 2:
+				return getDescription().getVersion();
+			default:
+				return "";
+		}
+	}
+
+	@Override
+	public int getParameterCount()
+	{
+		return 3;
+	}
+
+	@Override
+	public void show(CommandSender target)
+	{
+		target.sendMessage(getShortInfo(new String[0]));
+	}
+
+	@Override
+	public void show(CommandSender target, String... args)
+	{
+		target.sendMessage(getShortInfo(args));
+	}
+
+	@Override
+	public String getShortInfo(String... args)
+	{
+		return getName() + " Version " + getDescription().getVersion();
 	}
 }
