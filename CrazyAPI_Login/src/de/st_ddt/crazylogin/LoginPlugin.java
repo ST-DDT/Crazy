@@ -1,39 +1,25 @@
 package de.st_ddt.crazylogin;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazylogin.crypt.Encryptor;
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazylogin.data.LoginData;
+import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
 
-public interface LoginPlugin extends CrazyPluginInterface
+public interface LoginPlugin<S extends LoginData<S>> extends CrazyPlayerDataPluginInterface<S>
 {
 
 	public int dropInactiveAccounts();
 
 	public boolean isLoggedIn(Player player);
 
-	public boolean hasAccount(OfflinePlayer player);
-
-	public boolean hasAccount(String name);
-
-	public HashMap<String, ? extends LoginData> getPlayerData();
-
-	public LoginData getPlayerData(OfflinePlayer player);
-
-	public LoginData getPlayerData(String name);
+	public Set<S> getPlayerDatasPerIP(String IP);
 
 	public void updateAccount(String name);
-
-	public boolean deletePlayerData(String name);
-
-	public List<Player> getOnlinesPerIP(String ip);
-
-	public List<? extends LoginData> getRegistrationsPerIP(String ip);
 
 	public boolean isAlwaysNeedPassword();
 
@@ -73,6 +59,8 @@ public interface LoginPlugin extends CrazyPluginInterface
 
 	public boolean isForceSaveLoginEnabled();
 
+	public boolean isHidingInventoryEnabled();
+
 	public Encryptor getEncryptor();
 
 	public int getAutoDelete();
@@ -82,7 +70,7 @@ public interface LoginPlugin extends CrazyPluginInterface
 	public int getMaxRegistrationsPerIP();
 
 	public double getMoveRange();
-	
+
 	public boolean checkNameChars(String name);
 
 	public int getMinNameLength();

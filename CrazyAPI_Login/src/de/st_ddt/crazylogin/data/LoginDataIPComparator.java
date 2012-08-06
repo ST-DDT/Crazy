@@ -1,10 +1,10 @@
-package de.st_ddt.crazylogin;
+package de.st_ddt.crazylogin.data;
 
 public class LoginDataIPComparator implements LoginDataComparator
 {
 
 	@Override
-	public int compare(final LoginData o1, final LoginData o2)
+	public int compare(final LoginData<?> o1, final LoginData<?> o2)
 	{
 		return o1.getLatestIP().compareTo(o2.getLatestIP());
 	}

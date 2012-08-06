@@ -10,7 +10,7 @@ import de.st_ddt.crazylogin.LoginPlugin;
 public abstract class CustomEncryptor implements Encryptor
 {
 
-	public CustomEncryptor(final LoginPlugin plugin, final ConfigurationSection config)
+	public CustomEncryptor(final LoginPlugin<?> plugin, final ConfigurationSection config)
 	{
 		super();
 	}

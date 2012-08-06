@@ -3,31 +3,17 @@ package de.st_ddt.crazylogin.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
-import de.st_ddt.crazylogin.LoginData;
 import de.st_ddt.crazylogin.LoginPlugin;
+import de.st_ddt.crazylogin.data.LoginData;
 
-public class CrazyLoginPreLoginEvent extends CrazyLoginEvent implements Cancellable
+public class CrazyLoginPreLoginEvent<S extends LoginData<S>> extends CrazyLoginPlayerDataEvent<S> implements Cancellable
 {
 
-	protected final Player player;
 	protected boolean cancelled = false;
-	protected final LoginData data;
 
-	public CrazyLoginPreLoginEvent(final LoginPlugin plugin, final Player player, final LoginData data)
+	public CrazyLoginPreLoginEvent(final LoginPlugin<S> plugin, final Player player, final S data)
 	{
-		super(plugin);
-		this.player = player;
-		this.data = data;
-	}
-
-	public Player getPlayer()
-	{
-		return player;
-	}
-
-	public LoginData getData()
-	{
-		return data;
+		super(plugin, player, data);
 	}
 
 	@Override
