@@ -18,6 +18,8 @@ public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface, 
 
 	public final static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
+	public boolean isInstalled();
+
 	public boolean isUpdated();
 
 	public CrazyLogger getCrazyLogger();

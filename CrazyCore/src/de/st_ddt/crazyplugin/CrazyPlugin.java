@@ -38,6 +38,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	protected final CrazyLogger logger = new CrazyLogger(this);
 	protected CrazyLocale locale = null;
 	protected boolean isUpdated = false;
+	protected boolean isInstalled = false;
 
 	public static Collection<CrazyPlugin> getCrazyPlugins()
 	{
@@ -55,6 +56,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			if (plugin.getName().equalsIgnoreCase(name))
 				return plugin;
 		return null;
+	}
+
+	public final boolean isInstalled()
+	{
+		return isInstalled;
 	}
 
 	@Override
@@ -182,6 +188,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		new File(getDataFolder().getPath() + "/lang").mkdirs();
 		checkLocale();
 		final ConfigurationSection config = getConfig();
+		isInstalled = config.getString("version", "").equals("");
 		isUpdated = !config.getString("version", "").equals(getDescription().getVersion());
 		config.set("version", getDescription().getVersion());
 		super.onLoad();
