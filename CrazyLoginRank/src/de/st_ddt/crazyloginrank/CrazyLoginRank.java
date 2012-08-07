@@ -2,9 +2,7 @@ package de.st_ddt.crazyloginrank;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -25,7 +23,7 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 {
 
 	private static CrazyLoginRank plugin;
-	protected final HashMap<String, Integer> permissionRanks = new HashMap<String, Integer>();
+	protected final ArrayList<PermissionRanks> permissionRanks = new ArrayList<PermissionRanks>();
 	protected int defaultRank;
 	protected int defaultOPRank;
 
@@ -66,22 +64,23 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 		final ConfigurationSection config = getConfig();
 		defaultRank = config.getInt("defaultRank", 0);
 		defaultOPRank = config.getInt("defaultOPRank", 100);
-		ConfigurationSection ranks = config.getConfigurationSection("ranks");
+		final ConfigurationSection ranks = config.getConfigurationSection("ranks");
 		if (ranks != null)
-			for (String key : ranks.getKeys(false))
-				permissionRanks.put(key, config.getInt(key, 0));
+			for (final String key : ranks.getKeys(false))
+				permissionRanks.add(new PermissionRanks(key, ranks.getInt(key, 0)));
 		if (isInstalled)
 		{
-			permissionRanks.put("guest", 0);
-			permissionRanks.put("user", 5);
-			permissionRanks.put("friends", 30);
-			permissionRanks.put("rank1", 40);
-			permissionRanks.put("rank2", 45);
-			permissionRanks.put("moderator", 50);
-			permissionRanks.put("rank3", 75);
-			permissionRanks.put("admin", 100);
-			permissionRanks.put("owner", 200);
+			permissionRanks.add(new PermissionRanks("guest", 0));
+			permissionRanks.add(new PermissionRanks("user", 5));
+			permissionRanks.add(new PermissionRanks("friends", 10));
+			permissionRanks.add(new PermissionRanks("rank1", 30));
+			permissionRanks.add(new PermissionRanks("rank2", 40));
+			permissionRanks.add(new PermissionRanks("moderator", 50));
+			permissionRanks.add(new PermissionRanks("rank3", 75));
+			permissionRanks.add(new PermissionRanks("admin", 100));
+			permissionRanks.add(new PermissionRanks("owner", 200));
 		}
+		Collections.sort(permissionRanks);
 	}
 
 	@Override
@@ -90,8 +89,9 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 		final ConfigurationSection config = getConfig();
 		config.set("defaultRank", defaultRank);
 		config.set("defaultOPRank", defaultOPRank);
-		for (Entry<String, Integer> entry : permissionRanks.entrySet())
-			config.set("ranks." + entry.getKey(), entry.getValue());
+		for (final PermissionRanks entry : permissionRanks)
+			config.set("ranks." + entry.getName(), entry.getRank());
+		super.save();
 	}
 
 	@Override
@@ -166,9 +166,9 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 		final Player plr = player.getPlayer();
 		if (plr == null)
 			return null;
-		for (final Entry<String, Integer> rank : permissionRanks.entrySet())
-			if (plr.hasPermission("crazylogin.rank." + rank.getKey()))
-				return new LoginRankUnregisteredPlayerData(player, rank.getValue());
+		for (final PermissionRanks rank : permissionRanks)
+			if (plr.hasPermission("crazylogin.rank." + rank.getName()))
+				return new LoginRankUnregisteredPlayerData(player, rank.getRank());
 		return null;
 	}
 
