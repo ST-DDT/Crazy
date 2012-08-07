@@ -3,8 +3,8 @@ package de.st_ddt.crazyarena.participants;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyarena.utils.PlayerSaver;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.PlayerSaver;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class Participant

@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.classes.ParticipantClass;
-import de.st_ddt.crazyarena.utils.PlayerSaver;
+import de.st_ddt.crazyutil.PlayerSaver;
 
 public class ParticipantPvE extends Participant
 {

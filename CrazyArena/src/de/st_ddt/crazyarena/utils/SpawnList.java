@@ -41,7 +41,7 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 	public void spawn(EntityType type, int amount)
 	{
 		for (int i = 0; i < amount; i++)
-			world.spawnCreature(randomSpawn(), type);
+			world.spawnEntity(randomSpawn(), type);
 	}
 
 	public Location randomSpawn()
