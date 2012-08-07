@@ -14,3 +14,4 @@ CRAZYONLINE.MESSAGE.LIST=$0$ - $1$
 CRAZYONLINE.MODE.CHANGE=Mode "$0$"="$1$" set
 CRAZYONLINE.COMMAND.DELETE=Deleted $0$'s playerdata.
 CRAZYONLINE.COMMAND.RESET=Reseted $0$'s online time.
+CRAZYONLINE.DATABASE.LOADED=Loaded $0$ entries from database
