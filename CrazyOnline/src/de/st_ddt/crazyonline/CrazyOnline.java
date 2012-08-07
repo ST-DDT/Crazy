@@ -3,9 +3,15 @@ package de.st_ddt.crazyonline;
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -14,31 +20,49 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazyonline.data.OnlineDataComparator;
+import de.st_ddt.crazyonline.data.OnlineDataFirstLoginComperator;
+import de.st_ddt.crazyonline.data.OnlineDataIPComparator;
+import de.st_ddt.crazyonline.data.OnlineDataLastLoginComperator;
+import de.st_ddt.crazyonline.data.OnlineDataLastLogoutComperator;
+import de.st_ddt.crazyonline.data.OnlineDataNameComparator;
+import de.st_ddt.crazyonline.data.OnlineDataOnlineComperator;
+import de.st_ddt.crazyonline.data.OnlinePlayerData;
+import de.st_ddt.crazyonline.data.OnlineTimeDataGetter;
 import de.st_ddt.crazyonline.databases.CrazyOnlineConfigurationDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineFlatDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineMySQLDatabase;
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyonline.listener.CrazyOnlineCrazyListener;
+import de.st_ddt.crazyonline.listener.CrazyOnlinePlayerListener;
+import de.st_ddt.crazyonline.tasks.DropInactiveAccountsTask;
+import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
+import de.st_ddt.crazyplugin.data.ParameterData;
+import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.databases.Database;
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.CrazyPipe;
+import de.st_ddt.crazyutil.ToStringDataGetter;
 import de.st_ddt.crazyutil.databases.DatabaseType;
-import de.st_ddt.crazyutil.databases.MySQLConnection;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public class CrazyOnline extends CrazyPlugin
+public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> implements OnlinePlugin<OnlinePlayerData>
 {
 
 	private static CrazyOnline plugin;
-	protected HashMap<String, OnlinePlayerData> datas = new HashMap<String, OnlinePlayerData>();
 	protected CrazyOnlinePlayerListener playerListener = null;
 	protected CrazyOnlineCrazyListener crazyListener = null;
-	protected Database<OnlinePlayerData> database;
 	protected boolean showOnlineInfo;
+	protected boolean deleteShortVisitors;
+	protected boolean pluginCommunicationEnabled;
+	protected int autoDelete;
+	private boolean saveDatabaseOnShutdown;
 
 	public static CrazyOnline getPlugin()
 	{
@@ -60,18 +84,29 @@ public class CrazyOnline extends CrazyPlugin
 	}
 
 	@Override
+	public void onDisable()
+	{
+		if (saveDatabaseOnShutdown)
+			saveDatabase();
+		saveConfiguration();
+	}
+
+	@Override
 	public void load()
 	{
 		super.load();
 		final ConfigurationSection config = getConfig();
 		showOnlineInfo = config.getBoolean("showOnlineInfo", true);
+		deleteShortVisitors = config.getBoolean("deleteShortVisitors", deleteShortVisitors);
+		autoDelete = Math.max(config.getInt("autoDelete", -1), -1);
+		if (autoDelete != -1)
+			getServer().getScheduler().scheduleAsyncRepeatingTask(this, new DropInactiveAccountsTask(this), 20 * 60 * 60, 20 * 60 * 60 * 6);
+		// Logger
 		logger.createLogChannels(config.getConfigurationSection("logs"), "Join", "Quit");
-		datas.clear();
+		// Database
 		setupDatabase();
-		if (database != null)
-			for (final OnlinePlayerData data : database.getAllEntries())
-				datas.put(data.getName().toLowerCase(), data);
-		System.out.println(datas.values().iterator().next().getName());
+		dropInactiveAccounts();
+		saveDatabaseOnShutdown = config.getBoolean("database.saveOnShutdown", true);
 	}
 
 	public void setupDatabase()
@@ -90,31 +125,70 @@ public class CrazyOnline extends CrazyPlugin
 		}
 		final String tableName = config.getString("database.tableName", "CrazyOnline_players");
 		config.set("database.tableName", tableName);
-		// Columns
-		final String colName = config.getString("database.columns.name", "name");
-		config.set("database.columns.name", colName);
-		final String colFirstLogin = config.getString("database.columns.firstlogin", "FirstLogin");
-		config.set("database.columns.firstlogin", colFirstLogin);
-		final String colLastLogin = config.getString("database.columns.lastlogin", "LastLogin");
-		config.set("database.columns.lastlogin", colLastLogin);
-		final String colLastLogout = config.getString("database.columns.lastlogout", "LastLogout");
-		config.set("database.columns.lastlogout", colLastLogout);
-		final String colOnlineTime = config.getString("database.columns.onlinetime", "OnlineTime");
-		config.set("database.columns.onlinetime", colOnlineTime);
-		if (type == DatabaseType.CONFIG)
+		try
 		{
-			database = new CrazyOnlineConfigurationDatabase(config, tableName, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
+			if (type == DatabaseType.CONFIG)
+			{
+				database = new CrazyOnlineConfigurationDatabase(tableName, config);
+			}
+			else if (type == DatabaseType.MYSQL)
+			{
+				database = new CrazyOnlineMySQLDatabase(tableName, config);
+			}
+			else if (type == DatabaseType.FLAT)
+			{
+				final File file = new File(getDataFolder().getPath() + "/" + tableName + ".db");
+				database = new CrazyOnlineFlatDatabase(tableName, config, file);
+			}
 		}
-		else if (type == DatabaseType.MYSQL)
+		catch (final Exception e)
 		{
-			final MySQLConnection connection = new MySQLConnection(config, "localhost", "3306", "Crazy", "root", "");
-			database = new CrazyOnlineMySQLDatabase(connection, tableName, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
+			e.printStackTrace();
+			database = null;
 		}
-		else if (type == DatabaseType.FLAT)
+		finally
 		{
-			final File file = new File(getDataFolder().getPath() + "/" + tableName + ".db");
-			database = new CrazyOnlineFlatDatabase(file, colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime);
+			if (database == null)
+				broadcastLocaleMessage(true, "crazyonline.warndatabase", "DATABASE.ACCESSWARN", saveType);
+			else
+			{
+				database.loadAllEntries();
+				sendLocaleMessage("DATABASE.LOADED", Bukkit.getConsoleSender(), database.getAllEntries().size());
+			}
 		}
+	}
+
+	public int dropInactiveAccounts()
+	{
+		if (autoDelete != -1)
+			return dropInactiveAccounts(autoDelete);
+		return -1;
+	}
+
+	protected int dropInactiveAccounts(final long age)
+	{
+		final Date compare = new Date();
+		compare.setTime(compare.getTime() - age * 1000 * 60 * 60 * 24);
+		return dropInactiveAccounts(compare);
+	}
+
+	protected synchronized int dropInactiveAccounts(final Date limit)
+	{
+		final LinkedList<String> deletions = new LinkedList<String>();
+		final Iterator<OnlinePlayerData> it = database.getAllEntries().iterator();
+		while (it.hasNext())
+		{
+			final OnlinePlayerData data = it.next();
+			if (data.getLastLogin().before(limit) && data.getLastLogout().before(limit))
+				deletions.add(data.getName());
+		}
+		for (final String name : deletions)
+		{
+			database.deleteEntry(name);
+			if (pluginCommunicationEnabled)
+				Bukkit.getPluginManager().callEvent(new CrazyPlayerRemoveEvent(this, name));
+		}
+		return deletions.size();
 	}
 
 	@Override
@@ -129,14 +203,16 @@ public class CrazyOnline extends CrazyPlugin
 		final ConfigurationSection config = getConfig();
 		if (database != null)
 			config.set("database.saveType", database.getType().toString());
-		if (database != null)
-			database.saveAll(datas.values());
+		database.saveDatabase();
 	}
 
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("showOnlineInfo", showOnlineInfo);
+		config.set("deleteShortVisitors", deleteShortVisitors);
+		config.set("autoDelete", autoDelete);
+		config.set("database.saveOnShutdown", saveDatabaseOnShutdown);
 		logger.save(config, "logs.");
 		saveConfig();
 	}
@@ -302,10 +378,10 @@ public class CrazyOnline extends CrazyPlugin
 		if (!sender.hasPermission("crazyonline.since"))
 			throw new CrazyCommandPermissionException();
 		final ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
-		for (final OnlinePlayerData data : datas.values())
+		for (final OnlinePlayerData data : database.getAllEntries())
 			if (data.getLastLogin().after(date))
 				list.add(data);
-		Collections.sort(list, new OnlinePlayerDataLoginComperator());
+		Collections.sort(list, new OnlineDataLastLoginComperator());
 		sendLocaleMessage("MESSAGE.SINCE.HEADER", sender, DateFormat.format(date));
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
 		for (final OnlinePlayerData data : list)
@@ -334,10 +410,10 @@ public class CrazyOnline extends CrazyPlugin
 		if (!sender.hasPermission("crazyonline.before"))
 			throw new CrazyCommandPermissionException();
 		final ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
-		for (final OnlinePlayerData data : datas.values())
-			if (data.getLastLogin().after(date))
+		for (final OnlinePlayerData data : database.getAllEntries())
+			if (data.getLastLogin().before(date))
 				list.add(data);
-		Collections.sort(list, new OnlinePlayerDataLoginComperator());
+		Collections.sort(list, new OnlineDataLastLoginComperator());
 		sendLocaleMessage("MESSAGE.BEFORE.HEADER", sender, DateFormat.format(date));
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
 		for (final OnlinePlayerData data : list)
@@ -348,13 +424,22 @@ public class CrazyOnline extends CrazyPlugin
 	{
 		if (!sender.hasPermission("crazyonline.top10"))
 			throw new CrazyCommandPermissionException();
-		int page;
-		switch (args.length)
+		int page = 1;
+		final int length = args.length;
+		String[] pipe = null;
+		for (int i = 0; i < length; i++)
 		{
-			case 0:
-				page = 1;
+			final String arg = args[i];
+			if (arg.equals(">"))
+			{
+				pipe = ChatHelper.shiftArray(args, i + 1);
 				break;
-			case 1:
+			}
+			else if (i != 0)
+				throw new CrazyCommandUsageException("/ptop10 [page] [> Pipe]");
+			else if (arg.equals("*"))
+				page = Integer.MIN_VALUE;
+			else
 				try
 				{
 					page = Integer.parseInt(args[0]);
@@ -363,19 +448,27 @@ public class CrazyOnline extends CrazyPlugin
 				{
 					throw new CrazyCommandParameterException(1, "Integer");
 				}
-				break;
-			default:
-				throw new CrazyCommandUsageException("/crazylist [Page]");
 		}
-		final ArrayList<OnlinePlayerData> list = new ArrayList<OnlinePlayerData>();
-		list.addAll(datas.values());
-		Collections.sort(list, new OnlinePlayerDataOnlineComperator());
-		sendListMessage(sender, "COMMAND.TOP10.HEADER", 0, page, list, new OnlineTimeDataGetter(sender));
+		final ArrayList<OnlinePlayerData> dataList = new ArrayList<OnlinePlayerData>();
+		dataList.addAll(database.getAllEntries());
+		Collections.sort(dataList, new OnlineDataOnlineComperator());
+		if (pipe != null)
+		{
+			final ArrayList<ParameterData> datas = new ArrayList<ParameterData>(dataList);
+			CrazyPipe.pipe(sender, datas, pipe);
+			return;
+		}
+		sendListMessage(sender, "COMMAND.TOP10.HEADER", 0, page, dataList, new OnlineTimeDataGetter(sender));
 	}
 
 	@Override
 	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
+		if (commandLabel.equalsIgnoreCase("list"))
+		{
+			commandMainList(sender, args);
+			return true;
+		}
 		if (commandLabel.equalsIgnoreCase("mode"))
 		{
 			commandMainMode(sender, args);
@@ -392,6 +485,148 @@ public class CrazyOnline extends CrazyPlugin
 			return true;
 		}
 		return false;
+	}
+
+	private void commandMainList(final CommandSender sender, final String[] args) throws CrazyCommandException
+	{
+		{
+			if (!sender.hasPermission("crazyonline.list"))
+				throw new CrazyCommandPermissionException();
+			int page = 1;
+			int amount = 10;
+			final int length = args.length;
+			String nameFilter = null;
+			String IPFilter = null;
+			Boolean onlineFilter = null;
+			OnlineDataComparator comparator = new OnlineDataNameComparator();
+			String[] pipe = null;
+			for (int i = 0; i < length; i++)
+			{
+				final String arg = args[i].toLowerCase();
+				if (arg.startsWith("page:"))
+					try
+					{
+						page = Integer.parseInt(arg.substring(5));
+						if (page < 0)
+							throw new CrazyCommandParameterException(i, "positive Integer");
+					}
+					catch (final NumberFormatException e)
+					{
+						throw new CrazyCommandParameterException(i, "page:Integer");
+					}
+				else if (arg.startsWith("amount:"))
+				{
+					if (arg.substring(7).equals("*"))
+						amount = -1;
+					else
+						try
+						{
+							amount = Integer.parseInt(arg.substring(7));
+						}
+						catch (final NumberFormatException e)
+						{
+							throw new CrazyCommandParameterException(i, "amount:Integer");
+						}
+				}
+				else if (arg.startsWith("name:"))
+				{
+					if (arg.substring(5).equals("*"))
+						nameFilter = null;
+					else
+						nameFilter = arg.substring(5).toLowerCase();
+				}
+				else if (arg.startsWith("ip:"))
+				{
+					if (arg.substring(3).equals("*"))
+						IPFilter = null;
+					else
+						IPFilter = arg.substring(3);
+				}
+				else if (arg.startsWith("online:"))
+				{
+					final String temp = arg.substring(7);
+					if (temp.equals("*"))
+						onlineFilter = null;
+					else if (temp.equalsIgnoreCase("true") || temp.equals("1"))
+						onlineFilter = true;
+					else
+						onlineFilter = false;
+				}
+				else if (arg.startsWith("sort:"))
+				{
+					final String temp = arg.substring(5);
+					if (temp.equals("name"))
+						comparator = new OnlineDataNameComparator();
+					else if (temp.equals("ip"))
+						comparator = new OnlineDataIPComparator();
+					else if (temp.equals("firstlogin"))
+						comparator = new OnlineDataFirstLoginComperator();
+					else if (temp.equals("login") || temp.equals("lastlogin"))
+						comparator = new OnlineDataLastLoginComperator();
+					else if (temp.equals("logout") || temp.equals("lastlogout"))
+						comparator = new OnlineDataLastLogoutComperator();
+					else
+						throw new CrazyCommandParameterException(i, "sortType", "sort:Name/IP/Date");
+				}
+				else if (arg.equals(">"))
+				{
+					pipe = ChatHelper.shiftArray(args, i + 1);
+					break;
+				}
+				else if (arg.equals("*"))
+				{
+					page = Integer.MIN_VALUE;
+				}
+				else
+					try
+					{
+						page = Integer.parseInt(arg);
+					}
+					catch (final NumberFormatException e)
+					{
+						throw new CrazyCommandUsageException("/crazyonline list [name:Player] [ip:IP] [online:True/False/*] [amount:Integer] [sort:Name/IP/FirstJoin/LastJoin/LastLogout/TimeTotal] [[page:]Integer] [> Pipe]");
+					}
+			}
+			final ArrayList<OnlinePlayerData> dataList = new ArrayList<OnlinePlayerData>();
+			if (IPFilter != null)
+			{
+				final Iterator<OnlinePlayerData> it = dataList.iterator();
+				while (it.hasNext())
+					if (!it.next().getLatestIP().equals(IPFilter))
+						it.remove();
+			}
+			if (nameFilter != null)
+			{
+				Pattern pattern = null;
+				try
+				{
+					pattern = Pattern.compile(nameFilter);
+				}
+				catch (final PatternSyntaxException e)
+				{
+					throw new CrazyCommandErrorException(e);
+				}
+				final Iterator<OnlinePlayerData> it = dataList.iterator();
+				while (it.hasNext())
+					if (!pattern.matcher(it.next().getName().toLowerCase()).matches())
+						it.remove();
+			}
+			if (onlineFilter != null)
+			{
+				final Iterator<OnlinePlayerData> it = dataList.iterator();
+				while (it.hasNext())
+					if (!onlineFilter.equals(it.next().isOnline()))
+						it.remove();
+			}
+			Collections.sort(dataList, comparator);
+			if (pipe != null)
+			{
+				final ArrayList<ParameterData> datas = new ArrayList<ParameterData>(dataList);
+				CrazyPipe.pipe(sender, datas, pipe);
+				return;
+			}
+			sendListMessage(sender, "PLAYERDATA.LISTHEAD", amount, page, dataList, new ToStringDataGetter());
+		}
 	}
 
 	private void commandMainMode(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -424,13 +659,43 @@ public class CrazyOnline extends CrazyPlugin
 						type = null;
 					}
 					if (type == null)
-						throw new CrazyCommandNoSuchException("SaveType", saveType);
+						throw new CrazyCommandNoSuchException("saveType", saveType);
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
 					if (type == database.getType())
 						return;
+					Collection<OnlinePlayerData> datas = database.getAllEntries();
 					getConfig().set("database.saveType", type.toString());
 					setupDatabase();
+					database.saveAll(datas);
 					save();
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("autoDelete"))
+				{
+					int time = autoDelete;
+					try
+					{
+						time = Integer.parseInt(args[1]);
+					}
+					catch (final NumberFormatException e)
+					{
+						throw new CrazyCommandParameterException(1, "Integer", "-1 = disabled", "Time in Days");
+					}
+					autoDelete = Math.max(time, -1);
+					sendLocaleMessage("MODE.CHANGE", sender, "autoDelete", autoDelete == -1 ? "disabled" : autoDelete + " days");
+					saveConfiguration();
+					if (autoDelete != -1)
+						getServer().getScheduler().scheduleAsyncRepeatingTask(this, new DropInactiveAccountsTask(this), 20 * 60 * 60, 20 * 60 * 60 * 6);
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("saveDatabaseOnShutdown"))
+				{
+					boolean newValue = false;
+					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
+						newValue = true;
+					saveDatabaseOnShutdown = newValue;
+					sendLocaleMessage("MODE.CHANGE", sender, "saveDatabaseOnShutdown", saveDatabaseOnShutdown ? "True" : "False");
+					saveConfiguration();
 					return;
 				}
 				throw new CrazyCommandNoSuchException("Mode", args[0]);
@@ -445,38 +710,38 @@ public class CrazyOnline extends CrazyPlugin
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", database.getType().toString());
 					return;
 				}
+				else if (args[0].equalsIgnoreCase("saveDatabaseOnShutdown"))
+				{
+					sendLocaleMessage("MODE.CHANGE", sender, "saveDatabaseOnShutdown", saveDatabaseOnShutdown ? "True" : "False");
+					return;
+				}
 				throw new CrazyCommandNoSuchException("Mode", args[0]);
 			default:
 				throw new CrazyCommandUsageException("/crazyonline mode <Mode> [Value]");
 		}
 	}
 
-	private void commandMainDelete(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandMainDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.admin"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazyonline delete <Name>");
 		final String name = args[0];
-		OfflinePlayer player = Bukkit.getOfflinePlayer(name);
-		if (player == null)
+		if (!hasPlayerData(name))
 			throw new CrazyCommandNoSuchException("Player", name);
-		OnlinePlayerData data = getPlayerData(name);
-		if (data == null)
-			throw new CrazyCommandNoSuchException("Player", name);
-		datas.remove(name.toLowerCase());
-		database.delete(player.getName());
+		database.deleteEntry(name);
 		sendLocaleMessage("COMMAND.DELETE", sender, name);
 	}
 
-	private void commandMainReset(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandMainReset(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.admin"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
-			throw new CrazyCommandUsageException("/crazyonline delete <Name>");
+			throw new CrazyCommandUsageException("/crazyonline reset <Name>");
 		final String name = args[0];
-		OnlinePlayerData data = getPlayerData(name);
+		final OnlinePlayerData data = getPlayerData(name);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("Player", name);
 		data.resetOnlineTime();
@@ -484,28 +749,28 @@ public class CrazyOnline extends CrazyPlugin
 		database.save(data);
 	}
 
-	public OnlinePlayerData getPlayerData(final OfflinePlayer player)
-	{
-		return datas.get(player.getName().toLowerCase());
-	}
-
-	public OnlinePlayerData getPlayerData(final String name)
-	{
-		return datas.get(name.toLowerCase());
-	}
-
-	public HashMap<String, OnlinePlayerData> getDatas()
-	{
-		return datas;
-	}
-
 	public boolean isShowOnlineInfoEnabled()
 	{
 		return showOnlineInfo;
 	}
 
-	public boolean deletePlayerData(String player)
+	public int getAutoDelete()
 	{
-		return datas.remove(player.toLowerCase()) != null;
+		return autoDelete;
+	}
+
+	public boolean isDeletingShortVisitorsEnabled()
+	{
+		return deleteShortVisitors;
+	}
+
+	@Override
+	public Set<OnlinePlayerData> getPlayerDatasPerIP(String IP)
+	{
+		HashSet<OnlinePlayerData> res = new HashSet<OnlinePlayerData>();
+		for (OnlinePlayerData data : database.getAllEntries())
+			if (data.getLatestIP().equals(IP))
+				res.add(data);
+		return res;
 	}
 }

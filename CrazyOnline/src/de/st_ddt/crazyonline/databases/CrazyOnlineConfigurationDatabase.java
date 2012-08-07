@@ -1,15 +1,35 @@
 package de.st_ddt.crazyonline.databases;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyonline.OnlinePlayerData;
+import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabase;
+import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 
-public class CrazyOnlineConfigurationDatabase extends ConfigurationDatabase<OnlinePlayerData>
+public class CrazyOnlineConfigurationDatabase extends ConfigurationDatabase<OnlinePlayerData> implements PlayerDataDatabase<OnlinePlayerData>
 {
 
-	public CrazyOnlineConfigurationDatabase(final ConfigurationSection config, final String table, final String colName, final String colFirstLogin, final String colLastLogin, final String colLastLogout, final String colOnlineTime)
+	public CrazyOnlineConfigurationDatabase(final String tableName, final ConfigurationSection config)
 	{
-		super(OnlinePlayerData.class, config, table, new String[] { colName, colFirstLogin, colLastLogin, colLastLogout, colOnlineTime });
+		super(OnlinePlayerData.class, tableName, config, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" });
+	}
+
+	@Override
+	public OnlinePlayerData getEntry(final OfflinePlayer player)
+	{
+		return getEntry(player.getName());
+	}
+
+	@Override
+	public boolean hasEntry(final OfflinePlayer player)
+	{
+		return hasEntry(player.getName());
+	}
+
+	@Override
+	public boolean deleteEntry(final OfflinePlayer player)
+	{
+		return deleteEntry(player.getName());
 	}
 }

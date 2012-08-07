@@ -2,7 +2,7 @@ name: CrazyOnline
 main: de.st_ddt.crazyonline.CrazyOnline
 author: ST-DDT
 #C*=needed core version
-version: C7.6_4.5.1
+version: C8_5
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
@@ -11,7 +11,7 @@ commands:
     usage: /<command> <Player>
   ptop10:
     description: Show Top10 online players
-    usage: /<command>
+    usage: /<command> [Page] [> Pipe]
   ponlines:
     description: Show information about online player
     usage: /<command>
@@ -31,6 +31,7 @@ permissions:
     default: false
     children:
       crazyonline.admin: true
+      crazyonline.list: true
       crazyonline.info: true
       crazyonline.online: true
       crazyonline.since: true
@@ -41,6 +42,7 @@ permissions:
     description: Access to admit commands
     default: op
     children:
+      crazyonline.list: true
       crazyonline.info: true
       crazyonline.online: true
       crazyonline.since: true

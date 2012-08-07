@@ -1,7 +1,8 @@
-package de.st_ddt.crazyonline;
+package de.st_ddt.crazyonline.data;
 
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazyonline.CrazyOnline;
 import de.st_ddt.crazyutil.EntryDataGetter;
 
 public class OnlineTimeDataGetter implements EntryDataGetter<OnlinePlayerData>

@@ -1,8 +1,9 @@
-package de.st_ddt.crazyonline;
+package de.st_ddt.crazyonline.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import de.st_ddt.crazyonline.CrazyOnline;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 
 public class CrazyOnlineCrazyListener implements Listener

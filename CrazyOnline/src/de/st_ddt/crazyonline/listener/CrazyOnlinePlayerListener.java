@@ -1,11 +1,16 @@
-package de.st_ddt.crazyonline;
+package de.st_ddt.crazyonline.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import de.st_ddt.crazyonline.CrazyOnline;
+import de.st_ddt.crazyonline.data.OnlinePlayerData;
+import de.st_ddt.crazyonline.tasks.PlayerDataCheckTask;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 
 public class CrazyOnlinePlayerListener implements Listener
@@ -24,11 +29,8 @@ public class CrazyOnlinePlayerListener implements Listener
 		final Player player = event.getPlayer();
 		OnlinePlayerData data = plugin.getPlayerData(player);
 		if (data == null)
-		{
 			data = new OnlinePlayerData(player);
-			plugin.getDatas().put(player.getName().toLowerCase(), data);
-		}
-		data.login();
+		data.join(player.getAddress().getAddress().getHostAddress());
 		if (plugin.isShowOnlineInfoEnabled())
 			if (player.hasPermission("crazyonline.since.auto"))
 				try
@@ -39,10 +41,11 @@ public class CrazyOnlinePlayerListener implements Listener
 				{
 					e.printStackTrace();
 				}
+		plugin.getCrazyDatabase().save(data);
 		plugin.getCrazyLogger().log("Join", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " joined the server");
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW)
 	public void PlayerQuit(final PlayerQuitEvent event)
 	{
 		final Player player = event.getPlayer();
@@ -50,6 +53,21 @@ public class CrazyOnlinePlayerListener implements Listener
 		final OnlinePlayerData data = plugin.getPlayerData(player);
 		if (data == null)
 			return;
-		data.logout();
+		data.quit();
+		plugin.getCrazyDatabase().save(data);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void PlayerQuitCheck(final PlayerQuitEvent event)
+	{
+		if (!plugin.isDeletingShortVisitorsEnabled())
+			return;
+		final Player player = event.getPlayer();
+		final OnlinePlayerData data = plugin.getPlayerData(player);
+		if (data == null)
+			return;
+		if (data.getTimeTotal() > 5)
+			return;
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new PlayerDataCheckTask(plugin, player.getName()), 20 * 60 * 10);
 	}
 }
