@@ -1,0 +1,21 @@
+name: CrazyEnchanter
+main: de.st_ddt.crazyenchanter.CrazyEnchanter
+author: ST-DDT
+#C*=needed core version
+version: C8_0.1
+depend: [CrazyCore]
+description: >
+            Enchant your items.
+commands:
+  enchant:
+    description: Enchant hand held item
+    usage: /<command> <Enchantment> [Level [Unsafe]]
+permissions:
+  crazyenchanter.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazyenchanter.enchant: true
+  crazyenchanter.enchant:
+    description: Allow enchanting your item.
+    default: op
