@@ -1,0 +1,32 @@
+name: CrazyLoginRank
+main: de.st_ddt.crazyloginrank.CrazyLoginRank
+author: ST-DDT
+#C*=needed core version
+version: C8_0.1
+depend: [CrazyCore]
+description: >
+            CrazyLoginRank allow your favorite players to connect to your server.
+commands:
+  rank:
+    description: get/set a players rank
+    usage: /<command> [Player [Rank]]
+    aliases: [crank,crazyrank]
+  crazyloginrank:
+    description: Plugin Main Menu
+    usage: /<command>
+    aliases: [clr]
+permissions:
+  crazyloginrank.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazyloginrank.admin: true
+      crazyloginrank.list: true
+  crazyloginrank.admin:
+    description: Allow changingplayer ranks
+    default: op
+    children: 
+      crazyloginrank.list: true
+  crazyloginrank.list:
+    description: List all player ranks.
+    default: op
