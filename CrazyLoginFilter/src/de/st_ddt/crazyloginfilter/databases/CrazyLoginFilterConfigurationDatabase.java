@@ -1,15 +1,35 @@
 package de.st_ddt.crazyloginfilter.databases;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyloginfilter.PlayerAccessFilter;
+import de.st_ddt.crazyloginfilter.data.PlayerAccessFilter;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabase;
+import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 
-public class CrazyLoginFilterConfigurationDatabase extends ConfigurationDatabase<PlayerAccessFilter>
+public class CrazyLoginFilterConfigurationDatabase extends ConfigurationDatabase<PlayerAccessFilter> implements PlayerDataDatabase<PlayerAccessFilter>
 {
 
-	public CrazyLoginFilterConfigurationDatabase(ConfigurationSection config, String table, String colName, String colCheckIPs, String colWhitelistIPs, String colIPs, String colCheckConnections, String colWhitelistConnections, String colConnections)
+	public CrazyLoginFilterConfigurationDatabase(final String tableName, final ConfigurationSection config)
 	{
-		super(PlayerAccessFilter.class, config, table, new String[] { colName, colCheckIPs, colWhitelistIPs, colIPs, colCheckConnections, colWhitelistConnections, colConnections });
+		super(PlayerAccessFilter.class, tableName, config, new String[] { "name", "checkIPs", "whitelistIPs", "IPs", "checkConnections", "whitelistConnections", "connections" });
+	}
+
+	@Override
+	public PlayerAccessFilter getEntry(final OfflinePlayer player)
+	{
+		return getEntry(player.getName());
+	}
+
+	@Override
+	public boolean hasEntry(final OfflinePlayer player)
+	{
+		return hasEntry(player.getName());
+	}
+
+	@Override
+	public boolean deleteEntry(final OfflinePlayer player)
+	{
+		return deleteEntry(player.getName());
 	}
 }

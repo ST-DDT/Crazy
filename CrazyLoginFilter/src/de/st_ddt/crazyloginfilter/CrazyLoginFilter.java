@@ -1,16 +1,15 @@
 package de.st_ddt.crazyloginfilter;
 
-import java.util.HashMap;
-
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazyloginfilter.data.PlayerAccessFilter;
 import de.st_ddt.crazyloginfilter.databases.CrazyLoginFilterConfigurationDatabase;
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyloginfilter.listener.CrazyLoginFilterPlayerListener;
+import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
@@ -22,21 +21,18 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyplugin.exceptions.CrazyNotImplementedException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ToStringDataGetter;
-import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 
-public class CrazyLoginFilter extends CrazyPlugin
+public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter>
 {
 
 	private static CrazyLoginFilter plugin;
-	protected final HashMap<String, PlayerAccessFilter> datas = new HashMap<String, PlayerAccessFilter>();
 	protected PlayerAccessFilter serverFilter;
 	private CrazyLoginFilterPlayerListener playerListener;
 	protected String filterNames;
 	protected int minNameLength;
 	protected int maxNameLength;
 	// Database
-	protected Database<PlayerAccessFilter> database;
 	protected boolean saveDatabaseOnShutdown;
 
 	public static CrazyLoginFilter getPlugin()
@@ -98,10 +94,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 		minNameLength = Math.min(Math.max(config.getInt("minNameLength", 3), 1), 16);
 		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 16);
 		setupDatabase();
-		datas.clear();
-		if (database != null)
-			for (final PlayerAccessFilter data : database.getAllEntries())
-				datas.put(data.getName().toLowerCase(), data);
+		database.loadAllEntries();
 	}
 
 	public void setupDatabase()
@@ -111,26 +104,11 @@ public class CrazyLoginFilter extends CrazyPlugin
 		final DatabaseType type = DatabaseType.valueOf(saveType);
 		final String tableName = config.getString("database.tableName", "accessfilter");
 		config.set("database.tableName", tableName);
-		// Columns
-		final String colName = config.getString("database.columns.name", "name");
-		config.set("database.columns.name", colName);
-		final String colCheckIPs = config.getString("database.columns.checkIPs", "checkIPs");
-		config.set("database.columns.checkIPs", colCheckIPs);
-		final String colWhitelistIPs = config.getString("database.columns.whitelistIPs", "whitelistIPs");
-		config.set("database.columns.whitelistIPs", colWhitelistIPs);
-		final String colIPs = config.getString("database.columns.IPs", "IPs");
-		config.set("database.columns.IPs", colIPs);
-		final String colCheckConnections = config.getString("database.columns.checkConnections", "checkConnections");
-		config.set("database.columns.checkConnections", colCheckConnections);
-		final String colWhitelistConnections = config.getString("database.columns.whitelistConnections", "whitelistConnections");
-		config.set("database.columns.whitelistConnections", colWhitelistConnections);
-		final String colConnections = config.getString("database.columns.connections", "connections");
-		config.set("database.columns.connections", colConnections);
 		try
 		{
 			if (type == DatabaseType.CONFIG)
 			{
-				database = new CrazyLoginFilterConfigurationDatabase(config, tableName, colName, colCheckIPs, colWhitelistIPs, colIPs, colCheckConnections, colWhitelistConnections, colConnections);
+				database = new CrazyLoginFilterConfigurationDatabase(tableName, config);
 			}
 		}
 		catch (final Exception e)
@@ -157,8 +135,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 		final ConfigurationSection config = getConfig();
 		if (database != null)
 			config.set("database.saveType", database.getType().toString());
-		if (database != null)
-			database.saveAll(datas.values());
+		database.saveDatabase();
 	}
 
 	public void saveConfiguration()
@@ -244,7 +221,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 		final PlayerAccessFilter data = new PlayerAccessFilter(player);
 		data.setCheckIP(false);
 		data.setCheckConnection(false);
-		datas.put(player.getName().toLowerCase(), data);
+		database.save(data);
 		sendLocaleMessage("COMMMAND.CREATED", sender, player.getName());
 	}
 
@@ -253,7 +230,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 		if (sender instanceof ConsoleCommandSender)
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
-		commandMainShow(sender, args, getPlayerAccessFilter(player));
+		commandMainShow(sender, args, getPlayerData(player));
 	}
 
 	private void commandMainShow(final CommandSender sender, final String[] args, final PlayerAccessFilter data) throws CrazyException
@@ -266,7 +243,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 		if (sender instanceof ConsoleCommandSender)
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
-		commandMainIP(sender, args, getPlayerAccessFilter(player));
+		commandMainIP(sender, args, getPlayerData(player));
 	}
 
 	private void commandMainIP(final CommandSender sender, final String[] args, final PlayerAccessFilter data) throws CrazyCommandException
@@ -358,7 +335,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 		if (sender instanceof ConsoleCommandSender)
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
-		commandMainConnection(sender, args, getPlayerAccessFilter(player));
+		commandMainConnection(sender, args, getPlayerData(player));
 	}
 
 	private void commandMainConnection(final CommandSender sender, final String[] args, final PlayerAccessFilter data) throws CrazyCommandException
@@ -559,7 +536,7 @@ public class CrazyLoginFilter extends CrazyPlugin
 	{
 		if (!serverFilter.checkIP(IP))
 			return false;
-		final PlayerAccessFilter filter = getPlayerAccessFilter(player);
+		final PlayerAccessFilter filter = getPlayerData(player);
 		if (filter == null)
 			return true;
 		return filter.checkIP(IP);
@@ -579,35 +556,15 @@ public class CrazyLoginFilter extends CrazyPlugin
 	{
 		if (!serverFilter.checkConnection(connection))
 			return false;
-		final PlayerAccessFilter filter = getPlayerAccessFilter(player);
+		final PlayerAccessFilter filter = getPlayerData(player);
 		if (filter == null)
 			return true;
 		return filter.checkConnection(connection);
 	}
 
-	public PlayerAccessFilter getPlayerAccessFilter(final OfflinePlayer player)
-	{
-		return getPlayerAccessFilter(player.getName());
-	}
-
-	public PlayerAccessFilter getPlayerAccessFilter(final String player)
-	{
-		return datas.get(player.toLowerCase());
-	}
-
 	public PlayerAccessFilter getServerAccessFilter()
 	{
 		return serverFilter;
-	}
-
-	public boolean deletePlayerData(final String player)
-	{
-		final PlayerAccessFilter data = datas.remove(player.toLowerCase());
-		if (data == null)
-			return false;
-		if (database != null)
-			database.delete(data.getName());
-		return true;
 	}
 
 	public boolean checkNameChars(final String name)
