@@ -336,9 +336,9 @@ public class CrazyCore extends CrazyPlugin
 		preloadedLanguages.add(defaultLanguage);
 		for (final String language : config.getStringList("preloadedLanguages"))
 			preloadedLanguages.add(language);
+		preloadedLanguages.addAll(CrazyLocale.load(config.getConfigurationSection("players")));
 		for (final String language : preloadedLanguages)
 			loadLanguageFiles(language, false);
-		CrazyLocale.load(config.getConfigurationSection("players"));
 	}
 
 	private void loadLanguageFiles(final String language, final boolean forceUpdate)
