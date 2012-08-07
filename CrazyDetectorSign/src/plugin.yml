@@ -2,7 +2,7 @@ name: CrazyDetectorSign
 main: de.st_ddt.crazydetectorsign.CrazyDetectorSign
 author: ST-DDT
 #C*=needed core version
-version: C7.5.1_1.1.1
+version: C8_1.2
 depend: [CrazyCore]
 description: >
             Use Detector Signs to trigger redstone.
