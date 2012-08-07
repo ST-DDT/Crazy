@@ -2,7 +2,7 @@ name: CrazyPunisher
 main: de.st_ddt.crazypunisher.CrazyPunisher
 author: ST-DDT
 #C*=needed core version
-version: C7.5_G0.1_3.10.1
+version: C8_G0.1_3.10.2
 softdepend: [PermissionsBukkit,dynmap]
 depend: [CrazyCore,CrazyGeo]
 commands:

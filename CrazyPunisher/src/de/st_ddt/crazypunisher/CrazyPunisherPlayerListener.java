@@ -9,7 +9,8 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerChatEvent;
+
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -34,7 +35,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerChat(PlayerChatEvent event)
+	public void PlayerChat(AsyncPlayerChatEvent event)
 	{
 		if (!plugin.isJailed(event.getPlayer()))
 			return;
