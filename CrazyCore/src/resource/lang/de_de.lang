@@ -54,6 +54,7 @@ CRAZYPLUGIN.LANGUAGE.ERROR.EXPORT=Fehler beim Exportieren der $0$ Sprachdateien!
 CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD=Fehler beim Herunterladen der $0$ Sprachdateien!
 CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE=$0$ Sprachdateien nicht verfügbar!
 CRAZYPLUGIN.LANGUAGE.LOADED=Sprache $0$ erfolgreich geladen!
+CRAZYPLUGIN.DATABASE.LOADED=$0$ Einträge aus Datenbank geladen
 UNIT.TIME.DAYS=Tage
 UNIT.TIME.HOURS=Stunden
 UNIT.TIME.MINUTES=Minuten
