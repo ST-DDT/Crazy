@@ -50,7 +50,7 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 		if (plr != null)
 		{
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("OP"), plr.isOp() ? "True" : "False");
-			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("WHITELIST"), plr.isWhitelisted() ? "True" : "False");
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("WHITELISTED"), plr.isWhitelisted() ? "True" : "False");
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("BANNED"), plr.isBanned() ? "True" : "False");
 		}
 		if (showDetailed)
