@@ -257,6 +257,11 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 		return DateFormat;
 	}
 
+	public void join()
+	{
+		lastLogin = new Date();
+	}
+
 	public void join(String ip)
 	{
 		lastLogin = new Date();

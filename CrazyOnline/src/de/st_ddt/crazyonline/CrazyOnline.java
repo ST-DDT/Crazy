@@ -80,23 +80,15 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		plugin = this;
 		registerHooks();
 		super.onEnable();
-		for (Player player : Bukkit.getOnlinePlayers())
-		{
-			OnlinePlayerData data = getPlayerData(player);
-			if (data != null)
-				data.join(player.getAddress().getAddress().getHostAddress());
-		}
+		for (OnlinePlayerData data : getOnlinePlayerDatas())
+			data.join();
 	}
 
 	@Override
 	public void onDisable()
 	{
-		for (Player player : Bukkit.getOnlinePlayers())
-		{
-			OnlinePlayerData data = getPlayerData(player);
-			if (data != null)
-				data.quit();
-		}
+		for (OnlinePlayerData data : getOnlinePlayerDatas())
+			data.quit();
 		super.onDisable();
 	}
 
