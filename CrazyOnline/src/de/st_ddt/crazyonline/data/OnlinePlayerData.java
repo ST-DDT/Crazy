@@ -315,7 +315,7 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGINFIRST"), getFirstLoginString());
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGINLAST"), getLastLoginString());
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGOUTLAST"), getLastLogoutString());
-		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMELAST"), ChatHelper.timeConverter(getTimeLast() * 60, 2, target, 2, true));
-		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMETOTAL"), ChatHelper.timeConverter(getTimeTotal() * 60, 2, target, 2, true));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMELAST"), ChatHelper.timeConverter(getTimeLast() * 60, 2, target, 2, false));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMETOTAL"), ChatHelper.timeConverter(getTimeTotal() * 60, 2, target, 2, false));
 	}
 }
