@@ -1,5 +1,6 @@
 package de.st_ddt.crazyloginfilter;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -52,14 +53,6 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		super.onEnable();
 	}
 
-	@Override
-	public void onDisable()
-	{
-		if (saveDatabaseOnShutdown)
-			saveDatabase();
-		saveConfiguration();
-	}
-
 	public void registerHooks()
 	{
 		this.playerListener = new CrazyLoginFilterPlayerListener(this);
@@ -84,6 +77,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				System.out.println("Invalid Server Access Filter config!");
 				serverFilter = new PlayerAccessFilter("serverFilter");
 			}
+		// PlayerNames
 		filterNames = config.getString("filterNames", "false");
 		if (filterNames.equals("false"))
 			filterNames = ".";
@@ -91,8 +85,8 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 			filterNames = "[a-zA-Z0-9_]";
 		minNameLength = Math.min(Math.max(config.getInt("minNameLength", 3), 1), 16);
 		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 16);
+		// Database
 		setupDatabase();
-		database.loadAllEntries();
 	}
 
 	public void setupDatabase()
@@ -118,6 +112,11 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		{
 			if (database == null)
 				broadcastLocaleMessage(true, "crazyloginfilter.warndatabase", "DATABASE.ACCESSWARN", saveType);
+			else
+			{
+				database.loadAllEntries();
+				sendLocaleMessage("DATABASE.LOADED", Bukkit.getConsoleSender(), database.getAllEntries().size());
+			}
 		}
 	}
 

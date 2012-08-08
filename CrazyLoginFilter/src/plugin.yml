@@ -2,7 +2,7 @@ name: CrazyLoginFilter
 main: de.st_ddt.crazyloginfilter.CrazyLoginFilter
 author: ST-DDT
 #C*=needed core version
-version: C8.1_0.5
+version: C8.1_0.5.1
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore]
 commands:
@@ -17,11 +17,16 @@ permissions:
     children:
       crazyloginfilter.admin: true
       crazyloginfilter.mode: true
+      crazyloginfilter.warndatabase: true
   crazyloginfilter.admin:
     description: Allow changing account data for other players
     default: op
     children: 
       crazyloginfilter.mode: true
+      crazyloginfilter.warndatabase: true
   crazyloginfilter.mode:
     description: Allow changing plugin mode
+    default: op
+  crazyloginfilter.warndatabase:
+    description: Get informed if database connection fails
     default: op
