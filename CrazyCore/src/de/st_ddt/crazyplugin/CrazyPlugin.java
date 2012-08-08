@@ -74,7 +74,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	{
 		try
 		{
-			if (command(sender, commandLabel, args))
+			if (command(sender, commandLabel.toLowerCase(), args))
 				return true;
 			if (getDescription().getName().equalsIgnoreCase(commandLabel) || (commandLabel.equalsIgnoreCase(getShortPluginName())))
 			{
@@ -86,24 +86,25 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 						return true;
 					}
 					final String[] newArgs = ChatHelper.shiftArray(args, 1);
-					if (commandMain(sender, args[0], newArgs))
+					String commandString = args[0].toLowerCase();
+					if (commandMain(sender, commandString, newArgs))
 						return true;
-					if (args[0].equalsIgnoreCase("info"))
+					if (commandString.equals("info"))
 					{
 						commandInfo(sender, newArgs);
 						return true;
 					}
-					if (args[0].equalsIgnoreCase("reload"))
+					if (commandString.equals("reload"))
 					{
 						commandReload(sender, newArgs);
 						return true;
 					}
-					if (args[0].equalsIgnoreCase("save"))
+					if (commandString.equals("save"))
 					{
 						commandSave(sender, newArgs);
 						return true;
 					}
-					if (args[0].equalsIgnoreCase("help"))
+					if (commandString.equals("help"))
 					{
 						commandHelp(sender, newArgs);
 						return true;
@@ -143,10 +144,9 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		return false;
 	}
 
-	private void commandInfo(final CommandSender sender, final String[] newArgs)
+	protected void commandInfo(final CommandSender sender, final String[] newArgs)
 	{
-		sender.sendMessage(getChatHeader() + "Version " + getDescription().getVersion());
-		sender.sendMessage(getChatHeader() + "Authors " + getDescription().getAuthors().toString());
+		show(sender, getChatHeader(), true);
 	}
 
 	private final void commandReload(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -547,17 +547,5 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			if (stream != null)
 				stream.close();
 		}
-	}
-
-	@Override
-	public void show(CommandSender target)
-	{
-		commandInfo(target, new String[0]);
-	}
-
-	@Override
-	public void show(CommandSender target, String... args)
-	{
-		commandInfo(target, args);
 	}
 }

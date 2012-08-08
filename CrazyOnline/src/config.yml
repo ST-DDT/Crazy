@@ -1,0 +1,21 @@
+# CrazyOnline config.yml
+# For more information visit
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyOnline/src/config.yml
+version: C8.1_5.1
+database:
+  tableName: CrazyOnline_players
+  columns:
+    name: name
+    firstLogin: firstLogin
+    lastLogin: lastLogin
+    lastLogout: lastLogout
+    onlineTime: onlineTime
+    ip: ip
+  saveType: FLAT
+  saveOnShutdown: true
+showOnlineInfo: true
+deleteShortVisitors: false
+autoDelete: -1
+logs:
+  Quit: false
+  Join: false

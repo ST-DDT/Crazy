@@ -6,19 +6,23 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyonline.CrazyOnline;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.data.PlayerData;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
 import de.st_ddt.crazyutil.databases.FlatDatabaseEntry;
 import de.st_ddt.crazyutil.databases.MySQLConnection;
 import de.st_ddt.crazyutil.databases.MySQLDatabase;
 import de.st_ddt.crazyutil.databases.MySQLDatabaseEntry;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements ConfigurationDatabaseEntry, MySQLDatabaseEntry, FlatDatabaseEntry, OnlineData<OnlinePlayerData>
+public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements ConfigurationDatabaseEntry, MySQLDatabaseEntry, FlatDatabaseEntry, OnlineData
 {
 
 	protected Date firstLogin;
@@ -291,5 +295,27 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	public int getParameterCount()
 	{
 		return 6;
+	}
+
+	public CrazyOnline getPlugin()
+	{
+		return CrazyOnline.getPlugin();
+	}
+
+	@Override
+	protected String getChatHeader()
+	{
+		return getPlugin().getChatHeader();
+	}
+
+	@Override
+	public void showDetailed(CommandSender target, String chatHeader)
+	{
+		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYONLINE.PLAYERINFO");
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGINFIRST"), getFirstLoginString());
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGINLAST"), getLastLoginString());
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGOUTLAST"), getLastLogoutString());
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMELAST"), ChatHelper.timeConverter(getTimeLast() * 60, 2, target, 2, true));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMETOTAL"), ChatHelper.timeConverter(getTimeTotal() * 60, 2, target, 2, true));
 	}
 }

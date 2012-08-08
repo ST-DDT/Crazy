@@ -10,7 +10,7 @@ import de.st_ddt.crazylogin.crypt.Encryptor;
 import de.st_ddt.crazylogin.data.LoginData;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
 
-public interface LoginPlugin<S extends LoginData<S>> extends CrazyPlayerDataPluginInterface<S>
+public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginInterface<LoginData, S>
 {
 
 	public int dropInactiveAccounts();

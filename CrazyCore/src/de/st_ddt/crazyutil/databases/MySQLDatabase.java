@@ -19,6 +19,8 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		super(DatabaseType.MYSQL, clazz, tableName, config, convertColumnNames(columns), getConstructor(clazz));
 		this.connection = MySQLConnection.connect(config);
+		if (connection.isInErrorState())
+			throw new Exception();
 		this.columns = columns;
 		this.primary = columns[primaryIndex];
 		checkTable();

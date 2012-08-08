@@ -15,6 +15,7 @@ public class MySQLConnection
 	private final String database;
 	private final String user;
 	private final String password;
+	protected final boolean error;
 
 	public static MySQLConnection connect(final ConfigurationSection config)
 	{
@@ -53,19 +54,22 @@ public class MySQLConnection
 			// TODO Download and retry
 			System.err.println("JBDC-Treiber not found");
 		}
-		connect();
+		error = !connect();
 	}
 
-	public void connect()
+	public boolean connect()
 	{
 		try
 		{
 			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
+			return true;
 		}
 		catch (final SQLException e)
 		{
 			System.err.println("Connection failed");
-			e.printStackTrace();
+			System.err.println(e.getLocalizedMessage());
+			// e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -95,5 +99,10 @@ public class MySQLConnection
 		}
 		catch (final SQLException e)
 		{}
+	}
+
+	public boolean isInErrorState()
+	{
+		return error;
 	}
 }

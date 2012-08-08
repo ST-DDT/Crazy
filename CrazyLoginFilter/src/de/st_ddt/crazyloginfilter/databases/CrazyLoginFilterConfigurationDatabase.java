@@ -2,6 +2,7 @@ package de.st_ddt.crazyloginfilter.databases;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazyloginfilter.data.PlayerAccessFilter;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabase;
@@ -10,9 +11,9 @@ import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 public class CrazyLoginFilterConfigurationDatabase extends ConfigurationDatabase<PlayerAccessFilter> implements PlayerDataDatabase<PlayerAccessFilter>
 {
 
-	public CrazyLoginFilterConfigurationDatabase(final String tableName, final ConfigurationSection config)
+	public CrazyLoginFilterConfigurationDatabase(final String tableName, final ConfigurationSection config, JavaPlugin plugin)
 	{
-		super(PlayerAccessFilter.class, tableName, config, new String[] { "name", "checkIPs", "whitelistIPs", "IPs", "checkConnections", "whitelistConnections", "connections" });
+		super(PlayerAccessFilter.class, tableName, config, new String[] { "name", "checkIPs", "whitelistIPs", "IPs", "checkConnections", "whitelistConnections", "connections" }, plugin);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import de.st_ddt.crazyloginrank.listener.CrazyLoginRankPlayerListener;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> implements LoginRankPlugin<LoginRankPlayerData>
+public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankData, LoginRankPlayerData> implements LoginRankPlugin<LoginRankPlayerData>
 {
 
 	private static CrazyLoginRank plugin;
@@ -103,31 +103,26 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 	@Override
 	public Player getLowestRank()
 	{
-		final List<LoginRankData<?>> list = getRankList(true, false);
+		final List<LoginRankData> list = getRankList(true, false);
 		if (list.size() == 0)
 			return null;
 		return list.get(list.size() - 1).getPlayer();
 	}
 
 	@Override
-	public List<LoginRankData<?>> getRankList(final boolean includeOnline, final boolean includeData)
+	public List<LoginRankData> getRankList(final boolean includeOnline, final boolean includeData)
 	{
-		final List<LoginRankData<?>> list = new ArrayList<LoginRankData<?>>();
-		if (includeData)
-			list.addAll(database.getAllEntries());
-		if (includeOnline)
-			for (final Player player : Bukkit.getOnlinePlayers())
-				list.add(getAvailablePlayerData(player));
-		while (list.remove(null))
-			;
+		final List<LoginRankData> list = new ArrayList<LoginRankData>();
+		list.addAll(getAvailablePlayerData(includeOnline, includeData));
+		;
 		Collections.sort(list);
 		return list;
 	}
 
 	@Override
-	public LoginRankData<?> getAvailablePlayerData(final String name)
+	public LoginRankData getAvailablePlayerData(final String name)
 	{
-		LoginRankData<?> res = null;
+		LoginRankData res = null;
 		if (database != null)
 			res = database.getEntry(name);
 		if (res != null)
@@ -139,9 +134,9 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 	}
 
 	@Override
-	public LoginRankData<?> getAvailablePlayerData(final OfflinePlayer player)
+	public LoginRankData getAvailablePlayerData(final OfflinePlayer player)
 	{
-		LoginRankData<?> res = null;
+		LoginRankData res = null;
 		if (database != null)
 			res = database.getEntry(player);
 		if (res != null)
@@ -153,13 +148,13 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 	}
 
 	@Override
-	public LoginRankData<?> getPermissionBasedPlayerData(final String name)
+	public LoginRankData getPermissionBasedPlayerData(final String name)
 	{
 		return getPermissionBasedPlayerData(Bukkit.getPlayerExact(name));
 	}
 
 	@Override
-	public LoginRankData<?> getPermissionBasedPlayerData(final OfflinePlayer player)
+	public LoginRankData getPermissionBasedPlayerData(final OfflinePlayer player)
 	{
 		if (player == null)
 			return null;
@@ -173,13 +168,13 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankPlayerData> i
 	}
 
 	@Override
-	public LoginRankData<?> getDefaultPlayerData(final String name)
+	public LoginRankData getDefaultPlayerData(final String name)
 	{
 		return getDefaultPlayerData(Bukkit.getOfflinePlayer(name));
 	}
 
 	@Override
-	public LoginRankData<?> getDefaultPlayerData(final OfflinePlayer player)
+	public LoginRankData getDefaultPlayerData(final OfflinePlayer player)
 	{
 		if (player == null)
 			return null;

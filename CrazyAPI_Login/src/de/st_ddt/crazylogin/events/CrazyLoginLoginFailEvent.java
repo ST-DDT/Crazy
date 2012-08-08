@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazylogin.LoginPlugin;
 import de.st_ddt.crazylogin.data.LoginData;
 
-public class CrazyLoginLoginFailEvent<S extends LoginData<S>> extends CrazyLoginPlayerDataEvent<S>
+public class CrazyLoginLoginFailEvent<S extends LoginData> extends CrazyLoginPlayerDataEvent<S>
 {
 
 	protected final LoginFailReason reason;

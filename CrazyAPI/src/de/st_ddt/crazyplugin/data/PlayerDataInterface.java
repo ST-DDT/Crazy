@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyutil.databases.DatabaseEntry;
 
-public interface PlayerDataInterface<S extends PlayerDataInterface<S>> extends DatabaseEntry, ParameterData
+public interface PlayerDataInterface extends DatabaseEntry, ParameterData
 {
 
 	public Player getPlayer();

@@ -1,11 +1,17 @@
 package de.st_ddt.crazyplugin.data;
 
+import java.util.Date;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataInterface<S>
+import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
+
+public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataInterface
 {
 
 	protected final String name;
@@ -16,20 +22,48 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 		this.name = name;
 	}
 
-	@Override
+	protected abstract String getChatHeader();
+
 	public void show(final CommandSender target)
 	{
-		target.sendMessage(getShortInfo(new String[0]));
+		show(target, getChatHeader(), true);
 	}
 
-	@Override
-	public void show(final CommandSender target, final String... args)
+	public void show(final CommandSender target, String chatHeader, boolean showDetailed)
 	{
-		target.sendMessage(getShortInfo(args));
+		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLAYERINFO");
+		final Player player = getPlayer();
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), CrazyPluginInterface.DateFormat.format(new Date()));
+		if (player == null)
+		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("USERNAME"), getName());
+		}
+		else
+		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("USERNAME"), player.getName());
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DISPLAYNAME"), player.getDisplayName());
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("IPADDRESS"), player.getAddress().getAddress().getHostAddress());
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("CONNECTION"), player.getAddress().getHostName());
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("URL"), player.getAddress().getAddress().getHostAddress());
+		}
+		final OfflinePlayer plr = getOfflinePlayer();
+		if (plr != null)
+		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("OP"), plr.isOp() ? "True" : "False");
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("WHITELIST"), plr.isWhitelisted() ? "True" : "False");
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("BANNED"), plr.isBanned() ? "True" : "False");
+		}
+		if (showDetailed)
+		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("SEPERATOR"));
+			showDetailed(target, chatHeader);
+		}
 	}
 
+	public abstract void showDetailed(CommandSender target, String chatHeader);
+
 	@Override
-	public String getShortInfo(final String... args)
+	public String getShortInfo()
 	{
 		return toString();
 	}

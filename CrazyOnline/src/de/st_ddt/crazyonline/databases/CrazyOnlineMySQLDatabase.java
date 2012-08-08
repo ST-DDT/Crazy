@@ -28,7 +28,7 @@ public class CrazyOnlineMySQLDatabase extends MySQLDatabase<OnlinePlayerData> im
 		columns[2] = new MySQLColumn("lastLogin", "CHAR(19)", defaultDate, false, false);
 		columns[3] = new MySQLColumn("lastLogout", "CHAR(19)", defaultDate, false, false);
 		columns[4] = new MySQLColumn("onlineTime", "INT", "0", false, false);
-		columns[5] = new MySQLColumn("ip", "CHAR(50)", true, false);
+		columns[5] = new MySQLColumn("ip", "CHAR(50)", "''", false, false);
 		return columns;
 	}
 

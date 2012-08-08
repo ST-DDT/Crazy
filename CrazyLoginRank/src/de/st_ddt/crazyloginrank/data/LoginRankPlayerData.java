@@ -1,9 +1,12 @@
 package de.st_ddt.crazyloginrank.data;
 
+import org.bukkit.command.CommandSender;
+
+import de.st_ddt.crazyloginrank.CrazyLoginRank;
 import de.st_ddt.crazyloginrank.data.LoginRankData;
 import de.st_ddt.crazyplugin.data.PlayerData;
 
-public class LoginRankPlayerData extends PlayerData<LoginRankPlayerData> implements LoginRankData<LoginRankPlayerData>
+public class LoginRankPlayerData extends PlayerData<LoginRankPlayerData> implements LoginRankData
 {
 
 	protected int rank;
@@ -41,7 +44,7 @@ public class LoginRankPlayerData extends PlayerData<LoginRankPlayerData> impleme
 	}
 
 	@Override
-	public int compareTo(LoginRankData<?> o)
+	public int compareTo(LoginRankData o)
 	{
 		return getRank().compareTo(o.getRank());
 	}
@@ -56,5 +59,22 @@ public class LoginRankPlayerData extends PlayerData<LoginRankPlayerData> impleme
 	public String toString()
 	{
 		return getName() + " Rank " + getRank().toString();
+	}
+
+	public CrazyLoginRank getPlugin()
+	{
+		return CrazyLoginRank.getPlugin();
+	}
+
+	@Override
+	protected String getChatHeader()
+	{
+		return getPlugin().getChatHeader();
+	}
+
+	@Override
+	public void showDetailed(CommandSender target, String chatHeader)
+	{
+		// EDIT showDetailed
 	}
 }

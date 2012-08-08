@@ -3,16 +3,19 @@ package de.st_ddt.crazyutil.databases;
 import java.lang.reflect.Constructor;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final ConfigurationSection config;
+	protected final JavaPlugin plugin;
 
-	public ConfigurationDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final String[] columnNames)
+	public ConfigurationDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final String[] columnNames, JavaPlugin plugin)
 	{
 		super(DatabaseType.CONFIG, clazz, tableName, config, columnNames, getConstructor(clazz));
 		this.config = config;
+		this.plugin = plugin;
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -84,5 +87,6 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	@Override
 	public void saveDatabase()
 	{
+		plugin.saveConfig();
 	}
 }

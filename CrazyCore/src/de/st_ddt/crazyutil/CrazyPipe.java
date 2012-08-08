@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.data.ParameterData;
+import de.st_ddt.crazyplugin.data.PlayerData;
 
 public abstract class CrazyPipe
 {
@@ -28,12 +29,12 @@ public abstract class CrazyPipe
 			return;
 		if (pipeArgs == null)
 		{
-			defaultPipe(sender, datas, new String[0]);
+			defaultPipe(sender, datas);
 			return;
 		}
 		if (pipeArgs.length == 0)
 		{
-			defaultPipe(sender, datas, pipeArgs);
+			defaultPipe(sender, datas);
 			return;
 		}
 		int length = pipeArgs.length;
@@ -69,10 +70,10 @@ public abstract class CrazyPipe
 		commandPipe(sender, data, pipeArgs);
 	}
 
-	private static void defaultPipe(final CommandSender sender, final Collection<ParameterData> datas, final String... strings)
+	private static void defaultPipe(final CommandSender sender, final Collection<ParameterData> datas)
 	{
 		for (final ParameterData data : datas)
-			sender.sendMessage(data.getShortInfo(strings));
+			sender.sendMessage(data.getShortInfo());
 	}
 
 	private static void commandPipe(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
@@ -210,5 +211,16 @@ public abstract class CrazyPipe
 					sender.sendMessage(ChatHelper.putArgsPara(message, data));
 			}
 		}, "show");
+		registerPipe(new CrazyPipe()
+		{
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+			{
+				for (ParameterData data : datas)
+					if (data instanceof PlayerData<?>)
+						((PlayerData<?>) data).show(sender, "", true);
+			}
+		}, "show+");
 	}
 }

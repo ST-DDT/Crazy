@@ -2,7 +2,7 @@ name: CrazyLoginRank
 main: de.st_ddt.crazyloginrank.CrazyLoginRank
 author: ST-DDT
 #C*=needed core version
-version: C8_0.1
+version: C8.1_0.2
 depend: [CrazyCore]
 description: >
             CrazyLoginRank allow your favorite players to connect to your server.

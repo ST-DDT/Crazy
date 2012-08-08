@@ -5,7 +5,7 @@ import java.util.Date;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 
-public interface LoginData<S extends LoginData<S>> extends PlayerDataInterface<S>
+public interface LoginData extends PlayerDataInterface
 {
 
 	public void setPassword(String password) throws CrazyCommandException;
@@ -32,5 +32,5 @@ public interface LoginData<S extends LoginData<S>> extends PlayerDataInterface<S
 
 	public void notifyAction();
 
-	public boolean equals(LoginData<?> data);
+	public boolean equals(LoginData data);
 }

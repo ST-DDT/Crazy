@@ -23,7 +23,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ToStringDataGetter;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 
-public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter>
+public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, PlayerAccessFilter>
 {
 
 	private static CrazyLoginFilter plugin;
@@ -32,8 +32,6 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter>
 	protected String filterNames;
 	protected int minNameLength;
 	protected int maxNameLength;
-	// Database
-	protected boolean saveDatabaseOnShutdown;
 
 	public static CrazyLoginFilter getPlugin()
 	{
@@ -108,7 +106,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter>
 		{
 			if (type == DatabaseType.CONFIG)
 			{
-				database = new CrazyLoginFilterConfigurationDatabase(tableName, config);
+				database = new CrazyLoginFilterConfigurationDatabase(tableName, config, this);
 			}
 		}
 		catch (final Exception e)
@@ -123,21 +121,6 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter>
 		}
 	}
 
-	@Override
-	public void save()
-	{
-		saveDatabase();
-		saveConfiguration();
-	}
-
-	public void saveDatabase()
-	{
-		final ConfigurationSection config = getConfig();
-		if (database != null)
-			config.set("database.saveType", database.getType().toString());
-		database.saveDatabase();
-	}
-
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
@@ -148,9 +131,8 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter>
 			config.set("filterNames", filterNames);
 		config.set("minNameLength", minNameLength);
 		config.set("maxNameLength", maxNameLength);
-		config.set("database.saveOnShutdown", saveDatabaseOnShutdown);
 		logger.save(config, "logs.");
-		saveConfig();
+		super.saveConfiguration();
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazylogin.LoginPlugin;
 import de.st_ddt.crazylogin.data.LoginData;
 
-public class CrazyLoginPasswordEvent<S extends LoginData<S>> extends CrazyLoginEvent<S>
+public class CrazyLoginPasswordEvent<S extends LoginData> extends CrazyLoginEvent<S>
 {
 
 	protected final Player player;

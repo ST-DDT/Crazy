@@ -1,15 +1,12 @@
 package de.st_ddt.crazyloginfilter.data;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.data.PlayerData;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
 
@@ -186,32 +183,19 @@ public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implement
 		return 1;
 	}
 
-	@Override
-	public String getShortInfo(final String... args)
+	public CrazyLoginFilter getPlugin()
 	{
-		return toString();
+		return CrazyLoginFilter.getPlugin();
 	}
 
 	@Override
-	public void show(final CommandSender sender)
+	protected String getChatHeader()
 	{
-		final CrazyLoginFilter plugin = CrazyLoginFilter.getPlugin();
-		final Player player = getPlayer();
-		plugin.sendLocaleMessage("PLAYERINFO.HEAD", sender, CrazyPluginInterface.DateFormat.format(new Date()));
-		plugin.sendLocaleMessage("PLAYERINFO.USERNAME", sender, getName());
-		if (player != null)
-		{
-			plugin.sendLocaleMessage("PLAYERINFO.DISPLAYNAME", sender, player.getDisplayName());
-			plugin.sendLocaleMessage("PLAYERINFO.IPADDRESS", sender, player.getAddress().getAddress().getHostAddress());
-			plugin.sendLocaleMessage("PLAYERINFO.CONNECTION", sender, player.getAddress().getHostName());
-			if (sender.hasPermission("crazyloginfilter.playerinfo.extended"))
-				plugin.sendLocaleMessage("PLAYERINFO.URL", sender, player.getAddress().getAddress().getHostAddress());
-		}
+		return getPlugin().getChatHeader();
 	}
 
 	@Override
-	public void show(final CommandSender sender, final String... args)
+	public void showDetailed(CommandSender target, String chatHeader)
 	{
-		show(sender);
 	}
 }

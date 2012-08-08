@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 
-public interface CrazyPlayerDataPluginInterface<S extends PlayerDataInterface<S>> extends CrazyPluginInterface
+public interface CrazyPlayerDataPluginInterface<T extends PlayerDataInterface, S extends T> extends CrazyPluginInterface
 {
 
 	public PlayerDataDatabase<S> getCrazyDatabase();
@@ -23,6 +23,14 @@ public interface CrazyPlayerDataPluginInterface<S extends PlayerDataInterface<S>
 	public S getPlayerData(OfflinePlayer player);
 
 	public Collection<S> getPlayerData();
+
+	public T getAvailablePlayerData(final String name);
+
+	public T getAvailablePlayerData(final OfflinePlayer player);
+
+	public Collection<T> getAvailablePlayerData(boolean includeOnline, boolean includeData);
+
+	public <E extends OfflinePlayer> Set<S> getPlayerData(Collection<E> players);
 
 	public boolean deletePlayerData(String name);
 

@@ -14,12 +14,12 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazyonline.data.OnlineData;
 import de.st_ddt.crazyonline.data.OnlineDataComparator;
 import de.st_ddt.crazyonline.data.OnlineDataFirstLoginComperator;
 import de.st_ddt.crazyonline.data.OnlineDataIPComparator;
@@ -52,7 +52,7 @@ import de.st_ddt.crazyutil.ToStringDataGetter;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> implements OnlinePlugin<OnlinePlayerData>
+public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerData> implements OnlinePlugin<OnlinePlayerData>
 {
 
 	private static CrazyOnline plugin;
@@ -62,7 +62,6 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 	protected boolean deleteShortVisitors;
 	protected boolean pluginCommunicationEnabled;
 	protected int autoDelete;
-	private boolean saveDatabaseOnShutdown;
 
 	public static CrazyOnline getPlugin()
 	{
@@ -84,14 +83,6 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 	}
 
 	@Override
-	public void onDisable()
-	{
-		if (saveDatabaseOnShutdown)
-			saveDatabase();
-		saveConfiguration();
-	}
-
-	@Override
 	public void load()
 	{
 		super.load();
@@ -106,7 +97,6 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 		// Database
 		setupDatabase();
 		dropInactiveAccounts();
-		saveDatabaseOnShutdown = config.getBoolean("database.saveOnShutdown", true);
 	}
 
 	public void setupDatabase()
@@ -129,7 +119,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 		{
 			if (type == DatabaseType.CONFIG)
 			{
-				database = new CrazyOnlineConfigurationDatabase(tableName, config);
+				database = new CrazyOnlineConfigurationDatabase(tableName, config, this);
 			}
 			else if (type == DatabaseType.MYSQL)
 			{
@@ -191,30 +181,14 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 		return deletions.size();
 	}
 
-	@Override
-	public void save()
-	{
-		saveDatabase();
-		saveConfiguration();
-	}
-
-	public void saveDatabase()
-	{
-		final ConfigurationSection config = getConfig();
-		if (database != null)
-			config.set("database.saveType", database.getType().toString());
-		database.saveDatabase();
-	}
-
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("showOnlineInfo", showOnlineInfo);
 		config.set("deleteShortVisitors", deleteShortVisitors);
 		config.set("autoDelete", autoDelete);
-		config.set("database.saveOnShutdown", saveDatabaseOnShutdown);
 		logger.save(config, "logs.");
-		saveConfig();
+		super.saveConfiguration();
 	}
 
 	public void registerHooks()
@@ -231,24 +205,8 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 	{
 		if (commandLabel.equalsIgnoreCase("pinfo"))
 		{
-			switch (args.length)
-			{
-				case 0:
-					if (!(sender instanceof Player))
-						throw new CrazyCommandUsageException("/pinfo <Player>");
-					commandInfo(sender, (Player) sender);
-					return true;
-				case 1:
-					OfflinePlayer info = getServer().getPlayer(args[0]);
-					if (info == null)
-						info = getServer().getOfflinePlayer(args[0]);
-					if (info == null)
-						throw new CrazyCommandNoSuchException("Player", args[0]);
-					commandInfo(sender, info);
-					return true;
-				default:
-					throw new CrazyCommandUsageException("/pinfo <Player>");
-			}
+			commandPlayerInfo(sender, args);
+			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("ponlines"))
 		{
@@ -265,7 +223,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 						commandSince((Player) sender);
 						return true;
 					}
-					throw new CrazyCommandUsageException("/psince <yyyy.MM.dd>", "/psince <yyyy.MM.dd HH:mm:ss>");
+					throw new CrazyCommandUsageException("/psince <yyyy.MM.dd> [HH:mm:ss]");
 				case 1:
 					commandSince(sender, args[0] + " 00:00:00");
 					return true;
@@ -273,7 +231,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 					commandSince(sender, args[0] + " " + args[1]);
 					return true;
 				default:
-					throw new CrazyCommandUsageException("/psince <yyyy.MM.dd>", "/psince <yyyy.MM.dd HH:mm:ss>");
+					throw new CrazyCommandUsageException("/psince <yyyy.MM.dd> [HH:mm:ss]");
 			}
 		}
 		if (commandLabel.equalsIgnoreCase("pbefore"))
@@ -313,27 +271,6 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
 		for (final Player player : getServer().getOnlinePlayers())
 			sendLocaleMessage("MESSAGE.LIST", sender, player.getName(), getPlayerData(player).getLastLoginString());
-	}
-
-	public void commandInfo(final CommandSender sender, final OfflinePlayer player) throws CrazyCommandException
-	{
-		if (sender == player)
-		{
-			if (!sender.hasPermission("crazyonline.info.self"))
-				throw new CrazyCommandPermissionException();
-		}
-		else if (!sender.hasPermission("crazyonline.info.other"))
-			throw new CrazyCommandPermissionException();
-		final OnlinePlayerData data = getPlayerData(player);
-		if (data == null)
-			throw new CrazyCommandNoSuchException("PlayerData", player.getName());
-		sendLocaleMessage("MESSAGE.INFO.HEADER", sender, data.getName());
-		sendLocaleMessage("MESSAGE.SEPERATOR", sender);
-		sendLocaleMessage("MESSAGE.INFO.LOGIN.FIRST", sender, data.getFirstLoginString());
-		sendLocaleMessage("MESSAGE.INFO.LOGIN.LAST", sender, data.getLastLoginString());
-		sendLocaleMessage("MESSAGE.INFO.LOGOUT.LAST", sender, data.getLastLogoutString());
-		sendLocaleMessage("MESSAGE.INFO.TIME.LAST", sender, timeOutputConverter(data.getTimeLast(), sender));
-		sendLocaleMessage("MESSAGE.INFO.TIME.TOTAL", sender, timeOutputConverter(data.getTimeTotal(), sender));
 	}
 
 	public String timeOutputConverter(final long time, final CommandSender sender)
@@ -464,27 +401,17 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 	@Override
 	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
-		if (commandLabel.equalsIgnoreCase("list"))
+		if (commandLabel.equals("list"))
 		{
 			commandMainList(sender, args);
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("mode"))
+		if (commandLabel.equals("mode"))
 		{
 			commandMainMode(sender, args);
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("delete"))
-		{
-			commandMainDelete(sender, args);
-			return true;
-		}
-		if (commandLabel.equalsIgnoreCase("reset"))
-		{
-			commandMainReset(sender, args);
-			return true;
-		}
-		return false;
+		return super.commandMain(sender, commandLabel, args);
 	}
 
 	private void commandMainList(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -663,7 +590,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 					sendLocaleMessage("MODE.CHANGE", sender, "saveType", saveType);
 					if (type == database.getType())
 						return;
-					Collection<OnlinePlayerData> datas = database.getAllEntries();
+					final Collection<OnlinePlayerData> datas = database.getAllEntries();
 					getConfig().set("database.saveType", type.toString());
 					setupDatabase();
 					database.saveAll(datas);
@@ -721,25 +648,23 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 		}
 	}
 
-	private void commandMainDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
+	@Override
+	public boolean commandPlayer(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission("crazyonline.admin"))
-			throw new CrazyCommandPermissionException();
-		if (args.length != 1)
-			throw new CrazyCommandUsageException("/crazyonline delete <Name>");
-		final String name = args[0];
-		if (!hasPlayerData(name))
-			throw new CrazyCommandNoSuchException("Player", name);
-		database.deleteEntry(name);
-		sendLocaleMessage("COMMAND.DELETE", sender, name);
+		if (commandLabel.equals("reset"))
+		{
+			commandPlayerReset(sender, args);
+			return true;
+		}
+		return super.commandPlayer(sender, commandLabel, args);
 	}
 
-	private void commandMainReset(final CommandSender sender, final String[] args) throws CrazyCommandException
+	private void commandPlayerReset(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyonline.admin"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
-			throw new CrazyCommandUsageException("/crazyonline reset <Name>");
+			throw new CrazyCommandUsageException("/crazyonline player reset <Name>");
 		final String name = args[0];
 		final OnlinePlayerData data = getPlayerData(name);
 		if (data == null)
@@ -754,6 +679,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 		return showOnlineInfo;
 	}
 
+	@Override
 	public int getAutoDelete()
 	{
 		return autoDelete;
@@ -765,10 +691,10 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlinePlayerData> impleme
 	}
 
 	@Override
-	public Set<OnlinePlayerData> getPlayerDatasPerIP(String IP)
+	public Set<OnlinePlayerData> getPlayerDatasPerIP(final String IP)
 	{
-		HashSet<OnlinePlayerData> res = new HashSet<OnlinePlayerData>();
-		for (OnlinePlayerData data : database.getAllEntries())
+		final HashSet<OnlinePlayerData> res = new HashSet<OnlinePlayerData>();
+		for (final OnlinePlayerData data : database.getAllEntries())
 			if (data.getLatestIP().equals(IP))
 				res.add(data);
 		return res;

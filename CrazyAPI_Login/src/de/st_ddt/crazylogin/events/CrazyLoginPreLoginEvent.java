@@ -6,7 +6,7 @@ import org.bukkit.event.Cancellable;
 import de.st_ddt.crazylogin.LoginPlugin;
 import de.st_ddt.crazylogin.data.LoginData;
 
-public class CrazyLoginPreLoginEvent<S extends LoginData<S>> extends CrazyLoginPlayerDataEvent<S> implements Cancellable
+public class CrazyLoginPreLoginEvent<S extends LoginData> extends CrazyLoginPlayerDataEvent<S> implements Cancellable
 {
 
 	protected boolean cancelled = false;

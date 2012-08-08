@@ -4,7 +4,7 @@ import org.bukkit.OfflinePlayer;
 
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 
-public interface PlayerDataDatabase<S extends PlayerDataInterface<S>> extends Database<S>
+public interface PlayerDataDatabase<S extends PlayerDataInterface> extends Database<S>
 {
 
 	public S getEntry(OfflinePlayer player);

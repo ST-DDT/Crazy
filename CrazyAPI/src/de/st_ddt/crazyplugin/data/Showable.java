@@ -7,7 +7,7 @@ public interface Showable
 
 	public void show(CommandSender target);
 
-	public void show(CommandSender target, String... args);
+	public void show(final CommandSender target, String chatHeader, boolean showDetailed);
 
-	public String getShortInfo(String... args);
+	public String getShortInfo();
 }

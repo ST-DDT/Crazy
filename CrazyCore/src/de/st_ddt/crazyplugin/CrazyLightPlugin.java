@@ -1,11 +1,15 @@
 package de.st_ddt.crazyplugin;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightPluginInterface
 {
@@ -85,20 +89,41 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 		return 3;
 	}
 
+	public String getVersion()
+	{
+		return getDescription().getVersion();
+	}
+
+	public String getBukkitURL()
+	{
+		return "http://dev.bukkit.org/server-mods/" + getName().toLowerCase() + "/";
+	}
+
 	@Override
 	public void show(CommandSender target)
 	{
-		target.sendMessage(getShortInfo(new String[0]));
+		show(target, getChatHeader(), false);
 	}
 
 	@Override
-	public void show(CommandSender target, String... args)
+	public void show(CommandSender target, String chatHeader, boolean showDetailed)
 	{
-		target.sendMessage(getShortInfo(args));
+		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLUGININFO");
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), CrazyPluginInterface.DateFormat.format(new Date()));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("NAME"), getName());
+		if (showDetailed)
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DESCRIPTION"), getDescription().getDescription());
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("VERSION"), getVersion());
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("AUTHORS"), ChatHelper.listingString(getDescription().getAuthors()));
+		if (showDetailed)
+		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DEPENCIES"), ChatHelper.listingString(getDescription().getDepend()));
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("URL"), getBukkitURL());
+		}
 	}
 
 	@Override
-	public String getShortInfo(String... args)
+	public String getShortInfo()
 	{
 		return getName() + " Version " + getDescription().getVersion();
 	}
