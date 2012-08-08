@@ -8,13 +8,14 @@ depend: [CrazyCore]
 commands:
   pinfo:
     description: Show information about player
-    usage: /<command> <Player>
+    usage: /<command> [Player]
   ptop10:
     description: Show Top10 online players
     usage: /<command> [Page] [> Pipe]
   ponlines:
     description: Show information about online player
     usage: /<command>
+    aliases: [list]
   psince:
     description: Shows players who logged in since Date (yyyy.MM.dd HH:mm:ss)
     usage: /<command> [Date [Time]]
@@ -31,24 +32,32 @@ permissions:
     default: false
     children:
       crazyonline.admin: true
-      crazyonline.list: true
-      crazyonline.info: true
       crazyonline.online: true
       crazyonline.since: true
       crazyonline.since.auto: true
       crazyonline.till: true
       crazyonline.top10: true
+      crazyonline.mode: true
+      crazyonline.list: true
+      crazyonline.player.info: true
+      crazyonline.player.info.self: true
+      crazyonline.player.info.other: true
+      crazyonline.player.delete: true
   crazyonline.admin:
     description: Access to admit commands
     default: op
     children:
-      crazyonline.list: true
-      crazyonline.info: true
       crazyonline.online: true
       crazyonline.since: true
       crazyonline.since.auto: true
       crazyonline.till: true
       crazyonline.top10: true
+      crazyonline.mode: true
+      crazyonline.list: true
+      crazyonline.player.info: true
+      crazyonline.player.info.self: true
+      crazyonline.player.info.other: true
+      crazyonline.player.delete: true
   crazyonline.info.self:
     description: Show information about yourself
     default: true
@@ -69,4 +78,25 @@ permissions:
     default: op
   crazyonline.before:
     description: Shows which players has not been online
+    default: op
+  crazyonline.mode:
+    description: Allow changing plugin mode
+    default: op
+  crazyonline.list:
+    description: List all player accounts.
+    default: op
+  crazyonline.player.info:
+    description: Allow viewing playerinfo.
+    default: op
+    children:
+      crazyonline.player.info.self: true
+      crazyonline.player.info.other: true
+  crazyonline.player.info.self:
+    description: Allow viewing own playerinfo.
+    default: true
+  crazyonline.player.info.other:
+    description: Allow viewing playerinfo for other players.
+    default: op
+  crazyonline.player.delete:
+    description: Allow deleting player data
     default: op

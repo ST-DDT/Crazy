@@ -83,12 +83,25 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 	}
 
 	@Override
+	public void onDisable()
+	{
+		for (Player player : Bukkit.getOnlinePlayers())
+		{
+			OnlinePlayerData data = getPlayerData(player);
+			if (data != null)
+				data.quit();
+		}
+		super.onDisable();
+	}
+
+	@Override
 	public void load()
 	{
 		super.load();
 		final ConfigurationSection config = getConfig();
 		showOnlineInfo = config.getBoolean("showOnlineInfo", true);
 		deleteShortVisitors = config.getBoolean("deleteShortVisitors", deleteShortVisitors);
+		pluginCommunicationEnabled = config.getBoolean("pluginCommunicationEnabled", false);
 		autoDelete = Math.max(config.getInt("autoDelete", -1), -1);
 		if (autoDelete != -1)
 			getServer().getScheduler().scheduleAsyncRepeatingTask(this, new DropInactiveAccountsTask(this), 20 * 60 * 60, 20 * 60 * 60 * 6);
@@ -186,6 +199,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		final ConfigurationSection config = getConfig();
 		config.set("showOnlineInfo", showOnlineInfo);
 		config.set("deleteShortVisitors", deleteShortVisitors);
+		config.set("pluginCommunicationEnabled", pluginCommunicationEnabled);
 		config.set("autoDelete", autoDelete);
 		logger.save(config, "logs.");
 		super.saveConfiguration();

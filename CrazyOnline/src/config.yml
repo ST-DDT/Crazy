@@ -3,7 +3,9 @@
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyOnline/src/config.yml
 version: C8.1_5.1
 database:
+# the table/file/section name of the database
   tableName: CrazyOnline_players
+# column names (does not affect FLAT databases)
   columns:
     name: name
     firstLogin: firstLogin
@@ -11,10 +13,18 @@ database:
     lastLogout: lastLogout
     onlineTime: onlineTime
     ip: ip
+# database saveTypes can be MYSQL, FLAT and CONFIG
+# additional information about MYSQL can be fould here http://dev.bukkit.org/server-mods/crazycore/pages/mys-ql/
   saveType: FLAT
+# whether the database should be saved on shutdown
   saveOnShutdown: true
+# show a list of players being online in the meantime when joining the server
 showOnlineInfo: true
+# delete players a short time after leaving the server when not online for at least 5 minutes in total
 deleteShortVisitors: false
+# send delete request from autoDelete to all CrazyPlugins
+pluginCommunicationEnabled: false
+# automatically delete accounts that haven't been used for x day (-1=disabled)
 autoDelete: -1
 logs:
   Quit: false
