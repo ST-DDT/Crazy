@@ -149,6 +149,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		HashSet<S> res = new HashSet<S>();
 		for (Player player : Bukkit.getOnlinePlayers())
 			res.add(getPlayerData(player));
+		res.remove(null);
 		return res;
 	}
 
@@ -168,6 +169,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		HashSet<S> res = new HashSet<S>();
 		for (Player player : getOnlinePlayersPerIP(IP))
 			res.add(getPlayerData(player));
+		res.remove(null);
 		return res;
 	}
 
