@@ -214,6 +214,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 					commandPlayerInfo(sender, args[0], true);
 				else
 					commandPlayerInfo(sender, args[0], false);
+				return;
 			default:
 				throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " playerinfo [Player] [Details(true/false)]");
 		}
