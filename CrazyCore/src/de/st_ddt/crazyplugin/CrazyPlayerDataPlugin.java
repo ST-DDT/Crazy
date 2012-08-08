@@ -55,30 +55,40 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	@Override
 	public boolean hasPlayerData(final String name)
 	{
+		if (database == null)
+			return false;
 		return database.hasEntry(name);
 	}
 
 	@Override
 	public boolean hasPlayerData(final OfflinePlayer player)
 	{
+		if (database == null)
+			return false;
 		return database.hasEntry(player);
 	}
 
 	@Override
 	public S getPlayerData(final String name)
 	{
+		if (database == null)
+			return null;
 		return database.getEntry(name);
 	}
 
 	@Override
 	public S getPlayerData(final OfflinePlayer player)
 	{
+		if (database == null)
+			return null;
 		return database.getEntry(player);
 	}
 
 	@Override
 	public Collection<S> getPlayerData()
 	{
+		if (database == null)
+			return new HashSet<S>();
 		return database.getAllEntries();
 	}
 
@@ -99,10 +109,12 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	{
 		HashSet<T> result = new HashSet<T>();
 		if (includeData)
-			result.addAll(database.getAllEntries());
+			if (database != null)
+				result.addAll(database.getAllEntries());
 		if (includeOnline)
 			for (Player player : Bukkit.getOnlinePlayers())
 				result.add(getAvailablePlayerData(player));
+		result.remove(null);
 		return result;
 	}
 
@@ -118,12 +130,16 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	@Override
 	public boolean deletePlayerData(final String name)
 	{
+		if (database == null)
+			return false;
 		return database.deleteEntry(name);
 	}
 
 	@Override
 	public boolean deletePlayerData(final OfflinePlayer player)
 	{
+		if (database == null)
+			return false;
 		return database.deleteEntry(player);
 	}
 
