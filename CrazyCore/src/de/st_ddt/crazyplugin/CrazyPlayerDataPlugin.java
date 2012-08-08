@@ -201,22 +201,13 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		switch (args.length)
 		{
 			case 0:
-				commandPlayerInfo(sender, (String) null, false);
+				commandPlayerInfo(sender, (String) null, true);
 				return;
 			case 1:
-				if (args[0].equalsIgnoreCase("true") || args[0].equals("1"))
-					commandPlayerInfo(sender, (String) null, true);
-				else
-					commandPlayerInfo(sender, args[0], false);
-				return;
-			case 2:
-				if (args[1].equalsIgnoreCase("true") || args[1].equals("1"))
-					commandPlayerInfo(sender, args[0], true);
-				else
-					commandPlayerInfo(sender, args[0], false);
+				commandPlayerInfo(sender, args[0], true);
 				return;
 			default:
-				throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " playerinfo [Player] [Details(true/false)]");
+				throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " playerinfo [Player]");
 		}
 	}
 
