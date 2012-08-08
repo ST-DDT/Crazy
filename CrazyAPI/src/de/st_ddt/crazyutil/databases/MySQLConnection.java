@@ -16,19 +16,24 @@ public class MySQLConnection
 	private final String user;
 	private final String password;
 
-	public MySQLConnection(final ConfigurationSection config)
+	public static MySQLConnection connect(final ConfigurationSection config)
 	{
-		this(config, "localhost", "3306", "database", "root", "password");
+		return connect(config, "localhost", "3306", "database", "root", "password");
 	}
 
-	public MySQLConnection(final ConfigurationSection config, final String defaultHost, final String defaultPort, final String defaultDatabase, final String defaultUser, final String defaultPassword)
+	public static MySQLConnection connect(final ConfigurationSection config, final String defaultHost, final String defaultPort, final String defaultDatabase, final String defaultUser, final String defaultPassword)
 	{
-		this(config.getString("database.host", defaultHost), config.getString("database.port", defaultPort), config.getString("database.dbname", defaultDatabase), config.getString("database.user", defaultUser), config.getString("database.password", defaultPassword));
+		final String host = config.getString("database.host", defaultHost);
 		config.set("database.host", host);
+		final String port = config.getString("database.port", defaultPort);
 		config.set("database.port", port);
+		final String database = config.getString("database.dbname", defaultDatabase);
 		config.set("database.dbname", database);
+		final String user = config.getString("database.user", defaultUser);
 		config.set("database.user", user);
+		final String password = config.getString("database.password", defaultPassword);
 		config.set("database.password", password);
+		return new MySQLConnection(host, port, database, user, password);
 	}
 
 	public MySQLConnection(final String host, final String port, final String database, final String user, final String password)

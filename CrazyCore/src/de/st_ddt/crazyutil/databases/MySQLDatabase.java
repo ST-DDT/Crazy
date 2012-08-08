@@ -18,7 +18,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public MySQLDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final MySQLColumn[] columns, final int primaryIndex) throws Exception
 	{
 		super(DatabaseType.MYSQL, clazz, tableName, config, convertColumnNames(columns), getConstructor(clazz));
-		this.connection = new MySQLConnection(config);
+		this.connection = MySQLConnection.connect(config);
 		this.columns = columns;
 		this.primary = columns[primaryIndex];
 		checkTable();
