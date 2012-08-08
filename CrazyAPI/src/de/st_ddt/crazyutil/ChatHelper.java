@@ -45,13 +45,10 @@ public class ChatHelper
 
 	public static void sendMessage(final CommandSender target, final String chatHeader, final Object message, final Object... args)
 	{
-		if (target instanceof Player)
-			if (!showChatHeaders)
-			{
-				target.sendMessage(putArgsExtended(target, message, args));
-				return;
-			}
-		target.sendMessage(chatHeader + putArgsExtended(target, message, args));
+		if (showChatHeaders || !(target instanceof Player))
+			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
+		else
+			target.sendMessage(putArgsExtended(target, message, args));
 	}
 
 	public static void sendMessage(final CommandSender[] targets, final Object message, final Object... args)
@@ -200,5 +197,88 @@ public class ChatHelper
 		for (int i = 0; i < count; i++)
 			res[i] = data.getParameter(i);
 		return res;
+	}
+
+	/**
+	 * Converts a time in readable information, splited up in units.
+	 * 
+	 * @param time
+	 *            Time in seconds
+	 * @param shift
+	 *            Required amount of time for highest shown unit
+	 * @param target
+	 *            The CommandSender who shall recieve this message.
+	 * @param units
+	 *            How much time units shall be shown. Example: show Weeks and Days but skip Hours
+	 * @param showWeeks
+	 *            Use Weeks as a unit or not
+	 * @return A String representing the time shown in its units. Example: 2 Days 3 Hours 2 Seconds
+	 */
+	public static String timeConverter(long time, float shift, final CommandSender target, int units, final boolean showWeeks)
+	{
+		final StringBuilder res = new StringBuilder();
+		if (time > shift * 31536000)
+		{
+			final long unit = time / 31536000;
+			shift = 1;
+			units--;
+			time %= 31536000;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.YEARS", target));
+			if (units == 0)
+				return res.substring(1);
+		}
+		if (time > shift * 2592000)
+		{
+			final long unit = time / 2592000;
+			shift = 1;
+			units--;
+			time %= 2592000;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.MONTHS", target));
+			if (units == 0)
+				return res.substring(1);
+		}
+		if (showWeeks && time > shift * 604800)
+		{
+			final long unit = time / 604800;
+			shift = 1;
+			units--;
+			time %= 604800;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.WEEKS", target));
+			if (units == 0)
+				return res.substring(1);
+		}
+		if (time > shift * 86400)
+		{
+			final long unit = time / 86400;
+			shift = 1;
+			units--;
+			time %= 86400;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.DAYS", target));
+			if (units == 0)
+				return res.substring(1);
+		}
+		if (time > shift * 3600)
+		{
+			final long unit = time / 3600;
+			shift = 1;
+			units--;
+			time %= 3600;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.HOURS", target));
+			if (units == 0)
+				return res.substring(1);
+		}
+		if (time > shift * 60)
+		{
+			final long unit = time / 60;
+			shift = 1;
+			units--;
+			time %= 60;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.MINUTES", target));
+			if (units == 0)
+				return res.substring(1);
+		}
+		if (time > 0 || res.length() == 0)
+			res.append(" " + time + " " + CrazyLocale.getUnitText("TIME.SECONDS", target));
+		return res.substring(1);
 	}
 }
