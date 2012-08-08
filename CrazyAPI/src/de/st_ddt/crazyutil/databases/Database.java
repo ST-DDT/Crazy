@@ -13,7 +13,7 @@ public interface Database<S extends DatabaseEntry>
 
 	public String[] getColumnNames();
 
-	public void checkTable();
+	public void checkTable() throws Exception;
 
 	public boolean isStaticDatabase();
 
@@ -34,6 +34,6 @@ public interface Database<S extends DatabaseEntry>
 	public void saveAll(Collection<S> entries);
 
 	public boolean deleteEntry(String key);
-	
+
 	public void deleteAllEntries();
 }
