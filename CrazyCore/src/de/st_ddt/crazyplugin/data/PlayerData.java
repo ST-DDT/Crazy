@@ -60,4 +60,10 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 			return false;
 		return player.isOnline();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "PlayerData " + getName();
+	}
 }
