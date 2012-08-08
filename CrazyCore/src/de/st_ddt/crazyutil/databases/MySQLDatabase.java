@@ -15,7 +15,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	protected final MySQLColumn[] columns;
 	protected final MySQLColumn primary;
 
-	public MySQLDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final MySQLColumn[] columns, final int primaryIndex)
+	public MySQLDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final MySQLColumn[] columns, final int primaryIndex) throws Exception
 	{
 		super(DatabaseType.MYSQL, clazz, tableName, config, convertColumnNames(columns), getConstructor(clazz));
 		this.connection = new MySQLConnection(config);
@@ -38,91 +38,45 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public void checkTable()
+	public void checkTable() throws Exception
 	{
 		Statement query = null;
-		// Create Table if not exists
 		try
 		{
+			// Create Table if not exists
 			query = connection.getConnection().createStatement();
 			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + tableName + " (" + MySQLColumn.getFullCreateString(columns) + ");");
-		}
-		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final SQLException e)
-				{}
-		}
-		// Create columns if not exist
-		query = null;
-		final HashSet<String> columnsNames = new HashSet<String>();
-		try
-		{
+			query.close();
+			// Create columns if not exist
+			query = null;
+			final HashSet<String> columnsNames = new HashSet<String>();
 			query = connection.getConnection().createStatement();
 			// Vorhandene Spalten abfragen
 			final ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + tableName);
-			try
-			{
-				while (result.next())
-					columnsNames.add(result.getString("Field"));
-			}
-			catch (final Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final SQLException e)
-				{}
-		}
-		query = null;
-		for (final MySQLColumn column : columns)
-		{
-			// Prüfen ob Spalte vorhanden ist
-			if (columnsNames.contains(column.getName()))
-				continue;
-			System.out.println("ADDED COLUMN " + column.getName() + " TO TABLE " + tableName);
+			while (result.next())
+				columnsNames.add(result.getString("Field"));
+			query.close();
 			query = null;
-			try
+			for (final MySQLColumn column : columns)
 			{
+				// Prüfen ob Spalte vorhanden ist
+				if (columnsNames.contains(column.getName()))
+					continue;
+				System.out.println("ADDED COLUMN " + column.getName() + " TO TABLE " + tableName);
+				query = null;
 				// Spalte hinzufügen
 				query = connection.getConnection().createStatement();
 				query.executeUpdate("ALTER TABLE " + tableName + " ADD " + column.getCreateString());
-			}
-			catch (final SQLException e)
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				if (query != null)
-					try
-					{
-						query.close();
-					}
-					catch (final SQLException e)
-					{}
+				query.close();
+				connection.closeConnection();
 			}
 		}
-		connection.closeConnection();
+		catch (SQLException e)
+		{
+			connection.closeConnection();
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	private static String[] convertColumnNames(final MySQLColumn[] columns)
