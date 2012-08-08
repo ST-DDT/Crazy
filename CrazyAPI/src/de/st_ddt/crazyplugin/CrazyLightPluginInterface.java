@@ -15,4 +15,6 @@ public interface CrazyLightPluginInterface extends Named, ParameterData
 	public PluginDescriptionFile getDescription();
 
 	public File getDataFolder();
+
+	public String getVersion();
 }
