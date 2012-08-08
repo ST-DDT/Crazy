@@ -68,8 +68,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public final static CrazyLocale getPluginHead(final CrazyPluginInterface plugin)
 	{
-		getLocaleHead().addLanguageEntry("root", plugin.getName().toUpperCase(), plugin.getName());
-		return getLocaleHead().getLanguageEntry(plugin.getName());
+		return getLocaleHead().getSecureLanguageEntry(plugin.getName());
 	}
 
 	public final static CrazyLocale getUnit(final String unit)
@@ -317,25 +316,26 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	{
 		path = path.toUpperCase();
 		CrazyLocale locale = this;
-		CrazyLocale parent = this;
 		for (final String section : path.split("\\."))
 		{
-			locale = parent.get(section);
-			if (locale == null)
+			CrazyLocale temp = locale.get(section);
+			if (temp == null)
 			{
-				locale = new CrazyLocale(parent, section);
-				parent.put(section, locale);
-				if (parent.getAlternative() != null)
-					locale.setAlternative(parent.getAlternative().get(section));
+				temp = new CrazyLocale(locale, section);
+				locale.put(section, temp);
+				if (locale.getAlternative() != null)
+					temp.setAlternative(locale.getAlternative().get(section));
 			}
-			parent = locale;
+			locale = temp;
 		}
 		return locale;
 	}
 
-	private void addLanguageEntry(final String language, final String path, final String entry)
+	public CrazyLocale addLanguageEntry(final String language, final String path, final String entry)
 	{
-		getSecureLanguageEntry(path).setLanguageText(language, ChatHelper.colorise(entry));
+		CrazyLocale locale = getSecureLanguageEntry(path);
+		locale.setLanguageText(language, ChatHelper.colorise(entry));
+		return locale;
 	}
 
 	public static void readFile(final String language, final Reader reader) throws IOException
