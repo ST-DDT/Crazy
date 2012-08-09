@@ -73,7 +73,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				connection.closeConnection();
 			}
 		}
-		catch (SQLException e)
+		catch (final SQLException e)
 		{
 			connection.closeConnection();
 			e.printStackTrace();
@@ -117,7 +117,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public boolean hasEntry(final String key)
 	{
-		if (datas.containsKey(key.toLowerCase()))
+		if (super.hasEntry(key))
 			return true;
 		return loadEntry(key) != null;
 	}
@@ -125,7 +125,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public S loadEntry(final String key)
 	{
-		S res = null;
+		S data = null;
 		Statement query = null;
 		ResultSet result = null;
 		try
@@ -135,10 +135,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			if (result.next())
 				try
 				{
-					res = constructor.newInstance(result, columnNames);
+					data = constructor.newInstance(result, columnNames);
+					datas.put(data.getName().toLowerCase(), data);
 				}
 				catch (final Exception e)
 				{
+					data = null;
 					e.printStackTrace();
 				}
 			query.close();
@@ -166,8 +168,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{}
 			connection.closeConnection();
 		}
-		datas.put(key.toLowerCase(), res);
-		return res;
+		return data;
 	}
 
 	@Override
