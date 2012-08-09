@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -18,7 +18,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final File file;
-	protected HashMap<String, String[]> entries = new HashMap<String, String[]>();
+	protected TreeMap<String, String[]> entries = new TreeMap<String, String[]>();
 
 	public FlatDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final String[] columnNames, final File file)
 	{
@@ -175,7 +175,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public boolean deleteEntry(final String key)
 	{
-		entries.put(key.toLowerCase(), null);
+		entries.remove(key.toLowerCase());
 		if (!bulkOperation)
 			saveDatabase();
 		return super.deleteEntry(key);
