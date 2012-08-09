@@ -164,8 +164,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		}
 		if (commandLabel.equalsIgnoreCase("serverfilter"))
 		{
+			if (args.length == 0)
+				throw new CrazyCommandUsageException("/crazyloginfilter serverfilter show", "/crazyloginfilter serverfilter ip ...", "/crazyloginfilter serverfilter connection ...");
 			final String[] newArgs = ChatHelper.shiftArray(args, 1);
-			commandMainServerFilter(sender, args[0], newArgs);
+			commandMainServerFilter(sender, args[0].toLowerCase(), newArgs);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("mode"))
@@ -256,7 +258,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				{
 					data.addIP(regex);
 					sendLocaleMessage("COMMAND.IP.ADDED", sender, regex);
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 				if (args[0].equalsIgnoreCase("remove"))
@@ -271,7 +276,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 						data.removeIP(regex);
 					}
 					sendLocaleMessage("COMMAND.IP.REMOVED", sender, regex);
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
@@ -294,7 +302,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 						newValue = true;
 					data.setCheckIP(newValue);
 					sendLocaleMessage("COMMMAND.IP.CHECK", sender, data.isCheckIP() ? "True" : "False");
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 				if (args[0].equalsIgnoreCase("whitelist"))
@@ -304,11 +315,17 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 						newValue = true;
 					data.setWhitelistIP(newValue);
 					sendLocaleMessage("COMMMAND.IP.WHITELIST", sender, data.isWhitelistIP() ? "True" : "False");
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 		}
-		throw new CrazyCommandUsageException("/crazyloginfilter ip show [Page]", "/crazloginfilter ip <add/remove> <Value>", "/crazloginfilter ip whitelist [True/False]");
+		if (data == serverFilter)
+			throw new CrazyCommandUsageException("/crazyloginfilter serverFilter ip show [Page]", "/crazloginfilter serverFilter ip <add/remove> <Value>", "/crazloginfilter serverFilter ip whitelist [True/False]");
+		else
+			throw new CrazyCommandUsageException("/crazyloginfilter ip show [Page]", "/crazloginfilter ip <add/remove> <Value>", "/crazloginfilter ip whitelist [True/False]");
 	}
 
 	private void commandMainConnection(final CommandSender sender, final String[] args) throws CrazyCommandException
@@ -348,7 +365,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				{
 					data.addConnection(regex);
 					sendLocaleMessage("COMMAND.CONNECTION.ADDED", sender, regex);
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 				if (args[0].equalsIgnoreCase("remove"))
@@ -363,7 +383,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 						data.removeConnection(regex);
 					}
 					sendLocaleMessage("COMMAND.CONNECTION.REMOVED", sender, regex);
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
@@ -386,7 +409,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 						newValue = true;
 					data.setCheckConnection(newValue);
 					sendLocaleMessage("COMMMAND.CONNECTION.CHECK", sender, data.isCheckConnection() ? "True" : "False");
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 				if (args[0].equalsIgnoreCase("whitelist"))
@@ -396,11 +422,17 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 						newValue = true;
 					data.setWhitelistConnection(newValue);
 					sendLocaleMessage("COMMMAND.CONNECTION.WHITELIST", sender, data.isWhitelistConnection() ? "True" : "False");
-					database.save(data);
+					if (data == serverFilter)
+						saveConfiguration();
+					else
+						database.save(data);
 					return;
 				}
 		}
-		throw new CrazyCommandUsageException("/crazyloginfilter connection show [Page]", "/crazloginfilter connection <add/remove> <Value>", "/crazloginfilter connection whitelist [True/False]");
+		if (data == serverFilter)
+			throw new CrazyCommandUsageException("/crazyloginfilter serverFilter connection show [Page]", "/crazloginfilter serverFilter connection <add/remove> <Value>", "/crazloginfilter serverFilter connection whitelist [True/False]");
+		else
+			throw new CrazyCommandUsageException("/crazyloginfilter connection show [Page]", "/crazloginfilter connection <add/remove> <Value>", "/crazloginfilter connection whitelist [True/False]");
 	}
 
 	private void commandMainDelete(final CommandSender sender, final String[] args) throws CrazyException
