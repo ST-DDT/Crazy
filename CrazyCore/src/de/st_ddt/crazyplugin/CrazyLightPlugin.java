@@ -117,7 +117,8 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("AUTHORS"), ChatHelper.listingString(getDescription().getAuthors()));
 		if (showDetailed)
 		{
-			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DEPENCIES"), ChatHelper.listingString(getDescription().getDepend()));
+			if (getDescription().getDepend() != null)
+				ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DEPENCIES"), ChatHelper.listingString(getDescription().getDepend()));
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("URL"), getBukkitURL());
 		}
 	}
