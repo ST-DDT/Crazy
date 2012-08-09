@@ -215,17 +215,17 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 	@Override
 	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
-		if (commandLabel.equalsIgnoreCase("pinfo"))
+		if (commandLabel.equals("pinfo"))
 		{
 			commandPlayerInfo(sender, args);
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("ponlines"))
+		if (commandLabel.equals("ponlines") || commandLabel.equals("list"))
 		{
 			commandOnlines(sender);
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("psince"))
+		if (commandLabel.equals("psince"))
 		{
 			switch (args.length)
 			{
@@ -246,7 +246,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					throw new CrazyCommandUsageException("/psince <yyyy.MM.dd> [HH:mm:ss]");
 			}
 		}
-		if (commandLabel.equalsIgnoreCase("pbefore"))
+		if (commandLabel.equals("pbefore"))
 		{
 			switch (args.length)
 			{
@@ -267,7 +267,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					throw new CrazyCommandUsageException("/pbefore <yyyy.MM.dd>", "/pbefore <yyyy.MM.dd HH:mm:ss>");
 			}
 		}
-		if (commandLabel.equalsIgnoreCase("ptop10"))
+		if (commandLabel.equals("ptop10"))
 		{
 			commandTop10(sender, args);
 			return true;

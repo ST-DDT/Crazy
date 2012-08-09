@@ -31,6 +31,7 @@ public class CrazyOnlinePlayerListener implements Listener
 		if (data == null)
 			data = new OnlinePlayerData(player);
 		data.join(player.getAddress().getAddress().getHostAddress());
+		plugin.getCrazyDatabase().save(data);
 		if (plugin.isShowOnlineInfoEnabled())
 			if (player.hasPermission("crazyonline.since.auto"))
 				try
@@ -38,10 +39,7 @@ public class CrazyOnlinePlayerListener implements Listener
 					plugin.commandSince(player);
 				}
 				catch (final CrazyCommandException e)
-				{
-					e.printStackTrace();
-				}
-		plugin.getCrazyDatabase().save(data);
+				{}
 		plugin.getCrazyLogger().log("Join", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " joined the server");
 	}
 
