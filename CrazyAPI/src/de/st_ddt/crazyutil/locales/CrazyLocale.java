@@ -88,7 +88,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static CrazyLocale getLanguageName()
 	{
-		return getLocaleHead().getLanguageEntry("LANGUAGE.NAME");
+		return getLocaleHead().getSecureLanguageEntry("LANGUAGE.NAME");
 	}
 
 	public static String getLanguageName(final String language)
@@ -111,7 +111,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static Set<String> getActiveLanguages()
 	{
-		return getLanguageName().keySet();
+		return getLanguageName().getLanguageTextMap().keySet();
 	}
 
 	public static List<String> getActiveLanguagesNames(final boolean appendLanguage)
@@ -216,6 +216,11 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		return ChatHelper.putArgs(getLanguageEntry(localePath).getDefaultLanguageText(), args);
 	}
 
+	public HashMap<String, String> getLanguageTextMap()
+	{
+		return localeTexts;
+	}
+
 	public String getLanguageText(final CommandSender sender)
 	{
 		return getLanguageText(getUserLanguage(sender));
@@ -293,7 +298,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		{
 			for (final String section : path.split("\\."))
 			{
-				CrazyLocale alternative = locale.getAlternative();
+				final CrazyLocale alternative = locale.getAlternative();
 				locale = locale.get(section);
 				if (locale == null)
 					if (alternative == null)
@@ -333,7 +338,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public CrazyLocale addLanguageEntry(final String language, final String path, final String entry)
 	{
-		CrazyLocale locale = getSecureLanguageEntry(path);
+		final CrazyLocale locale = getSecureLanguageEntry(path);
 		locale.setLanguageText(language, ChatHelper.colorise(entry));
 		return locale;
 	}
