@@ -19,6 +19,7 @@ import de.st_ddt.crazyplugin.PluginDataGetter;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
@@ -157,10 +158,13 @@ public class CrazyCore extends CrazyPlugin
 			case 1:
 				if (!args[0].equalsIgnoreCase("list"))
 				{
-					loadLanguageFiles(args[0], false);
-					CrazyLocale.setUserLanguage(sender, args[0]);
+					String language = args[0].toLowerCase();
+					if (!language.matches("[a-z][a-z]_[a-z][a-z]"))
+						throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
+					loadLanguageFiles(language, false);
+					CrazyLocale.setUserLanguage(sender, language);
 					save();
-					sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getLanguageName(), args[0]);
+					sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getLanguageName(), language);
 					return;
 				}
 			case 0:
