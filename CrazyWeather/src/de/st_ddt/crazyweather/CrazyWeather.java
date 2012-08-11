@@ -1,6 +1,6 @@
 package de.st_ddt.crazyweather;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,7 +28,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 	private int tool = 280;
 	private boolean lightningdisabled = false;
 	private boolean lightningdamagedisabled = false;
-	private final HashSet<WorldWeather> worldWeather = new HashSet<WorldWeather>();
+	private final HashMap<String, WorldWeather> worldWeather = new HashMap<String, WorldWeather>();
 	private CrazyWeatherPlayerListener playerListener = null;
 	private CrazyWeatherWeatherListener weatherListener = null;
 
@@ -52,21 +52,28 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 		final ConfigurationSection config = getConfig();
 		worldWeather.clear();
 		for (final World world : getServer().getWorlds())
-		{
-			final WorldWeather weather = new WorldWeather(world);
-			weather.load(config.getConfigurationSection("worlds." + world.getName()));
-			worldWeather.add(weather);
-		}
+			loadWorld(world);
 		tool = config.getInt("tool", 280);
 		lightningdisabled = config.getBoolean("lightningdisabled", false);
 		lightningdamagedisabled = config.getBoolean("lightningdamagedisabled", false);
+	}
+
+	public WorldWeather loadWorld(final World world)
+	{
+		if (world == null)
+			return null;
+		final ConfigurationSection config = getConfig();
+		final WorldWeather weather = new WorldWeather(world);
+		weather.load(config.getConfigurationSection("worlds." + world.getName()));
+		worldWeather.put(world.getName(), weather);
+		return weather;
 	}
 
 	@Override
 	public void save()
 	{
 		final ConfigurationSection config = getConfig();
-		for (final WorldWeather world : worldWeather)
+		for (final WorldWeather world : worldWeather.values())
 			world.save(config, "worlds." + world.getWorldName() + ".");
 		saveConfiguration();
 	}
@@ -348,9 +355,9 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 	@Override
 	public WorldWeather getWorldWeather(final World world)
 	{
-		for (final WorldWeather temp : worldWeather)
-			if (temp.getWorld().equals(world))
-				return temp;
-		return null;
+		final WorldWeather weather = worldWeather.get(world.getName());
+		if (weather != null)
+			return weather;
+		return loadWorld(world);
 	}
 }

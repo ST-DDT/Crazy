@@ -15,7 +15,7 @@ public class CrazyWeatherPlayerListener implements Listener
 
 	protected final CrazyWeather plugin;
 
-	public CrazyWeatherPlayerListener(CrazyWeather plugin)
+	public CrazyWeatherPlayerListener(final CrazyWeather plugin)
 	{
 		super();
 		this.plugin = plugin;
@@ -27,14 +27,14 @@ public class CrazyWeatherPlayerListener implements Listener
 		if ((event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.isCancelled()) || event.getAction().equals(Action.RIGHT_CLICK_AIR))
 		{
 			final int tool = plugin.getThunderTool();
-			Player player = event.getPlayer();
+			final Player player = event.getPlayer();
 			if (tool != -1)
 				if (tool != player.getItemInHand().getTypeId())
 					return;
 			if (!player.hasPermission("crazyweather.thunder.tool"))
 				return;
-			Location location = player.getTargetBlock(null, 1024).getLocation();
-			CrazyWeatherPreThunderToolCastEvent cast = new CrazyWeatherPreThunderToolCastEvent(plugin, player, location);
+			final Location location = player.getTargetBlock(null, 1024).getLocation();
+			final CrazyWeatherPreThunderToolCastEvent cast = new CrazyWeatherPreThunderToolCastEvent(plugin, player, location);
 			Bukkit.getPluginManager().callEvent(cast);
 			if (cast.isCancelled())
 				return;
