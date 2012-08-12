@@ -1,6 +1,5 @@
 package de.st_ddt.crazyweather;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,15 +26,16 @@ public class CrazyWeatherPlayerListener implements Listener
 		if ((event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.isCancelled()) || event.getAction().equals(Action.RIGHT_CLICK_AIR))
 		{
 			final int tool = plugin.getThunderTool();
+			if (tool == -1)
+				return;
 			final Player player = event.getPlayer();
-			if (tool != -1)
-				if (tool != player.getItemInHand().getTypeId())
-					return;
+			if (tool != player.getItemInHand().getTypeId())
+				return;
 			if (!player.hasPermission("crazyweather.thunder.tool"))
 				return;
 			final Location location = player.getTargetBlock(null, 1024).getLocation();
 			final CrazyWeatherPreThunderToolCastEvent cast = new CrazyWeatherPreThunderToolCastEvent(plugin, player, location);
-			Bukkit.getPluginManager().callEvent(cast);
+			cast.callEvent();
 			if (cast.isCancelled())
 				return;
 			event.getPlayer().getWorld().strikeLightning(location);

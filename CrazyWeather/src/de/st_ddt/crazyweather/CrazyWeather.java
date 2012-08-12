@@ -99,17 +99,17 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 	@Override
 	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
 	{
-		if (commandLabel.equalsIgnoreCase("sun") || commandLabel.equalsIgnoreCase("rain"))
+		if (commandLabel.equals("sun") || commandLabel.equals("rain"))
 		{
-			commandWeather(sender, commandLabel.toLowerCase(), args);
+			commandWeather(sender, commandLabel, args);
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("weather"))
+		if (commandLabel.equals("weather"))
 		{
 			commandWeather(sender, args);
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("thunder"))
+		if (commandLabel.equals("thunder"))
 		{
 			commandThunder(sender, args);
 			return true;
@@ -140,7 +140,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 			{
 				world = Bukkit.getWorld(arg.substring(6));
 				if (world == null)
-					throw new CrazyCommandNoSuchException("World", arg.substring(6));
+					throw new CrazyCommandNoSuchException("World", arg.substring(6), worldWeather.keySet());
 			}
 			else if (arg.startsWith("duration:"))
 			{
@@ -174,8 +174,16 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 					keepLoad = false;
 			}
 			else
+			{
 				weather = Weather.getWeather(arg);
+				if (weather == null)
+					throw new CrazyCommandUsageException("/crazyweather [weather:]Weather [world:World] [duration:Integer] [static:Boolean] [load:Boolean]");
+			}
 		}
+		if (weather == null)
+			throw new CrazyCommandUsageException("/crazyweather [weather:]Weather [world:World] [duration:Integer] [static:Boolean] [load:Boolean]");
+		if (world == null)
+			throw new CrazyCommandUsageException("/crazyweather [weather:]Weather <world:World> [duration:Integer] [static:Boolean] [load:Boolean]");
 		changeWeather(sender, weather, world, keepStatic, keepLoad, duration);
 	}
 
@@ -193,15 +201,18 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 		if (!hasWeatherPermission(sender, world, keepStatic || keepLoad, weather))
 			throw new CrazyCommandPermissionException();
 		final WorldWeather worldWeather = getWorldWeather(world);
-		if (worldWeather != null)
+		if (worldWeather == null)
+		{
+			sendLocaleMessage("COMMAND.WEATHER.ERROR", sender);
+			return;
+		}
+		else
 		{
 			worldWeather.setWeather(weather, keepStatic, keepLoad, duration);
 			if ((weather != null) && (sender instanceof Player))
 				sendLocaleMessage("WEATHER." + weather.toString(), sender, world.getName());
 			sendLocaleMessage("COMMAND.WEATHER.SUCCESS", sender);
 		}
-		else
-			sendLocaleMessage("COMMAND.WEATHER.ERROR", sender);
 	}
 
 	protected int getRandomDuration()
@@ -282,28 +293,31 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 				{
 					if (!sender.hasPermission("crazyweather.thunder.toolchange"))
 						throw new CrazyCommandPermissionException();
+					int newtool = tool;
 					try
 					{
-						final int newtool = Integer.parseInt(args[1]);
-						tool = newtool;
+						newtool = Integer.parseInt(args[1]);
 					}
 					catch (final NumberFormatException e)
 					{
-						throw new CrazyCommandUsageException("/thundertool", "/thundertool <ToolID>");
+						throw new CrazyCommandParameterException(1, "ToolID");
 					}
-					sendLocaleMessage("THUNDERTOOL.SET", sender, new ItemStack(tool).getType().toString(), tool);
+					if (newtool < -1)
+						throw new CrazyCommandParameterException(1, "ToolID", "-1 (disabled)", "0 (Air/Empty Hands)");
+					tool = newtool;
+					sendLocaleMessage("THUNDERTOOL.SET", sender, tool == -1 ? "DISABLED" : new ItemStack(tool).getType().toString(), tool);
 					return;
 				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
+				throw new CrazyCommandNoSuchException("Mode", args[0], "thundertool");
 			case 1:
 				if (args[0].equalsIgnoreCase("thundertool"))
 				{
 					if (!sender.hasPermission("crazyweather.thunder.tool") && !sender.hasPermission("crazyweather.thunder.toolchange"))
 						throw new CrazyCommandPermissionException();
-					sendLocaleMessage("THUNDERTOOL.GET", sender, new ItemStack(tool).getType().toString(), tool);
+					sendLocaleMessage("THUNDERTOOL.GET", sender, tool == -1 ? "DISABLED" : new ItemStack(tool).getType().toString(), tool);
 					return;
 				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
+				throw new CrazyCommandNoSuchException("Mode", args[0], "thundertool");
 			default:
 				throw new CrazyCommandUsageException("/crazyweather mode <Mode> [Value]");
 		}
