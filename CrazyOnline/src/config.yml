@@ -1,7 +1,7 @@
 # CrazyOnline config.yml
 # For more information visit
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyOnline/src/config.yml
-version: C8.1_5.1
+version: C8.2_5.2
 database:
 # the table/file/section name of the database
   tableName: CrazyOnline_players
