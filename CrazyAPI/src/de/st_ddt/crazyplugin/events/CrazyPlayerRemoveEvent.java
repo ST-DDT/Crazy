@@ -3,6 +3,7 @@ package de.st_ddt.crazyplugin.events;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -55,6 +56,11 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 		for (final JavaPlugin plugin : deletions)
 			list.add(plugin.getName());
 		return ChatHelper.listingString(list);
+	}
+
+	public void callEvent()
+	{
+		Bukkit.getPluginManager().callEvent(this);
 	}
 
 	@Override
