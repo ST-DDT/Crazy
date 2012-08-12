@@ -22,9 +22,8 @@ database:
 showOnlineInfo: true
 # delete players a short time after leaving the server when not online for at least 5 minutes in total
 deleteShortVisitors: false
-# send delete request from autoDelete to all CrazyPlugins
-pluginCommunicationEnabled: false
 # automatically delete accounts that haven't been used for x day (-1=disabled)
+# WARNING: deletes all data belonging to this player in every listening plugin and the player file itself.
 autoDelete: -1
 logs:
   Quit: false

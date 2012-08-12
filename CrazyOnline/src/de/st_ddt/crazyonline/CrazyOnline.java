@@ -60,7 +60,6 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 	protected CrazyOnlineCrazyListener crazyListener = null;
 	protected boolean showOnlineInfo;
 	protected boolean deleteShortVisitors;
-	protected boolean pluginCommunicationEnabled;
 	protected int autoDelete;
 
 	public static CrazyOnline getPlugin()
@@ -80,15 +79,18 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		plugin = this;
 		registerHooks();
 		super.onEnable();
-		for (OnlinePlayerData data : getOnlinePlayerDatas())
+		for (final OnlinePlayerData data : getOnlinePlayerDatas())
 			data.join();
 	}
 
 	@Override
 	public void onDisable()
 	{
-		for (OnlinePlayerData data : getOnlinePlayerDatas())
+		for (final OnlinePlayerData data : getOnlinePlayerDatas())
+		{
 			data.quit();
+			database.save(data);
+		}
 		super.onDisable();
 	}
 
@@ -99,7 +101,6 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		final ConfigurationSection config = getConfig();
 		showOnlineInfo = config.getBoolean("showOnlineInfo", true);
 		deleteShortVisitors = config.getBoolean("deleteShortVisitors", deleteShortVisitors);
-		pluginCommunicationEnabled = config.getBoolean("pluginCommunicationEnabled", false);
 		autoDelete = Math.max(config.getInt("autoDelete", -1), -1);
 		if (autoDelete != -1)
 			getServer().getScheduler().scheduleAsyncRepeatingTask(this, new DropInactiveAccountsTask(this), 20 * 60 * 60, 20 * 60 * 60 * 6);
@@ -186,18 +187,17 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		for (final String name : deletions)
 		{
 			database.deleteEntry(name);
-			if (pluginCommunicationEnabled)
-				Bukkit.getPluginManager().callEvent(new CrazyPlayerRemoveEvent(this, name));
+			new CrazyPlayerRemoveEvent(this, name).callAsyncEvent();
 		}
 		return deletions.size();
 	}
 
+	@Override
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("showOnlineInfo", showOnlineInfo);
 		config.set("deleteShortVisitors", deleteShortVisitors);
-		config.set("pluginCommunicationEnabled", pluginCommunicationEnabled);
 		config.set("autoDelete", autoDelete);
 		logger.save(config, "logs.");
 		super.saveConfiguration();

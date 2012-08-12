@@ -1,7 +1,5 @@
 package de.st_ddt.crazyonline.tasks;
 
-import org.bukkit.Bukkit;
-
 import de.st_ddt.crazyonline.CrazyOnline;
 import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
@@ -29,6 +27,6 @@ public class PlayerDataCheckTask implements Runnable
 			return;
 		if (data.getTimeTotal() > 5)
 			return;
-		Bukkit.getPluginManager().callEvent(new CrazyPlayerRemoveEvent(plugin, name));
+		new CrazyPlayerRemoveEvent(plugin, name).callAsyncEvent();
 	}
 }
