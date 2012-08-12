@@ -206,7 +206,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 			commandPlayerInfo(sender, args);
 			return true;
 		}
-		else if (commandLabel.equals("delete"))
+		else if (commandLabel.equals("delete") || commandLabel.equals("remove"))
 		{
 			commandPlayerDelete(sender, args);
 			return true;
@@ -269,9 +269,8 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " player delete <Player>");
 		if (!sender.hasPermission(getName().toLowerCase() + ".player.delete"))
 			throw new CrazyCommandPermissionException();
-		if (!hasPlayerData(args[0]))
+		if (!deletePlayerData(args[0]))
 			throw new CrazyCommandNoSuchException("PlayerData", args[0]);
-		deletePlayerData(args[0]);
 		sendLocaleMessage("COMMAND.PLAYERDATA.DELETED", sender, args[0]);
 	}
 
