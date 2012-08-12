@@ -43,7 +43,11 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 
 	public boolean isBlockingGuestCommandsEnabled();
 
-	public boolean isResettingGuestLocationsEnabled();
+	public boolean isBlockingGuestChatEnabled();
+
+	public boolean isBlockingGuestJoinEnabled();
+
+	public boolean isRemovingGuestDataEnabled();
 
 	public boolean isTempBanned(String IP);
 
