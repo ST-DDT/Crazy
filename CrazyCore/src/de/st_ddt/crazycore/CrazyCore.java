@@ -317,7 +317,7 @@ public class CrazyCore extends CrazyPlugin
 			else if (!sender.hasPermission("crazycore.deleteplayer.other"))
 				throw new CrazyCommandPermissionException();
 		final CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, name);
-		getServer().getPluginManager().callEvent(event);
+		event.callEvent();
 		sendLocaleMessage("COMMAND.DELETE.HEAD", sender, name);
 		sendLocaleMessage("COMMAND.DELETE.AMOUNT", sender, event.getDeletionsCount());
 		if (event.getDeletionsCount() != 0)
