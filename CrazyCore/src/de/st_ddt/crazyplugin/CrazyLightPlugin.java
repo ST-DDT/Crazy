@@ -112,7 +112,8 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), CrazyPluginInterface.DateFormat.format(new Date()));
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("NAME"), getName());
 		if (showDetailed)
-			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DESCRIPTION"), getDescription().getDescription());
+			if (getDescription().getDescription() != null)
+				ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DESCRIPTION"), getDescription().getDescription());
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("VERSION"), getVersion());
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("AUTHORS"), ChatHelper.listingString(getDescription().getAuthors()));
 		if (showDetailed)
