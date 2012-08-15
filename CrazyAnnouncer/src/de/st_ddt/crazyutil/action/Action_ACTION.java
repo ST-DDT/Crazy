@@ -34,7 +34,7 @@ public class Action_ACTION extends Action
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		if (action == null)

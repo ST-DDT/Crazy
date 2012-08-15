@@ -10,13 +10,13 @@ public class Action_DELAYEDACTION extends Action_ACTION
 
 	protected final long delay;
 
-	public Action_DELAYEDACTION(ConfigurationSection config)
+	public Action_DELAYEDACTION(final ConfigurationSection config)
 	{
 		super(config);
 		delay = config.getLong("delay", 0);
 	}
 
-	public Action_DELAYEDACTION(String name, String actionname, long delay)
+	public Action_DELAYEDACTION(final String name, final String actionname, final long delay)
 	{
 		super(name, actionname);
 		this.delay = delay;
@@ -32,7 +32,7 @@ public class Action_DELAYEDACTION extends Action_ACTION
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "delay", delay);

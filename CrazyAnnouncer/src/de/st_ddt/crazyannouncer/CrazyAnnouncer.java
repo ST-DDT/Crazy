@@ -50,7 +50,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 	public void load()
 	{
 		super.load();
-		//EDIT eventListener.clearEventRegistrations();
+		// EDIT eventListener.clearEventRegistrations();
 		EventTrigger.setTriggerEventListener(eventListener);
 		ConfigurationSection config = getConfig().getConfigurationSection("actions");
 		if (config != null)
@@ -61,7 +61,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 		else
 		{
 			actions.add(new Action_MESSAGE("example", "This is a default message", "Welcome to the minecraft server of &E" + getServer().getServerName()));
-			ActionList_ORDERED action = new ActionList_ORDERED("example123");
+			final ActionList_ORDERED action = new ActionList_ORDERED("example123");
 			actions.add(action);
 			action.addAction(new Action_MESSAGE("a1", "Message1"));
 			action.addAction(new Action_MESSAGE("a2", "Message2"));
@@ -70,10 +70,10 @@ public class CrazyAnnouncer extends CrazyPlugin
 		config = getConfig().getConfigurationSection("triggers");
 		if (config != null)
 		{
-			for (String name : config.getKeys(false))
+			for (final String name : config.getKeys(false))
 				triggers.add(Trigger.load(config.getConfigurationSection(name), actions, this));
 			triggers.remove(null);
-			for (Trigger trigger : triggers)
+			for (final Trigger trigger : triggers)
 				trigger.register();
 		}
 		else
@@ -108,9 +108,9 @@ public class CrazyAnnouncer extends CrazyPlugin
 		return actions;
 	}
 
-	public NamedRunnable getAction(String actionname)
+	public NamedRunnable getAction(final String actionname)
 	{
-		for (NamedRunnable action : actions)
+		for (final NamedRunnable action : actions)
 			if (action.getName().equals(actionname))
 				return action;
 		return null;

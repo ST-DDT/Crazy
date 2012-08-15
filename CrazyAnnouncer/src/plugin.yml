@@ -2,9 +2,10 @@ name: CrazyAnnouncer
 main: de.st_ddt.crazyannouncer.CrazyAnnouncer
 author: ST-DDT
 #C*=needed core version
-version: C7_1.6
-softdepend: [PermissionsBukkit]
+version: C7_1.6.1
 depend: [CrazyCore]
+description: >
+            Announce messages and commands in defined intervals and on special events.
 commands:
   crazyannouncer:
     description: Create/show delete an announcement

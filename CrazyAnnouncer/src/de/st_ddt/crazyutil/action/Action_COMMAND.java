@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazycore.CrazyCore;
+import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
 
 public class Action_COMMAND extends Action
@@ -15,7 +15,7 @@ public class Action_COMMAND extends Action
 
 	List<String> commands;
 
-	public Action_COMMAND(ConfigurationSection config)
+	public Action_COMMAND(final ConfigurationSection config)
 	{
 		super(config);
 		commands = config.getStringList("commands");
@@ -27,14 +27,14 @@ public class Action_COMMAND extends Action
 		run(Bukkit.getConsoleSender());
 	}
 
-	public void run(CommandSender sender)
+	public void run(final CommandSender sender)
 	{
-		for (String command : commands)
-			Bukkit.getServer().dispatchCommand(sender, ChatHelper.putArgs(command, sender.getName(), CrazyCore.DateFormat.format(new Date())));
+		for (final String command : commands)
+			Bukkit.getServer().dispatchCommand(sender, ChatHelper.putArgs(command, sender.getName(), CrazyPluginInterface.DateFormat.format(new Date())));
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "commands", commands);

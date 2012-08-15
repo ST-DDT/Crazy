@@ -19,7 +19,7 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 		super(config, actionlist, plugin);
 		this.interval = config.getInt("interval", 1000);
 		this.repeat = config.getInt("repeat", 0);
-		Date now = new Date();
+		final Date now = new Date();
 		if (repeat > 0)
 			this.repeat = (int) Math.max((repeat - date.getTime() - now.getTime()) / interval, 0);
 		if (repeat != 0)
@@ -31,7 +31,7 @@ public class ScheduledRepeatedTrigger extends ScheduledTrigger
 		super(name, actionlist, plugin, date);
 		this.interval = interval;
 		this.repeat = repeat;
-		Date now = new Date();
+		final Date now = new Date();
 		if (repeat > 0)
 			this.repeat = (int) Math.max((repeat - date.getTime() - now.getTime()) / interval, 0);
 		if (repeat != 0)

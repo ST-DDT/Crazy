@@ -20,7 +20,7 @@ public class EventTrigger extends Trigger
 		return listener;
 	}
 
-	public static void setTriggerEventListener(TriggerEventListener listener)
+	public static void setTriggerEventListener(final TriggerEventListener listener)
 	{
 		EventTrigger.listener = listener;
 	}

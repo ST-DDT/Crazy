@@ -7,17 +7,17 @@ import org.bukkit.configuration.ConfigurationSection;
 public class ActionList_MULTI extends ActionList
 {
 
-	public ActionList_MULTI(ConfigurationSection config)
+	public ActionList_MULTI(final ConfigurationSection config)
 	{
 		super(config);
 	}
 
-	public ActionList_MULTI(String name, Collection<? extends Action> actions)
+	public ActionList_MULTI(final String name, final Collection<? extends Action> actions)
 	{
 		super(name, actions);
 	}
 
-	public ActionList_MULTI(String name)
+	public ActionList_MULTI(final String name)
 	{
 		super(name);
 	}
@@ -25,7 +25,7 @@ public class ActionList_MULTI extends ActionList
 	@Override
 	public void run()
 	{
-		for (Action action : actions)
+		for (final Action action : actions)
 			action.run();
 	}
 }

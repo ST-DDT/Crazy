@@ -3,6 +3,7 @@ package de.st_ddt.crazyannouncer;
 import java.util.ArrayList;
 
 import org.bukkit.event.Event;
+
 import de.st_ddt.crazyutil.trigger.EventTrigger;
 import de.st_ddt.crazyutil.trigger.TriggerEventListener;
 
@@ -12,15 +13,15 @@ public class CrazyAnnouncerEventListener implements TriggerEventListener
 	private final CrazyAnnouncer plugin;
 	private final ArrayList<EventTrigger> triggers = new ArrayList<EventTrigger>();
 
-	public CrazyAnnouncerEventListener(CrazyAnnouncer plugin)
+	public CrazyAnnouncerEventListener(final CrazyAnnouncer plugin)
 	{
 		super();
 		this.plugin = plugin;
 	}
 
-	public void Event(Event event)
+	public void Event(final Event event)
 	{
-		for (EventTrigger trigger : triggers)
+		for (final EventTrigger trigger : triggers)
 			if (trigger.getEventList().contains(event.getClass()))
 			{
 				trigger.run();
@@ -34,14 +35,14 @@ public class CrazyAnnouncerEventListener implements TriggerEventListener
 	}
 
 	@Override
-	public void addTrigger(EventTrigger eventTrigger)
+	public void addTrigger(final EventTrigger eventTrigger)
 	{
 		if (!triggers.contains(eventTrigger))
 			triggers.add(eventTrigger);
 	}
 
 	@Override
-	public void removeTrigger(EventTrigger eventTrigger)
+	public void removeTrigger(final EventTrigger eventTrigger)
 	{
 		triggers.add(eventTrigger);
 	}

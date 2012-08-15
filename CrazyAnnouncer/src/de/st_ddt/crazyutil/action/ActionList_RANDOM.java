@@ -12,20 +12,20 @@ public class ActionList_RANDOM extends ActionList
 
 	protected int amount;
 
-	public ActionList_RANDOM(ConfigurationSection config)
+	public ActionList_RANDOM(final ConfigurationSection config)
 	{
 		super(config);
 		amount = config.getInt("amount", 1);
 		amount = Math.max(amount, actions.size());
 	}
 
-	public ActionList_RANDOM(String name, Collection<? extends Action> actions)
+	public ActionList_RANDOM(final String name, final Collection<? extends Action> actions)
 	{
 		super(name, actions);
 		this.amount = 1;
 	}
 
-	public ActionList_RANDOM(String name)
+	public ActionList_RANDOM(final String name)
 	{
 		super(name);
 		this.amount = 1;
@@ -34,8 +34,8 @@ public class ActionList_RANDOM extends ActionList
 	@Override
 	public void run()
 	{
-		List<Action> list = new ArrayList<Action>();
-		for (Action action : actions)
+		final List<Action> list = new ArrayList<Action>();
+		for (final Action action : actions)
 			list.add(action);
 		Collections.shuffle(list);
 		for (int i = 0; i < amount; i++)

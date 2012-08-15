@@ -9,7 +9,7 @@ public class ActionList_ORDERED extends ActionList
 
 	protected int currentIndex;
 
-	public ActionList_ORDERED(ConfigurationSection config)
+	public ActionList_ORDERED(final ConfigurationSection config)
 	{
 		super(config);
 		currentIndex = config.getInt("currentIndex", 0);
@@ -17,13 +17,13 @@ public class ActionList_ORDERED extends ActionList
 			currentIndex = 0;
 	}
 
-	public ActionList_ORDERED(String name, Collection<? extends Action> actions)
+	public ActionList_ORDERED(final String name, final Collection<? extends Action> actions)
 	{
 		super(name, actions);
 		currentIndex = 0;
 	}
 
-	public ActionList_ORDERED(String name)
+	public ActionList_ORDERED(final String name)
 	{
 		super(name);
 		currentIndex = 0;
@@ -32,19 +32,19 @@ public class ActionList_ORDERED extends ActionList
 	@Override
 	public void run()
 	{
-		int size = actions.size();
+		final int size = actions.size();
 		if (size == 0)
 			return;
 		if (currentIndex >= size)
 			currentIndex = 0;
-		Action action = actions.get(currentIndex);
+		final Action action = actions.get(currentIndex);
 		if (action != null)
 			action.run();
 		currentIndex++;
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "currentIndex", currentIndex);

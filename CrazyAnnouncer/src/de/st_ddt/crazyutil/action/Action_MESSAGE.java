@@ -11,31 +11,31 @@ import de.st_ddt.crazyutil.ChatHelper;
 public class Action_MESSAGE extends Action
 {
 
-	private List<String> messages;
+	private final List<String> messages;
 
-	public Action_MESSAGE(ConfigurationSection config)
+	public Action_MESSAGE(final ConfigurationSection config)
 	{
 		super(config);
 		messages = config.getStringList("messages");
 	}
 
-	public Action_MESSAGE(String name, String... messages)
+	public Action_MESSAGE(final String name, final String... messages)
 	{
 		super(name);
 		this.messages = new ArrayList<String>();
-		for (String message : messages)
+		for (final String message : messages)
 			this.messages.add(message);
 	}
 
 	@Override
 	public void run()
 	{
-		for (String message : messages)
+		for (final String message : messages)
 			Bukkit.broadcastMessage(ChatHelper.colorise(message));
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "messages", messages);
