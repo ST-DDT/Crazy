@@ -49,8 +49,11 @@ public class CrazyAnnouncer extends CrazyPlugin
 	@Override
 	public void load()
 	{
-		super.load();
+		// Cleanup
 		// EDIT eventListener.clearEventRegistrations();
+		actions.clear();
+		triggers.clear();
+		// Load
 		EventTrigger.setTriggerEventListener(eventListener);
 		ConfigurationSection config = getConfig().getConfigurationSection("actions");
 		if (config != null)
