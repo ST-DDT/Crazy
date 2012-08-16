@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,22 +34,26 @@ public class ChatHelper
 		ChatHelper.showChatHeaders = showChatHeaders;
 	}
 
+	/**
+	 * Replace Colorcodes texts with the real colors
+	 * 
+	 * @param string
+	 *            The string the colors should apply to
+	 * @return The colorated String
+	 */
 	public static String colorise(final String string)
 	{
-		return string.replaceAll("\\&0", ChatColor.BLACK.toString()).replaceAll("\\&1", ChatColor.DARK_BLUE.toString()).replaceAll("\\&2", ChatColor.DARK_GREEN.toString()).replaceAll("\\&3", ChatColor.DARK_AQUA.toString()).replaceAll("\\&4", ChatColor.DARK_RED.toString()).replaceAll("\\&5", ChatColor.DARK_PURPLE.toString()).replaceAll("\\&6", ChatColor.GOLD.toString()).replaceAll("\\&7", ChatColor.GRAY.toString()).replaceAll("\\&8", ChatColor.DARK_GRAY.toString()).replaceAll("\\&9", ChatColor.BLUE.toString()).replaceAll("\\&A", ChatColor.GREEN.toString()).replaceAll("\\&B", ChatColor.AQUA.toString()).replaceAll("\\&C", ChatColor.RED.toString()).replaceAll("\\&D", ChatColor.LIGHT_PURPLE.toString()).replaceAll("\\&E", ChatColor.YELLOW.toString()).replaceAll("\\&F", ChatColor.WHITE.toString()).replaceAll("\\&G", ChatColor.MAGIC.toString());
+		return ChatColor.translateAlternateColorCodes('&', string);
 	}
 
 	public static void sendMessage(final CommandSender target, final Object message, final Object... args)
 	{
-		target.sendMessage(putArgsExtended(target, message, args));
+		sendFinalMessage(target, putArgsExtended(target, message, args));
 	}
 
 	public static void sendMessage(final CommandSender target, final String chatHeader, final Object message, final Object... args)
 	{
-		if (showChatHeaders || !(target instanceof Player))
-			target.sendMessage(chatHeader + putArgsExtended(target, message, args));
-		else
-			target.sendMessage(putArgsExtended(target, message, args));
+		sendFinalMessage(target, chatHeader, putArgsExtended(target, message, args));
 	}
 
 	public static void sendMessage(final CommandSender[] targets, final Object message, final Object... args)
@@ -60,7 +65,7 @@ public class ChatHelper
 	public static void sendMessage(final CommandSender[] targets, final String chatHeader, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
-			sendMessage(target, message, args);
+			sendMessage(target, chatHeader, message, args);
 	}
 
 	public static void sendMessage(final Collection<CommandSender> targets, final Object message, final Object... args)
@@ -72,7 +77,22 @@ public class ChatHelper
 	public static void sendMessage(final Collection<CommandSender> targets, final String chatHeader, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
-			sendMessage(target, message, args);
+			sendMessage(target, chatHeader, message, args);
+	}
+
+	public static void sendFinalMessage(final CommandSender target, final String message)
+	{
+		for (final String part : StringUtils.splitByWholeSeparator(message, "\\n"))
+			target.sendMessage(part);
+	}
+
+	public static void sendFinalMessage(final CommandSender target, final String chatHeader, final String message)
+	{
+		for (final String part : StringUtils.splitByWholeSeparator(message, "\\n"))
+			if (showChatHeaders || !(target instanceof Player))
+				target.sendMessage(chatHeader + part);
+			else
+				target.sendMessage(part);
 	}
 
 	public static <E> void sendListMessage(final CommandSender target, final CrazyPluginInterface plugin, final String headLocale, final String seperator, final String entry, final String emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
@@ -178,11 +198,14 @@ public class ChatHelper
 	{
 		if (strings.size() == 0)
 			return "";
-		final Iterator<S> list = strings.iterator();
-		String res = list.next().toString();
-		while (list.hasNext())
-			res = res + seperator + list.next().toString();
-		return res;
+		final Iterator<S> it = strings.iterator();
+		final StringBuilder res = new StringBuilder(it.next().toString());
+		while (it.hasNext())
+		{
+			res.append(seperator);
+			res.append(it.next().toString());
+		}
+		return res.toString();
 	}
 
 	public static String dateToString(final Date date)
