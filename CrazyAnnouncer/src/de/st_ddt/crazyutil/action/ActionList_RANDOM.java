@@ -3,7 +3,6 @@ package de.st_ddt.crazyutil.action;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -11,18 +10,21 @@ public class ActionList_RANDOM extends ActionList
 {
 
 	protected int amount;
+	protected final ArrayList<Action> random = new ArrayList<Action>();
 
 	public ActionList_RANDOM(final ConfigurationSection config)
 	{
 		super(config);
 		amount = config.getInt("amount", 1);
 		amount = Math.min(amount, actions.size());
+		random.addAll(actions);
 	}
 
 	public ActionList_RANDOM(final String name, final Collection<? extends Action> actions)
 	{
 		super(name, actions);
 		this.amount = 1;
+		random.addAll(actions);
 	}
 
 	public ActionList_RANDOM(final String name)
@@ -34,12 +36,9 @@ public class ActionList_RANDOM extends ActionList
 	@Override
 	public void run()
 	{
-		final List<Action> list = new ArrayList<Action>();
-		for (final Action action : actions)
-			list.add(action);
-		Collections.shuffle(list);
+		Collections.shuffle(random);
 		for (int i = 0; i < amount; i++)
-			list.get(i).run();
+			random.get(i).run();
 	}
 
 	@Override
