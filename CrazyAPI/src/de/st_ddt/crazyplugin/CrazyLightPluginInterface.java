@@ -13,8 +13,10 @@ public interface CrazyLightPluginInterface extends Named, ParameterData, Plugin
 
 	public String getChatHeader();
 
+	@Override
 	public PluginDescriptionFile getDescription();
 
+	@Override
 	public File getDataFolder();
 
 	public String getVersion();
