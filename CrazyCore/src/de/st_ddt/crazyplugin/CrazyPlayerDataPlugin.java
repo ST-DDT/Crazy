@@ -24,11 +24,11 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S extends T> extends CrazyPlugin implements CrazyPlayerDataPluginInterface<T, S>
 {
 
-	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin> playerDataPlugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>> playerDataPlugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>>();
 	protected PlayerDataDatabase<S> database;
 	protected boolean saveDatabaseOnShutdown;
 
-	public static Collection<CrazyPlugin> getCrazyPlayerDataPlugins()
+	public static Collection<CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>> getCrazyPlayerDataPlugins()
 	{
 		return playerDataPlugins.values();
 	}
@@ -105,24 +105,24 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public HashSet<T> getAvailablePlayerData(boolean includeOnline, boolean includeData)
+	public HashSet<T> getAvailablePlayerData(final boolean includeOnline, final boolean includeData)
 	{
-		HashSet<T> result = new HashSet<T>();
+		final HashSet<T> result = new HashSet<T>();
 		if (includeData)
 			if (database != null)
 				result.addAll(database.getAllEntries());
 		if (includeOnline)
-			for (Player player : Bukkit.getOnlinePlayers())
+			for (final Player player : Bukkit.getOnlinePlayers())
 				result.add(getAvailablePlayerData(player));
 		result.remove(null);
 		return result;
 	}
 
 	@Override
-	public <E extends OfflinePlayer> HashSet<S> getPlayerData(Collection<E> players)
+	public <E extends OfflinePlayer> HashSet<S> getPlayerData(final Collection<E> players)
 	{
-		HashSet<S> datas = new HashSet<S>();
-		for (OfflinePlayer player : players)
+		final HashSet<S> datas = new HashSet<S>();
+		for (final OfflinePlayer player : players)
 			datas.add(getPlayerData(player));
 		return datas;
 	}
@@ -146,17 +146,17 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	@Override
 	public final HashSet<S> getOnlinePlayerDatas()
 	{
-		HashSet<S> res = new HashSet<S>();
-		for (Player player : Bukkit.getOnlinePlayers())
+		final HashSet<S> res = new HashSet<S>();
+		for (final Player player : Bukkit.getOnlinePlayers())
 			res.add(getPlayerData(player));
 		res.remove(null);
 		return res;
 	}
 
 	@Override
-	public final HashSet<Player> getOnlinePlayersPerIP(String IP)
+	public final HashSet<Player> getOnlinePlayersPerIP(final String IP)
 	{
-		HashSet<Player> res = new HashSet<Player>();
+		final HashSet<Player> res = new HashSet<Player>();
 		for (final Player player : Bukkit.getOnlinePlayers())
 			if (player.getAddress().getAddress().getHostAddress().equals(IP))
 				res.add(player);
@@ -164,17 +164,17 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public final HashSet<S> getOnlinePlayerDatasPerIP(String IP)
+	public final HashSet<S> getOnlinePlayerDatasPerIP(final String IP)
 	{
-		HashSet<S> res = new HashSet<S>();
-		for (Player player : getOnlinePlayersPerIP(IP))
+		final HashSet<S> res = new HashSet<S>();
+		for (final Player player : getOnlinePlayersPerIP(IP))
 			res.add(getPlayerData(player));
 		res.remove(null);
 		return res;
 	}
 
 	@Override
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (commandLabel.equalsIgnoreCase("player"))
 		{
@@ -199,7 +199,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		return false;
 	}
 
-	public boolean commandPlayer(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandPlayer(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (commandLabel.equals("info"))
 		{
@@ -257,13 +257,13 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 				throw new CrazyCommandPermissionException();
 			else if (!sender.hasPermission(getName().toLowerCase() + ".player.info.other"))
 				throw new CrazyCommandPermissionException();
-		S data = getPlayerData(target);
+		final S data = getPlayerData(target);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("PlayerData", target.getName());
 		data.show(sender, getChatHeader(), detailed);
 	}
 
-	protected void commandPlayerDelete(CommandSender sender, String[] args) throws CrazyCommandException
+	protected void commandPlayerDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " player delete <Player>");
@@ -275,7 +275,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public void show(CommandSender target, String chatHeader, boolean showDetailed)
+	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLUGININFO");
 		super.show(target, chatHeader, showDetailed);
@@ -326,6 +326,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("database.saveOnShutdown", saveDatabaseOnShutdown);
+		logger.save(config, "logs.");
 		saveConfig();
 	}
 }
