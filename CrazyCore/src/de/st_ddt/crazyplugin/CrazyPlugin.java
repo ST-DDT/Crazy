@@ -94,6 +94,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 						commandInfo(sender, newArgs);
 						return true;
 					}
+					if (commandString.equals("logger") || commandString.equals("log"))
+					{
+						commandLogger(sender, newArgs);
+						return true;
+					}
 					if (commandString.equals("reload"))
 					{
 						commandReload(sender, newArgs);
@@ -149,12 +154,49 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		show(sender, getChatHeader(), true);
 	}
 
+	protected void commandLogger(final CommandSender sender, final String[] args) throws CrazyCommandException
+	{
+		if (!sender.hasPermission(getName().toLowerCase() + ".logger"))
+			throw new CrazyCommandPermissionException();
+		if (logger.getAllLogChannelCount() == 0)
+		{
+			sendLocaleMessage("COMMAND.CONFIG.NOLOGGERS", sender);
+			return;
+		}
+		if (args.length == 0)
+			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " logger <LogChannel> [NewOption]");
+		String channel = args[0];
+		if (!logger.hasLogChannel(channel))
+			throw new CrazyCommandNoSuchException("LogChannel", channel, logger.getLogChannelNames());
+		if (args.length == 1)
+		{
+			if (logger.isActiveLogChannel(channel))
+				sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, logger.getPath(channel));
+			else
+				sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, "disabled");
+			return;
+		}
+		String path = ChatHelper.listingString(" ", ChatHelper.shiftArray(args, 1));
+		if (path.equalsIgnoreCase("false"))
+		{
+			logger.createEmptyLogChannels(channel);
+			sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, "disabled");
+			return;
+		}
+		if (path.equalsIgnoreCase("true"))
+			path = "logs/plugin.log";
+		logger.createLogChannel(channel, path);
+		sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, logger.getPath(channel));
+		logger.save(getConfig(), "logs.");
+		saveConfig();
+	}
+
 	private final void commandReload(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
-		if (!sender.hasPermission(getDescription().getName().toLowerCase() + ".reload"))
+		if (!sender.hasPermission(getName().toLowerCase() + ".reload"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 0)
-			throw new CrazyCommandUsageException("/" + getDescription().getName().toLowerCase() + " reload");
+			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " reload");
 		reloadConfig();
 		load();
 		sendLocaleMessage("COMMAND.CONFIG.RELOADED", sender);
@@ -162,10 +204,10 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 
 	private final void commandSave(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
-		if (!sender.hasPermission(getDescription().getName().toLowerCase() + ".save"))
+		if (!sender.hasPermission(getName().toLowerCase() + ".save"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 0)
-			throw new CrazyCommandUsageException("/" + getDescription().getName().toLowerCase() + " save");
+			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " save");
 		save();
 		sendLocaleMessage("COMMAND.CONFIG.SAVED", sender);
 	}
@@ -214,6 +256,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 
 	public void save()
 	{
+		logger.save(getConfig(), "logs.");
 		saveConfig();
 	}
 
