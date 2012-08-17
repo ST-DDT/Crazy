@@ -15,6 +15,7 @@ public abstract class CrazyPipe
 {
 
 	private final static HashMap<String, CrazyPipe> pipes = new HashMap<String, CrazyPipe>();
+	protected static boolean disabled;
 
 	public static CrazyPipe registerPipe(final CrazyPipe pipe, final String... keys)
 	{
@@ -25,6 +26,8 @@ public abstract class CrazyPipe
 
 	public static void pipe(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
 	{
+		if (disabled)
+			return;
 		if (datas.size() == 0)
 			return;
 		if (pipeArgs == null)
@@ -57,6 +60,8 @@ public abstract class CrazyPipe
 
 	public static void pipe(final CommandSender sender, final ParameterData data, final String... pipeArgs)
 	{
+		if (disabled)
+			return;
 		if (pipeArgs == null)
 		{
 			data.show(sender);
@@ -103,6 +108,16 @@ public abstract class CrazyPipe
 	}
 
 	public abstract void execute(CommandSender sender, Collection<ParameterData> datas, String... pipeArgs);
+
+	public static boolean isDisabled()
+	{
+		return disabled;
+	}
+
+	public static void setDisabled(boolean disabled)
+	{
+		CrazyPipe.disabled = disabled;
+	}
 
 	static
 	{
