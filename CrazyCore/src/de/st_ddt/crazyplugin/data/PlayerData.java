@@ -24,12 +24,14 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 
 	protected abstract String getChatHeader();
 
+	@Override
 	public void show(final CommandSender target)
 	{
 		show(target, getChatHeader(), true);
 	}
 
-	public void show(final CommandSender target, String chatHeader, boolean showDetailed)
+	@Override
+	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLAYERINFO");
 		final Player player = getPlayer();
@@ -61,8 +63,6 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 			showDetailed(target, chatHeader);
 		}
 	}
-
-	public abstract void showDetailed(CommandSender target, String chatHeader);
 
 	@Override
 	public String getShortInfo()
