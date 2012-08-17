@@ -1,8 +1,8 @@
 package de.st_ddt.crazyplugin;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -24,7 +24,7 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S extends T> extends CrazyPlugin implements CrazyPlayerDataPluginInterface<T, S>
 {
 
-	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> playerDataPlugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin> playerDataPlugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 	protected PlayerDataDatabase<S> database;
 	protected boolean saveDatabaseOnShutdown;
 

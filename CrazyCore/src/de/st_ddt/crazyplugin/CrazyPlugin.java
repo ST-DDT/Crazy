@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -34,7 +34,7 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPluginInterface
 {
 
-	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 	protected final CrazyLogger logger = new CrazyLogger(this);
 	protected CrazyLocale locale = null;
 	protected boolean isUpdated = false;

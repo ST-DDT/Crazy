@@ -2,7 +2,7 @@ package de.st_ddt.crazyplugin;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightPluginInterface
 {
 
-	private static final HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin> lightplugins = new HashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin>();
+	private static final LinkedHashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin> lightplugins = new LinkedHashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin>();
 	private String chatHeader = null;
 
 	@Override
