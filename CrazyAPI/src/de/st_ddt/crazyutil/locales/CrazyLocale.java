@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -28,7 +29,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	private final static HashMap<String, HashSet<String>> languageAlternatives = new HashMap<String, HashSet<String>>();
 	private static String defaultLanguage;
 	private final String name;
-	private final HashMap<String, String> localeTexts;
+	private final HashMap<String, String> localeTexts=new HashMap<String, String>();
 	private final CrazyLocale parent;
 	private CrazyLocale alternative = null;
 
@@ -153,7 +154,6 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		super();
 		this.name = name;
 		this.parent = parent;
-		this.localeTexts = new HashMap<String, String>();
 	}
 
 	private static CrazyLocale getCrazyLocaleHead()
@@ -198,7 +198,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		if (alternative == null)
 			return;
 		CrazyLocale temp;
-		for (final java.util.Map.Entry<String, CrazyLocale> subPath : this.entrySet())
+		for (final Entry<String, CrazyLocale> subPath : this.entrySet())
 		{
 			temp = alternative.get(subPath.getKey());
 			if (temp != null)
