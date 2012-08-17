@@ -2,7 +2,7 @@ name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
 #C*=needed core version
-version: C8.3
+version: C8.4
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
 commands:
@@ -25,9 +25,17 @@ permissions:
     default: false
     children:
       crazycore.list: true
+      crazycore.infoplayer: true
+      crazycore.deleteplayer: true
       crazylanguage.*: true
   crazycore.list:
     description: Allow showing all enabled CrazyPlugins
+    default: op
+  crazycore.infoplayer:
+    description: Show all available information about a player
+    default: op
+  crazycore.deleteplayer:
+    description: Delete all available information about a player
     default: op
   crazylanguage.*:
     description: Access to all commands (Subsection language)

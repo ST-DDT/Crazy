@@ -4,19 +4,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.messaging.Messenger;
 
+import de.st_ddt.crazycore.data.PseudoPlayerData;
 import de.st_ddt.crazycore.listener.CrazyCoreCrazyListener;
 import de.st_ddt.crazycore.listener.CrazyCoreMessageListener;
 import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
 import de.st_ddt.crazyplugin.CrazyLightPlugin;
+import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.PluginDataGetter;
 import de.st_ddt.crazyplugin.data.ParameterData;
+import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
@@ -96,7 +101,7 @@ public class CrazyCore extends CrazyPlugin
 		final int length = args.length;
 		for (int i = 0; i < length; i++)
 		{
-			String arg = args[i].toLowerCase();
+			final String arg = args[i].toLowerCase();
 			if (arg.startsWith("page:"))
 				try
 				{
@@ -158,7 +163,7 @@ public class CrazyCore extends CrazyPlugin
 			case 1:
 				if (!args[0].equalsIgnoreCase("list"))
 				{
-					String language = args[0].toLowerCase();
+					final String language = args[0].toLowerCase();
 					if (!language.matches("[a-z][a-z]_[a-z][a-z]"))
 						throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
 					loadLanguageFiles(language, false);
@@ -189,7 +194,7 @@ public class CrazyCore extends CrazyPlugin
 				}
 				if (args[0].equalsIgnoreCase("link"))
 				{
-					CrazyLocale locale = CrazyLocale.getLocaleHead().getLanguageEntry(args[1]);
+					final CrazyLocale locale = CrazyLocale.getLocaleHead().getLanguageEntry(args[1]);
 					if (locale.getAlternative() == null)
 						sender.sendMessage(locale.getPath() + " <= (null)");
 					else
@@ -300,24 +305,57 @@ public class CrazyCore extends CrazyPlugin
 	@Override
 	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
-		if (commandLabel.equalsIgnoreCase("delete"))
+		if (commandLabel.equals("info"))
 		{
-			commanMainDelete(sender, args);
+			commandMainInfo(sender, args);
+			return true;
+		}
+		if (commandLabel.equals("delete"))
+		{
+			commandMainDelete(sender, args);
 			return true;
 		}
 		return false;
 	}
 
-	private void commanMainDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
+	private void commandMainInfo(CommandSender sender, String[] args) throws CrazyCommandException
+	{
+		if (args.length != 1)
+			throw new CrazyCommandUsageException("/crazycore info <Player>");
+		commandMainInfo(sender, args[0]);
+	}
+
+	private void commandMainInfo(CommandSender sender, String name) throws CrazyCommandException
+	{
+		if (!sender.hasPermission("crazycore.infoplayer"))
+			throw new CrazyCommandPermissionException();
+		OfflinePlayer player = Bukkit.getPlayer(name);
+		if (player == null)
+			player = Bukkit.getOfflinePlayer(name);
+		if (player == null)
+			throw new CrazyCommandNoSuchException("Player", name);
+		new PseudoPlayerData(player.getName()).show(sender);
+		for (CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface> plugin : CrazyPlayerDataPlugin.getCrazyPlayerDataPlugins())
+		{
+			PlayerDataInterface data = plugin.getAvailablePlayerData(name);
+			if (data != null)
+			{
+				sendLocaleMessage("PLAYERINFO.SEPERATOR", sender);
+				data.showDetailed(sender, plugin.getChatHeader());
+			}
+		}
+	}
+
+	private void commandMainDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazycore delete <Player>");
-		commanMainDelete(sender, args[0]);
+		commandMainDelete(sender, args[0]);
 	}
 
-	private void commanMainDelete(final CommandSender sender, String name) throws CrazyCommandException
+	private void commandMainDelete(final CommandSender sender, String name) throws CrazyCommandException
 	{
-		final Player player = getServer().getPlayer(name);
+		final Player player = Bukkit.getPlayer(name);
 		if (player != null)
 			name = player.getName();
 		if (sender.getName().equalsIgnoreCase(name))
@@ -343,6 +381,7 @@ public class CrazyCore extends CrazyPlugin
 		super.load();
 		final ConfigurationSection config = getConfig();
 		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
+		CrazyPipe.setDisabled(config.getBoolean("disablePipes", false));
 		ChatHelper.setShowChatHeaders(config.getBoolean("showChatHeaders", true));
 		final String defaultLanguage = config.getString("defaultLanguage", "en_en");
 		CrazyLocale.setDefaultLanguage(defaultLanguage);
@@ -371,9 +410,11 @@ public class CrazyCore extends CrazyPlugin
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("wipePlayerFiles", wipePlayerFiles);
+		config.set("disablePipes", CrazyPipe.isDisabled());
 		config.set("showChatHeaders", ChatHelper.isShowingChatHeadersEnabled());
 		config.set("defaultLanguage", CrazyLocale.getDefaultLanguage());
 		config.set("defaultLanguages", new ArrayList<String>(preloadedLanguages));
+		config.set("players", null);
 		CrazyLocale.save(config, "players.");
 		super.save();
 	}
