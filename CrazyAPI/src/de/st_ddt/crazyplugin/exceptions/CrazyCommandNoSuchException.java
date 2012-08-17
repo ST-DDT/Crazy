@@ -23,7 +23,7 @@ public class CrazyCommandNoSuchException extends CrazyCommandException
 		this.alternatives = new ArrayList<String>(0);
 	}
 
-	public CrazyCommandNoSuchException(String searched, String type, Collection<String> alternatives)
+	public CrazyCommandNoSuchException(final String type, final String searched, final Collection<String> alternatives)
 	{
 		super();
 		this.searched = searched;
@@ -31,13 +31,13 @@ public class CrazyCommandNoSuchException extends CrazyCommandException
 		this.alternatives = alternatives;
 	}
 
-	public CrazyCommandNoSuchException(String searched, String type, String... alternatives)
+	public CrazyCommandNoSuchException(final String type, final String searched, final String... alternatives)
 	{
 		super();
 		this.searched = searched;
 		this.type = type;
 		this.alternatives = new ArrayList<String>(alternatives.length);
-		for (String alternative : alternatives)
+		for (final String alternative : alternatives)
 			this.alternatives.add(alternative);
 	}
 
