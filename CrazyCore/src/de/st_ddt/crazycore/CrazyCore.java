@@ -187,6 +187,15 @@ public class CrazyCore extends CrazyPlugin
 					CrazyLocale.getLocaleHead().getLanguageEntry(args[1]).print(sender);
 					return;
 				}
+				if (args[0].equalsIgnoreCase("link"))
+				{
+					CrazyLocale locale = CrazyLocale.getLocaleHead().getLanguageEntry(args[1]);
+					if (locale.getAlternative() == null)
+						sender.sendMessage(locale.getPath() + " <= (null)");
+					else
+						sender.sendMessage(locale.getPath() + " <= " + locale.getAlternative().getPath());
+					return;
+				}
 				else if (args[0].equalsIgnoreCase("setdefault"))
 				{
 					final String newDefault = args[1].toLowerCase();
