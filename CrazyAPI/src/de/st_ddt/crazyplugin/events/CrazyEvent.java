@@ -2,6 +2,7 @@ package de.st_ddt.crazyplugin.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
+
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
 public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Event
@@ -35,7 +36,7 @@ public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Ev
 
 		private final CrazyEvent<T> event;
 
-		public AsyncEventRunnable(CrazyEvent<T> event)
+		public AsyncEventRunnable(final CrazyEvent<T> event)
 		{
 			super();
 			this.event = event;
@@ -44,7 +45,7 @@ public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Ev
 		@Override
 		public void run()
 		{
-			Bukkit.getPluginManager().callEvent(event);
+			event.callEvent();
 		}
 	}
 }
