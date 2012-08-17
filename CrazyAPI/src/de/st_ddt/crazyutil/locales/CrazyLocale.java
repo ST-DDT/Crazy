@@ -29,7 +29,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	private final static HashMap<String, HashSet<String>> languageAlternatives = new HashMap<String, HashSet<String>>();
 	private static String defaultLanguage;
 	private final String name;
-	private final HashMap<String, String> localeTexts=new HashMap<String, String>();
+	private final HashMap<String, String> localeTexts = new HashMap<String, String>();
 	private final CrazyLocale parent;
 	private CrazyLocale alternative = null;
 
@@ -434,10 +434,20 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static String getUserLanguage(final String name)
 	{
-		String res = userLanguages.get(name);
+		String res = userLanguages.get(name.toLowerCase());
 		if (res == null)
 			res = defaultLanguage;
 		return res;
+	}
+
+	public static String getUserLanguageName(final CommandSender sender, boolean appendLanguage)
+	{
+		return getLanguageName(getUserLanguage(sender), appendLanguage);
+	}
+
+	public static String getUserLanguageName(final String name, boolean appendLanguage)
+	{
+		return getLanguageName(getUserLanguage(name), appendLanguage);
 	}
 
 	public static void setUserLanguage(final CommandSender sender, final String language)
@@ -447,12 +457,12 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static void setUserLanguage(final String name, final String language)
 	{
-		userLanguages.put(name, language);
+		userLanguages.put(name.toLowerCase(), language);
 	}
 
 	public static boolean removeUserLanguage(final String name)
 	{
-		return userLanguages.remove(name) != null;
+		return userLanguages.remove(name.toLowerCase()) != null;
 	}
 
 	public static void loadLanguage(final String language)
