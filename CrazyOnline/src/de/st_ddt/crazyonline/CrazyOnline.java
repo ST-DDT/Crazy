@@ -627,6 +627,16 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 						getServer().getScheduler().scheduleAsyncRepeatingTask(this, new DropInactiveAccountsTask(this), 20 * 60 * 60, 20 * 60 * 60 * 6);
 					return;
 				}
+				else if (args[0].equalsIgnoreCase("deleteShortVisitors"))
+				{
+					boolean newValue = false;
+					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
+						newValue = true;
+					deleteShortVisitors = newValue;
+					sendLocaleMessage("MODE.CHANGE", sender, "deleteShortVisitors", deleteShortVisitors ? "True" : "False");
+					saveConfiguration();
+					return;
+				}
 				else if (args[0].equalsIgnoreCase("saveDatabaseOnShutdown"))
 				{
 					boolean newValue = false;
@@ -637,11 +647,21 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					saveConfiguration();
 					return;
 				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
+				throw new CrazyCommandNoSuchException("Mode", args[0], "showOnlineInfo", "saveType", "autoDelete", "deleteShortVisitors", "saveDatabaseOnShutdown");
 			case 1:
 				if (args[0].equalsIgnoreCase("showOnlineInfo"))
 				{
 					sendLocaleMessage("MODE.CHANGE", sender, "showOnlineInfo", showOnlineInfo ? "True" : "False");
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("autoDelete"))
+				{
+					sendLocaleMessage("MODE.CHANGE", sender, "autoDelete", autoDelete == -1 ? "disabled" : autoDelete + " days");
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("deleteShortVisitors"))
+				{
+					sendLocaleMessage("MODE.CHANGE", sender, "deleteShortVisitors", deleteShortVisitors ? "True" : "False");
 					return;
 				}
 				else if (args[0].equalsIgnoreCase("saveType"))
@@ -654,7 +674,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					sendLocaleMessage("MODE.CHANGE", sender, "saveDatabaseOnShutdown", saveDatabaseOnShutdown ? "True" : "False");
 					return;
 				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
+				throw new CrazyCommandNoSuchException("Mode", args[0], "showOnlineInfo", "saveType", "autoDelete", "deleteShortVisitors", "saveDatabaseOnShutdown");
 			default:
 				throw new CrazyCommandUsageException("/crazyonline mode <Mode> [Value]");
 		}
