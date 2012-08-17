@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -52,9 +53,39 @@ public class CrazyLogger
 		this.level = level;
 	}
 
+	public boolean hasLogChannel(final String channel)
+	{
+		return logChannelsByName.containsKey(channel);
+	}
+
 	public Logger getLogChannel(final String channel)
 	{
 		return logChannelsByName.get(channel);
+	}
+
+	public Set<String> getLogChannelNames()
+	{
+		return logChannelsByName.keySet();
+	}
+
+	public boolean isActiveLogChannel(final String channel)
+	{
+		return logPathsByName.containsKey(channel);
+	}
+
+	public String getPath(final String channel)
+	{
+		return logPathsByName.get(channel);
+	}
+
+	public int getAllLogChannelCount()
+	{
+		return logChannelsByName.size();
+	}
+
+	public int getLogChannelCount()
+	{
+		return logPathsByName.size();
 	}
 
 	public Collection<Logger> getLoggers()
@@ -65,7 +96,10 @@ public class CrazyLogger
 	public void createEmptyLogChannels(final String... channels)
 	{
 		for (final String channel : channels)
+		{
 			logChannelsByName.put(channel, null);
+			logPathsByName.remove(channel);
+		}
 	}
 
 	public Logger createLogChannel(final String channel, final ConfigurationSection config, final String defaulPath)
