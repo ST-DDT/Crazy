@@ -13,7 +13,6 @@ public class CrazyWeatherEvent extends CrazyEvent<WeatherPlugin>
 	public CrazyWeatherEvent(final WeatherPlugin plugin)
 	{
 		super(plugin);
-		// EDIT Auto-generated constructor stub
 	}
 
 	@Override
