@@ -2,7 +2,7 @@ name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
 #C*=needed core version
-version: C8.4
+version: C8.4.1
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
 commands:
@@ -19,7 +19,9 @@ commands:
 permissions:
   crazy*.*:
     description: Access to all crazyplugin commands
-    default: false 
+    default: false
+    children:
+      crazylanguage.*: true
   crazycore.*:
     description: Access to all commands
     default: false
@@ -35,6 +37,15 @@ permissions:
     description: Show all available information about a player
     default: op
   crazycore.deleteplayer:
+    description: Delete all available information about a player
+    default: op
+    children:
+      crazycore.deleteplayer.self: true
+      crazycore.deleteplayer.other: true
+  crazycore.deleteplayer.self:
+    description: Delete all available information about you
+    default: true
+  crazycore.deleteplayer.other:
     description: Delete all available information about a player
     default: op
   crazylanguage.*:
