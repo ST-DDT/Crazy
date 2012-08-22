@@ -84,4 +84,6 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 	public boolean checkNameLength(String name);
 
 	public String getUniqueIDKey();
+
+	public void requestLogin(Player player);
 }
