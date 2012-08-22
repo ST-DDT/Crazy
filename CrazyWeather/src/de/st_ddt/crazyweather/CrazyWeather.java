@@ -66,6 +66,8 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 		final WorldWeather weather = new WorldWeather(world);
 		weather.load(config.getConfigurationSection("worlds." + world.getName()));
 		worldWeather.put(world.getName(), weather);
+		if (weather.isOnLoadEnabled())
+			weather.setWeather(weather.getStaticWeather(), true, true, 0);
 		return weather;
 	}
 

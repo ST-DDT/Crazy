@@ -25,8 +25,6 @@ public class WorldWeather implements ConfigurationSaveable, WeatherData
 			return;
 		staticWeather = Weather.getWeather(config.getString("static"));
 		onLoad = config.getBoolean("onLoad", false);
-		if (onLoad)
-			setWeather(staticWeather, true, true, 0);
 	}
 
 	@Override
@@ -39,6 +37,11 @@ public class WorldWeather implements ConfigurationSaveable, WeatherData
 	public World getWorld()
 	{
 		return world;
+	}
+
+	public Weather getStaticWeather()
+	{
+		return staticWeather;
 	}
 
 	@Override

@@ -18,6 +18,7 @@ public class CrazyWeatherWeatherListener implements Listener
 		this.plugin = plugin;
 	}
 
+	@EventHandler
 	public void WorldLoad(final WorldLoadEvent event)
 	{
 		plugin.loadWorld(event.getWorld());
@@ -26,7 +27,7 @@ public class CrazyWeatherWeatherListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void WeatherChange(final WeatherChangeEvent event)
 	{
-		final WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
+		final WorldWeather weather = plugin.getWorldWeather(event.getWorld());
 		if (weather != null)
 			if (weather.isStaticWeatherEnabled())
 				event.setCancelled(true);
@@ -35,7 +36,7 @@ public class CrazyWeatherWeatherListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void ThunderChange(final ThunderChangeEvent event)
 	{
-		final WorldWeather weather = CrazyWeather.getPlugin().getWorldWeather(event.getWorld());
+		final WorldWeather weather = plugin.getWorldWeather(event.getWorld());
 		if (weather != null)
 			if (weather.isStaticWeatherEnabled())
 				event.setCancelled(true);
