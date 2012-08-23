@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazylogin.crypt.Encryptor;
 import de.st_ddt.crazylogin.data.LoginData;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginInterface<LoginData, S>
 {
@@ -86,4 +87,16 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 	public String getUniqueIDKey();
 
 	public void requestLogin(Player player);
+
+	public void broadcastLocaleMessage(boolean console, String permission, boolean loggedInOnly, String localepath, Object... args);
+
+	public void broadcastLocaleRootMessage(boolean console, String permission, boolean loggedInOnly, String localepath, Object... args);
+
+	public void broadcastLocaleMessage(boolean console, String permission, boolean loggedInOnly, CrazyLocale locale, Object... args);
+
+	public void broadcastLocaleMessage(boolean console, String[] permissions, boolean loggedInOnly, String localepath, Object... args);
+
+	public void broadcastLocaleRootMessage(boolean console, String[] permissions, boolean loggedInOnly, String localepath, Object... args);
+
+	public void broadcastLocaleMessage(boolean console, String[] permissions, boolean loggedInOnly, CrazyLocale locale, Object... args);
 }
