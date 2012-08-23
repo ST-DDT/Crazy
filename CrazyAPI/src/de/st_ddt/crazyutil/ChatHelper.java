@@ -68,13 +68,13 @@ public class ChatHelper
 			sendMessage(target, chatHeader, message, args);
 	}
 
-	public static void sendMessage(final Collection<CommandSender> targets, final Object message, final Object... args)
+	public static void sendMessage(final Collection<? extends CommandSender> targets, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
 			sendMessage(target, message, args);
 	}
 
-	public static void sendMessage(final Collection<CommandSender> targets, final String chatHeader, final Object message, final Object... args)
+	public static void sendMessage(final Collection<? extends CommandSender> targets, final String chatHeader, final Object message, final Object... args)
 	{
 		for (final CommandSender target : targets)
 			sendMessage(target, chatHeader, message, args);
