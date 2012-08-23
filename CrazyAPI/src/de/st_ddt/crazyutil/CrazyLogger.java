@@ -1,16 +1,14 @@
 package de.st_ddt.crazyutil;
 
 import java.io.File;
-import java.util.Collection;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -19,23 +17,15 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 public class CrazyLogger
 {
 
-	protected static final Formatter formater = new CrazyLogFormat();
-	protected final HashMap<String, Logger> logChannelsByName = new HashMap<String, Logger>();
+	protected static final HashMap<String, CrazyLog> logChannelsByRootPath = new HashMap<String, CrazyLog>();
+	protected final HashMap<String, CrazyLog> logChannelsByName = new HashMap<String, CrazyLog>();
+	protected final HashMap<String, Boolean> logToConsoleByName = new HashMap<String, Boolean>();
 	protected final HashMap<String, String> logPathsByName = new HashMap<String, String>();
-	protected final HashMap<String, Logger> logChannelsByPath = new HashMap<String, Logger>();
 	protected final CrazyPluginInterface plugin;
-	protected Level level;
 
 	public CrazyLogger(final CrazyPluginInterface plugin)
 	{
 		this.plugin = plugin;
-		this.level = Level.FINE;
-	}
-
-	public CrazyLogger(final CrazyPluginInterface plugin, final Level level)
-	{
-		this.plugin = plugin;
-		this.level = level;
 	}
 
 	public CrazyPluginInterface getPlugin()
@@ -43,22 +33,12 @@ public class CrazyLogger
 		return plugin;
 	}
 
-	public Level getLevel()
-	{
-		return level;
-	}
-
-	public void setLevel(final Level level)
-	{
-		this.level = level;
-	}
-
 	public boolean hasLogChannel(final String channel)
 	{
 		return logChannelsByName.containsKey(channel);
 	}
 
-	public Logger getLogChannel(final String channel)
+	public CrazyLog getLogChannel(final String channel)
 	{
 		return logChannelsByName.get(channel);
 	}
@@ -88,9 +68,12 @@ public class CrazyLogger
 		return logPathsByName.size();
 	}
 
-	public Collection<Logger> getLoggers()
+	public HashSet<CrazyLog> getLoggers()
 	{
-		return logChannelsByPath.values();
+		final HashSet<CrazyLog> logger = new HashSet<CrazyLog>();
+		logger.addAll(logChannelsByName.values());
+		logger.remove(null);
+		return logger;
 	}
 
 	public void createEmptyLogChannels(final String... channels)
@@ -102,42 +85,44 @@ public class CrazyLogger
 		}
 	}
 
-	public Logger createLogChannel(final String channel, final ConfigurationSection config, final String defaulPath)
+	public CrazyLog createLogChannel(final String channel, final ConfigurationSection config, final String defaulPath, final boolean defaultConsole)
 	{
-		if (config == null)
-			return createLogChannel(channel, defaulPath);
-		if (config.getBoolean(channel, false))
-			return createLogChannel(channel, defaulPath);
-		if (!config.getBoolean(channel, true))
+		logChannelsByName.put(channel, null);
+		if (!config.getBoolean("path", true))
+		{
+			logToConsoleByName.put(channel, config.getBoolean(channel + ".console", false));
 			return null;
-		return createLogChannel(channel, config.getString(channel, defaulPath));
+		}
+		else if (config.getBoolean("path", false))
+			return createLogChannel(channel, "logs/plugin.log", config.getBoolean("console", false));
+		else
+			return createLogChannel(channel, config.getString("path", null), config.getBoolean("console", false));
 	}
 
-	public Logger createLogChannel(final String channel, final String path)
+	public CrazyLog createLogChannel(final String channel, final String path, final Boolean console)
 	{
+		if (console != null)
+			logToConsoleByName.put(channel, console);
 		if (path == null)
 			return logChannelsByName.get(channel);
 		if (path.startsWith("$"))
-			return createRootLogChannel(channel, path.substring(1));
-		Logger log = logChannelsByPath.get(path);
+			return createRootLogChannel(channel, path.substring(1), null);
+		final String realPath = plugin.getDataFolder().getPath() + File.separator + path;
+		CrazyLog log = logChannelsByRootPath.get(realPath);
 		if (log == null)
 		{
 			try
 			{
-				log = Logger.getLogger(plugin.getName() + "." + channel);
-				log.setLevel(level);
-				final File file = new File(plugin.getDataFolder().getPath() + "/" + path);
+				final File file = new File(realPath);
 				if (file.getParentFile() != null)
 					file.getParentFile().mkdirs();
-				final FileHandler fileHandler = new FileHandler(file.getPath(), true);
-				fileHandler.setFormatter(formater);
-				log.addHandler(fileHandler);
+				log = new CrazyLog(file, true);
 			}
 			catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
-			logChannelsByPath.put(path, log);
+			logChannelsByRootPath.put(realPath, log);
 		}
 		logChannelsByName.put(channel, log);
 		logPathsByName.put(channel, path);
@@ -154,38 +139,36 @@ public class CrazyLogger
 		for (final String channel : channels)
 		{
 			logChannelsByName.put(channel, null);
-			if (!config.getBoolean(channel, true))
-				logChannelsByName.put(channel, null);
-			else if (config.getBoolean(channel, false))
-				createLogChannel(channel, "logs/plugin.log");
+			if (!config.getBoolean(channel + ".path", config.getBoolean(channel, true)))
+				logToConsoleByName.put(channel, config.getBoolean(channel + ".console", false));
+			else if (config.getBoolean(channel + ".path", config.getBoolean(channel, false)))
+				createLogChannel(channel, "logs/plugin.log", config.getBoolean(channel + ".console", false));
 			else
-				createLogChannel(channel, config.getString(channel, null));
+				createLogChannel(channel, config.getString(channel + ".path", config.getString(channel, null)), config.getBoolean(channel + ".console", false));
 		}
 	}
 
-	public Logger createRootLogChannel(final String channel, final String path)
+	public CrazyLog createRootLogChannel(final String channel, final String path, final Boolean console)
 	{
+		if (console != null)
+			logToConsoleByName.put(channel, console);
 		if (path == null)
 			return logChannelsByName.get(channel);
-		Logger log = logChannelsByPath.get(path);
+		CrazyLog log = logChannelsByRootPath.get(path);
 		if (log == null)
 		{
 			try
 			{
-				log = Logger.getLogger(channel);
-				log.setLevel(level);
 				final File file = new File(path);
 				if (file.getParentFile() != null)
 					file.getParentFile().mkdirs();
-				final FileHandler fileHandler = new FileHandler(file.getPath(), true);
-				fileHandler.setFormatter(formater);
-				log.addHandler(fileHandler);
+				log = new CrazyLog(file, true);
 			}
 			catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
-			logChannelsByPath.put(path, log);
+			logChannelsByRootPath.put(path, log);
 		}
 		logChannelsByName.put(channel, log);
 		logPathsByName.put(channel, "$" + path);
@@ -199,36 +182,49 @@ public class CrazyLogger
 
 	public void log(final String channel, final String... message)
 	{
-		log(channel, level, message);
-	}
-
-	public void log(final String channel, final Level level, final String... message)
-	{
-		final Logger log = getLogChannel(channel);
+		if (logToConsoleByName.get(channel))
+			plugin.getLogger().log(Level.INFO, "[" + plugin.getName() + "." + channel + "] " + ChatHelper.listingString("\n\t", message));
+		final CrazyLog log = getLogChannel(channel);
 		if (log == null)
 			return;
 		if (isRootLogChannel(channel))
-			log.log(level, "[" + plugin.getName() + "." + channel + "] " + ChatHelper.listingString("\n\t", message));
+			log.log("[" + plugin.getName() + "." + channel + "] " + ChatHelper.listingString("\n\t", message));
 		else
-			log.log(level, "[" + channel + "] " + ChatHelper.listingString("\n\t", message));
+			log.log("[" + channel + "] " + ChatHelper.listingString("\n\t", message));
 	}
 
 	public void save(final ConfigurationSection config, final String path)
 	{
-		for (final Entry<String, Logger> entry : logChannelsByName.entrySet())
+		for (final Entry<String, CrazyLog> entry : logChannelsByName.entrySet())
+		{
 			if (entry.getValue() == null)
-				config.set(path + entry.getKey(), false);
+				config.set(path + entry.getKey() + ".path", false);
 			else
-				config.set(path + entry.getKey(), logPathsByName.get(entry.getKey()));
+				config.set(path + entry.getKey() + ".path", logPathsByName.get(entry.getKey()));
+			config.set(path + entry.getKey() + ".console", logToConsoleByName.get(entry.getKey()));
+		}
 	}
 
-	protected static class CrazyLogFormat extends Formatter
+	protected final class CrazyLog
 	{
 
-		@Override
-		public String format(final LogRecord record)
+		private final FileWriter out;
+
+		public CrazyLog(final File out, final boolean append) throws IOException
 		{
-			return CrazyPluginInterface.DateFormat.format(new Date(record.getMillis())) + " - " + record.getMessage() + '\n';
+			super();
+			this.out = new FileWriter(out, append);
+		}
+
+		public void log(final String message)
+		{
+			try
+			{
+				out.write(CrazyPluginInterface.DateFormat.format(new Date()) + " - " + message + '\n');
+				out.flush();
+			}
+			catch (final IOException e)
+			{}
 		}
 	}
 }
