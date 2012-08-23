@@ -58,6 +58,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		return null;
 	}
 
+	@Override
 	public final boolean isInstalled()
 	{
 		return isInstalled;
@@ -86,7 +87,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 						return true;
 					}
 					final String[] newArgs = ChatHelper.shiftArray(args, 1);
-					String commandString = args[0].toLowerCase();
+					final String commandString = args[0].toLowerCase();
 					if (commandMain(sender, commandString, newArgs))
 						return true;
 					if (commandString.equals("info"))
@@ -165,7 +166,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		if (args.length == 0)
 			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " logger <LogChannel> [NewOption]");
-		String channel = args[0];
+		final String channel = args[0];
 		if (!logger.hasLogChannel(channel))
 			throw new CrazyCommandNoSuchException("LogChannel", channel, logger.getLogChannelNames());
 		if (args.length == 1)
@@ -185,7 +186,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		if (path.equalsIgnoreCase("true"))
 			path = "logs/plugin.log";
-		logger.createLogChannel(channel, path);
+		logger.createLogChannel(channel, path, null);
 		sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, logger.getPath(channel));
 		logger.save(getConfig(), "logs.");
 		saveConfig();
@@ -307,19 +308,19 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public final void sendLocaleMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
+	public final void sendLocaleMessage(final String localepath, final Collection<? extends CommandSender> targets, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
 	}
 
 	@Override
-	public final void sendLocaleRootMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
+	public final void sendLocaleRootMessage(final String localepath, final Collection<? extends CommandSender> targets, final Object... args)
 	{
 		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), targets, args);
 	}
 
 	@Override
-	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
+	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<? extends CommandSender> targets, final Object... args)
 	{
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
 	}
@@ -382,12 +383,36 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	@Override
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final CrazyLocale locale, final Object... args)
 	{
+		if (permission == null)
+			broadcastLocaleMessage(console, new String[] {}, locale, args);
+		else
+			broadcastLocaleMessage(console, new String[] { permission }, locale, args);
+	}
+
+	@Override
+	public final void broadcastLocaleMessage(final boolean console, final String[] permissions, final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(console, permissions, getLocale().getLanguageEntry(localepath), args);
+	}
+
+	@Override
+	public final void broadcastLocaleRootMessage(final boolean console, final String[] permissions, final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(console, permissions, CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
+	}
+
+	@Override
+	public final void broadcastLocaleMessage(final boolean console, final String[] permissions, final CrazyLocale locale, final Object... args)
+	{
 		if (console)
 			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
-		for (final Player player : Bukkit.getOnlinePlayers())
-			if (permission != null)
-				if (player.hasPermission(permission))
-					sendLocaleMessage(locale, player, args);
+		Player: for (final Player player : Bukkit.getOnlinePlayers())
+		{
+			for (final String permission : permissions)
+				if (!player.hasPermission(permission))
+					continue Player;
+			sendLocaleMessage(locale, player, args);
+		}
 	}
 
 	@Override
