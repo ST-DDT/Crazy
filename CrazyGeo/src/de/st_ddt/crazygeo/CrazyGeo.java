@@ -16,15 +16,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.poly.room.FuncRoom;
 import de.st_ddt.crazyutil.poly.room.Room;
 
-/**
- * @author Daniel
- * 
- */
 public class CrazyGeo extends CrazyPlugin
 {
 
 	private static CrazyGeo plugin;
-	protected final HashMap<Player, RealRoom<? extends Room>> geos = new HashMap<Player, RealRoom<? extends Room>>();
+	protected final HashMap<String, RealRoom<? extends Room>> geos = new HashMap<String, RealRoom<? extends Room>>();
 	protected final HashMap<String, Class<Room>> type = new HashMap<String, Class<Room>>();
 	protected WorldEditBridge weBridge;
 
@@ -105,7 +101,7 @@ public class CrazyGeo extends CrazyPlugin
 		if (weBridge == null)
 			throw new CrazyCommandCircumstanceException("when WorldEdit is enabled!");
 		final RealRoom<FuncRoom> region = weBridge.getSemiSavePlayerSelection(player);
-		geos.put(player, region);
+		geos.put(player.getName().toLowerCase(), region);
 	}
 
 	/**
@@ -120,7 +116,7 @@ public class CrazyGeo extends CrazyPlugin
 		if (weBridge == null)
 			return;
 		final RealRoom<FuncRoom> region = weBridge.getSemiSavePlayerSelection(player);
-		geos.put(player, region);
+		geos.put(player.getName().toLowerCase(), region);
 	}
 
 	private void commandMainWEExport(final Player player, final String[] args) throws CrazyException
@@ -148,16 +144,16 @@ public class CrazyGeo extends CrazyPlugin
 
 	public RealRoom<? extends Room> getPlayerSelection(final Player player)
 	{
-		return geos.get(player);
+		return geos.get(player.getName().toLowerCase());
 	}
 
 	public void setPlayerSelection(final Player player, final RealRoom<? extends Room> room)
 	{
-		geos.put(player, room);
+		geos.put(player.getName().toLowerCase(), room);
 	}
 
 	public void clearPlayerSelection(final Player player)
 	{
-		geos.remove(player);
+		geos.remove(player.getName().toLowerCase());
 	}
 }
