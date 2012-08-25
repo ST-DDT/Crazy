@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+import de.st_ddt.crazyutil.poly.room.PseudoRoom;
 import de.st_ddt.crazyutil.poly.room.Room;
 
 public class RealRoom<S extends Room> implements ConfigurationSaveable
@@ -17,7 +18,7 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 
 	public static RealRoom<Room> load(final ConfigurationSection config, final World world)
 	{
-		return null;
+		return new RealRoom<Room>(PseudoRoom.load(config.getConfigurationSection("room")), ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("basis"), world));
 	}
 
 	public RealRoom(final RealRoom<S> realRoom)
@@ -93,9 +94,8 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 		return new RealRoom<S>(this);
 	}
 
-	@SuppressWarnings("unchecked")
-	public final RealRoom<S> cloneAsRealRoom()
+	public final RealRoom<Room> cloneAsRealRoom()
 	{
-		return new RealRoom<S>((S) room.clone(), basis);
+		return new RealRoom<Room>(room.clone(), basis);
 	}
 }

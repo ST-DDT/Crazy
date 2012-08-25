@@ -119,6 +119,21 @@ public class CrazyGeo extends CrazyPlugin
 		geos.put(player.getName().toLowerCase(), region);
 	}
 
+	/**
+	 * Import a region from WorldEdit
+	 * 
+	 * @param player
+	 *            The Player whos selection should be imported
+	 * @return
+	 * @throws CrazyException
+	 */
+	public RealRoom<FuncRoom> directImportWE(final Player player) throws CrazyException
+	{
+		if (weBridge == null)
+			return null;
+		return weBridge.getSemiSavePlayerSelection(player);
+	}
+
 	private void commandMainWEExport(final Player player, final String[] args) throws CrazyException
 	{
 		if (weBridge == null)
@@ -142,9 +157,23 @@ public class CrazyGeo extends CrazyPlugin
 		weBridge.setSemiSavePlayerSelection(player, region);
 	}
 
-	public RealRoom<? extends Room> getPlayerSelection(final Player player)
+	/**
+	 * Export a region to WorldEdit
+	 * 
+	 * @param player
+	 *            The Player whos selection should be exported
+	 * @throws CrazyException
+	 */
+	public void directExportWE(final Player player, final RealRoom<? extends Room> region) throws CrazyException
 	{
-		return geos.get(player.getName().toLowerCase());
+		if (weBridge == null)
+			return;
+		weBridge.setSemiSavePlayerSelection(player, region);
+	}
+
+	public RealRoom<Room> getPlayerSelection(final Player player)
+	{
+		return geos.get(player.getName().toLowerCase()).cloneAsRealRoom();
 	}
 
 	public void setPlayerSelection(final Player player, final RealRoom<? extends Room> room)
@@ -155,5 +184,10 @@ public class CrazyGeo extends CrazyPlugin
 	public void clearPlayerSelection(final Player player)
 	{
 		geos.remove(player.getName().toLowerCase());
+	}
+
+	public RealRoom<Room> getAndClearPlayerSelection(final Player player)
+	{
+		return geos.remove(player.getName().toLowerCase()).cloneAsRealRoom();
 	}
 }
