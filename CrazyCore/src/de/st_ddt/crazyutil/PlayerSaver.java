@@ -15,7 +15,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 /**
  * PlayerSaver shall be used to temporarily backup player datas and restore them later.
- * 
  */
 public class PlayerSaver implements Named
 {
@@ -60,7 +59,7 @@ public class PlayerSaver implements Named
 	}
 
 	/**
-	 * Create PlayerSaver, it autimatically generates a backup.
+	 * Create PlayerSaver, it automatically generates a backup.
 	 * 
 	 * @param player
 	 *            the Player who is used to create the backup.
@@ -76,7 +75,7 @@ public class PlayerSaver implements Named
 	}
 
 	/**
-	 * Create PlayerSaver, you have to create a backup first to use it.
+	 * Create PlayerSaver, it loads the backup from file.
 	 * 
 	 * @param name
 	 *            the name of the player is backup belongs to.
@@ -91,7 +90,7 @@ public class PlayerSaver implements Named
 	}
 
 	/**
-	 * Create PlayerSaver, you have to create a backup first to use it.
+	 * Create PlayerSaver, it loads the backup from file.
 	 * 
 	 * @param name
 	 *            the name of the player is backup belongs to.

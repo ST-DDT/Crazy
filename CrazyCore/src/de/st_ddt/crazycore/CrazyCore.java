@@ -67,7 +67,7 @@ public class CrazyCore extends CrazyPlugin
 
 	private void registerHooks()
 	{
-		this.crazylistener = new CrazyCoreCrazyListener(this);
+		crazylistener = new CrazyCoreCrazyListener(this);
 		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(crazylistener, this);
 		messageListener = new CrazyCoreMessageListener(this);
@@ -318,14 +318,14 @@ public class CrazyCore extends CrazyPlugin
 		return false;
 	}
 
-	private void commandMainInfo(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandMainInfo(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazycore info <Player>");
 		commandMainInfo(sender, args[0]);
 	}
 
-	private void commandMainInfo(CommandSender sender, String name) throws CrazyCommandException
+	private void commandMainInfo(final CommandSender sender, final String name) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazycore.infoplayer"))
 			throw new CrazyCommandPermissionException();
@@ -335,9 +335,9 @@ public class CrazyCore extends CrazyPlugin
 		if (player == null)
 			throw new CrazyCommandNoSuchException("Player", name);
 		new PseudoPlayerData(player.getName()).show(sender);
-		for (CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface> plugin : CrazyPlayerDataPlugin.getCrazyPlayerDataPlugins())
+		for (final CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface> plugin : CrazyPlayerDataPlugin.getCrazyPlayerDataPlugins())
 		{
-			PlayerDataInterface data = plugin.getAvailablePlayerData(name);
+			final PlayerDataInterface data = plugin.getAvailablePlayerData(name);
 			if (data != null)
 			{
 				sendLocaleMessage("PLAYERINFO.SEPERATOR", sender);
