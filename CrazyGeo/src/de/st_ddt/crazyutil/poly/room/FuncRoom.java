@@ -88,7 +88,8 @@ public class FuncRoom extends BasicRoom
 	@Override
 	public void scale(final double scaleX, final double scaleY, final double scaleZ)
 	{
-		// EDIT Auto-generated method stub
+		region.scale(scaleX, scaleZ);
+		height *= scaleY;
 	}
 
 	public Region getRegion()

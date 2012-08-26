@@ -27,7 +27,9 @@ public abstract class MultiRoom extends PseudoRoom
 	public MultiRoom(final ConfigurationSection config)
 	{
 		super(config);
-		// EDIT Auto-generated constructor stub
+		final ConfigurationSection roomConfig = config.getConfigurationSection("rooms");
+		for (final String key : roomConfig.getKeys(false))
+			rooms.add(PseudoRoom.load(roomConfig.getConfigurationSection(key)));
 	}
 
 	public ArrayList<Room> getRooms()
@@ -53,6 +55,7 @@ public abstract class MultiRoom extends PseudoRoom
 	public void save(final ConfigurationSection config, final String path)
 	{
 		int i = 0;
+		config.set(path + "rooms", null);
 		for (final Room room : rooms)
 			room.save(config, path + "rooms.room" + (i++) + ".");
 	}
@@ -67,17 +70,12 @@ public abstract class MultiRoom extends PseudoRoom
 
 	public boolean equals(final MultiRoom room)
 	{
-		for (final Room search : rooms)
+		Found: for (final Room search : rooms)
 		{
-			boolean found = false;
 			for (final Room match : room.getRooms())
 				if (search.equals(match))
-				{
-					found = true;
-					break;
-				}
-			if (found == false)
-				return false;
+					continue Found;
+			return false;
 		}
 		return true;
 	}
