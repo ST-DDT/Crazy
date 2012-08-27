@@ -208,6 +208,7 @@ public class ChatHelper
 		return res.toString();
 	}
 
+	@Deprecated
 	public static String dateToString(final Date date)
 	{
 		return CrazyPluginInterface.DateFormat.format(date);
