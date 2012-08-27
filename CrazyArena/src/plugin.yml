@@ -1,7 +1,9 @@
 name: CrazyArena
 main: de.st_ddt.crazyarena.CrazyArena
 author: ST-DDT
-version: C7.1_G0.1_A0.1
+version: 0.2
+# requires CrazyCore v8.4
+# requires CrazyGeo v0.1
 softdepend: [PermissionsBukkit]
 depend: [CrazyCore,CrazyGeo]
 description: >

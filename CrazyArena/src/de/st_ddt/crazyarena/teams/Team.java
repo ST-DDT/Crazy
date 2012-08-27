@@ -1,25 +1,29 @@
 package de.st_ddt.crazyarena.teams;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TreeSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaTeamExceedingMemberLimitException;
+import de.st_ddt.crazyarena.participants.Participant;
+import de.st_ddt.crazyutil.Named;
 
-public class Team
+public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Named
 {
 
-	protected final Arena arena;
-	protected final ArrayList<Player> members = new ArrayList<Player>();
+	protected final T arena;
+	protected final TreeSet<String> members = new TreeSet<String>();
 	protected final String name;
 	private int maxSize;
 	protected ChatColor color = null;
 	private boolean autosetcolors = false;
 
-	public Team(Arena arena, String name, int maxSize)
+	public Team(T arena, String name, int maxSize)
 	{
 		super();
 		this.arena = arena;
@@ -30,6 +34,11 @@ public class Team
 	public String getName()
 	{
 		return name;
+	}
+
+	public T getArena()
+	{
+		return arena;
 	}
 
 	public void setMaxSize(int maxSize)
@@ -55,24 +64,42 @@ public class Team
 			return;
 		if (maxSize > 0 && maxSize <= members.size())
 			throw new CrazyArenaTeamExceedingMemberLimitException(arena, this, maxSize);
-		members.add(player);
+		members.add(player.getName().toLowerCase());
 		if (autosetcolors)
 			setTeamColor(player);
 	}
 
 	public void remove(Player player)
 	{
-		members.remove(player);
+		members.remove(player.getName().toLowerCase());
 	}
 
-	public Player[] getMembers()
+	public TreeSet<String> getMembers()
 	{
-		return (Player[]) members.toArray();
+		return members;
+	}
+
+	public HashSet<Player> getMemberPlayers()
+	{
+		HashSet<Player> players = new HashSet<Player>();
+		for (String name : getMembers())
+			players.add(Bukkit.getPlayerExact(name));
+		players.remove(null);
+		return players;
+	}
+
+	public HashSet<S> getMemberParticipants()
+	{
+		HashSet<S> participants = new HashSet<S>();
+		for (String name : getMembers())
+			participants.add(arena.getParticipant(name));
+		participants.remove(null);
+		return participants;
 	}
 
 	public boolean isMember(Player player)
 	{
-		return members.contains(player);
+		return members.contains(player.getName().toLowerCase());
 	}
 
 	public void clear()
@@ -99,7 +126,7 @@ public class Team
 
 	public void setTeamColor()
 	{
-		for (Player player : members)
+		for (Player player : getMemberPlayers())
 			setTeamColor(player);
 	}
 

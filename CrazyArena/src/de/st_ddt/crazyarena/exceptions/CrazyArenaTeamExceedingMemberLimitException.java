@@ -5,36 +5,33 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.teams.Team;
 
-
 public class CrazyArenaTeamExceedingMemberLimitException extends CrazyArenaTeamException
 {
 
 	private static final long serialVersionUID = -6289593070900257339L;
-	protected final int maxSize ;
-	
-	
-	
-	public CrazyArenaTeamExceedingMemberLimitException(Arena arena, Team team, int maxSize)
+	protected final int maxCount;
+
+	public <S extends Arena<?>> CrazyArenaTeamExceedingMemberLimitException(S arena, Team<?, S> team, int maxCount)
 	{
 		super(arena, team);
-		this.maxSize = maxSize;
+		this.maxCount = maxCount;
 	}
-	
-	public int getMaxSize()
+
+	public int getMaxCount()
 	{
-		return maxSize;
+		return maxCount;
 	}
 
 	@Override
 	public String getLangPath()
 	{
-		return super.getLangPath()+".FULL";
+		return super.getLangPath() + ".MEMBERS.TOMUCH";
 	}
 
 	@Override
 	public void print(CommandSender sender, String header)
 	{
 		super.print(sender, header);
-		sender.sendMessage(header+locale.getLocaleMessage(sender,"MEMBERS", maxSize));
+		sender.sendMessage(header + locale.getLocaleMessage(sender, "MAX", maxCount));
 	}
 }

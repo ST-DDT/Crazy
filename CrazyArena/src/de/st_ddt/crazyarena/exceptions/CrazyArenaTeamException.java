@@ -9,15 +9,15 @@ public class CrazyArenaTeamException extends CrazyArenaException
 {
 
 	private static final long serialVersionUID = -1709234377602224997L;
-	protected final Team team;
+	protected final Team<?, ?> team;
 
-	public CrazyArenaTeamException(Arena arena, Team team)
+	public <S extends Arena<?>> CrazyArenaTeamException(S arena, Team<?, S> team)
 	{
 		super(arena);
 		this.team = team;
 	}
 
-	public Team getTeam()
+	public final Team<?, ?> getTeam()
 	{
 		return team;
 	}

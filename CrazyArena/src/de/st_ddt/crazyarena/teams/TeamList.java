@@ -1,72 +1,70 @@
 package de.st_ddt.crazyarena.teams;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyarena.exceptions.CrazyArenaTeamExceedingTeamLimitException;
+import de.st_ddt.crazyarena.exceptions.CrazyArenaExceedingTeamLimitException;
+import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaTeamException;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaTeamNotEmptyException;
+import de.st_ddt.crazyarena.participants.Participant;
 
-public class TeamList
+public class TeamList<S extends Participant<S, T>, T extends Arena<S>>
 {
 
-	protected final ArrayList<Team> teams = new ArrayList<Team>();
-	protected final Arena arena;
+	protected final ArrayList<Team<S, T>> teams = new ArrayList<Team<S, T>>();
+	protected final T arena;
 	protected int maxTeams = 0;
 	protected int maxTeamSize = 0;
 	protected boolean autoColor;
 
-	public TeamList(Arena arena)
+	public TeamList(final T arena)
 	{
 		this.arena = arena;
 	}
 
-	public TeamList(Arena arena, int maxTeams, int maxTeamSize)
+	public TeamList(final T arena, final int maxTeams, final int maxTeamSize)
 	{
 		this(arena);
 		this.maxTeams = maxTeams;
 		this.maxTeamSize = maxTeamSize;
 	}
 
-	public Team addTeam(String name, int maxTeamSize) throws CrazyArenaTeamException
+	public Team<S, T> addTeam(final String name, final int maxTeamSize) throws CrazyArenaException
 	{
-		Team team = new Team(arena, name, maxTeamSize);
-		addTeam(team);
-		return team;
-	}
-
-	public Team addTeam(String name) throws CrazyArenaTeamException
-	{
-		Team team = new Team(arena, name, maxTeamSize);
-		addTeam(team);
-		return team;
-	}
-
-	private void addTeam(Team team) throws CrazyArenaTeamException
-	{
-		if (team == null)
-			return;
 		if (maxTeams > 0 && maxTeams < teams.size())
-			throw new CrazyArenaTeamExceedingTeamLimitException(arena, team, maxTeams);
+			throw new CrazyArenaExceedingTeamLimitException(arena, name, maxTeams);
+		final Team<S, T> team = new Team<S, T>(arena, name, maxTeamSize);
 		teams.add(team);
+		return team;
 	}
 
-	public Team quickjoin(Player player, boolean addNew) throws CrazyArenaTeamException
+	public Team<S, T> addTeam(final String name) throws CrazyArenaException
+	{
+		if (maxTeams > 0 && maxTeams < teams.size())
+			throw new CrazyArenaExceedingTeamLimitException(arena, name, maxTeams);
+		final Team<S, T> team = new Team<S, T>(arena, name, maxTeamSize);
+		teams.add(team);
+		return team;
+	}
+
+	public Team<S, T> quickjoin(final Player player, final boolean addNew) throws CrazyArenaException
 	{
 		if (addNew)
 		{
 			if (maxTeams > 0 || getTeamCount() > maxTeams)
 				return quickjoin(player, false);
-			Team team = addTeam(player.getName());
+			final Team<S, T> team = addTeam(player.getName());
 			team.add(player);
 			return team;
 		}
 		int min = Integer.MAX_VALUE;
-		Team minteam = null;
-		for (Team team : teams)
+		Team<S, T> minteam = null;
+		for (final Team<S, T> team : teams)
 			if (team.getMemberCount() < min)
 			{
 				minteam = team;
@@ -76,37 +74,37 @@ public class TeamList
 		return minteam;
 	}
 
-	public Team getTeam(String name)
+	public Team<S, T> getTeam(final String name)
 	{
-		for (Team team : teams)
+		for (final Team<S, T> team : teams)
 			if (team.getName().equalsIgnoreCase(name))
 				return team;
 		return null;
 	}
 
-	public Team getTeam(ChatColor color)
+	public Team<S, T> getTeam(final ChatColor color)
 	{
-		for (Team team : teams)
+		for (final Team<S, T> team : teams)
 			if (team.getColor().equals(color))
 				return team;
 		return null;
 	}
 
-	public Team getTeam(Player player)
+	public Team<S, T> getTeam(final Player player)
 	{
-		for (Team team : teams)
+		for (final Team<S, T> team : teams)
 			if (team.isMember(player))
 				return team;
 		return null;
 	}
 
-	public Team getTeam(int index) throws IndexOutOfBoundsException
+	public Team<S, T> getTeam(final int index) throws IndexOutOfBoundsException
 	{
 		return teams.get(index);
 	}
 
 	/**
-	 * Löscht alle Teams
+	 * LÃ¶scht alle Teams
 	 */
 	public void clear()
 	{
@@ -118,44 +116,27 @@ public class TeamList
 	 */
 	public void clearTeams()
 	{
-		for (Team team : teams)
+		for (final Team<S, T> team : teams)
 			team.clear();
 	}
 
 	/**
-	 * Löscht leere Teams
+	 * LÃ¶scht leere Teams
 	 */
 	public void clean()
 	{
-		for (int i = teams.size(); i >= 0; i--)
-			try
-			{
-				clean(i);
-			}
-			catch (CrazyArenaTeamException e)
-			{
-			}
+		Iterator<Team<S, T>> it = teams.iterator();
+		while (it.hasNext())
+			if (it.next().getMemberCount() == 0)
+				it.remove();
 	}
 
 	/**
-	 * Prüft ob das Team gelöscht werden kann
+	 * PrÃ¼ft ob das Team gelÃ¶scht werden kann
 	 * 
 	 * @throws CrazyArenaTeamNotEmptyException
 	 */
-	public void clean(int i) throws CrazyArenaTeamException
-	{
-		if (teams.get(i).getMemberCount() == 0)
-			teams.remove(i);
-		else
-			throw new CrazyArenaTeamNotEmptyException(arena, teams.get(i));
-	}
-
-	/**
-	 * Prüft ob das Team gelöscht werden kann
-	 * 
-	 * @throws CrazyArenaTeamNotEmptyException
-	 */
-	public void clean(Team team) throws CrazyArenaTeamException
+	public void clean(final Team<S, T> team) throws CrazyArenaTeamException
 	{
 		if (team.getMemberCount() == 0)
 			teams.remove(team);
@@ -168,21 +149,21 @@ public class TeamList
 		return maxTeams;
 	}
 
-	public void setMaxTeams(int maxTeams)
+	public void setMaxTeams(final int maxTeams)
 	{
 		this.maxTeams = maxTeams;
 	}
 
-	public Arena getArena()
+	public T getArena()
 	{
 		return arena;
 	}
 
-	public void setNewMaxTeamSize(int maxSize, boolean updateOld)
+	public void setNewMaxTeamSize(final int maxSize, final boolean updateOld)
 	{
 		this.maxTeamSize = maxSize;
 		if (updateOld)
-			for (Team team : teams)
+			for (final Team<S, T> team : teams)
 				team.setMaxSize(maxSize);
 	}
 
@@ -196,10 +177,10 @@ public class TeamList
 		return teams.size();
 	}
 
-	public void setAutoColor(boolean autoColor)
+	public void setAutoColor(final boolean autoColor)
 	{
 		this.autoColor = autoColor;
-		for (Team team : teams)
+		for (final Team<S, T> team : teams)
 			team.setAutoColors(autoColor);
 	}
 }

@@ -1,69 +1,64 @@
 package de.st_ddt.crazyarena.score;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
-import de.st_ddt.crazyarena.arenas.Arena;
+import org.bukkit.command.CommandSender;
 
-public class Score implements Comparable<Score>
+import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyplugin.data.PlayerData;
+
+public class Score extends PlayerData<Score> implements Comparable<Score>
 {
 
-	protected final String name;
-	protected final Arena arena;
-	protected final HashMap<String, String> strings;
-	protected final HashMap<String, Double> values;
+	protected final Arena<?> arena;
+	protected final LinkedHashMap<String, String> strings = new LinkedHashMap<String, String>();
+	protected final LinkedHashMap<String, Double> values = new LinkedHashMap<String, Double>();
 
-	public Score(String name, Arena arena, String[] stringnames, String[] valuenames)
+	public Score(final String name, final Arena<?> arena, final String[] stringnames, final String[] valuenames)
 	{
-		super();
-		this.name = name;
+		super(name);
 		this.arena = arena;
-		strings = new HashMap<String, String>();
-		values = new HashMap<String, Double>();
-		for (String string : stringnames)
+		strings.put("name", name);
+		for (final String string : stringnames)
 			strings.put(string, "");
-		for (String string : valuenames)
+		for (final String string : valuenames)
 			values.put(string, 0d);
 	}
 
-	public String getName()
-	{
-		return name;
-	}
-
-	public Arena getArena()
+	public Arena<?> getArena()
 	{
 		return arena;
 	}
 
-	public String getString(String entry)
+	public String getString(final String entry)
 	{
 		return strings.get(entry);
 	}
 
-	public void setString(String entry, String value)
+	public void setString(final String entry, final String value)
 	{
 		strings.put(entry, value);
 	}
 
-	public Double getValue(String entry)
+	public Double getValue(final String entry)
 	{
 		return values.get(entry);
 	}
 
-	public void setValue(String entry, double value)
+	public void setValue(final String entry, final double value)
 	{
 		values.put(entry, value);
 	}
 
-	public void addValue(String entry, double add)
+	public void addValue(final String entry, final double add)
 	{
 		double value = values.get(entry);
 		value = value + add;
 		values.put(entry, value);
 	}
 
-	public String getEntry(String column)
+	public String getEntry(final String column)
 	{
 		String string = getString(column);
 		if (string == null)
@@ -71,27 +66,59 @@ public class Score implements Comparable<Score>
 		return string;
 	}
 
-	public String[] getSignRow(String[] columns)
+	public String[] getSignRow(final String[] columns)
 	{
-		int length = columns.length;
-		String[] row = new String[length];
+		final int length = columns.length;
+		final String[] row = new String[length];
 		for (int i = 0; i < length; i++)
 			row[i] = getEntry(columns[i]);
 		return row;
 	}
 
-	public String[] getSignRow(List<String> columns)
+	public String[] getSignRow(final List<String> columns)
 	{
-		int length = columns.size();
-		String[] row = new String[length];
+		final int length = columns.size();
+		final String[] row = new String[length];
 		for (int i = 0; i < length; i++)
 			row[i] = getEntry(columns.get(i));
 		return row;
 	}
 
 	@Override
-	public int compareTo(Score score)
+	public int compareTo(final Score score)
 	{
 		return getName().compareTo(score.getName());
+	}
+
+	@Override
+	public void showDetailed(CommandSender target, String chatHeader)
+	{
+		// EDIT Automatisch generierter Methodenstub
+	}
+
+	@Override
+	public String getParameter(int index)
+	{
+		switch (index)
+		{
+			case 0:
+				return getName();
+			case 1:
+				return arena.getName();
+			default:
+				return "";
+		}
+	}
+
+	@Override
+	public int getParameterCount()
+	{
+		return 2;
+	}
+
+	@Override
+	protected String getChatHeader()
+	{
+		return arena.getChatHeader();
 	}
 }

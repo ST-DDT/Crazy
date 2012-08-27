@@ -2,7 +2,8 @@ package de.st_ddt.crazyarena;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Set;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -10,9 +11,9 @@ import de.st_ddt.crazyplugin.CrazyPlugin;
 public abstract class CrazyArenaPlugin extends CrazyPlugin
 {
 
-	private static final HashMap<Class<? extends CrazyPlugin>, CrazyPlugin> arenaPlugins = new HashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
+	private static final LinkedHashMap<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin> arenaPlugins = new LinkedHashMap<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin>();
 
-	public static Collection<CrazyPlugin> getCrazyArenaPlugins()
+	public static Collection<CrazyArenaPlugin> getCrazyArenaPlugins()
 	{
 		return arenaPlugins.values();
 	}
@@ -20,21 +21,33 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 	@Override
 	public void onLoad()
 	{
-		CrazyArena.registerArenaTypes(getArenaTypes());
-		super.onLoad();
+		arenaPlugins.put(this.getClass(), this);
+		registerArenaTypes();
+		super.onEnable();
 	}
 
-	@Override
-	public void onDisable()
+	protected abstract void registerArenaTypes();
+
+	public abstract String[] getArenaTypes();
+
+	protected static void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
 	{
-		CrazyArena.unregisterArenaType(getArenaTypes().values());
-		super.onDisable();
+		CrazyArena.registerArenaType(mainType, clazz, aliases);
 	}
 
-	/**
-	 * Gibt die Arenatyp zurück
-	 * 
-	 * @return Arenatypen
-	 */
-	public abstract Map<String, Class<? extends Arena>> getArenaTypes();
+	protected static CrazyArena getArenaPlugin()
+	{
+		return CrazyArena.getPlugin();
+	}
+
+	public HashMap<String, Set<Arena<?>>> getArenas()
+	{
+		final CrazyArena plugin = getArenaPlugin();
+		final HashMap<String, Set<Arena<?>>> arenas = new HashMap<String, Set<Arena<?>>>();
+		if (plugin == null)
+			return arenas;
+		for (final String type : getArenaTypes())
+			arenas.put(type, plugin.getArenaByType(type));
+		return arenas;
+	}
 }

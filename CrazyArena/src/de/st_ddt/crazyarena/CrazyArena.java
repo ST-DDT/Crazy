@@ -1,11 +1,14 @@
 package de.st_ddt.crazyarena;
 
-import java.util.Collection;
+import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -16,8 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyarena.arenas.ArenaSet;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
+import de.st_ddt.crazyarena.listener.CrazyArenaPlayerListener;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -32,17 +35,20 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
 
 public class CrazyArena extends CrazyPlugin
 {
 
+	private static final HashSet<Arena<?>> arenas = new HashSet<Arena<?>>();
+	private static final TreeMap<String, Arena<?>> arenasByName = new TreeMap<String, Arena<?>>();
+	private static final TreeMap<String, Set<Arena<?>>> arenasByType = new TreeMap<String, Set<Arena<?>>>();
+	private static final TreeMap<String, Arena<?>> arenasByPlayer = new TreeMap<String, Arena<?>>();
+	private static TreeMap<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
 	private static CrazyArena plugin;
-	private CrazyArenaPlayerListener playerListener = null;
-	private CrazyArenaBlockListener blocklistener = null;
-	private ArenaSet arenas = null;
-	private final HashMap<Player, Arena> invitations = new HashMap<Player, Arena>();
-	private final HashMap<Player, Arena> selection = new HashMap<Player, Arena>();
-	private static HashMap<String, Class<? extends Arena>> arenaTypes = new HashMap<String, Class<? extends Arena>>();
+	private final HashMap<String, Arena<?>> invitations = new HashMap<String, Arena<?>>();
+	private final HashMap<String, Arena<?>> selection = new HashMap<String, Arena<?>>();
+	private CrazyArenaPlayerListener playerlistener;
 
 	public static CrazyArena getPlugin()
 	{
@@ -55,53 +61,82 @@ public class CrazyArena extends CrazyPlugin
 		return "ca";
 	}
 
+	@Override
 	public void onEnable()
 	{
 		plugin = this;
-		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
-		this.arenas = new ArenaSet(getConfig());
 		registerHooks();
 		super.onEnable();
 	}
 
-	public void onDisable()
+	private void registerHooks()
 	{
-		save();
-		super.onDisable();
+		playerlistener = new CrazyArenaPlayerListener(this);
+		getServer();
+		final PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(playerlistener, this);
 	}
 
+	@Override
 	public void save()
 	{
-		ConfigurationSection config = getConfig();
-		LinkedList<String> names = new LinkedList<String>();
-		for (Arena arena : arenas)
+		final ConfigurationSection config = getConfig();
+		final LinkedList<String> names = new LinkedList<String>();
+		for (final Arena<?> arena : arenas)
 		{
-			arena.stop(Bukkit.getConsoleSender(), true);
-			arena.disable();
-			arena.save();
-			arena.saveConfig();
+			arena.shutdown();
+			arena.saveToFile();
 			names.add(arena.getName());
 		}
 		config.set("arenas", names);
 		super.save();
 	}
 
-	public void registerHooks()
-	{
-		PluginManager pm = this.getServer().getPluginManager();
-		playerListener = new CrazyArenaPlayerListener();
-		blocklistener = new CrazyArenaBlockListener();
-		pm.registerEvents(playerListener, this);
-		pm.registerEvents(blocklistener, this);
-	}
-
-	public ArenaSet getArenas()
+	public Set<Arena<?>> getArenas()
 	{
 		return arenas;
 	}
 
+	public Set<Arena<?>> getArenaByType(final String name)
+	{
+		return arenasByType.get(name.toLowerCase());
+	}
+
+	public Arena<?> getArena(final Player player)
+	{
+		return getArenaByPlayer(player.getName());
+	}
+
+	public Arena<?> getArenaByPlayer(final String name)
+	{
+		return arenasByPlayer.get(name.toLowerCase());
+	}
+
+	public Arena<?> getArena(final String name)
+	{
+		return arenasByName.get(name.toLowerCase());
+	}
+
+	public Set<Arena<?>> searchArenas(String name)
+	{
+		name = name.toLowerCase();
+		final HashSet<Arena<?>> arenas = new HashSet<Arena<?>>();
+		for (final Entry<String, Arena<?>> entry : arenasByName.entrySet())
+			if (entry.getKey().matches(".*" + name + ".*"))
+				arenas.add(entry.getValue());
+		return arenas;
+	}
+
+	public TreeSet<String> searchArenaNames(final String name)
+	{
+		final TreeSet<String> arenas = new TreeSet<String>();
+		for (final Arena<?> arena : searchArenas(name))
+			arenas.add(arena.getName());
+		return arenas;
+	}
+
 	@Override
-	public boolean command(CommandSender sender, String commandLabel, String[] args) throws CrazyCommandException
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (commandLabel.equalsIgnoreCase("join"))
 		{
@@ -115,6 +150,13 @@ public class CrazyArena extends CrazyPlugin
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandExecutorException(false);
 			commandSpectate((Player) sender, args);
+			return true;
+		}
+		if (commandLabel.equalsIgnoreCase("judge"))
+		{
+			if (sender instanceof ConsoleCommandSender)
+				throw new CrazyCommandExecutorException(false);
+			commandJudge((Player) sender, args);
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("ready"))
@@ -159,46 +201,59 @@ public class CrazyArena extends CrazyPlugin
 		return false;
 	}
 
-	private void commandJoin(Player player, String[] args) throws CrazyCommandException
+	private void commandJoin(final Player player, final String[] args) throws CrazyException
 	{
-		if (player.hasPermission("crazyarena.join"))
+		if (!player.hasPermission("crazyarena.join"))
 			throw new CrazyCommandPermissionException();
-		Arena arena = arenas.getArena(player);
-		if (arena != null)
-			throw new CrazyCommandCircumstanceException();
+		final Arena<?> oldArena = getArena(player);
+		Arena<?> arena = null;
 		switch (args.length)
 		{
 			case 0:
-				arena = invitations.get(player);
+				arena = oldArena;
+				if (arena == null)
+					arena = invitations.get(player.getName().toLowerCase());
 				if (arena == null)
 					throw new CrazyCommandUsageException("/join <Arena/Player>");
 				break;
 			case 1:
-				arena = arenas.getArena(args[0]);
+				final String name = args[0];
+				arena = getArena(name);
 				if (arena == null)
 				{
-					Player to = getServer().getPlayerExact(args[0]);
+					Player to = Bukkit.getPlayerExact(name);
 					if (to == null)
-						to = getServer().getPlayer(args[0]);
-					arena = arenas.getArena(to);
+						to = Bukkit.getPlayer(name);
+					arena = getArena(to);
 				}
 				if (arena == null)
-					throw new CrazyCommandNoSuchException("Arena/Player", args[0]);
+					throw new CrazyCommandNoSuchException("Arena/Player", name, searchArenaNames(name));
 				break;
 			default:
 				throw new CrazyCommandUsageException("/join <Arena/Player>");
 		}
-		if (!arena.isEnabled())
-			throw new CrazyCommandCircumstanceException("when arena is enabled", "disabled");
-		arena.join(player);
+		if (oldArena != null)
+			if (!oldArena.isParticipant(player, ParticipantType.SPECTATOR))
+				throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + oldArena.getName() + ")");
+			else
+				oldArena.leave(player, false);
+		if (!arena.getStatus().allowJoins())
+			if (arena.getStatus().isActive())
+			{
+				if (!arena.allowJoin(player))
+					throw new CrazyCommandCircumstanceException("when arena is ready for joins", arena.getStatus().toString());
+			}
+			else
+				throw new CrazyCommandCircumstanceException("when arena is ready for joins", arena.getStatus().toString());
+		arena.join(player, false);
 		return;
 	}
 
-	private boolean commandSpectate(Player player, String[] args) throws CrazyCommandException
+	private void commandSpectate(final Player player, final String[] args) throws CrazyException
 	{
-		if (player.hasPermission("crazyarena.spectate"))
+		if (!player.hasPermission("crazyarena.spectate"))
 			throw new CrazyCommandPermissionException();
-		Arena arena = arenas.getArena(player);
+		Arena<?> arena = getArena(player);
 		if (arena != null)
 			throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + arena.getName() + ")");
 		switch (args.length)
@@ -209,60 +264,90 @@ public class CrazyArena extends CrazyPlugin
 					throw new CrazyCommandUsageException("/spectate <Arena/Player>");
 				break;
 			case 1:
-				arena = arenas.getArena(args[0]);
+				final String name = args[0];
+				arena = getArena(name);
 				if (arena == null)
 				{
-					Player to = getServer().getPlayerExact(args[0]);
+					Player to = Bukkit.getPlayerExact(args[0]);
 					if (to == null)
-						to = getServer().getPlayer(args[0]);
-					arena = arenas.getArena(to);
+						to = Bukkit.getPlayer(args[0]);
+					arena = getArena(to);
 				}
 				if (arena == null)
-					throw new CrazyCommandNoSuchException("Arena/Player", args[0]);
+					throw new CrazyCommandNoSuchException("Arena/Player", args[0], searchArenaNames(name));
 				break;
 			default:
 				throw new CrazyCommandUsageException("/spectate <Arena/Player>");
 		}
-		if (!arena.isEnabled())
-			throw new CrazyCommandCircumstanceException("when arena is enabled", "disabled");
+		if (!arena.getStatus().allowSpectators())
+			throw new CrazyCommandCircumstanceException("when arena is ready for spectators", arena.getStatus().toString());
 		arena.spectate(player);
-		return true;
 	}
 
-	private boolean commandReady(Player player) throws CrazyCommandException
+	private void commandJudge(final Player player, final String[] args) throws CrazyException
 	{
-		Arena arena = arenas.getArena(player);
-		if (arena == null || !arena.isParticipant(player, ParticipantType.WAITING))
+		if (!player.hasPermission("crazyarena.judge"))
+			throw new CrazyCommandPermissionException();
+		Arena<?> arena = getArena(player);
+		if (arena != null)
+			throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + arena.getName() + ")");
+		switch (args.length)
+		{
+			case 0:
+				arena = invitations.get(player);
+				if (arena == null)
+					throw new CrazyCommandUsageException("/judge <Arena/Player>");
+				break;
+			case 1:
+				final String name = args[0];
+				arena = getArena(name);
+				if (arena == null)
+				{
+					Player to = Bukkit.getPlayerExact(args[0]);
+					if (to == null)
+						to = Bukkit.getPlayer(args[0]);
+					arena = getArena(to);
+				}
+				if (arena == null)
+					throw new CrazyCommandNoSuchException("Arena/Player", args[0], searchArenaNames(name));
+				break;
+			default:
+				throw new CrazyCommandUsageException("/judge <Arena/Player>");
+		}
+		if (!arena.getStatus().isActive())
+			throw new CrazyCommandCircumstanceException("when arena is ready for judges", arena.getStatus().toString());
+		arena.judge(player);
+	}
+
+	private void commandReady(final Player player) throws CrazyException
+	{
+		final Arena<?> arena = getArena(player);
+		if (arena == null || !arena.isParticipant(player, ParticipantType.SELECTING))
 			throw new CrazyCommandCircumstanceException("when waiting inside an arena!");
 		arena.ready(player);
-		return true;
 	}
 
-	private boolean commandTeam(Player player, String[] args) throws CrazyCommandException
+	private void commandTeam(final Player player, final String[] args) throws CrazyException
 	{
-		Arena arena = arenas.getArena(player);
-		if (arena == null || !arena.isParticipant(player))
+		final Arena<?> arena = getArena(player);
+		if (arena == null || !arena.isParticipant(player, ParticipantType.SELECTING))
 			throw new CrazyCommandCircumstanceException("when participating in an arena!");
 		arena.team(player);
-		return true;
 	}
 
-	private boolean commandLeave(Player player) throws CrazyCommandException
+	private void commandLeave(final Player player) throws CrazyException
 	{
-		if (player.hasPermission("crazyarena.leave"))
-			throw new CrazyCommandPermissionException();
-		Arena arena = arenas.getArena(player);
+		final Arena<?> arena = getArena(player);
 		if (arena == null || !arena.isParticipant(player))
 			throw new CrazyCommandCircumstanceException("when participating in an arena!");
-		arena.leave(player);
-		return true;
+		arena.leave(player, false);
 	}
 
-	private boolean commandInvite(Player player, String[] args) throws CrazyCommandException
+	private boolean commandInvite(final Player player, final String[] args) throws CrazyCommandException
 	{
 		if (player.hasPermission("crazyarena.invite"))
 			throw new CrazyCommandPermissionException();
-		Arena arena = arenas.getArena(player);
+		final Arena<?> arena = getArena(player);
 		if (arena == null || !arena.isParticipant(player))
 			throw new CrazyCommandCircumstanceException("when participating in an arena!");
 		if (args.length == 0)
@@ -272,11 +357,11 @@ public class CrazyArena extends CrazyPlugin
 			if (player.hasPermission("crazyarena.invite.all"))
 			{
 				int anz = 0;
-				for (Player invited : getServer().getOnlinePlayers())
-					if (arenas.getArena(invited) == null)
+				for (final Player invited : Bukkit.getOnlinePlayers())
+					if (getArena(invited) == null)
 					{
 						anz++;
-						invitations.put(invited, arena);
+						invitations.put(invited.getName().toLowerCase(), arena);
 						sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 					}
 				sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());
@@ -286,34 +371,34 @@ public class CrazyArena extends CrazyPlugin
 				throw new CrazyCommandPermissionException();
 		}
 		int anz = 0;
-		for (String name : args)
+		for (final String name : args)
 		{
-			Player invited = getServer().getPlayerExact(name);
+			Player invited = Bukkit.getPlayerExact(name);
 			if (invited == null)
-				invited = getServer().getPlayer(name);
+				invited = Bukkit.getPlayer(name);
 			if (invited == null)
 				continue;
 			anz++;
-			invitations.put(invited, arena);
+			invitations.put(invited.getName().toLowerCase(), arena);
 			sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 		}
 		sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());
 		return true;
 	}
 
-	private boolean commandScore(Player sender, String[] args)
+	private void commandScore(final Player player, final String[] args)
 	{
-		// EDIT score
-		// <Arena> [Player/Number]
-		// Arena => 1.2.3.
-		// Arena Player/Rank => Detailed Information about Player/Rank (lastest match maybe total)
-		// implemented in Arena getArena->sendScoreInformation(sender,Player/Rank)
-		//
-		return false;
+		Arena<?> arena = null;
+		final String[] newArgs = ChatHelper.shiftArray(args, 1);
+		if (args.length != 0)
+			arena = getArena(args[0]);
+		if (arena == null)
+			arena = selection.get(player.getName().toLowerCase());
+		arena.command(player, "score", newArgs);
 	}
 
 	@Override
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
+	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		if (command(sender, commandLabel, args))
 			return true;
@@ -362,66 +447,65 @@ public class CrazyArena extends CrazyPlugin
 			commandKick(sender, args);
 			return true;
 		}
-		if (sender instanceof ConsoleCommandSender)
-			return false;
-		Player player = (Player) sender;
-		Arena arena = selection.get(player);
-		if (arena == null)
-			throw new CrazyCommandCircumstanceException("when an arena is selected!");
-		if (arena.command(player, commandLabel, args))
-			return true;
+		final Arena<?> arena = selection.get(sender.getName().toLowerCase());
+		if (arena != null)
+			if (arena.command(sender, commandLabel, args))
+				return true;
 		return false;
 	}
 
-	private boolean commandEnable(CommandSender sender, String[] args, boolean enabled) throws CrazyCommandException
+	private void commandEnable(final CommandSender sender, final String[] args, final boolean enabled) throws CrazyCommandException
 	{
 		if (sender.hasPermission("crazyarena.arena.switchmode"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazyarena " + (enabled ? "enabled" : "disabled") + " <Arena>");
-		String name = args[0];
-		Arena arena = arenas.getArena(name);
+		final String name = args[0];
+		final Arena<?> arena = getArena(name);
 		try
 		{
 			arena.setEnabled(enabled);
 		}
-		catch (CrazyArenaException e)
+		catch (final CrazyArenaException e)
 		{
 			throw new CrazyCommandCrazyErrorException(e);
 		}
-		if (enabled)
-		{
-			sendLocaleMessage("COMMAND.ARENA.MODE.ENABLED", sender, name);
-			if (sender != getServer().getConsoleSender())
-				sendLocaleMessage("COMMAND.ARENA.MODE.ENABLED", getServer().getConsoleSender(), name);
-		}
-		else
-		{
-			sendLocaleMessage("COMMAND.ARENA.MODE.DISABLED", sender, name);
-			if (sender != getServer().getConsoleSender())
-				sendLocaleMessage("COMMAND.ARENA.MODE.DISABLED", getServer().getConsoleSender(), name);
-		}
-		return true;
+		sendLocaleMessage("COMMAND.ARENA.ENABLED", sender, name, enabled ? "TRUE" : "FALSE");
+		if (sender != Bukkit.getConsoleSender())
+			sendLocaleMessage("COMMAND.ARENA.ENABLED", Bukkit.getConsoleSender(), name);
 	}
 
-	private boolean commandImport(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandImport(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (sender.hasPermission("crazyarena.arena.import"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException();
-		String name = args[0];
-		Arena arena = arenas.loadArena(name);
-		if (arena == null)
+		final String name = args[0];
+		Arena<?> arena = getArena(name);
+		if (arena != null)
+			throw new CrazyCommandAlreadyExistsException("Arena", name);
+		final File file = new File(Arena.arenaDataRootPath + name + File.separator + "config.yml");
+		if (!file.exists())
 			throw new CrazyCommandNoSuchException("ArenaFile", name);
-		sendLocaleMessage("COMMAND.ARENA.LOADED", sender);
-		if (sender != getServer().getConsoleSender())
-			sendLocaleMessage("COMMAND.ARENA.LOADED", getServer().getConsoleSender());
-		arena.sendInfo(sender);
-		return true;
+		try
+		{
+			arena = Arena.loadFromFile(name, file);
+		}
+		catch (final Exception e)
+		{
+			throw new CrazyCommandErrorException(e);
+		}
+		arenas.add(arena);
+		arenasByName.put(name, arena);
+		arenasByType.get(arena.getType()).add(arena);
+		sendLocaleMessage("COMMAND.ARENA.LOADED", sender, arena.getName());
+		if (sender != Bukkit.getConsoleSender())
+			sendLocaleMessage("COMMAND.ARENA.LOADED", Bukkit.getConsoleSender(), arena.getName());
+		arena.show(sender);
 	}
 
-	private boolean commandCreate(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandCreate(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.arena.create"))
 			throw new CrazyCommandPermissionException();
@@ -429,191 +513,157 @@ public class CrazyArena extends CrazyPlugin
 			throw new CrazyCommandExecutorException(false);
 		if (args.length != 2)
 			throw new CrazyCommandUsageException("/crazyarena create <Name> <ArenaClass/Type>");
-		Player player = (Player) sender;
-		String name = args[0];
-		if (arenas.getArena(name) != null)
+		final Player player = (Player) sender;
+		final String name = args[0];
+		if (getArena(name) != null)
 			throw new CrazyCommandAlreadyExistsException("Arena", name);
-		String type = args[1];
-		Class<?> clazz = arenaTypes.get(type);
+		final String type = args[1];
+		Class<?> clazz = arenaTypes.get(type.toLowerCase());
 		if (clazz == null)
 			try
 			{
 				clazz = Class.forName(type);
 			}
-			catch (ClassNotFoundException e)
+			catch (final ClassNotFoundException e)
 			{
 				try
 				{
 					clazz = Class.forName("de.st_ddt.crazyarena.arenas." + type);
 				}
-				catch (ClassNotFoundException e2)
+				catch (final ClassNotFoundException e2)
 				{
 					throw new CrazyCommandNoSuchException("ArenaClass/Type", type);
 				}
 			}
 		if (!Arena.class.isAssignableFrom(clazz))
 			throw new CrazyCommandParameterException(2, "ArenaClass/Type");
-		Arena arena = null;
+		Arena<?> arena = null;
 		try
 		{
-			arena = (Arena) clazz.getConstructor(String.class, World.class).newInstance(name, player.getWorld());
+			arena = (Arena<?>) clazz.getConstructor(String.class, World.class).newInstance(name, player.getWorld());
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			throw new CrazyCommandErrorException(e);
 		}
 		if (arena == null)
 			throw new CrazyCommandException();
 		arenas.add(arena);
+		arenasByName.put(name.toLowerCase(), arena);
+		arenasByType.get(arena.getType()).add(arena);
 		sendLocaleMessage("COMMAND.ARENA.CREATED", player, arena.getName());
-		selection.put(player, arena);
+		selection.put(player.getName().toLowerCase(), arena);
 		sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
-		return true;
 	}
 
-	private boolean commandDelete(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.arena.delete"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
-			throw new CrazyCommandUsageException("/crazyarena kick <Player> [Player...]");
-		String name = args[0];
-		Arena arena = arenas.getArena(name);
+			throw new CrazyCommandUsageException("/crazyarena delete <Arena>");
+		final String name = args[0];
+		final Arena<?> arena = getArena(name);
 		if (arena == null)
-			throw new CrazyCommandNoSuchException("Arena", name);
+			throw new CrazyCommandNoSuchException("Arena", name, arenasByName.keySet());
+		arena.shutdown();
+		arena.saveToFile();
 		arenas.remove(arena);
+		arenasByName.remove(name);
+		arenasByType.get(arena.getType()).remove(arena);
 		sendLocaleMessage("COMMAND.ARENA.DELETED", sender, name);
 		sendLocaleMessage("COMMAND.ARENA.DELETED.RECOVER", sender, name);
-		return true;
 	}
 
-	private boolean commandSelect(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandSelect(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
 		if (!sender.hasPermission("crazyarena.arena.modify"))
 			throw new CrazyCommandPermissionException();
 		if (sender instanceof ConsoleCommandSender)
-			throw new CrazyCommandException();
-		Player player = (Player) sender;
+			throw new CrazyCommandExecutorException(false);
+		final Player player = (Player) sender;
 		switch (args.length)
 		{
 			case 0:
-				Arena arena = selection.get(player);
+				Arena<?> arena = selection.get(player);
 				if (arena == null)
-					sendLocaleMessage("COMMAND.ARENA.SELECTED.NONE", player);
+					throw new CrazyCommandUsageException("/crazyarena select <Arena>");
 				else
 					sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
-				return true;
+				return;
 			case 1:
-				arena = arenas.getArena(args[0]);
+				arena = getArena(args[0]);
 				if (arena == null)
 					throw new CrazyCommandNoSuchException("Arena", args[0]);
-				selection.put(player, arena);
+				selection.put(player.getName().toLowerCase(), arena);
 				sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
-				return true;
+				return;
 			default:
 				throw new CrazyCommandUsageException("/crazyarena select [Arena]");
 		}
 	}
 
-	private boolean commandForceReady(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandForceReady(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (!sender.hasPermission("crazyarena.forceready"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazyarena forceready <Arena>");
-		Arena arena = arenas.getArena(args[0]);
+		final Arena<?> arena = getArena(args[0]);
 		if (arena == null)
 			throw new CrazyCommandNoSuchException("Arena", args[0]);
-		for (Participant player : arena.getParticipants(ParticipantType.WAITING))
-			arena.ready(player.getPlayer());
-		return true;
+		for (final Participant<?, ?> player : arena.getParticipants(ParticipantType.SELECTING))
+			if (!arena.ready(player.getPlayer()))
+				arena.leave(player.getPlayer(), true);
 	}
 
-	private boolean commandForceStop(CommandSender sender, String[] args) throws CrazyCommandException
+	private void commandForceStop(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (!sender.hasPermission("crazyarena.forcestop"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazyarena forcestop <Arena>");
-		Arena arena = arenas.getArena(args[0]);
+		final Arena<?> arena = getArena(args[0]);
 		if (arena == null)
 			throw new CrazyCommandNoSuchException("Arena", args[0]);
-		arena.stop(sender, true);
-		sendLocaleMessage("COMMAND.ARENA.STOP.FORCE", getServer().getOnlinePlayers(), arena.getName());
-		sendLocaleMessage("COMMAND.ARENA.STOP.FORCE", getServer().getConsoleSender(), arena.getName());
-		return true;
+		arena.stop();
+		sendLocaleMessage("COMMAND.ARENA.STOP.FORCE", sender, arena.getName());
+		sendLocaleMessage("COMMAND.ARENA.STOP.FORCE", arena.getParticipatingPlayers(), arena.getName());
+		sendLocaleMessage("COMMAND.ARENA.STOP.FORCE", Bukkit.getConsoleSender(), arena.getName());
 	}
 
-	private boolean commandKick(CommandSender sender, String[] args) throws CrazyCommandException
+	private boolean commandKick(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (!sender.hasPermission("crazyarena.kick"))
 			throw new CrazyCommandPermissionException();
 		if (args.length == 0)
 			throw new CrazyCommandUsageException("/crazyarena kick <Player> [Player...]");
-		for (String name : args)
+		for (final String name : args)
 		{
-			Player player = getServer().getPlayerExact(name);
+			Player player = Bukkit.getPlayerExact(name);
 			if (player == null)
-				player = getServer().getPlayer(name);
+				player = Bukkit.getPlayer(name);
 			if (player == null)
 				throw new CrazyCommandNoSuchException("Player", name);
-			Arena arena = arenas.getArena(player);
+			final Arena<?> arena = getArena(player);
 			if (arena != null)
 				arena.leave(player, true);
-			sendLocaleMessage("COMMAND.ARENA.KICK", getServer().getOnlinePlayers(), arena.getName(), player.getName());
-			sendLocaleMessage("COMMAND.ARENA.KICK", getServer().getConsoleSender(), arena.getName(), player.getName());
+			sendLocaleMessage("COMMAND.ARENA.KICK", Bukkit.getOnlinePlayers(), arena.getName(), player.getName());
+			sendLocaleMessage("COMMAND.ARENA.KICK", Bukkit.getConsoleSender(), arena.getName(), player.getName());
 		}
 		return true;
 	}
 
-	public static Map<String, Class<? extends Arena>> getArenaTypes()
+	public static Map<String, Class<? extends Arena<?>>> getArenaTypes()
 	{
 		return arenaTypes;
 	}
 
-	public static void registerArenaType(String type, Class<? extends Arena> clazz)
+	public static void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
 	{
-		arenaTypes.put(type, clazz);
-	}
-
-	public static void registerArenaTypes(Map<String, Class<? extends Arena>> types)
-	{
-		for (Map.Entry<String, Class<? extends Arena>> type : types.entrySet())
-			registerArenaType(type.getKey(), type.getValue());
-	}
-
-	public static void unregisterArenaType(String... types)
-	{
-		for (String type : types)
-		{
-			Class<? extends Arena> clazz = arenaTypes.remove(type);
-			if (clazz != null)
-				if (!arenaTypes.values().contains(clazz))
-					getPlugin().getArenas().removeArenaType(clazz);
-		}
-	}
-
-	public static void unregisterArenaType(Class<? extends Arena>... clazzes)
-	{
-		for (Class<? extends Arena> clazz : clazzes)
-		{
-			Set<Entry<String, Class<? extends Arena>>> entries = arenaTypes.entrySet();
-			for (Entry<String, Class<? extends Arena>> entry : entries)
-				if (entry.getValue().equals(arenaTypes))
-					arenaTypes.remove(entry);
-			getPlugin().getArenas().removeArenaType(clazz);
-		}
-	}
-
-	public static void unregisterArenaType(Collection<Class<? extends Arena>> clazzes)
-	{
-		for (Class<? extends Arena> clazz : clazzes)
-		{
-			Set<Entry<String, Class<? extends Arena>>> entries = arenaTypes.entrySet();
-			for (Entry<String, Class<? extends Arena>> entry : entries)
-				if (entry.getValue().equals(arenaTypes))
-					arenaTypes.remove(entry);
-			getPlugin().getArenas().removeArenaType(clazz);
-		}
+		arenaTypes.put(mainType.toLowerCase(), clazz);
+		for (final String alias : aliases)
+			arenaTypes.put(alias.toLowerCase(), clazz);
+		arenasByType.put(mainType.toLowerCase(), new HashSet<Arena<?>>());
 	}
 }

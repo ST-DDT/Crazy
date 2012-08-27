@@ -1,82 +1,103 @@
 package de.st_ddt.crazyarena.arenas;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
-import de.st_ddt.crazyarena.exceptions.CrazyArenaCheckExcetion;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
+import de.st_ddt.crazyarena.exceptions.CrazyArenaUnsupportedException;
 import de.st_ddt.crazyarena.participants.Participant;
-import de.st_ddt.crazyarena.participants.ParticipantList;
 import de.st_ddt.crazyarena.participants.ParticipantType;
-import de.st_ddt.crazygeo.region.RealRoom;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
+import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Commandable;
+import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.poly.room.Room;
 
-public abstract class Arena implements Commandable
+public abstract class Arena<S extends Participant<S, ?>> implements Named, ParameterData, Commandable
 {
 
-	protected String name;
-	protected final World world;
-	protected boolean enabled;
-	protected boolean edit;
-	protected RealRoom<? extends Room> region;
-	protected CrazyLocale locale;
-	protected final ParticipantList participants = new ParticipantList(this);
-	protected FileConfiguration config;
-	protected final CrazyArena plugin = CrazyArena.getPlugin();
-	private String chatHeader = null;
+	public static final String arenaDataRootPath = "plugins" + File.separator + "CrazyArena" + File.separator + "arenas" + File.separator;
+	protected final String name;
+	protected final YamlConfiguration config = new YamlConfiguration();
+	protected final String chatHeader;
+	protected final HashMap<String, S> participants = new HashMap<String, S>();
+	protected final CrazyLocale locale;
+	protected ArenaStatus status = ArenaStatus.INITIALIZING;
 
-	public static Arena loadArena(FileConfiguration config)
+	public static Arena<?> loadFromFile(final String name, final File file) throws Exception
 	{
-		return ObjectSaveLoadHelper.load(config, Arena.class, new Class[] { FileConfiguration.class }, new Object[] { config });
+		final YamlConfiguration config = new YamlConfiguration();
+		config.load(file);
+		return loadFromConfig(name, config);
 	}
 
-	private Arena(final World world)
+	public static Arena<?> loadFromConfig(final String name, final ConfigurationSection config) throws Exception
+	{
+		Arena<?> arena = null;
+		try
+		{
+			arena = ObjectSaveLoadHelper.load(config, Arena.class, new Class[] { String.class, ConfigurationSection.class }, new Object[] { name, config }, null);
+			arena.status = ArenaStatus.valueOf(config.getString("status", "READY"));
+		}
+		catch (final Exception e)
+		{
+			if (arena != null)
+				arena.status = ArenaStatus.ERROR;
+			throw e;
+		}
+		return arena;
+	}
+
+	public Arena(final String name)
 	{
 		super();
-		// World
-		this.world = world;
-		// Locale
+		this.name = name;
+		getDataFolder().mkdirs();
+		this.chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE;
+		// Locales
 		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
-		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_" + getArenaTypeLocaleDefault().toUpperCase());
+		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
 		this.locale.setAlternative(typeLocale);
 		final CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_DEFAULT");
 		typeLocale.setAlternative(defaultLocale);
-		// ChatHeader
-		chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + "Arena_" + getName() + ChatColor.RED + "] " + ChatColor.WHITE;
 	}
 
-	public Arena(final FileConfiguration config)
+	public Arena(final String name, final ConfigurationSection config)
 	{
-		this(Bukkit.getWorld(config.getString("world")));
-		this.name = config.getString("name");
-		this.config = config;
-		load();
-	}
-
-	public Arena(final String name, final World world)
-	{
-		this(world);
+		super();
 		this.name = name;
-		this.config = new YamlConfiguration();
-		this.enabled = false;
-		this.edit = false;
+		getDataFolder().mkdirs();
+		this.chatHeader = ChatHelper.colorise(config.getString("chatHeader", ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE));
+		// Locale
+		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
+		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
+		this.locale.setAlternative(typeLocale);
+		final CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_DEFAULT");
+		typeLocale.setAlternative(defaultLocale);
+	}
+
+	public ArenaStatus getStatus()
+	{
+		return status;
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 
 	public String getChatHeader()
@@ -84,202 +105,284 @@ public abstract class Arena implements Commandable
 		return chatHeader;
 	}
 
-	public CrazyLocale getLocale()
+	public abstract String getType();
+
+	public ConfigurationSection getConfig()
 	{
-		return locale;
+		return config;
 	}
 
-	public Participant getParticipant(final Player player)
+	public final File getDataFolder()
 	{
-		return participants.getParticipant(player);
+		return new File(arenaDataRootPath + name);
 	}
 
-	public ParticipantList getParticipants()
+	public abstract void save();
+
+	public final void saveToFile()
 	{
-		return participants;
-	}
-
-	public ParticipantList getParticipants(final ParticipantType type)
-	{
-		return participants.getParticipants(type);
-	}
-
-	public boolean isParticipant(final Player player)
-	{
-		return getParticipant(player) != null;
-	}
-
-	public boolean isParticipant(final Player player, final ParticipantType type)
-	{
-		final Participant participant = getParticipant(player);
-		if (participant == null)
-			return false;
-		return participant.getParticipantType() == type;
-	}
-
-	public final void join(final Player player) throws CrazyCommandException
-	{
-		join(player, false);
-	}
-
-	public abstract void join(Player player, boolean rejoin) throws CrazyCommandException;
-
-	public abstract void ready(Player player) throws CrazyCommandException;
-
-	public void team(final Player player, final String... team) throws CrazyCommandException
-	{
-		plugin.sendLocaleMessage("ARENA.TEAM.UNSUPPORTED", player);
-	}
-
-	public void spectate(final Player player) throws CrazyCommandException
-	{
-		plugin.sendLocaleMessage("ARENA.SPECTATOR.UNSUPPORTED", player);
-	}
-
-	public final void leave(final Player player) throws CrazyCommandException
-	{
-		leave(player, false);
-	}
-
-	public abstract void leave(Player player, boolean kicked) throws CrazyCommandException;
-
-	public void quitgame(final Player player)
-	{
-		final Participant participant = getParticipant(player);
-		if (participant != null)
-			participant.setParticipantType(ParticipantType.QUITER);
-		stop(null, false);
-	}
-
-	protected abstract boolean checkStart();
-
-	public abstract void start(CommandSender sender, boolean force);
-
-	protected abstract boolean checkFinished();
-
-	public abstract void stop(CommandSender sender, boolean force);
-
-	public void load()
-	{
-		this.enabled = config.getBoolean("enabled", false);
-		this.edit = config.getBoolean("edit", true);
-		this.region = RealRoom.load(config.getConfigurationSection("region"), world);
-	}
-
-	public abstract void enable();
-
-	public abstract void disable();
-
-	public void save()
-	{
-		config.set("name", name);
-		config.set("type", getClass().getName());
-		config.set("world", world);
-		config.set("enabled", enabled);
-		config.set("edit", edit);
-		config.set("region", null);
-		region.save(config, "region.", true);
-	}
-
-	public final void saveConfig()
-	{
+		save();
 		try
 		{
-			config.save(plugin.getDataFolder().getPath() + "/Arenas/" + name + ".yml");
+			getDataFolder().mkdirs();
+			config.save(arenaDataRootPath + name + File.separator + "config.yml");
 		}
-		catch (final IOException e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	public final String getName()
+	/**
+	 * Let a player join this arena.
+	 * 
+	 * @param player
+	 *            The joining player
+	 * @param rejoin
+	 *            whether he is already in this arena or not. (Rejoins after leaving the server only)
+	 */
+	public abstract void join(Player player, boolean rejoin) throws CrazyException;
+
+	/**
+	 * Allow a player to join although the game has started already.
+	 * 
+	 * @param player
+	 * @return
+	 */
+	public boolean allowJoin(final Player player)
 	{
-		return name;
+		return false;
 	}
 
-	public abstract String getArenaType();
+	public abstract boolean ready(Player player) throws CrazyException;
 
-	protected abstract String getArenaTypeLocaleDefault();
-
-	public final World getWorld()
+	public void team(final Player player, final String... team) throws CrazyException
 	{
-		return world;
+		throw new CrazyArenaUnsupportedException(this, "Teams");
 	}
 
-	public boolean isEnabled()
+	public void spectate(final Player player) throws CrazyException
 	{
-		return enabled;
+		throw new CrazyArenaUnsupportedException(this, "Spectator");
+	}
+
+	public void judge(final Player player) throws CrazyException
+	{
+		throw new CrazyArenaUnsupportedException(this, "Judges");
+	}
+
+	public abstract void leave(final Player player, final boolean kicked) throws CrazyException;
+
+	public abstract void quitgame(Player player);
+
+	public abstract void registerMatchListener();
+
+	public abstract void unregisterMatchListener();
+
+	/**
+	 * Stops the arena and kicks every participant. This should be executed after every finished match.
+	 */
+	public void stop()
+	{
+		for (final Player player : getParticipatingPlayers())
+			try
+			{
+				leave(player, true);
+			}
+			catch (final CrazyException e)
+			{}
+		participants.clear();
+		unregisterMatchListener();
+		if (status.isActive())
+			status = ArenaStatus.READY;
+	}
+
+	/**
+	 * Shutdown arena. This will be executed on server shutdown and before arena is deleted. This should unregister every event listeners.
+	 */
+	public void shutdown()
+	{
+		status = ArenaStatus.SHUTDOWN;
+		stop();
+	}
+
+	public boolean isParticipant(final Player player)
+	{
+		return isParticipant(player.getName());
+	}
+
+	public boolean isParticipant(final String name)
+	{
+		return participants.containsKey(name.toLowerCase());
+	}
+
+	public boolean isParticipant(final Player player, final ParticipantType type)
+	{
+		return isParticipant(player.getName(), type);
+	}
+
+	public boolean isParticipant(final String name, final ParticipantType type)
+	{
+		final S participant = getParticipant(name);
+		if (participant == null)
+			return false;
+		return participant.getParticipantType() == type;
+	}
+
+	public Collection<S> getParticipants()
+	{
+		return participants.values();
+	}
+
+	/**
+	 * The run number increases every match played and is important for rejoins. A player can only rejoin if the arena has the same run number
+	 * 
+	 * @return the current match number
+	 * 
+	 */
+	public abstract int getRunNumber();
+
+	/**
+	 * Time a player can rejoin after leaving the server.
+	 * 
+	 * @return Time in milliseconds
+	 */
+	public abstract long getRejoinTime();
+
+	public HashSet<S> getParticipants(final ParticipantType type)
+	{
+		final HashSet<S> participants = new HashSet<S>();
+		for (final S participant : getParticipants())
+			if (participant.getParticipantType() == type)
+				participants.add(participant);
+		return participants;
+	}
+
+	public HashSet<Player> getParticipatingPlayers()
+	{
+		final HashSet<Player> players = new HashSet<Player>();
+		for (final S participant : getParticipants())
+			players.add(participant.getPlayer());
+		players.remove(null);
+		return players;
+	}
+
+	public HashSet<Player> getParticipatingPlayers(final ParticipantType type)
+	{
+		final HashSet<Player> players = new HashSet<Player>();
+		for (final S participant : getParticipants(type))
+			players.add(participant.getPlayer());
+		players.remove(null);
+		return players;
+	}
+
+	public TreeSet<String> getParticipatingPlayerNames()
+	{
+		final TreeSet<String> names = new TreeSet<String>();
+		for (final Player player : getParticipatingPlayers())
+			names.add(player.getName());
+		names.remove(null);
+		return names;
+	}
+
+	public TreeSet<String> getParticipatingPlayerNames(final ParticipantType type)
+	{
+		final TreeSet<String> names = new TreeSet<String>();
+		for (final Player player : getParticipatingPlayers(type))
+			names.add(player.getName());
+		names.remove(null);
+		return names;
+	}
+
+	public S getParticipant(final Player player)
+	{
+		return getParticipant(player.getName());
+	}
+
+	public S getParticipant(final String name)
+	{
+		return participants.get(name.toLowerCase());
+	}
+
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args)
+	{
+		return false;
 	}
 
 	public void setEnabled(final boolean enabled) throws CrazyArenaException
 	{
 		if (enabled)
-			if (!checkArena(null))
-				throw new CrazyArenaCheckExcetion(this);
-		this.enabled = enabled;
-	}
-
-	public boolean getEditMode()
-	{
-		return edit;
-	}
-
-	public void setEditMode(final boolean edit)
-	{
-		this.edit = edit;
-		if (edit)
-			try
+		{
+			if (status == ArenaStatus.DISABLED)
 			{
-				setEnabled(false);
+				status = checkEnable();
 			}
-			catch (final CrazyArenaException e)
-			{}
+		}
+		else
+		{
+			stop();
+			status = ArenaStatus.DISABLED;
+		}
 	}
 
-	public CrazyArena getPlugin()
+	protected ArenaStatus checkEnable() throws CrazyArenaException
 	{
-		return plugin;
+		return ArenaStatus.READY;
 	}
 
-	public abstract boolean isRunning();
-	
-	public final boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
+	@Override
+	public void show(final CommandSender target)
 	{
-		if (sender instanceof Player)
-			return command((Player) sender, commandLabel, args); 
-		throw new CrazyCommandExecutorException(false);
+		show(target, chatHeader, true);
 	}
 
-	public boolean command(final Player player, final String commandLabel, final String[] args) throws CrazyException
+	@Override
+	public String getShortInfo()
 	{
-		return false;
+		return toString();
 	}
 
-	public void addSign(final Player player, final Block block)
+	@Override
+	public String toString()
 	{
-		plugin.sendLocaleMessage("ARENA.SIGN.UNSUPPORTED", player);
+		return "Arena " + name;
 	}
 
-	public void sendInfo(final CommandSender sender)
+	@Override
+	public String getParameter(final int index)
 	{
-		plugin.sendLocaleMessage("ARENA.INFO.NAME", sender, name);
-		plugin.sendLocaleMessage("MESSAGE.SEPERATOR", sender);
-		plugin.sendLocaleMessage("ARENA.INFO.TYPE", sender, getArenaType());
-		plugin.sendLocaleMessage("ARENA.INFO.WORLD", sender, world.getName());
+		switch (index)
+		{
+			case 0:
+				return name;
+			case 1:
+				return status.toString();
+			case 2:
+				return ChatHelper.listingString(getParticipatingPlayerNames());
+			default:
+				return "";
+		}
 	}
 
-	/**
-	 * Verify whether all nessesary setting have been done, and send any error to sender
-	 * 
-	 * @param sender
-	 */
-	public abstract boolean checkArena(CommandSender sender);
+	@Override
+	public int getParameterCount()
+	{
+		return 3;
+	}
 
-	/**
-	 * @return Returns the current run number. (needed for rejoins)
-	 */
-	public abstract int getRunNumber();
+	@Override
+	public void show(CommandSender target, String chatHeader, boolean showDetailed)
+	{
+		// EDIT show
+		// Name & Type
+		// Separator
+		// Participants sorted by TypeAndName
+	}
+
+	public CrazyLocale getLocale()
+	{
+		return locale;
+	}
 
 	public final void sendLocaleMessage(final String localepath, final CommandSender target, final Object... args)
 	{
@@ -288,7 +391,7 @@ public abstract class Arena implements Commandable
 
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
 	{
-		ChatHelper.sendMessage(target, chatHeader, locale, args);
+		ChatHelper.sendMessage(target, getChatHeader(), locale, args);
 	}
 
 	public final void sendLocaleMessage(final String localepath, final CommandSender[] targets, final Object... args)
@@ -301,13 +404,113 @@ public abstract class Arena implements Commandable
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
 	}
 
-	public final void sendLocaleMessage(final String localepath, final Collection<CommandSender> targets, final Object... args)
+	public final void sendLocaleMessage(final String localepath, final Collection<? extends CommandSender> targets, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
 	}
 
-	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<CommandSender> targets, final Object... args)
+	public final void sendLocaleMessage(final CrazyLocale locale, final Collection<? extends CommandSender> targets, final Object... args)
 	{
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
+	}
+
+	public final void sendLocaleMessage(final String localepath, final S target, final Object... args)
+	{
+		sendLocaleMessage(getLocale().getLanguageEntry(localepath), target, args);
+	}
+
+	public final void sendLocaleMessage(final CrazyLocale locale, final S target, final Object... args)
+	{
+		if (target.isOnline())
+			ChatHelper.sendMessage(target.getPlayer(), getChatHeader(), locale, args);
+	}
+
+	public final void sendLocaleMessage(final String localepath, final S[] targets, final Object... args)
+	{
+		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
+	}
+
+	public final void sendLocaleMessage(final CrazyLocale locale, final S[] targets, final Object... args)
+	{
+		for (final S target : targets)
+			sendLocaleMessage(locale, target, args);
+	}
+
+	public final void broadcastLocaleMessage(boolean console, final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(console, getLocale().getLanguageEntry(localepath), args);
+	}
+
+	public final void broadcastLocaleMessage(boolean console, final CrazyLocale locale, final Object... args)
+	{
+		if (console)
+			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
+		sendLocaleMessage(locale, getParticipatingPlayers(), args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final ParticipantType type, final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(console, type, getLocale().getLanguageEntry(localepath), args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final ParticipantType type, final CrazyLocale locale, final Object... args)
+	{
+		if (type == null)
+			broadcastLocaleMessage(console, new ParticipantType[] {}, locale, args);
+		else
+			broadcastLocaleMessage(console, new ParticipantType[] { type }, locale, args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final ParticipantType[] types, final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(console, types, getLocale().getLanguageEntry(localepath), args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final ParticipantType[] types, final CrazyLocale locale, final Object... args)
+	{
+		if (console)
+			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
+		for (final ParticipantType type : types)
+			for (final S player : getParticipants(type))
+				sendLocaleMessage(locale, player, args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final boolean player, final boolean spectator, final boolean judge, final String localepath, final Object... args)
+	{
+		broadcastLocaleMessage(console, player, spectator, judge, getLocale().getLanguageEntry(localepath), args);
+	}
+
+	public final void broadcastLocaleMessage(final boolean console, final boolean player, final boolean spectator, final boolean judge, final CrazyLocale locale, final Object... args)
+	{
+		if (console)
+			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
+		if (player)
+			for (final S participant : getParticipants())
+				if (participant.isPlayer())
+					sendLocaleMessage(locale, participant, args);
+		if (spectator)
+			for (final S participant : getParticipants(ParticipantType.SPECTATOR))
+				sendLocaleMessage(locale, participant, args);
+		if (judge)
+			for (final S participant : getParticipants(ParticipantType.JUDGE))
+				sendLocaleMessage(locale, participant, args);
+	}
+
+	public boolean hasPermission(final CommandSender sender, final String permissionSuffix)
+	{
+		if (sender.hasPermission("crazyarena." + permissionSuffix))
+			return true;
+		if (sender.hasPermission("crazyarena.*"))
+			return true;
+		else if (sender.hasPermission("crazyarena." + getType() + "." + permissionSuffix))
+			return true;
+		else if (sender.hasPermission("crazyarena." + getType() + ".*"))
+			return true;
+		else if (sender.hasPermission("crazyarena." + getName() + "." + permissionSuffix))
+			return true;
+		else if (sender.hasPermission("crazyarena." + getName() + ".*"))
+			return true;
+		else
+			return false;
 	}
 }

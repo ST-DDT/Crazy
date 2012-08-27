@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Wolf;
 
@@ -53,6 +54,7 @@ public enum Creatures
 			case POWEREDCREEPERS:
 				((Creeper) e).setPowered(true);
 				break;
+			case ANGRYWOLF:
 			case ANGRYWOLVES:
 				((Wolf) e).setAngry(true);
 				break;
@@ -80,6 +82,10 @@ public enum Creatures
 			case MAGMASLIMESHUGE:
 				((Slime) e).setSize(4);
 				break;
+			case CAT:
+			case CATS:
+				((Ocelot) e).setTamed(true);
+			default:
 		}
 		return e;
 	}
