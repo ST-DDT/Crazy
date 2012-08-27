@@ -241,7 +241,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	public void onEnable()
 	{
 		if (isUpdated)
-			broadcastLocaleRootMessage("CRAZYPLUGIN.UPDATED", getName(), getDescription().getVersion());
+			broadcastLocaleMessage("UPDATED", getName(), getDescription().getVersion());
 		load();
 		if (isUpdated)
 			save();
@@ -278,12 +278,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public final void sendLocaleRootMessage(final String localepath, final CommandSender target, final Object... args)
-	{
-		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), target, args);
-	}
-
-	@Override
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender target, final Object... args)
 	{
 		ChatHelper.sendMessage(target, getChatHeader(), locale, args);
@@ -296,12 +290,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public final void sendLocaleRootMessage(final String localepath, final CommandSender[] targets, final Object... args)
-	{
-		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), targets, args);
-	}
-
-	@Override
 	public final void sendLocaleMessage(final CrazyLocale locale, final CommandSender[] targets, final Object... args)
 	{
 		ChatHelper.sendMessage(targets, getChatHeader(), locale, args);
@@ -311,12 +299,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	public final void sendLocaleMessage(final String localepath, final Collection<? extends CommandSender> targets, final Object... args)
 	{
 		sendLocaleMessage(getLocale().getLanguageEntry(localepath), targets, args);
-	}
-
-	@Override
-	public final void sendLocaleRootMessage(final String localepath, final Collection<? extends CommandSender> targets, final Object... args)
-	{
-		sendLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), targets, args);
 	}
 
 	@Override
@@ -338,12 +320,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public final <E> void sendListRootMessage(final CommandSender target, final String headLocale, final String seperator, final String entry, final String emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
-	{
-		ChatHelper.sendListMessage(target, this.getChatHeader(), CrazyLocale.getLocaleHead().getLanguageEntry(headLocale), seperator == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(seperator), entry == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(entry), emptyPage == null ? null : CrazyLocale.getLocaleHead().getLanguageEntry(emptyPage), amount, page, datas, getter);
-	}
-
-	@Override
 	public final <E> void sendListMessage(final CommandSender target, final CrazyLocale headLocale, final CrazyLocale seperator, final CrazyLocale entry, final CrazyLocale emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
 	{
 		ChatHelper.sendListMessage(target, this.getChatHeader(), headLocale, seperator, entry, emptyPage, amount, page, datas, getter);
@@ -356,28 +332,16 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public final void broadcastLocaleRootMessage(final String localepath, final Object... args)
-	{
-		broadcastLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
-	}
-
-	@Override
 	public final void broadcastLocaleMessage(final CrazyLocale locale, final Object... args)
 	{
-		sendLocaleMessage(locale, getServer().getConsoleSender(), args);
-		sendLocaleMessage(locale, getServer().getOnlinePlayers(), args);
+		sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);
+		sendLocaleMessage(locale, Bukkit.getOnlinePlayers(), args);
 	}
 
 	@Override
 	public final void broadcastLocaleMessage(final boolean console, final String permission, final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(console, permission, getLocale().getLanguageEntry(localepath), args);
-	}
-
-	@Override
-	public final void broadcastLocaleRootMessage(final boolean console, final String permission, final String localepath, final Object... args)
-	{
-		broadcastLocaleMessage(console, permission, CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
 	}
 
 	@Override
@@ -393,12 +357,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	public final void broadcastLocaleMessage(final boolean console, final String[] permissions, final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(console, permissions, getLocale().getLanguageEntry(localepath), args);
-	}
-
-	@Override
-	public final void broadcastLocaleRootMessage(final boolean console, final String[] permissions, final String localepath, final Object... args)
-	{
-		broadcastLocaleMessage(console, permissions, CrazyLocale.getLocaleHead().getLanguageEntry(localepath), args);
 	}
 
 	@Override
