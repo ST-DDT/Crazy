@@ -1,0 +1,51 @@
+name: CrazyArena
+main: de.st_ddt.crazyarena.CrazyArena
+author: ST-DDT
+version: 0.1
+# requires CrazyCore v8.4
+# requires CrazyGeo v0.1
+# requires CrazyArena v0.2
+softdepend: [PermissionsBukkit]
+depend: [CrazyCore,CrazyGeo]
+description: >
+            Arena Plugin
+commands:
+  crazyarena:
+    description: Maincommand
+    usage: /<command> <Action> [Parameter...]
+    aliases: [ca]
+permissions:
+  crazyarena.*:
+    description: Gives access to all crazyarena functions
+    default: op
+    children:
+      crazyarena*.*: true
+      crazyarena.use: true
+      crazyarena.op: true
+      crazyarena.admin: true
+      crazyarena.arena: true
+  crazyarena*.*:
+    description: Access to all crazyarenaplugin commands
+    default: false 
+  crazyarena.use:
+    description: Gives access to all user functions
+    default: true
+    children:
+      crazyarena.join: true
+      crazyarena.spectate: true
+      crazyarena.leave: true
+      crazyarena.invite: true
+  crazyarena.admin:
+    description: Gives access to all admin functions
+    default: op
+    children:
+      crazyarena.invite.all: true
+      crazyarena.arena.switchmode: true
+      crazyarena.arena.import: true
+      crazyarena.arena.create: true
+      crazyarena.arena.delete: true
+      crazyarena.arena.modify: true
+      crazyarena.arena.sign: true
+      crazyarena.forceready: true
+      crazyarena.forcestop: true
+      crazyarena.kick: true
