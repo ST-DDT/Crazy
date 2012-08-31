@@ -3,6 +3,7 @@ package de.st_ddt.crazycore.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +12,7 @@ import org.bukkit.event.Listener;
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazycore.tasks.PlayerWipeTask;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class CrazyCoreCrazyListener implements Listener
@@ -24,11 +26,16 @@ public class CrazyCoreCrazyListener implements Listener
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void CrazyPlayerRemoveLanguageEvent(final CrazyPlayerRemoveEvent event)
+	@EventHandler(priority = EventPriority.LOW)
+	public void CrazyPlayerRemoveOfflinePlayerDataEvent(final CrazyPlayerRemoveEvent event)
 	{
-		if (CrazyLocale.removeUserLanguage(event.getPlayer()))
-			event.markDeletion(plugin);
+		final OfflinePlayer player = Bukkit.getOfflinePlayer(event.getPlayer());
+		if (player != null)
+		{
+			player.setBanned(false);
+			player.setOp(false);
+			player.setWhitelisted(false);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -59,15 +66,19 @@ public class CrazyCoreCrazyListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void CrazyPlayerRemoveOfflinePlayerDataEvent(final CrazyPlayerRemoveEvent event)
+	public void CrazyPlayerRemoveLanguageEvent(final CrazyPlayerRemoveEvent event)
 	{
-		final OfflinePlayer player = Bukkit.getOfflinePlayer(event.getPlayer());
-		if (player != null)
-		{
-			player.setBanned(false);
-			player.setOp(false);
-			player.setWhitelisted(false);
-		}
+		if (CrazyLocale.removeUserLanguage(event.getPlayer()))
+			event.markDeletion(plugin);
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void CrazyPlayerRemoveCommandEvent(final CrazyPlayerRemoveEvent event)
+	{
+		final String name = event.getPlayer();
+		final ConsoleCommandSender console = Bukkit.getConsoleSender();
+		for (final String command : plugin.getPlayerWipeCommands())
+			Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, name));
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

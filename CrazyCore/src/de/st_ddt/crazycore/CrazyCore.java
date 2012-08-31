@@ -3,6 +3,7 @@ package de.st_ddt.crazycore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -43,6 +44,7 @@ public class CrazyCore extends CrazyPlugin
 	private CrazyCoreMessageListener messageListener;
 	private CrazyCoreCrazyListener crazylistener;
 	protected boolean wipePlayerFiles;
+	protected final ArrayList<String> playerWipeCommands = new ArrayList<String>();
 
 	public static CrazyCore getPlugin()
 	{
@@ -381,6 +383,9 @@ public class CrazyCore extends CrazyPlugin
 		super.load();
 		final ConfigurationSection config = getConfig();
 		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
+		List<String> list = config.getStringList("playerWipeCommands");
+		if (list != null)
+			playerWipeCommands.addAll(list);
 		CrazyPipe.setDisabled(config.getBoolean("disablePipes", false));
 		ChatHelper.setShowChatHeaders(config.getBoolean("showChatHeaders", true));
 		final String defaultLanguage = config.getString("defaultLanguage", "en_en");
@@ -410,10 +415,11 @@ public class CrazyCore extends CrazyPlugin
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("wipePlayerFiles", wipePlayerFiles);
+		config.set("playerWipeCommands", playerWipeCommands);
 		config.set("disablePipes", CrazyPipe.isDisabled());
 		config.set("showChatHeaders", ChatHelper.isShowingChatHeadersEnabled());
 		config.set("defaultLanguage", CrazyLocale.getDefaultLanguage());
-		config.set("defaultLanguages", new ArrayList<String>(preloadedLanguages));
+		config.set("preloadedLanguages", new ArrayList<String>(preloadedLanguages));
 		config.set("players", null);
 		CrazyLocale.save(config, "players.");
 		super.save();
@@ -422,5 +428,10 @@ public class CrazyCore extends CrazyPlugin
 	public boolean isWipingPlayerFilesEnabled()
 	{
 		return wipePlayerFiles;
+	}
+
+	public ArrayList<String> getPlayerWipeCommands()
+	{
+		return playerWipeCommands;
 	}
 }
