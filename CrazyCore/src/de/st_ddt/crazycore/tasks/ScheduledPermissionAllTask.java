@@ -12,6 +12,8 @@ public class ScheduledPermissionAllTask implements Runnable
 	public void run()
 	{
 		final Permission permission = Bukkit.getPluginManager().getPermission("crazy*.*");
+		if (permission == null)
+			return;
 		for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 			permission.getChildren().put(plugin.getName().toLowerCase() + ".*", true);
 		permission.recalculatePermissibles();
