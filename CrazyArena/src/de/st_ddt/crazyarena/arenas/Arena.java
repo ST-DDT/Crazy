@@ -304,7 +304,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		return participants.get(name.toLowerCase());
 	}
 
-	public boolean command(final CommandSender sender, final String commandLabel, final String[] args)
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
 	}

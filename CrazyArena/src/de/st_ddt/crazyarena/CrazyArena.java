@@ -386,7 +386,7 @@ public class CrazyArena extends CrazyPlugin
 		return true;
 	}
 
-	private void commandScore(final Player player, final String[] args)
+	private void commandScore(final Player player, final String[] args) throws CrazyException
 	{
 		Arena<?> arena = null;
 		final String[] newArgs = ChatHelper.shiftArray(args, 1);
