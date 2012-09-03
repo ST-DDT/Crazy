@@ -72,13 +72,21 @@ public class CrazyCoreCrazyListener implements Listener
 			event.markDeletion(plugin);
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void CrazyPlayerRemoveCommandEvent(final CrazyPlayerRemoveEvent event)
 	{
 		final String name = event.getPlayer();
 		final ConsoleCommandSender console = Bukkit.getConsoleSender();
-		for (final String command : plugin.getPlayerWipeCommands())
-			Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, name));
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable()
+		{
+
+			@Override
+			public void run()
+			{
+				for (final String command : plugin.getPlayerWipeCommands())
+					Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, name));
+			}
+		});
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

@@ -6,8 +6,11 @@ version: '8.7'
 wipePlayerFiles: true
 # execute this commands when player is deleted 
 # (Example: delete other plugins data too)
-playerWipeCommands: 
-- say $0$ has been wiped!
+# playerWipeCommands:
+# - say $0$ has been wiped!
+# - permissions player removegroup $0$ user
+# - money remove $0$
+playerWipeCommands: []
 # block usage of >
 disablePipes: false
 # show [CrazyPlugin] chatheaders in front of every plugin message
