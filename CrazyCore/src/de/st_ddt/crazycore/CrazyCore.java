@@ -383,6 +383,7 @@ public class CrazyCore extends CrazyPlugin
 		super.load();
 		final ConfigurationSection config = getConfig();
 		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
+		playerWipeCommands.clear();
 		List<String> list = config.getStringList("playerWipeCommands");
 		if (list != null)
 			playerWipeCommands.addAll(list);
