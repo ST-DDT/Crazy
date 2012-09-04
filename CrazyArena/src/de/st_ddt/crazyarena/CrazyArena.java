@@ -1,9 +1,11 @@
 package de.st_ddt.crazyarena;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -44,7 +46,7 @@ public class CrazyArena extends CrazyPlugin
 	private static final TreeMap<String, Arena<?>> arenasByName = new TreeMap<String, Arena<?>>();
 	private static final TreeMap<String, Set<Arena<?>>> arenasByType = new TreeMap<String, Set<Arena<?>>>();
 	private static final TreeMap<String, Arena<?>> arenasByPlayer = new TreeMap<String, Arena<?>>();
-	private static TreeMap<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
+	private static final TreeMap<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
 	private static CrazyArena plugin;
 	private final HashMap<String, Arena<?>> invitations = new HashMap<String, Arena<?>>();
 	private final HashMap<String, Arena<?>> selection = new HashMap<String, Arena<?>>();
@@ -75,6 +77,32 @@ public class CrazyArena extends CrazyPlugin
 		getServer();
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(playerlistener, this);
+	}
+
+	public void load()
+	{
+		ConfigurationSection config = getConfig();
+		List<String> arenaList = config.getStringList("arenas");
+		int loadedArenas = 0;
+		if (arenas != null)
+			for (String name : arenaList)
+			{
+				try
+				{
+					Arena<?> arena = Arena.loadFromFile(name);
+					loadedArenas++;
+					arenas.add(arena);
+					arenasByName.put(name.toLowerCase(), arena);
+					arenasByType.get(arena.getType().toLowerCase()).add(arena);
+				}
+				catch (FileNotFoundException e)
+				{
+					broadcastLocaleMessage(true, "crazyarena.warnloaderror", "ARENA.FILENOTFOUND", name);
+				}
+				catch (Exception e)
+				{}
+			}
+		sendLocaleMessage("ARENA.LOADED", Bukkit.getConsoleSender(), loadedArenas);
 	}
 
 	@Override

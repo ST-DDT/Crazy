@@ -37,6 +37,11 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 	protected final CrazyLocale locale;
 	protected ArenaStatus status = ArenaStatus.INITIALIZING;
 
+	public static Arena<?> loadFromFile(final String name) throws Exception
+	{
+		return loadFromFile(name, new File(arenaDataRootPath + name + File.separator + "config.yml"));
+	}
+
 	public static Arena<?> loadFromFile(final String name, final File file) throws Exception
 	{
 		final YamlConfiguration config = new YamlConfiguration();
