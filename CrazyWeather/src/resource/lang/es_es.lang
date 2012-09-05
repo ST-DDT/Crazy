@@ -1,0 +1,8 @@
+﻿CRAZYWEATHER=CrazyWeather
+CRAZYWEATHER.COMMAND.WEATHER.ERROR=Error de mundo (Puede que no haya sido cargado)
+CRAZYWEATHER.COMMAND.WEATHER.SUCCESS=El clima cambió con éxito.
+CRAZYWEATHER.WEATHER.SUN=$0$ ahora tiene &Fclima &Esoleado!
+CRAZYWEATHER.WEATHER.RAIN=$0$ ahora tiene &Fclima &9lluvioso!
+CRAZYWEATHER.WEATHER.STORM=$0$ ahora tiene &Fclima &9de tormenta!
+CRAZYWEATHER.THUNDERTOOL.GET=Thundertool = &D$0$ ($1$)
+CRAZYWEATHER.THUNDERTOOL.SET=Thundertool cambiada a &D$0$ ($1$)
