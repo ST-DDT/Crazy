@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -79,27 +81,35 @@ public class CrazyArena extends CrazyPlugin
 		pm.registerEvents(playerlistener, this);
 	}
 
+	@Override
 	public void load()
 	{
-		ConfigurationSection config = getConfig();
-		List<String> arenaList = config.getStringList("arenas");
+		final ConfigurationSection config = getConfig();
+		arenas.clear();
+		arenasByName.clear();
+		for (final Set<Arena<?>> type : arenasByType.values())
+			type.clear();
+		arenasByPlayer.clear();
+		invitations.clear();
+		selection.clear();
+		final List<String> arenaList = config.getStringList("arenas");
 		int loadedArenas = 0;
 		if (arenas != null)
-			for (String name : arenaList)
+			for (final String name : arenaList)
 			{
 				try
 				{
-					Arena<?> arena = Arena.loadFromFile(name);
+					final Arena<?> arena = Arena.loadFromFile(name);
 					loadedArenas++;
 					arenas.add(arena);
 					arenasByName.put(name.toLowerCase(), arena);
 					arenasByType.get(arena.getType().toLowerCase()).add(arena);
 				}
-				catch (FileNotFoundException e)
+				catch (final FileNotFoundException e)
 				{
 					broadcastLocaleMessage(true, "crazyarena.warnloaderror", "ARENA.FILENOTFOUND", name);
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{}
 			}
 		sendLocaleMessage("ARENA.LOADED", Bukkit.getConsoleSender(), loadedArenas);
@@ -130,7 +140,7 @@ public class CrazyArena extends CrazyPlugin
 		return arenasByType.get(name.toLowerCase());
 	}
 
-	public Arena<?> getArena(final Player player)
+	public Arena<?> getArena(final OfflinePlayer player)
 	{
 		return getArenaByPlayer(player.getName());
 	}
@@ -138,6 +148,16 @@ public class CrazyArena extends CrazyPlugin
 	public Arena<?> getArenaByPlayer(final String name)
 	{
 		return arenasByPlayer.get(name.toLowerCase());
+	}
+
+	public void setArenaByPlayer(final OfflinePlayer player, final Arena<?> arena)
+	{
+		setArenaByPlayer(player.getName(), arena);
+	}
+
+	public void setArenaByPlayer(final String name, final Arena<?> arena)
+	{
+		arenasByPlayer.put(name.toLowerCase(), arena);
 	}
 
 	public Arena<?> getArena(final String name)
@@ -599,6 +619,14 @@ public class CrazyArena extends CrazyPlugin
 		arenas.remove(arena);
 		arenasByName.remove(name);
 		arenasByType.get(arena.getType()).remove(arena);
+		Iterator<Entry<String, Arena<?>>> it = invitations.entrySet().iterator();
+		while (it.hasNext())
+			if (it.next().getValue() == arena)
+				it.remove();
+		it = selection.entrySet().iterator();
+		while (it.hasNext())
+			if (it.next().getValue() == arena)
+				it.remove();
 		sendLocaleMessage("COMMAND.ARENA.DELETED", sender, name);
 		sendLocaleMessage("COMMAND.ARENA.DELETED.RECOVER", sender, name);
 	}
