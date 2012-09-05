@@ -1,0 +1,20 @@
+﻿CRAZYPUNISHER=CrazyPunisher
+CRAZYPUNISHER.MESSAGE.HARDBAN=&CEl martillo de la justicia cayó sobre tí y fuiste baneado de este servidor!
+CRAZYPUNISHER.MESSAGE.HARDBAN=&CHas sido baneado de este servidor!
+CRAZYPUNISHER.MESSAGE.JAILED=Has sido &CEncarcelado!
+CRAZYPUNISHER.MESSAGE.JAILEDUNTIL=Estas &Cencarcelado! &F$0$
+CRAZYPUNISHER.MESSAGE.KICK=Has sido kickeado!
+CRAZYPUNISHER.BROADCAST.HARDBAN=&5El martillo de la justicia cayó sobre $0$ y ha sido baneado del servidor!
+CRAZYPUNISHER.BROADCAST.BAN=&5$0$ ha sido baneado del servidor!
+CRAZYPUNISHER.BROADCAST.UNBAN=&5$0$ ha sido desbaneado del servidor!
+CRAZYPUNISHER.BROADCAST.JAIL=&5$0$ ha sido encarcelado!
+CRAZYPUNISHER.BROADCAST.UNJAIL=&5$0$ ha sido liberado!
+CRAZYPUNISHER.BROADCAST.KICK=&5$0$ ha sido kickeado del servidor!
+CRAZYPUNISHER.COMMAND.SHOW=Ahora eres visible!
+CRAZYPUNISHER.COMMAND.SHOW.DONE=Visibilidad cambiada con éxito a Visible!
+CRAZYPUNISHER.COMMAND.HIDDEN=Ahora estás invisible!
+CRAZYPUNISHER.COMMAND.HIDDEN.DONE=Visibilidad cambiada con éxito a Invisible!
+CRAZYPUNISHER.JAILLOCATION=Jaillocation = $0$ $1$ $2$ $3$
+CRAZYPUNISHER.JAILLOCATION.CHANGED=Localización de la carcel cambiada
+CRAZYPUNISHER.JAILRANGE=Jailrange = $0$
+CRAZYPUNISHER.JAILRANGE.CHANGED=Rango de carcel cambiado
