@@ -9,10 +9,17 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazylogin.crypt.Encryptor;
 import de.st_ddt.crazylogin.data.LoginData;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginInterface<LoginData, S>
 {
+
+	public void playerLogin(Player player, final String password) throws CrazyException;
+
+	public void playerLogout(Player player) throws CrazyException;
+
+	public void playerPassword(Player player, String password) throws CrazyException;
 
 	public int dropInactiveAccounts();
 
