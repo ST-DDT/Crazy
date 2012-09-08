@@ -1,8 +1,8 @@
 package de.st_ddt.crazyarena.utils;
 
 import java.util.ArrayList;
+
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -14,34 +14,35 @@ import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 public class SpawnList extends ArrayList<Location> implements ConfigurationSaveable
 {
 
-	protected final World world;
 	private static final long serialVersionUID = -4995034097544178441L;
 
-	public SpawnList(World world)
+	public SpawnList()
 	{
 		super();
-		this.world = world;
 	}
 
-	public SpawnList(World world, ConfigurationSection config)
+	public SpawnList(final ConfigurationSection config)
 	{
-		this(world);
+		super();
 		if (config != null)
 		{
-			for (String key : config.getKeys(false))
-				this.add(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection(key), world));
+			for (final String key : config.getKeys(false))
+				this.add(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection(key), null));
 		}
 	}
 
-	public void teleport(LivingEntity entity)
+	public void teleport(final LivingEntity entity)
 	{
 		entity.teleport(randomSpawn(), TeleportCause.PLUGIN);
 	}
 
-	public void spawn(EntityType type, int amount)
+	public void spawn(final EntityType type, final int amount)
 	{
 		for (int i = 0; i < amount; i++)
-			world.spawnEntity(randomSpawn(), type);
+		{
+			final Location location = randomSpawn();
+			location.getWorld().spawnEntity(location, type);
+		}
 	}
 
 	public Location randomSpawn()
@@ -49,15 +50,15 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 		return get((int) (Math.random() * size()));
 	}
 
-	public Location findNearest(Location target)
+	public Location findNearest(final Location target)
 	{
-		if (target.getWorld() != world)
-			return null;
 		double dist = Double.MAX_VALUE;
 		Location nearest = null;
-		for (Location location : this)
+		for (final Location location : this)
 		{
-			double temp = location.distance(target);
+			if (target.getWorld() != location.getWorld())
+				continue;
+			final double temp = location.distance(target);
 			if (temp < dist)
 			{
 				dist = temp;
@@ -68,10 +69,10 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		int anz = 0;
-		for (Location location : this)
-			ObjectSaveLoadHelper.saveLocation(config, path + "Location_" + (anz++), location);
+		for (final Location location : this)
+			ObjectSaveLoadHelper.saveLocation(config, path + "Location_" + (anz++), location, true, true);
 	}
 }
