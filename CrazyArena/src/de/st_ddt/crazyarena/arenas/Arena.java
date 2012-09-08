@@ -14,7 +14,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
-import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaUnsupportedException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
@@ -52,17 +51,9 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 	public static Arena<?> loadFromConfig(final String name, final ConfigurationSection config) throws Exception
 	{
 		Arena<?> arena = null;
-		try
-		{
-			arena = ObjectSaveLoadHelper.load(config, Arena.class, new Class[] { String.class, ConfigurationSection.class }, new Object[] { name, config }, null);
-			arena.status = ArenaStatus.valueOf(config.getString("status", "READY"));
-		}
-		catch (final Exception e)
-		{
-			if (arena != null)
-				arena.status = ArenaStatus.ERROR;
-			throw e;
-		}
+		arena = ObjectSaveLoadHelper.load(config, Arena.class, new Class[] { String.class, ConfigurationSection.class }, new Object[] { name, config }, null);
+		if (arena.getStatus() != ArenaStatus.CONSTRUCTING && arena.getStatus() != ArenaStatus.DISABLED)
+			arena.setEnabled(null, true);
 		return arena;
 	}
 
@@ -84,7 +75,6 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 	{
 		super();
 		this.name = name;
-		getDataFolder().mkdirs();
 		this.chatHeader = ChatHelper.colorise(config.getString("chatHeader", ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE));
 		// Locale
 		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
@@ -184,6 +174,10 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 
 	public abstract void unregisterMatchListener();
 
+	public abstract void registerArenaListener();
+
+	public abstract void unregisterArenaListener();
+
 	/**
 	 * Stops the arena and kicks every participant. This should be executed after every finished match.
 	 */
@@ -198,17 +192,18 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 			{}
 		participants.clear();
 		unregisterMatchListener();
-		if (status.isActive())
+		if (status.isEnabled())
 			status = ArenaStatus.READY;
 	}
 
 	/**
-	 * Shutdown arena. This will be executed on server shutdown and before arena is deleted. This should unregister every event listeners.
+	 * Shutdown arena. This will be executed on server shutdown and before arena is deleted.
 	 */
 	public void shutdown()
 	{
 		status = ArenaStatus.SHUTDOWN;
 		stop();
+		unregisterArenaListener();
 	}
 
 	public boolean isParticipant(final Player player)
@@ -309,31 +304,38 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		return participants.get(name.toLowerCase());
 	}
 
+	@Override
 	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		return false;
 	}
 
-	public void setEnabled(final boolean enabled) throws CrazyArenaException
+	public boolean setEnabled(final CommandSender sender, final boolean enabled)
 	{
 		if (enabled)
 		{
-			if (status == ArenaStatus.DISABLED)
-			{
-				status = checkEnable();
-			}
+			if (!status.isEnabled())
+				if (!checkArena(sender))
+					status = ArenaStatus.CONSTRUCTING;
+				else
+					status = ArenaStatus.READY;
 		}
 		else
 		{
-			stop();
 			status = ArenaStatus.DISABLED;
+			stop();
 		}
+		return status.isEnabled();
 	}
 
-	protected ArenaStatus checkEnable() throws CrazyArenaException
-	{
-		return ArenaStatus.READY;
-	}
+	/**
+	 * This method checks whether the arena is setup properly. Return true when arena is setup corretly, otherwise it returns false. If this returns true, it does not send anything to the sender.
+	 * 
+	 * @param sender
+	 *            The checking CommandSender (is null when loading arenas from file)
+	 * @return Whether this arena is finished or not.
+	 */
+	protected abstract boolean checkArena(final CommandSender sender);
 
 	@Override
 	public void show(final CommandSender target)
@@ -376,7 +378,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 	}
 
 	@Override
-	public void show(CommandSender target, String chatHeader, boolean showDetailed)
+	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		// EDIT show
 		// Name & Type
@@ -441,12 +443,12 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 			sendLocaleMessage(locale, target, args);
 	}
 
-	public final void broadcastLocaleMessage(boolean console, final String localepath, final Object... args)
+	public final void broadcastLocaleMessage(final boolean console, final String localepath, final Object... args)
 	{
 		broadcastLocaleMessage(console, getLocale().getLanguageEntry(localepath), args);
 	}
 
-	public final void broadcastLocaleMessage(boolean console, final CrazyLocale locale, final Object... args)
+	public final void broadcastLocaleMessage(final boolean console, final CrazyLocale locale, final Object... args)
 	{
 		if (console)
 			sendLocaleMessage(locale, Bukkit.getConsoleSender(), args);

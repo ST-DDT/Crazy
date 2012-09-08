@@ -23,14 +23,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyarena.exceptions.CrazyArenaException;
 import de.st_ddt.crazyarena.listener.CrazyArenaPlayerListener;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandAlreadyExistsException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandCrazyErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
@@ -502,7 +500,7 @@ public class CrazyArena extends CrazyPlugin
 		return false;
 	}
 
-	private void commandEnable(final CommandSender sender, final String[] args, final boolean enabled) throws CrazyCommandException
+	private void commandEnable(final CommandSender sender, final String[] args, boolean enabled) throws CrazyCommandException
 	{
 		if (sender.hasPermission("crazyarena.arena.switchmode"))
 			throw new CrazyCommandPermissionException();
@@ -510,15 +508,8 @@ public class CrazyArena extends CrazyPlugin
 			throw new CrazyCommandUsageException("/crazyarena " + (enabled ? "enabled" : "disabled") + " <Arena>");
 		final String name = args[0];
 		final Arena<?> arena = getArena(name);
-		try
-		{
-			arena.setEnabled(enabled);
-		}
-		catch (final CrazyArenaException e)
-		{
-			throw new CrazyCommandCrazyErrorException(e);
-		}
-		sendLocaleMessage("COMMAND.ARENA.ENABLED", sender, name, enabled ? "TRUE" : "FALSE");
+		enabled = arena.setEnabled(sender, enabled);
+		sendLocaleMessage("COMMAND.ARENA.ENABLED", sender, name, enabled ? "TRUE" : "FALSE", arena.getStatus().toString());
 		if (sender != Bukkit.getConsoleSender())
 			sendLocaleMessage("COMMAND.ARENA.ENABLED", Bukkit.getConsoleSender(), name);
 	}
