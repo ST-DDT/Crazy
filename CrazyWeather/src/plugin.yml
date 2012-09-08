@@ -85,12 +85,12 @@ permissions:
     default: op
   crazyweather.thunder.tool: 
     description: Allow casting thunderstrikes with tool
-    default: false
+    default: op
     children:
       crazyweather.mode: true
   crazyweather.thunder.toolchange: 
     description: Allow changing thunderstrikes tool
-    default: false
+    default: op
     children: 
       crazyweather.thunder.tool: true
       crazyweather.mode: true
