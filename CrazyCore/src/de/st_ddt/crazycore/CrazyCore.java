@@ -38,13 +38,14 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 public class CrazyCore extends CrazyPlugin
 {
 
-	protected static CrazyCore plugin;
-	protected final HashSet<String> preloadedLanguages = new HashSet<String>();
-	protected final HashSet<String> loadedLanguages = new HashSet<String>();
+	private static CrazyCore plugin;
+	private final HashSet<String> preloadedLanguages = new HashSet<String>();
+	private final HashSet<String> loadedLanguages = new HashSet<String>();
 	private CrazyCoreMessageListener messageListener;
 	private CrazyCoreCrazyListener crazylistener;
-	protected boolean wipePlayerFiles;
-	protected final ArrayList<String> playerWipeCommands = new ArrayList<String>();
+	private boolean wipePlayerFiles;
+	private boolean wipePlayerBans;
+	private final ArrayList<String> playerWipeCommands = new ArrayList<String>();
 
 	public static CrazyCore getPlugin()
 	{
@@ -383,6 +384,7 @@ public class CrazyCore extends CrazyPlugin
 		super.load();
 		final ConfigurationSection config = getConfig();
 		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
+		wipePlayerBans = config.getBoolean("wipePlayerBans", false);
 		playerWipeCommands.clear();
 		List<String> list = config.getStringList("playerWipeCommands");
 		if (list != null)
@@ -416,6 +418,7 @@ public class CrazyCore extends CrazyPlugin
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("wipePlayerFiles", wipePlayerFiles);
+		config.set("wipePlayerBans", wipePlayerBans);
 		config.set("playerWipeCommands", playerWipeCommands);
 		config.set("disablePipes", CrazyPipe.isDisabled());
 		config.set("showChatHeaders", ChatHelper.isShowingChatHeadersEnabled());
@@ -429,6 +432,11 @@ public class CrazyCore extends CrazyPlugin
 	public boolean isWipingPlayerFilesEnabled()
 	{
 		return wipePlayerFiles;
+	}
+
+	public boolean isWipingPlayerBansEnabled()
+	{
+		return wipePlayerBans;
 	}
 
 	public ArrayList<String> getPlayerWipeCommands()

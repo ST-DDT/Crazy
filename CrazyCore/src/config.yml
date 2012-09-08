@@ -2,8 +2,11 @@
 # For more information visit
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyCore/src/config.yml
 version: X.Y
-# wipe the players data file in "world/players" folder too.
+# removes the players data file in "world/players" folder too. (true/false)
+# removes op and whitelist
 wipePlayerFiles: true
+# removes player name from the banned list (true/false)
+wipePlayerBans: false
 # execute this commands when player is deleted 
 # (Example: delete other plugins data too)
 # playerWipeCommands:
@@ -11,17 +14,19 @@ wipePlayerFiles: true
 # - permissions player removegroup $0$ user
 # - money remove $0$
 playerWipeCommands: []
-# block usage of >
+# block usage of > (true/false)
 disablePipes: false
-# show [CrazyPlugin] chatheaders in front of every plugin message
+# show [CrazyPlugin] chatheaders in front of every plugin message (true/false)
 showChatHeaders: true
 # the servers default language
 defaultLanguage: en_en
 # the languages which are loaded on startup 
 # (this languages will be updated when a plugin has been updated)
 preloadedLanguages:
-- de_de
 - en_en
+# - de_de
+# - fr_fr
+# - es_es
 # the language selection for each player & console
 players:
   console: en_en
