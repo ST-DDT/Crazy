@@ -37,6 +37,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 	protected final CrazyLogger logger = new CrazyLogger(this);
 	protected CrazyLocale locale = null;
+	protected String previousVersion = "0";
 	protected boolean isUpdated = false;
 	protected boolean isInstalled = false;
 
@@ -231,8 +232,9 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		new File(getDataFolder().getPath() + "/lang").mkdirs();
 		checkLocale();
 		final ConfigurationSection config = getConfig();
-		isInstalled = config.getString("version", "").equals("");
-		isUpdated = !config.getString("version", "").equals(getDescription().getVersion());
+		previousVersion = config.getString("version", "0");
+		isInstalled = previousVersion.equals("0");
+		isUpdated = !previousVersion.equals(getDescription().getVersion());
 		config.set("version", getDescription().getVersion());
 		super.onLoad();
 	}
