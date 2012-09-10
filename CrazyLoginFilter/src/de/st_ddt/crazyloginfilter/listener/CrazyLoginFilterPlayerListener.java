@@ -24,7 +24,7 @@ public class CrazyLoginFilterPlayerListener implements Listener
 	public void PlayerLoginNameCharCheck(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
-		if (!plugin.checkNameChars(player.getName()))
+		if (plugin.checkNameChars(player.getName()))
 			return;
 		event.setResult(Result.KICK_OTHER);
 		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "NAME.INVALIDCHARS"));
@@ -35,7 +35,7 @@ public class CrazyLoginFilterPlayerListener implements Listener
 	public void PlayerLoginNameCaseCheck(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
-		if (!plugin.checkNameCase(player.getName()))
+		if (plugin.checkNameCase(player.getName()))
 			return;
 		event.setResult(Result.KICK_OTHER);
 		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "NAME.INVALIDCASE"));
