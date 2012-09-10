@@ -28,11 +28,12 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 {
 
 	private static CrazyLoginFilter plugin;
-	protected PlayerAccessFilter serverFilter;
+	private PlayerAccessFilter serverFilter;
 	private CrazyLoginFilterPlayerListener playerListener;
-	protected String filterNames;
-	protected int minNameLength;
-	protected int maxNameLength;
+	private String filterNames;
+	private boolean blockDifferentNameCases;
+	private int minNameLength;
+	private int maxNameLength;
 
 	public static CrazyLoginFilter getPlugin()
 	{
@@ -83,6 +84,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 			filterNames = ".";
 		else if (filterNames.equals("true"))
 			filterNames = "[a-zA-Z0-9_]";
+		blockDifferentNameCases = config.getBoolean("blockDifferentNameCases", blockDifferentNameCases);
 		minNameLength = Math.min(Math.max(config.getInt("minNameLength", 3), 1), 16);
 		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 16);
 		// Database
@@ -128,6 +130,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 			config.set("filterNames", false);
 		else
 			config.set("filterNames", filterNames);
+		config.set("blockDifferentNameCases", blockDifferentNameCases);
 		config.set("minNameLength", minNameLength);
 		config.set("maxNameLength", maxNameLength);
 		logger.save(config, "logs.");
@@ -460,6 +463,16 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 					saveConfiguration();
 					return;
 				}
+				else if (args[0].equalsIgnoreCase("blockDifferentNameCases"))
+				{
+					boolean newValue = false;
+					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
+						newValue = true;
+					blockDifferentNameCases = newValue;
+					sendLocaleMessage("MODE.CHANGE", sender, "blockDifferentNameCases", blockDifferentNameCases ? "True" : "False");
+					saveConfiguration();
+					return;
+				}
 				else if (args[0].equalsIgnoreCase("minNameLength"))
 				{
 					int length = minNameLength;
@@ -507,6 +520,11 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				if (args[0].equalsIgnoreCase("filterNames"))
 				{
 					sendLocaleMessage("MODE.CHANGE", sender, "filterNames", filterNames.equals(".") ? "disabled" : filterNames);
+					return;
+				}
+				else if (args[0].equalsIgnoreCase("blockDifferentNameCases"))
+				{
+					sendLocaleMessage("MODE.CHANGE", sender, "blockDifferentNameCases", blockDifferentNameCases ? "True" : "False");
 					return;
 				}
 				else if (args[0].equalsIgnoreCase("minNameLength"))
@@ -580,9 +598,33 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		return serverFilter;
 	}
 
+	public String getNameFilter()
+	{
+		return filterNames;
+	}
+
 	public boolean checkNameChars(final String name)
 	{
 		return name.matches(filterNames + "*");
+	}
+
+	public boolean isBlockingDifferentNameCasesEnabled()
+	{
+		return blockDifferentNameCases;
+	}
+
+	public boolean checkNameCase(final String name)
+	{
+		if (blockDifferentNameCases)
+		{
+			final PlayerAccessFilter data = getPlayerData(name);
+			if (data == null)
+				return true;
+			else
+				return data.getName().equals(name);
+		}
+		else
+			return true;
 	}
 
 	public int getMinNameLength()
