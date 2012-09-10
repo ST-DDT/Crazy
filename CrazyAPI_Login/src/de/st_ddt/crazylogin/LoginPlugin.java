@@ -83,7 +83,13 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 
 	public double getMoveRange();
 
+	public String getNameFilter();
+
 	public boolean checkNameChars(String name);
+
+	public boolean isBlockingDifferentNameCasesEnabled();
+
+	public boolean checkNameCase(String name);
 
 	public int getMinNameLength();
 
