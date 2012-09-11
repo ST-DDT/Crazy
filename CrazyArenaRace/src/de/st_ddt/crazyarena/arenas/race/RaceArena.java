@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -20,14 +21,23 @@ import de.st_ddt.crazyarena.participants.race.RaceParticipant;
 import de.st_ddt.crazyarena.tasks.CountDownTask;
 import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
+import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class RaceArena extends Arena<RaceParticipant>
 {
 
 	protected ArrayList<Location> starts = new ArrayList<Location>();
+	protected SpawnList spectatorSpawns = new SpawnList();
 	protected final HashMap<String, Location> quitLocation = new HashMap<String, Location>();
 	protected ArrayList<RaceTarget> targets = new ArrayList<RaceTarget>();
 	private int runnumber = 0;
@@ -56,6 +66,10 @@ public class RaceArena extends Arena<RaceParticipant>
 				previous = temp;
 			}
 		}
+		final ConfigurationSection spectatorConfig = config.getConfigurationSection("spectators");
+		if (spectatorConfig != null)
+			for (final String key : spectatorConfig.getKeys(false))
+				spectatorSpawns.add(ObjectSaveLoadHelper.loadLocation(spectatorConfig.getConfigurationSection(key), null));
 	}
 
 	public RaceArena(final String name)
@@ -70,16 +84,277 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Override
+	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
+	{
+		if (commandLabel.equals("player") || commandLabel.equals("players"))
+		{
+			if (status != ArenaStatus.CONSTRUCTING)
+				throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
+			commandPlayerSpawns(sender, args);
+			return true;
+		}
+		if (commandLabel.equals("spectator") || commandLabel.equals("spectators"))
+		{
+			if (status != ArenaStatus.CONSTRUCTING)
+				throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
+			commandSpectatorSpawns(sender, args);
+			return true;
+		}
+		if (commandLabel.equals("target") || commandLabel.equals("targets"))
+		{
+			if (status != ArenaStatus.CONSTRUCTING)
+				throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
+			// Targets
+			return true;
+		}
+		if (commandLabel.equals("options"))
+		{
+			if (status.isActive())
+				throw new CrazyCommandCircumstanceException("while arena is idle", status.toString());
+			// Options (minParticipants)
+			return true;
+		}
+		return false;
+	}
+
+	private void commandPlayerSpawns(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (!hasPermission(sender, "playerspawns"))
+			throw new CrazyCommandPermissionException();
+		if (args.length == 0)
+		{
+			commandPlayerSpawnsList(sender, args);
+			return;
+		}
+		final String commandLabel = args[0].toLowerCase();
+		final String[] newArgs = ChatHelper.shiftArray(args, 1);
+		try
+		{
+			if (commandLabel.equals("add"))
+			{
+				commandPlayerSpawnsAdd(sender, newArgs);
+				return;
+			}
+			else if (commandLabel.equals("insert"))
+			{
+				commandPlayerSpawnsInsert(sender, newArgs);
+				return;
+			}
+			else if (commandLabel.equals("del") || commandLabel.equals("delete") || commandLabel.equals("rem") || commandLabel.equals("remove"))
+			{
+				commandPlayerSpawnsRemove(sender, newArgs);
+				return;
+			}
+			else if (commandLabel.equals("list"))
+			{
+				commandPlayerSpawnsList(sender, newArgs);
+				return;
+			}
+		}
+		catch (final CrazyCommandException e)
+		{
+			e.shiftCommandIndex();
+			throw e;
+		}
+		throw new CrazyCommandUsageException("/crazyarena player add [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena player insert <Index> [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena player del(ete)/rem(ove) <Index>", "/crazyarena player [list]");
+	}
+
+	private void commandPlayerSpawnsAdd(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		starts.add(ChatHelper.stringToLocation(sender, args));
+		saveToFile();
+		sendLocaleMessage("PLAYERSPAWNS.ADDED", sender, starts.size());
+	}
+
+	private void commandPlayerSpawnsInsert(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (args.length == 0)
+			throw new CrazyCommandUsageException("/crazyarena player insert <Index> [[World] [[X] [Y] [Z]]]");
+		try
+		{
+			final int pos = Integer.parseInt(args[0]);
+			starts.add(pos, ChatHelper.stringToLocation(sender, ChatHelper.shiftArray(args, 1)));
+			saveToFile();
+			sendLocaleMessage("PLAYERSPAWNS.ADDED", sender, pos);
+		}
+		catch (final CrazyCommandException e)
+		{
+			e.shiftCommandIndex();
+			throw e;
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new CrazyCommandParameterException(0, "Number (Integer)");
+		}
+		catch (final IndexOutOfBoundsException e)
+		{
+			throw new CrazyCommandErrorException(e);
+		}
+	}
+
+	private void commandPlayerSpawnsRemove(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		try
+		{
+			final int pos = Integer.parseInt(args[0]);
+			starts.remove(pos);
+			saveToFile();
+			sendLocaleMessage("PLAYERSPAWNS.REMOVED", sender, pos);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new CrazyCommandParameterException(0, "Number (Integer)");
+		}
+		catch (final IndexOutOfBoundsException e)
+		{
+			throw new CrazyCommandErrorException(e);
+		}
+	}
+
+	private void commandPlayerSpawnsList(final CommandSender sender, final String[] args)
+	{
+		final int length = starts.size();
+		sendLocaleMessage("PLAYERSPAWNS.LIST.HEAD", sender, name);
+		sendLocaleMessage("PLAYERSPAWNS.LIST.SEPERATOR", sender);
+		for (int i = 0; i < length; i++)
+		{
+			final Location start = starts.get(i);
+			sendLocaleMessage("PLAYERSPAWNS.LIST.ENTRY", sender, i + 1, start.getWorld(), start.getX(), start.getY(), start.getZ(), start.getYaw(), start.getPitch());
+		}
+	}
+
+	private void commandSpectatorSpawns(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (!hasPermission(sender, "spectatorspawns"))
+			throw new CrazyCommandPermissionException();
+		if (args.length == 0)
+		{
+			commandSpectatorSpawnsList(sender, args);
+			return;
+		}
+		final String commandLabel = args[0].toLowerCase();
+		final String[] newArgs = ChatHelper.shiftArray(args, 1);
+		try
+		{
+			if (commandLabel.equals("add"))
+			{
+				commandSpectatorSpawnsAdd(sender, newArgs);
+				return;
+			}
+			else if (commandLabel.equals("insert"))
+			{
+				commandSpectatorSpawnsInsert(sender, newArgs);
+				return;
+			}
+			else if (commandLabel.equals("del") || commandLabel.equals("delete") || commandLabel.equals("rem") || commandLabel.equals("remove"))
+			{
+				commandSpectatorSpawnsRemove(sender, newArgs);
+				return;
+			}
+			else if (commandLabel.equals("list"))
+			{
+				commandSpectatorSpawnsList(sender, newArgs);
+				return;
+			}
+		}
+		catch (final CrazyCommandException e)
+		{
+			e.shiftCommandIndex();
+			throw e;
+		}
+		throw new CrazyCommandUsageException("/crazyarena spectator add [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena spectator insert <Index> [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena spectator del(ete)/rem(ove) <Index>", "/crazyarena spectator [list]");
+	}
+
+	private void commandSpectatorSpawnsAdd(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		spectatorSpawns.add(ChatHelper.stringToLocation(sender, args));
+		saveToFile();
+		sendLocaleMessage("SPECTATORSPAWNS.ADDED", sender, spectatorSpawns.size());
+	}
+
+	private void commandSpectatorSpawnsInsert(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (args.length == 0)
+			throw new CrazyCommandUsageException("/crazyarena spectator insert <Index> [[World] [[X] [Y] [Z]]]");
+		try
+		{
+			final int pos = Integer.parseInt(args[0]);
+			spectatorSpawns.add(pos, ChatHelper.stringToLocation(sender, ChatHelper.shiftArray(args, 1)));
+			saveToFile();
+			sendLocaleMessage("SPECTATORSPAWNS.ADDED", sender, pos);
+		}
+		catch (final CrazyCommandException e)
+		{
+			e.shiftCommandIndex();
+			throw e;
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new CrazyCommandParameterException(0, "Number (Integer)");
+		}
+		catch (final IndexOutOfBoundsException e)
+		{
+			throw new CrazyCommandErrorException(e);
+		}
+	}
+
+	private void commandSpectatorSpawnsRemove(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		try
+		{
+			final int pos = Integer.parseInt(args[0]);
+			spectatorSpawns.remove(pos);
+			saveToFile();
+			sendLocaleMessage("SPECTATORSPAWNS.REMOVED", sender, pos);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new CrazyCommandParameterException(0, "Number (Integer)");
+		}
+		catch (final IndexOutOfBoundsException e)
+		{
+			throw new CrazyCommandErrorException(e);
+		}
+	}
+
+	private void commandSpectatorSpawnsList(final CommandSender sender, final String[] args)
+	{
+		final int length = spectatorSpawns.size();
+		sendLocaleMessage("SPECTATORSPAWNS.LIST.HEAD", sender, name);
+		sendLocaleMessage("SPECTATORSPAWNS.LIST.SEPERATOR", sender);
+		for (int i = 0; i < length; i++)
+		{
+			final Location spawn = spectatorSpawns.get(i);
+			sendLocaleMessage("SPECTATORSPAWNS.LIST.ENTRY", sender, i + 1, spawn.getWorld(), spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getYaw(), spawn.getPitch());
+		}
+	}
+
+	@Override
+	protected boolean checkArena(final CommandSender sender)
+	{
+		// EDIT Automatisch generierter Methodenstub
+		// minParticpants > 1
+		// Starts > minParticipants
+		// SpectatorsSpawns > 0
+		// TargetsCount > 0
+		return true;
+	}
+
+	@Override
 	public void save()
 	{
 		config.set("starts", null);
 		int i = 0;
 		for (final Location location : starts)
 			ObjectSaveLoadHelper.saveLocation(config, "starts.start" + (i++) + ".", location, true, true);
-		i = 0;
 		config.set("targets", null);
+		i = 0;
 		for (final RaceTarget target : targets)
 			target.save(config, "targets.target" + (i++) + ".");
+		config.set("spectators", null);
+		i = 0;
+		for (final RaceTarget target : targets)
+			target.save(config, "spectators.spectators" + (i++) + ".");
 	}
 
 	public Location getEmptyStartLocation()
@@ -197,6 +472,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		final int position = winners++;
 		raceParticipant.setParticipantType(ParticipantType.SPECTATOR);
 		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime()));
+		// EDIT queue kick task for to slow players
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 			stop();
 	}
@@ -214,6 +490,18 @@ public class RaceArena extends Arena<RaceParticipant>
 		if (playerMatchListener != null)
 			HandlerList.unregisterAll(playerMatchListener);
 		playerMatchListener = null;
+	}
+
+	@Override
+	public void registerArenaListener()
+	{
+		// EDIT Automatisch generierter Methodenstub
+	}
+
+	@Override
+	public void unregisterArenaListener()
+	{
+		// EDIT Automatisch generierter Methodenstub
 	}
 
 	@Override
