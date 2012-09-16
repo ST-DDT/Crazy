@@ -193,14 +193,24 @@ public class PlayerSaver implements Named
 				inv.setItem(i, inventory.get(i).clone());
 		if (inventory.containsKey(-1))
 			inv.setBoots(inventory.get(-1).clone());
+		else
+			inv.setBoots(null);
 		if (inventory.containsKey(-2))
 			inv.setLeggings(inventory.get(-2).clone());
+		else
+			inv.setLeggings(null);
 		if (inventory.containsKey(-3))
 			inv.setChestplate(inventory.get(-3).clone());
+		else
+			inv.setChestplate(null);
 		if (inventory.containsKey(-4))
 			inv.setHelmet(inventory.get(-4).clone());
+		else
+			inv.setHelmet(null);
 		if (inventory.containsKey(-5))
 			player.setItemInHand(inventory.get(-5).clone());
+		else
+			inv.setItemInHand(null);
 	}
 
 	/**
