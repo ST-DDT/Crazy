@@ -14,7 +14,7 @@ public abstract class ConditionBase<T> implements Condition<T>
 	@SuppressWarnings("unchecked")
 	public static <T> ConditionBase<T> load(ConfigurationSection config)
 	{
-		return (ConditionBase<T>) ObjectSaveLoadHelper.load(config, null, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
+		return (ConditionBase<T>) ObjectSaveLoadHelper.load(config, ConditionBase.class, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
 	}
 
 	public ConditionBase(ConfigurationSection config)
