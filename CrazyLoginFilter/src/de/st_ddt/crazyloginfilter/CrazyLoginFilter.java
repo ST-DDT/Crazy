@@ -1,35 +1,36 @@
 package de.st_ddt.crazyloginfilter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazyloginfilter.commands.CrazyLoginFilterCommandConnection;
+import de.st_ddt.crazyloginfilter.commands.CrazyLoginFilterCommandCreate;
+import de.st_ddt.crazyloginfilter.commands.CrazyLoginFilterCommandDelete;
+import de.st_ddt.crazyloginfilter.commands.CrazyLoginFilterCommandIP;
+import de.st_ddt.crazyloginfilter.commands.CrazyLoginFilterCommandServerFilter;
+import de.st_ddt.crazyloginfilter.commands.CrazyLoginFilterCommandShow;
 import de.st_ddt.crazyloginfilter.data.PlayerAccessFilter;
 import de.st_ddt.crazyloginfilter.databases.CrazyLoginFilterConfigurationDatabase;
 import de.st_ddt.crazyloginfilter.listener.CrazyLoginFilterPlayerListener;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyplugin.exceptions.CrazyNotImplementedException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.ToStringDataGetter;
 import de.st_ddt.crazyutil.databases.DatabaseType;
+import de.st_ddt.crazyutil.locales.Localized;
 
+;
 public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, PlayerAccessFilter>
 {
 
 	private static CrazyLoginFilter plugin;
-	private PlayerAccessFilter serverFilter;
+	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyLoginFilterPlayerListener playerListener;
+	private PlayerAccessFilter serverFilter;
 	private String filterNames;
 	private boolean blockDifferentNameCases;
 	private int minNameLength;
@@ -40,21 +41,140 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		return plugin;
 	}
 
-	@Override
-	protected String getShortPluginName()
+	public CrazyLoginFilter()
 	{
-		return "clf";
+		super();
+		registerModes();
 	}
 
-	@Override
-	public void onEnable()
+	@Localized("CRAZYLOGINFILTER.MODE.CHANGE")
+	private void registerModes()
 	{
-		plugin = this;
-		registerHooks();
-		super.onEnable();
+		modeCommand.addMode(modeCommand.new Mode<String>("filterNames", String.class)
+		{
+
+			@Override
+			public String getValue()
+			{
+				return filterNames;
+			}
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("MODE.CHANGE", sender, "filterNames", filterNames.equals(".") ? "disabled" : filterNames);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				String newFilter = ChatHelper.listingString(" ", args);
+				if (newFilter.equalsIgnoreCase("false") || newFilter.equalsIgnoreCase("0") || newFilter.equalsIgnoreCase("off"))
+					newFilter = ".";
+				else if (newFilter.equalsIgnoreCase("true") || newFilter.equalsIgnoreCase("1") || newFilter.equalsIgnoreCase("on"))
+					newFilter = "[a-zA-Z0-9_]";
+				setValue(newFilter);
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				filterNames = newValue;
+				saveConfiguration();
+			}
+		});
+		modeCommand.addMode(modeCommand.new BooleanFalseMode("blockDifferentNameCases")
+		{
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				blockDifferentNameCases = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public Boolean getValue()
+			{
+				return blockDifferentNameCases;
+			}
+		});
+		modeCommand.addMode(modeCommand.new IntegerMode("minNameLength")
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("MODE.CHANGE", sender, name, getValue() + " characters");
+			}
+
+			@Override
+			public void setValue(final Integer newValue) throws CrazyException
+			{
+				minNameLength = Math.min(Math.max(newValue, 1), 16);
+				saveConfiguration();
+			}
+
+			@Override
+			public Integer getValue()
+			{
+				return minNameLength;
+			}
+		});
+		modeCommand.addMode(modeCommand.new IntegerMode("maxNameLength")
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("MODE.CHANGE", sender, name, getValue() + " characters");
+			}
+
+			@Override
+			public void setValue(final Integer newValue) throws CrazyException
+			{
+				maxNameLength = Math.min(Math.max(newValue, 1), 16);
+				saveConfiguration();
+			}
+
+			@Override
+			public Integer getValue()
+			{
+				return maxNameLength;
+			}
+		});
+		modeCommand.addMode(modeCommand.new BooleanFalseMode("saveDatabaseOnShutdown")
+		{
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				saveDatabaseOnShutdown = newValue;
+			}
+
+			@Override
+			public Boolean getValue()
+			{
+				return saveDatabaseOnShutdown;
+			}
+		});
 	}
 
-	public void registerHooks()
+	private void registerCommands()
+	{
+		mainCommand.addSubCommand(new CrazyLoginFilterCommandCreate(this), "create");
+		CrazyLoginFilterCommandShow showCommand = new CrazyLoginFilterCommandShow(this);
+		mainCommand.addSubCommand(showCommand, "show", "list");
+		CrazyLoginFilterCommandIP ipCommand = new CrazyLoginFilterCommandIP(this);
+		mainCommand.addSubCommand(ipCommand, "ip", "ips");
+		CrazyLoginFilterCommandConnection connectionCommand = new CrazyLoginFilterCommandConnection(this);
+		mainCommand.addSubCommand(connectionCommand, "connection", "connections");
+		mainCommand.addSubCommand(new CrazyLoginFilterCommandServerFilter(this, showCommand, ipCommand, connectionCommand), "serverfilter");
+		mainCommand.addSubCommand(new CrazyLoginFilterCommandDelete(this), "delete", "remove");
+	}
+
+	private void registerHooks()
 	{
 		this.playerListener = new CrazyLoginFilterPlayerListener(this);
 		final PluginManager pm = this.getServer().getPluginManager();
@@ -62,9 +182,23 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 	}
 
 	@Override
-	public void load()
+	public void onLoad()
 	{
-		super.load();
+		plugin = this;
+		super.onLoad();
+	}
+
+	@Override
+	public void onEnable()
+	{
+		registerHooks();
+		super.onEnable();
+		registerCommands();
+	}
+
+	@Override
+	public void loadConfiguration()
+	{
 		final ConfigurationSection config = getConfig();
 		if (config.getConfigurationSection("serverFilter") == null)
 			serverFilter = new PlayerAccessFilter("serverFilter");
@@ -87,41 +221,57 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		blockDifferentNameCases = config.getBoolean("blockDifferentNameCases", blockDifferentNameCases);
 		minNameLength = Math.min(Math.max(config.getInt("minNameLength", 3), 1), 16);
 		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 16);
-		// Database
-		setupDatabase();
 	}
 
-	public void setupDatabase()
+	@Override
+	@Localized({ "CRAZYLOGINFILTER.DATABASE.ACCESSWARN $SaveType$", "CRAZYLOGINFILTER.DATABASE.LOADED $EntryCount$" })
+	public void loadDatabase()
 	{
 		final ConfigurationSection config = getConfig();
 		final String saveType = config.getString("database.saveType", "CONFIG").toUpperCase();
-		final DatabaseType type = DatabaseType.valueOf(saveType);
-		final String tableName = config.getString("database.tableName", "accessfilter");
-		config.set("database.tableName", tableName);
+		DatabaseType type = null;
 		try
 		{
-			if (type == DatabaseType.CONFIG)
-			{
-				database = new CrazyLoginFilterConfigurationDatabase(tableName, config, this);
-			}
+			type = DatabaseType.valueOf(saveType);
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
-			database = null;
+			consoleLog(ChatColor.RED + "NO SUCH SAVETYPE " + saveType);
 		}
-		finally
-		{
-			if (database == null)
-				broadcastLocaleMessage(true, "crazyloginfilter.warndatabase", "DATABASE.ACCESSWARN", saveType);
-			else
+		if (type == DatabaseType.CONFIG)
+			database = new CrazyLoginFilterConfigurationDatabase(this, config.getConfigurationSection("database.CONFIG"));
+		if (database != null)
+			try
 			{
-				database.loadAllEntries();
-				sendLocaleMessage("DATABASE.LOADED", Bukkit.getConsoleSender(), database.getAllEntries().size());
+				database.save(config, "database.");
+				database.initialize();
 			}
+			catch (final Exception e)
+			{
+				e.printStackTrace();
+				database = null;
+			}
+		if (database == null)
+		{
+			broadcastLocaleMessage(true, "crazylogin.warndatabase", "DATABASE.ACCESSWARN", saveType);
+			Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					if (database == null)
+						broadcastLocaleMessage(true, "crazyloginfilter.warndatabase", "DATABASE.ACCESSWARN", saveType);
+				}
+			}, 600, 600);
+		}
+		else
+		{
+			sendLocaleMessage("DATABASE.LOADED", Bukkit.getConsoleSender(), database.getAllEntries().size());
 		}
 	}
 
+	@Override
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
@@ -133,424 +283,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		config.set("blockDifferentNameCases", blockDifferentNameCases);
 		config.set("minNameLength", minNameLength);
 		config.set("maxNameLength", maxNameLength);
-		logger.save(config, "logs.");
 		super.saveConfiguration();
-	}
-
-	@Override
-	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		if (commandLabel.equalsIgnoreCase("create"))
-		{
-			commandMainCreate(sender, args);
-			return true;
-		}
-		if (commandLabel.equalsIgnoreCase("show"))
-		{
-			commandMainShow(sender, args);
-			return true;
-		}
-		if (commandLabel.equalsIgnoreCase("ip") || commandLabel.equalsIgnoreCase("ips"))
-		{
-			commandMainIP(sender, args);
-			return true;
-		}
-		if (commandLabel.equalsIgnoreCase("connection") || commandLabel.equalsIgnoreCase("connections"))
-		{
-			commandMainConnection(sender, args);
-			return true;
-		}
-		if (commandLabel.equalsIgnoreCase("delete"))
-		{
-			commandMainDelete(sender, args);
-			return true;
-		}
-		if (commandLabel.equalsIgnoreCase("serverfilter"))
-		{
-			if (args.length == 0)
-				throw new CrazyCommandUsageException("/crazyloginfilter serverfilter show", "/crazyloginfilter serverfilter ip ...", "/crazyloginfilter serverfilter connection ...");
-			final String[] newArgs = ChatHelper.shiftArray(args, 1);
-			commandMainServerFilter(sender, args[0].toLowerCase(), newArgs);
-			return true;
-		}
-		if (commandLabel.equalsIgnoreCase("mode"))
-		{
-			commandMainMode(sender, args);
-			return true;
-		}
-		return false;
-	}
-
-	private void commandMainServerFilter(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		if (!sender.hasPermission("crazyloginfilter.admin"))
-			throw new CrazyCommandPermissionException();
-		if (commandLabel.equalsIgnoreCase("show"))
-		{
-			commandMainShow(sender, args, serverFilter);
-		}
-		else if (commandLabel.equalsIgnoreCase("ip") || commandLabel.equalsIgnoreCase("ips"))
-		{
-			commandMainIP(sender, args, serverFilter);
-		}
-		else if (commandLabel.equalsIgnoreCase("connection") || commandLabel.equalsIgnoreCase("connections"))
-		{
-			commandMainConnection(sender, args, serverFilter);
-		}
-	}
-
-	private void commandMainCreate(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (sender instanceof ConsoleCommandSender)
-			throw new CrazyCommandExecutorException(false);
-		final Player player = (Player) sender;
-		final PlayerAccessFilter data = new PlayerAccessFilter(player);
-		data.setCheckIP(false);
-		data.setCheckConnection(false);
-		database.save(data);
-		sendLocaleMessage("COMMMAND.CREATED", sender, player.getName());
-	}
-
-	private void commandMainShow(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		if (sender instanceof ConsoleCommandSender)
-			throw new CrazyCommandExecutorException(false);
-		final Player player = (Player) sender;
-		commandMainShow(sender, args, getPlayerData(player));
-	}
-
-	private void commandMainShow(final CommandSender sender, final String[] args, final PlayerAccessFilter data) throws CrazyException
-	{
-		throw new CrazyNotImplementedException();
-	}
-
-	private void commandMainIP(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (sender instanceof ConsoleCommandSender)
-			throw new CrazyCommandExecutorException(false);
-		final Player player = (Player) sender;
-		commandMainIP(sender, args, getPlayerData(player));
-	}
-
-	private void commandMainIP(final CommandSender sender, final String[] args, final PlayerAccessFilter data) throws CrazyCommandException
-	{
-		if (data == null)
-			throw new CrazyCommandCircumstanceException("when AccessFilter is created!");
-		switch (args.length)
-		{
-			case 1:
-				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
-				{
-					sendListMessage(sender, "COMMMAND.IP.LISTHEAD", 10, 1, data.getIPs(), new ToStringDataGetter());
-					return;
-				}
-				if (args[0].equalsIgnoreCase("check"))
-				{
-					sendLocaleMessage("COMMMAND.IP.CHECK", sender, data.isCheckIP() ? "True" : "False");
-					return;
-				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					sendLocaleMessage("COMMMAND.IP.WHITELIST", sender, data.isWhitelistIP() ? "True" : "False");
-					return;
-				}
-				break;
-			case 2:
-				String regex = args[1];
-				if (args[0].equalsIgnoreCase("add"))
-				{
-					data.addIP(regex);
-					sendLocaleMessage("COMMAND.IP.ADDED", sender, regex);
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-				if (args[0].equalsIgnoreCase("remove"))
-				{
-					try
-					{
-						final int index = Integer.parseInt(regex);
-						regex = data.removeIP(index);
-					}
-					catch (final NumberFormatException e)
-					{
-						data.removeIP(regex);
-					}
-					sendLocaleMessage("COMMAND.IP.REMOVED", sender, regex);
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
-				{
-					try
-					{
-						final int page = Integer.parseInt(args[1]);
-						sendListMessage(sender, "COMMMAND.IP.LISTHEAD", 10, page, data.getIPs(), new ToStringDataGetter());
-					}
-					catch (final NumberFormatException e)
-					{
-						throw new CrazyCommandParameterException(1, "Integer");
-					}
-					return;
-				}
-				if (args[0].equalsIgnoreCase("check"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					data.setCheckIP(newValue);
-					sendLocaleMessage("COMMMAND.IP.CHECK", sender, data.isCheckIP() ? "True" : "False");
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					data.setWhitelistIP(newValue);
-					sendLocaleMessage("COMMMAND.IP.WHITELIST", sender, data.isWhitelistIP() ? "True" : "False");
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-		}
-		if (data == serverFilter)
-			throw new CrazyCommandUsageException("/crazyloginfilter serverFilter ip show [Page]", "/crazloginfilter serverFilter ip <add/remove> <Value>", "/crazloginfilter serverFilter ip whitelist [True/False]");
-		else
-			throw new CrazyCommandUsageException("/crazyloginfilter ip show [Page]", "/crazloginfilter ip <add/remove> <Value>", "/crazloginfilter ip whitelist [True/False]");
-	}
-
-	private void commandMainConnection(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (sender instanceof ConsoleCommandSender)
-			throw new CrazyCommandExecutorException(false);
-		final Player player = (Player) sender;
-		commandMainConnection(sender, args, getPlayerData(player));
-	}
-
-	private void commandMainConnection(final CommandSender sender, final String[] args, final PlayerAccessFilter data) throws CrazyCommandException
-	{
-		if (data == null)
-			throw new CrazyCommandCircumstanceException("when AccessFilter is created!");
-		switch (args.length)
-		{
-			case 1:
-				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
-				{
-					sendListMessage(sender, "COMMMAND.CONNECTION.LISTHEAD", 10, 1, data.getConnections(), new ToStringDataGetter());
-					return;
-				}
-				if (args[0].equalsIgnoreCase("check"))
-				{
-					sendLocaleMessage("COMMMAND.CONNECTION.CHECK", sender, data.isCheckConnection() ? "True" : "False");
-					return;
-				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					sendLocaleMessage("COMMMAND.CONNECTION.WHITELIST", sender, data.isWhitelistConnection() ? "True" : "False");
-					return;
-				}
-				break;
-			case 2:
-				String regex = args[1];
-				if (args[0].equalsIgnoreCase("add"))
-				{
-					data.addConnection(regex);
-					sendLocaleMessage("COMMAND.CONNECTION.ADDED", sender, regex);
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-				if (args[0].equalsIgnoreCase("remove"))
-				{
-					try
-					{
-						final int index = Integer.parseInt(regex);
-						regex = data.removeConnection(index);
-					}
-					catch (final NumberFormatException e)
-					{
-						data.removeConnection(regex);
-					}
-					sendLocaleMessage("COMMAND.CONNECTION.REMOVED", sender, regex);
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-				if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("list"))
-				{
-					try
-					{
-						final int page = Integer.parseInt(args[1]);
-						sendListMessage(sender, "COMMMAND.CONNECTION.LISTHEAD", 10, page, data.getConnections(), new ToStringDataGetter());
-					}
-					catch (final NumberFormatException e)
-					{
-						throw new CrazyCommandParameterException(1, "Integer");
-					}
-					return;
-				}
-				if (args[0].equalsIgnoreCase("check"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					data.setCheckConnection(newValue);
-					sendLocaleMessage("COMMMAND.CONNECTION.CHECK", sender, data.isCheckConnection() ? "True" : "False");
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-				if (args[0].equalsIgnoreCase("whitelist"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					data.setWhitelistConnection(newValue);
-					sendLocaleMessage("COMMMAND.CONNECTION.WHITELIST", sender, data.isWhitelistConnection() ? "True" : "False");
-					if (data == serverFilter)
-						saveConfiguration();
-					else
-						database.save(data);
-					return;
-				}
-		}
-		if (data == serverFilter)
-			throw new CrazyCommandUsageException("/crazyloginfilter serverFilter connection show [Page]", "/crazloginfilter serverFilter connection <add/remove> <Value>", "/crazloginfilter serverFilter connection whitelist [True/False]");
-		else
-			throw new CrazyCommandUsageException("/crazyloginfilter connection show [Page]", "/crazloginfilter connection <add/remove> <Value>", "/crazloginfilter connection whitelist [True/False]");
-	}
-
-	private void commandMainDelete(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		throw new CrazyNotImplementedException();
-	}
-
-	private void commandMainMode(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (!sender.hasPermission("crazyloginfilter.mode"))
-			throw new CrazyCommandPermissionException();
-		switch (args.length)
-		{
-			case 2:
-				if (args[0].equalsIgnoreCase("filterNames"))
-				{
-					String newFilter = filterNames;
-					newFilter = args[0];
-					if (newFilter.equalsIgnoreCase("false") || newFilter.equalsIgnoreCase("0") || newFilter.equalsIgnoreCase("off"))
-						newFilter = ".";
-					else if (newFilter.equalsIgnoreCase("true") || newFilter.equalsIgnoreCase("1") || newFilter.equalsIgnoreCase("on"))
-						newFilter = "[a-zA-Z0-9_]";
-					filterNames = newFilter;
-					sendLocaleMessage("MODE.CHANGE", sender, "filterNames", filterNames.equals(".") ? "disabled" : filterNames);
-					saveConfiguration();
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("blockDifferentNameCases"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					blockDifferentNameCases = newValue;
-					sendLocaleMessage("MODE.CHANGE", sender, "blockDifferentNameCases", blockDifferentNameCases ? "True" : "False");
-					saveConfiguration();
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("minNameLength"))
-				{
-					int length = minNameLength;
-					try
-					{
-						length = Integer.parseInt(args[1]);
-					}
-					catch (final NumberFormatException e)
-					{
-						throw new CrazyCommandParameterException(1, "Integer");
-					}
-					minNameLength = Math.min(Math.max(length, 1), 16);
-					sendLocaleMessage("MODE.CHANGE", sender, "minNameLength", minNameLength + " characters");
-					saveConfiguration();
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("maxNameLength"))
-				{
-					int length = maxNameLength;
-					try
-					{
-						length = Integer.parseInt(args[1]);
-					}
-					catch (final NumberFormatException e)
-					{
-						throw new CrazyCommandParameterException(1, "Integer");
-					}
-					maxNameLength = Math.min(Math.max(length, 1), 16);
-					sendLocaleMessage("MODE.CHANGE", sender, "maxNameLength", maxNameLength + " characters");
-					saveConfiguration();
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("saveDatabaseOnShutdown"))
-				{
-					boolean newValue = false;
-					if (args[1].equalsIgnoreCase("1") || args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("yes"))
-						newValue = true;
-					saveDatabaseOnShutdown = newValue;
-					sendLocaleMessage("MODE.CHANGE", sender, "saveDatabaseOnShutdown", saveDatabaseOnShutdown ? "True" : "False");
-					saveConfiguration();
-					return;
-				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
-			case 1:
-				if (args[0].equalsIgnoreCase("filterNames"))
-				{
-					sendLocaleMessage("MODE.CHANGE", sender, "filterNames", filterNames.equals(".") ? "disabled" : filterNames);
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("blockDifferentNameCases"))
-				{
-					sendLocaleMessage("MODE.CHANGE", sender, "blockDifferentNameCases", blockDifferentNameCases ? "True" : "False");
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("minNameLength"))
-				{
-					sendLocaleMessage("MODE.CHANGE", sender, "minNameLength", minNameLength + " characters");
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("maxNameLength"))
-				{
-					sendLocaleMessage("MODE.CHANGE", sender, "maxNameLength", maxNameLength + " characters");
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("saveDatabaseOnShutdown"))
-				{
-					sendLocaleMessage("MODE.CHANGE", sender, "saveDatabaseOnShutdown", saveDatabaseOnShutdown ? "True" : "False");
-					return;
-				}
-				else if (args[0].equalsIgnoreCase("filterNames"))
-				{
-					sendLocaleMessage("MODE.CHANGE", sender, "filterNames", filterNames.equals(".") ? "disabled" : filterNames);
-					return;
-				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
-			default:
-				throw new CrazyCommandUsageException("/crazylogin mode <Mode> [Value]");
-		}
 	}
 
 	public boolean checkIP(final Player player)
@@ -565,12 +298,11 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 
 	public boolean checkIP(final String player, final String IP)
 	{
-		if (!serverFilter.checkIP(IP))
-			return false;
 		final PlayerAccessFilter filter = getPlayerData(player);
 		if (filter == null)
-			return true;
-		return filter.checkIP(IP);
+			return serverFilter.checkIP(IP);
+		else
+			return filter.checkIP(IP) && serverFilter.checkIP(IP);
 	}
 
 	public boolean checkConnection(final Player player)
@@ -585,12 +317,10 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 
 	public boolean checkConnection(final String player, final String connection)
 	{
-		if (!serverFilter.checkConnection(connection))
-			return false;
 		final PlayerAccessFilter filter = getPlayerData(player);
 		if (filter == null)
-			return true;
-		return filter.checkConnection(connection);
+			return serverFilter.checkConnection(connection);
+		return filter.checkConnection(connection) && serverFilter.checkConnection(connection);
 	}
 
 	public PlayerAccessFilter getServerAccessFilter()

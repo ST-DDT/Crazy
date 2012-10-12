@@ -8,7 +8,11 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
 import de.st_ddt.crazyplugin.data.PlayerData;
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implements ConfigurationDatabaseEntry
 {
@@ -167,7 +171,7 @@ public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implement
 	}
 
 	@Override
-	public String getParameter(final int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -195,7 +199,21 @@ public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implement
 	}
 
 	@Override
-	public void showDetailed(CommandSender target, String chatHeader)
+	@Localized({ "CRAZYLOGINFILTER.PLAYERINFO.IP.CHECK $Boolean$", "CRAZYLOGINFILTER.PLAYERINFO.IP.WHITELISTED $Boolean$", "CRAZYLOGINFILTER.PLAYERINFO.CONNECTION.CHECK $Boolean$", "CRAZYLOGINFILTER.PLAYERINFO.CONNECTION.WHITELISTED $Boolean$" })
+	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
+		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYLOGINFILTER.PLAYERINFO");
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("IP.CHECK"), checkIP ? "True" : "False");
+		if (checkIP)
+		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("IP.WHITELISTED"), whitelistIP ? "True" : "False");
+			ChatHelperExtended.sendList(target, chatHeader, "Checked IPs", "$2$$1$\n", null, 1, -1, IPs);
+		}
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("CONNECTION.CHECK"), checkConnection ? "True" : "False");
+		if (checkConnection)
+		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("CONNECTION.WHITELISTED"), whitelistConnection ? "True" : "False");
+			ChatHelperExtended.sendList(target, chatHeader, "Checked Connections", "$2$$1$\n", null, 1, -1, connections);
+		}
 	}
 }

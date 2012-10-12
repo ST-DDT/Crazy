@@ -1,9 +1,11 @@
 name: CrazyLoginFilter
 main: de.st_ddt.crazyloginfilter.CrazyLoginFilter
 author: ST-DDT
-#C*=needed core version
-version: C8.1_0.6
-softdepend: [PermissionsBukkit]
+version: 0.7
+# requires CrazyCore v9 or later
+depend: [CrazyCore]
+description: >
+            CrazyLoginFilter protect your server with ip and connection filters for each player and the server itself.
 depend: [CrazyCore]
 commands:
   crazyloginfilter:

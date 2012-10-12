@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazyLoginFilterPlayerListener implements Listener
 {
@@ -21,46 +22,50 @@ public class CrazyLoginFilterPlayerListener implements Listener
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+	@Localized("CRAZYLOGINFILTER.KICKED.NAME.INVALIDCHARS")
 	public void PlayerLoginNameCharCheck(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
 		if (plugin.checkNameChars(player.getName()))
 			return;
 		event.setResult(Result.KICK_OTHER);
-		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "NAME.INVALIDCHARS"));
+		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "KICKED.NAME.INVALIDCHARS"));
 		plugin.getCrazyLogger().log("AccessDenied", "Denied access for player " + player.getName() + " @ " + event.getAddress().getHostAddress() + " because of invalid chars");
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+	@Localized("CRAZYLOGINFILTER.KICKED.NAME.INVALIDCASE")
 	public void PlayerLoginNameCaseCheck(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
 		if (plugin.checkNameCase(player.getName()))
 			return;
 		event.setResult(Result.KICK_OTHER);
-		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "NAME.INVALIDCASE"));
+		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "KICKED.NAME.INVALIDCASE"));
 		plugin.getCrazyLogger().log("AccessDenied", "Denied access for player " + player.getName() + " @ " + event.getAddress().getHostAddress() + " because of invalid name case");
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+	@Localized("CRAZYLOGINFILTER.KICKED.NAME.INVALIDLENGTH $MinLength$ $MaxLength$")
 	public void PlayerLoginNameLengthCheck(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
 		if (plugin.checkNameLength(event.getPlayer().getName()))
 			return;
 		event.setResult(Result.KICK_OTHER);
-		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "NAME.INVALIDLENGTH", plugin.getMinNameLength(), plugin.getMaxNameLength()));
+		event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "KICKED.NAME.INVALIDLENGTH", plugin.getMinNameLength(), plugin.getMaxNameLength()));
 		plugin.getCrazyLogger().log("AccessDenied", "Denied access for player " + player.getName() + " @ " + event.getAddress().getHostAddress() + " because of invalid name length");
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	@Localized("CRAZYLOGINFILTER.KICKED.ACCESS.DENIED")
 	public void PlayerLoginAccessCheck(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
 		if (!plugin.checkIP(player, event.getAddress().getHostAddress()) || !plugin.checkConnection(player, event.getHostname()))
 		{
 			event.setResult(Result.KICK_OTHER);
-			event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "ACCESS.DENIED"));
+			event.setKickMessage(plugin.getLocale().getLocaleMessage(player, "KICKED.ACCESS.DENIED"));
 			return;
 		}
 	}

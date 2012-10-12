@@ -11,9 +11,14 @@ import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 public class CrazyLoginFilterConfigurationDatabase extends ConfigurationDatabase<PlayerAccessFilter> implements PlayerDataDatabase<PlayerAccessFilter>
 {
 
-	public CrazyLoginFilterConfigurationDatabase(final String tableName, final ConfigurationSection config, JavaPlugin plugin)
+	public CrazyLoginFilterConfigurationDatabase(JavaPlugin plugin, ConfigurationSection config)
 	{
-		super(PlayerAccessFilter.class, tableName, config, new String[] { "name", "checkIPs", "whitelistIPs", "IPs", "checkConnections", "whitelistConnections", "connections" }, plugin);
+		super(PlayerAccessFilter.class, new String[] { "name", "checkIPs", "whitelistIPs", "IPs", "checkConnections", "whitelistConnections", "connections" }, "accounts", plugin, config);
+	}
+
+	public CrazyLoginFilterConfigurationDatabase(JavaPlugin plugin, String path, String[] columnNames)
+	{
+		super(PlayerAccessFilter.class, new String[] { "name", "checkIPs", "whitelistIPs", "IPs", "checkConnections", "whitelistConnections", "connections" }, plugin, path, columnNames);
 	}
 
 	@Override
