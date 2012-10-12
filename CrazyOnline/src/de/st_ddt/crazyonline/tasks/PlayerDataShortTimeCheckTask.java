@@ -4,13 +4,13 @@ import de.st_ddt.crazyonline.CrazyOnline;
 import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 
-public class PlayerDataCheckTask implements Runnable
+public class PlayerDataShortTimeCheckTask implements Runnable
 {
 
 	protected final CrazyOnline plugin;
 	protected final String name;
 
-	public PlayerDataCheckTask(CrazyOnline plugin, String name)
+	public PlayerDataShortTimeCheckTask(final CrazyOnline plugin, final String name)
 	{
 		super();
 		this.plugin = plugin;
@@ -20,13 +20,13 @@ public class PlayerDataCheckTask implements Runnable
 	@Override
 	public void run()
 	{
-		OnlinePlayerData data = plugin.getPlayerData(name);
+		final OnlinePlayerData data = plugin.getPlayerData(name);
 		if (data == null)
 			return;
 		if (data.isOnline())
 			return;
 		if (data.getTimeTotal() > 5)
 			return;
-		new CrazyPlayerRemoveEvent(plugin, name).callAsyncEvent();
+		new CrazyPlayerRemoveEvent(plugin, name).checkAndCallAsyncEvent();
 	}
 }

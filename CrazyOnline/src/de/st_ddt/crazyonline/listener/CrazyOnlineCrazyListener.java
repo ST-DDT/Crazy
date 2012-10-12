@@ -5,6 +5,7 @@ import org.bukkit.event.Listener;
 
 import de.st_ddt.crazyonline.CrazyOnline;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
+import de.st_ddt.crazyutil.Named;
 
 public class CrazyOnlineCrazyListener implements Listener
 {
@@ -26,6 +27,6 @@ public class CrazyOnlineCrazyListener implements Listener
 	public void CrazyPlayerRemoveEvent(final CrazyPlayerRemoveEvent event)
 	{
 		if (plugin.deletePlayerData(event.getPlayer()))
-			event.markDeletion(plugin);
+			event.markDeletion((Named) plugin);
 	}
 }

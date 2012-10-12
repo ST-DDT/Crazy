@@ -11,9 +11,14 @@ import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 public class CrazyOnlineConfigurationDatabase extends ConfigurationDatabase<OnlinePlayerData> implements PlayerDataDatabase<OnlinePlayerData>
 {
 
-	public CrazyOnlineConfigurationDatabase(final String tableName, final ConfigurationSection config, JavaPlugin plugin)
+	public CrazyOnlineConfigurationDatabase(final JavaPlugin plugin, final ConfigurationSection config)
 	{
-		super(OnlinePlayerData.class, tableName, config, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, plugin);
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, "accounts", plugin, config);
+	}
+
+	public CrazyOnlineConfigurationDatabase(final JavaPlugin plugin, final String path, final String[] columnNames)
+	{
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, plugin, path, columnNames);
 	}
 
 	@Override

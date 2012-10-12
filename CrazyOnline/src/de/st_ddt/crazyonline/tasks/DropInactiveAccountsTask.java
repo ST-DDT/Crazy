@@ -1,6 +1,7 @@
 package de.st_ddt.crazyonline.tasks;
 
 import de.st_ddt.crazyonline.CrazyOnline;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class DropInactiveAccountsTask implements Runnable
 {
@@ -14,13 +15,11 @@ public class DropInactiveAccountsTask implements Runnable
 	}
 
 	@Override
+	@Localized("CRAZYONLINE.COMMAND.DROPOLDDATA.DELETED $DropCauser$ $KeptDays$ $DroppedAmount$")
 	public void run()
 	{
 		final int amount = plugin.dropInactiveAccounts();
 		if (amount > 0)
-		{
-			final int autoDelete = plugin.getAutoDelete();
-			plugin.broadcastLocaleMessage("ACCOUNTS.DELETED", "DropTask", autoDelete, amount);
-		}
+			plugin.broadcastLocaleMessage(true, "crazyonline.warndelete", "COMMAND.DROPOLDDATA.DELETED", "DropTask", plugin.getAutoDelete(), amount);
 	}
 }

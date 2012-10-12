@@ -1,4 +1,6 @@
-package de.st_ddt.crazyonline.data;
+package de.st_ddt.crazyonline.data.comparator;
+
+import de.st_ddt.crazyonline.data.OnlineData;
 
 public class OnlineDataFirstLoginComperator implements OnlineDataComparator
 {

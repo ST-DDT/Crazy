@@ -2,8 +2,6 @@ package de.st_ddt.crazyonline.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.bukkit.command.CommandSender;
@@ -11,16 +9,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyonline.CrazyOnline;
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.data.PlayerData;
+import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
 import de.st_ddt.crazyutil.databases.FlatDatabaseEntry;
-import de.st_ddt.crazyutil.databases.MySQLConnection;
 import de.st_ddt.crazyutil.databases.MySQLDatabase;
 import de.st_ddt.crazyutil.databases.MySQLDatabaseEntry;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements ConfigurationDatabaseEntry, MySQLDatabaseEntry, FlatDatabaseEntry, OnlineData
 {
@@ -30,7 +29,6 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	protected Date lastLogout;
 	protected long onlineTime;
 	protected String ip;
-	private static final SimpleDateFormat DateFormat = CrazyPlugin.DateFormat;
 
 	public OnlinePlayerData(final String name)
 	{
@@ -64,9 +62,9 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	public void saveToConfigDatabase(final ConfigurationSection config, final String path, final String[] columnNames)
 	{
 		config.set(path + columnNames[0], name);
-		config.set(path + columnNames[1], DateFormat.format(firstLogin));
-		config.set(path + columnNames[2], DateFormat.format(lastLogin));
-		config.set(path + columnNames[3], DateFormat.format(lastLogout));
+		config.set(path + columnNames[1], CrazyLightPluginInterface.DATETIMEFORMAT.format(firstLogin));
+		config.set(path + columnNames[2], CrazyLightPluginInterface.DATETIMEFORMAT.format(lastLogin));
+		config.set(path + columnNames[3], CrazyLightPluginInterface.DATETIMEFORMAT.format(lastLogout));
 		config.set(path + columnNames[4], onlineTime);
 		config.set(path + columnNames[5], ip);
 	}
@@ -124,29 +122,9 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 
 	// in MySQL-Datenbank speichern
 	@Override
-	public void saveToMySQLDatabase(final MySQLConnection connection, final String table, final String[] columnNames)
+	public String saveToMySQLDatabase(final String[] columnNames)
 	{
-		Statement query = null;
-		try
-		{
-			query = connection.getConnection().createStatement();
-			query.executeUpdate("INSERT INTO " + table + " (" + columnNames[0] + "," + columnNames[1] + "," + columnNames[2] + "," + columnNames[3] + "," + columnNames[4] + "," + columnNames[5] + ") VALUES ('" + getName() + "','" + getFirstLoginString() + "','" + getLastLoginString() + "','" + getLastLogoutString() + "','" + getTimeTotal() + "','" + getLatestIP() + "') " + "ON DUPLICATE KEY UPDATE " + columnNames[1] + "='" + getFirstLoginString() + "', " + columnNames[2] + "='" + getLastLoginString() + "', " + columnNames[3] + "='" + getLastLogoutString() + "', " + columnNames[4] + "='" + onlineTime + "', " + columnNames[5] + "='" + ip + "'");
-		}
-		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final SQLException e)
-				{}
-			connection.closeConnection();
-		}
+		return columnNames[1] + "='" + getFirstLoginString() + "', " + columnNames[2] + "='" + getLastLoginString() + "', " + columnNames[3] + "='" + getLastLogoutString() + "', " + columnNames[4] + "='" + onlineTime + "', " + columnNames[5] + "='" + ip + "'";
 	}
 
 	// aus Flat-Datenbank laden
@@ -186,7 +164,7 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	@Override
 	public String getFirstLoginString()
 	{
-		return DateFormat.format(firstLogin);
+		return CrazyLightPluginInterface.DATETIMEFORMAT.format(firstLogin);
 	}
 
 	@Override
@@ -198,7 +176,7 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	@Override
 	public String getLastLoginString()
 	{
-		return DateFormat.format(lastLogin);
+		return CrazyLightPluginInterface.DATETIMEFORMAT.format(lastLogin);
 	}
 
 	@Override
@@ -210,7 +188,7 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	@Override
 	public String getLastLogoutString()
 	{
-		return DateFormat.format(lastLogout);
+		return CrazyLightPluginInterface.DATETIMEFORMAT.format(lastLogout);
 	}
 
 	@Override
@@ -237,11 +215,12 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	public void resetOnlineTime()
 	{
 		onlineTime = 0;
-		if (lastLogin.after(lastLogout))
-			lastLogin = new Date();
+		if (!isOnline())
+			if (lastLogin.after(lastLogout))
+				lastLogin = lastLogout;
 	}
 
-	public void setIp(String ip)
+	public void setIp(final String ip)
 	{
 		this.ip = ip;
 	}
@@ -252,17 +231,12 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 		return ip;
 	}
 
-	public static SimpleDateFormat getDateFormat()
-	{
-		return DateFormat;
-	}
-
 	public void join()
 	{
 		lastLogin = new Date();
 	}
 
-	public void join(String ip)
+	public void join(final String ip)
 	{
 		lastLogin = new Date();
 		this.ip = ip;
@@ -276,7 +250,7 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	}
 
 	@Override
-	public String getParameter(final int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -292,6 +266,8 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 				return String.valueOf(getTimeTotal());
 			case 5:
 				return ip;
+			case 6:
+				return ChatConverter.timeConverter(getTimeTotal() * 60, 2, sender, 2, false);
 		}
 		return "";
 	}
@@ -299,7 +275,7 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	@Override
 	public int getParameterCount()
 	{
-		return 6;
+		return 7;
 	}
 
 	public CrazyOnline getPlugin()
@@ -314,13 +290,14 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	}
 
 	@Override
-	public void showDetailed(CommandSender target, String chatHeader)
+	@Localized({ "CRAZYONLINE.PLAYERINFO.LOGINFIRST $FirstLogin$", "CRAZYONLINE.PLAYERINFO.LOGINLAST $LastLogin$", "CRAZYONLINE.PLAYERINFO.LOGOUTLAST $LastLogout$", "CRAZYONLINE.PLAYERINFO.TIMELAST $TimeLastText$", "CRAZYONLINE.PLAYERINFO.TIMETOTAL $TimeTotalText$" })
+	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYONLINE.PLAYERINFO");
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGINFIRST"), getFirstLoginString());
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGINLAST"), getLastLoginString());
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LOGOUTLAST"), getLastLogoutString());
-		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMELAST"), ChatHelper.timeConverter(getTimeLast() * 60, 2, target, 2, false));
-		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMETOTAL"), ChatHelper.timeConverter(getTimeTotal() * 60, 2, target, 2, false));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMELAST"), ChatConverter.timeConverter(getTimeLast() * 60, 2, target, 2, false));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("TIMETOTAL"), ChatConverter.timeConverter(getTimeTotal() * 60, 2, target, 2, false));
 	}
 }

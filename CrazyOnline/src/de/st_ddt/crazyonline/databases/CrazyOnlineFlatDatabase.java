@@ -1,9 +1,8 @@
 package de.st_ddt.crazyonline.databases;
 
-import java.io.File;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyutil.databases.FlatDatabase;
@@ -12,9 +11,14 @@ import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 public class CrazyOnlineFlatDatabase extends FlatDatabase<OnlinePlayerData> implements PlayerDataDatabase<OnlinePlayerData>
 {
 
-	public CrazyOnlineFlatDatabase(final String tableName, final ConfigurationSection config, final File file)
+	public CrazyOnlineFlatDatabase(final JavaPlugin plugin, final ConfigurationSection config)
 	{
-		super(OnlinePlayerData.class, tableName, config, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime","ip" }, file);
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, "accounts.db", plugin, config);
+	}
+
+	public CrazyOnlineFlatDatabase(final JavaPlugin plugin, final String path)
+	{
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, plugin, path);
 	}
 
 	@Override
