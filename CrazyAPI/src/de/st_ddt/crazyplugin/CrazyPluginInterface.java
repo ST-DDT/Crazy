@@ -44,6 +44,8 @@ public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface
 
 	public void sendLocaleMessage(CrazyLocale locale, Collection<? extends CommandSender> targets, Object... args);
 
+	public void sendLocaleList(CommandSender target, String formatPath, int amount, int page, List<?> datas);
+
 	public void sendLocaleList(final CommandSender target, ListFormat format, int amount, int page, List<?> datas);
 
 	public void sendLocaleList(final CommandSender target, String headFormatPath, String listFormatPath, String entryFormatPath, int amount, int page, List<?> datas);
