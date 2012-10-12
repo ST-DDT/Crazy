@@ -1,12 +1,12 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 8.8
+version: 9
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
 commands:
   crazylist:
-    description: Shows all enabled CrazyPlugins
+    description: Shows all enabled CrazyPlugins.
     usage: /<command>
   crazycore:
     description: Some further information and commands.
@@ -15,6 +15,14 @@ commands:
     description: Change languages
     usage: /<command> [Language]
     aliases: [language]
+  crazypage:
+    description: Scroll through pages.
+    usage: /<command> [+/-/pagenumber]
+    aliases: [page,cpage]
+  crazypipe:
+    description: Push data in pipe commands
+    usage: /<command> <$PresetList>/<Arg1>, <Arg2>, ... [> PipeCommand]
+    aliases: [pipe,cpipe]
 permissions:
   crazy*.*:
     description: Access to all crazyplugin commands

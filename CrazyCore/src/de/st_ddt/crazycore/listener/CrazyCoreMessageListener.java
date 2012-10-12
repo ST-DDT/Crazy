@@ -2,15 +2,15 @@ package de.st_ddt.crazycore.listener;
 
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.listener.CrazyPluginMessageListener;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public class CrazyCoreMessageListener extends CrazyPluginMessageListener
+public class CrazyCoreMessageListener extends CrazyPluginMessageListener<CrazyCore>
 {
 
-	public CrazyCoreMessageListener(final CrazyPlugin plugin)
+	public CrazyCoreMessageListener(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

@@ -24,19 +24,19 @@ public class PlayerWipeTask implements Runnable
 		super();
 		this.name = name;
 		this.player = Bukkit.getOfflinePlayer(name);
-		for (World world : Bukkit.getWorlds())
+		for (final World world : Bukkit.getWorlds())
 		{
-			File tempFile = new File(world.getName() + File.separator + "players" + File.separator + name + ".dat");
+			final File tempFile = new File(world.getName() + File.separator + "players" + File.separator + name + ".dat");
 			try
 			{
 				files.add(tempFile.getCanonicalFile());
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				files.add(tempFile);
 			}
 		}
-		Iterator<File> it = files.iterator();
+		final Iterator<File> it = files.iterator();
 		while (it.hasNext())
 			if (!it.next().exists())
 				it.remove();
@@ -61,10 +61,10 @@ public class PlayerWipeTask implements Runnable
 
 	public synchronized boolean fileCheck()
 	{
-		Iterator<File> it = files.iterator();
+		final Iterator<File> it = files.iterator();
 		while (it.hasNext())
 		{
-			File file = it.next();
+			final File file = it.next();
 			if (file.exists())
 				try
 				{

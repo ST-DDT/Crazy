@@ -11,9 +11,12 @@ import org.bukkit.event.Listener;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazycore.tasks.PlayerWipeTask;
+import de.st_ddt.crazyplugin.events.CrazyPlayerPreRemoveEvent;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazyCoreCrazyListener implements Listener
 {
@@ -24,6 +27,13 @@ public class CrazyCoreCrazyListener implements Listener
 	{
 		super();
 		this.plugin = plugin;
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void CrazyPlayerPreRemoveEvent(final CrazyPlayerPreRemoveEvent event)
+	{
+		if (plugin.getProtectedPlayers().contains(event.getPlayer().toLowerCase()))
+			event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -40,6 +50,7 @@ public class CrazyCoreCrazyListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
+	@Localized("CRAZYCORE.COMMAND.PLAYER.DELETE.KICK")
 	public void CrazyPlayerRemovePlayerDataEvent(final CrazyPlayerRemoveEvent event)
 	{
 		final Player player = Bukkit.getPlayerExact(event.getPlayer());
@@ -62,7 +73,7 @@ public class CrazyCoreCrazyListener implements Listener
 				player.teleport(spawn);
 				player.setBedSpawnLocation(spawn);
 				player.saveData();
-				player.kickPlayer(plugin.getLocale().getLocaleMessage(player, "COMMAND.DELETE.KICK"));
+				player.kickPlayer(plugin.getLocale().getLocaleMessage(player, "COMMAND.PLAYER.DELETE.KICK"));
 			}
 	}
 
@@ -70,7 +81,7 @@ public class CrazyCoreCrazyListener implements Listener
 	public void CrazyPlayerRemoveLanguageEvent(final CrazyPlayerRemoveEvent event)
 	{
 		if (CrazyLocale.removeUserLanguage(event.getPlayer()))
-			event.markDeletion(plugin);
+			event.markDeletion((Named) plugin);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -90,10 +101,11 @@ public class CrazyCoreCrazyListener implements Listener
 		});
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void CrazyPlayerRemoveFileEvent(final CrazyPlayerRemoveEvent event)
 	{
 		if (plugin.isWipingPlayerFilesEnabled())
 			new PlayerWipeTask(event.getPlayer()).execute();
+		plugin.save();
 	}
 }

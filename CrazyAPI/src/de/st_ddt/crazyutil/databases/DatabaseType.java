@@ -15,4 +15,9 @@ public enum DatabaseType
 	{
 		return staticDatabase;
 	}
+
+	public boolean isCachedDatabase()
+	{
+		return staticDatabase;
+	}
 }

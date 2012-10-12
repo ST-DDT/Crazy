@@ -20,7 +20,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
 public final class ObjectSaveLoadHelper
 {
@@ -70,7 +70,7 @@ public final class ObjectSaveLoadHelper
 			return defaultDate;
 		try
 		{
-			return CrazyPluginInterface.DateFormat.parse(date);
+			return CrazyLightPluginInterface.DATETIMEFORMAT.parse(date);
 		}
 		catch (final ParseException e)
 		{
@@ -80,7 +80,7 @@ public final class ObjectSaveLoadHelper
 
 	public static String DateToString(final Date date)
 	{
-		return CrazyPluginInterface.DateFormat.format(date);
+		return CrazyLightPluginInterface.DATETIMEFORMAT.format(date);
 	}
 
 	// ItemStack
@@ -212,13 +212,12 @@ public final class ObjectSaveLoadHelper
 		return load(clazzname, parentClazz, paraClazzes, paraObjects, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> T load(final String clazzname, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
-		Class<?> clazz = null;
+		Class<? extends T> clazz = null;
 		try
 		{
-			clazz = Class.forName(clazzname);
+			clazz = Class.forName(clazzname).asSubclass(parentClazz);
 		}
 		catch (final ClassNotFoundException e)
 		{
@@ -229,7 +228,7 @@ public final class ObjectSaveLoadHelper
 			}
 			try
 			{
-				clazz = Class.forName(alternativePackage + "." + clazzname);
+				clazz = Class.forName(alternativePackage + "." + clazzname).asSubclass(parentClazz);
 			}
 			catch (final ClassNotFoundException e2)
 			{
@@ -237,16 +236,10 @@ public final class ObjectSaveLoadHelper
 				return null;
 			}
 		}
-		if (parentClazz != null)
-			if (!parentClazz.isAssignableFrom(clazz))
-			{
-				new ClassCastException("Cannot cast " + clazz.getName() + " to " + parentClazz.getName()).printStackTrace();
-				return null;
-			}
-		return load((Class<T>) clazz, paraClazzes, paraObjects);
+		return load(clazz, paraClazzes, paraObjects);
 	}
 
-	public static <T> T load(final Class<T> clazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
+	public static <T> T load(final Class<? extends T> clazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
 	{
 		T instance = null;
 		try

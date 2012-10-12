@@ -1,20 +1,20 @@
 package de.st_ddt.crazyplugin.events;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
-import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.Named;
 
 public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 {
 
 	private static final HandlerList handlers = new HandlerList();
-	private final HashSet<JavaPlugin> deletions = new HashSet<JavaPlugin>();
+	private final Set<String> deletions = new TreeSet<String>();
 	protected final String player;
 
 	public CrazyPlayerRemoveEvent(final CrazyPluginInterface plugin, final OfflinePlayer player)
@@ -34,12 +34,22 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 		return player;
 	}
 
-	public void markDeletion(final JavaPlugin plugin)
+	public void markDeletion(final Plugin dataKeeper)
 	{
-		deletions.add(plugin);
+		markDeletion(dataKeeper.getName());
 	}
 
-	public HashSet<JavaPlugin> getDeletions()
+	public void markDeletion(final Named dataKeeper)
+	{
+		markDeletion(dataKeeper.getName());
+	}
+
+	public void markDeletion(final String dataKeeper)
+	{
+		deletions.add(dataKeeper);
+	}
+
+	public Set<String> getDeletions()
 	{
 		return deletions;
 	}
@@ -47,14 +57,6 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 	public int getDeletionsCount()
 	{
 		return deletions.size();
-	}
-
-	public String getDeletionsList()
-	{
-		final ArrayList<String> list = new ArrayList<String>();
-		for (final JavaPlugin plugin : deletions)
-			list.add(plugin.getName());
-		return ChatHelper.listingString(list);
 	}
 
 	@Override
@@ -66,5 +68,23 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 	public static HandlerList getHandlerList()
 	{
 		return handlers;
+	}
+
+	public void checkAndCallEvent()
+	{
+		final CrazyPlayerPreRemoveEvent event = new CrazyPlayerPreRemoveEvent(plugin, player);
+		event.callEvent();
+		if (event.isCancelled())
+			return;
+		callEvent();
+	}
+
+	public void checkAndCallAsyncEvent()
+	{
+		final CrazyPlayerPreRemoveEvent event = new CrazyPlayerPreRemoveEvent(plugin, player);
+		event.callAsyncEvent();
+		if (event.isCancelled())
+			return;
+		callAsyncEvent();
 	}
 }

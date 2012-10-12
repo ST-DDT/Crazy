@@ -14,6 +14,8 @@ wipePlayerBans: false
 # - permissions player removegroup $0$ user
 # - money remove $0$
 playerWipeCommands: []
+# cancel deletion tasks for this player
+protectedPlayers: []
 # block usage of > (true/false)
 disablePipes: false
 # show [CrazyPlugin] chatheaders in front of every plugin message (true/false)

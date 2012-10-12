@@ -1,0 +1,87 @@
+package de.st_ddt.crazyplugin.commands;
+
+import java.util.TreeMap;
+
+import org.bukkit.command.CommandSender;
+
+import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.Logger;
+import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
+
+public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPluginInterface>
+{
+
+	public CrazyPluginCommandMainLogger(final CrazyPluginInterface plugin)
+	{
+		super(plugin);
+	}
+
+	@Override
+	@Localized({ "CRAZYPLUGIN.COMMAND.CONFIG.NOLOGGERS", "CRAZYPLUGIN.COMMAND.CONFIG.LOGGER" })
+	public void command(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		final Logger logger = plugin.getCrazyLogger();
+		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".logger"))
+			throw new CrazyCommandPermissionException();
+		if (logger.getAllLogChannelCount() == 0)
+		{
+			plugin.sendLocaleMessage("COMMAND.CONFIG.NOLOGGERS", sender);
+			return;
+		}
+		if (args.length == 0)
+			throw new CrazyCommandNoSuchException("LogChannel", "(none)", logger.getLogChannelNames());
+		final String channel = args[0];
+		if (!logger.hasLogChannel(channel))
+			throw new CrazyCommandNoSuchException("LogChannel", channel, logger.getLogChannelNames());
+		final boolean changes = args.length > 1;
+		// Change Logger Config
+		if (changes)
+		{
+			// Create Params
+			final TreeMap<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
+			final StringParamitrisable pathParam = new StringParamitrisable(logger.getPath(channel));
+			params.put("path", pathParam);
+			params.put("", pathParam);
+			final BooleanParamitrisable consoleParam = new BooleanParamitrisable(logger.isLoggedToConsole(channel));
+			params.put("console", consoleParam);
+			// Read Params
+			try
+			{
+				ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params);
+			}
+			catch (final CrazyCommandException e)
+			{
+				e.addCommandPrefix(channel);
+				throw e;
+			}
+			// Apply Params
+			final String path = pathParam.getValue();
+			final boolean console = consoleParam.getValue();
+			if (path.equalsIgnoreCase("false"))
+				logger.createEmptyLogChannels(channel);
+			else if (path.equalsIgnoreCase("true"))
+				logger.createLogChannel(channel, "logs/plugin.log", null);
+			else
+				logger.createLogChannel(channel, path, null);
+			logger.setLoggedToConsole(channel, console);
+		}
+		// Show
+		if (logger.isActiveLogChannel(channel))
+			plugin.sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, logger.getPath(channel), logger.isLoggedToConsole(channel) ? "True" : "False");
+		else
+			plugin.sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, "disabled", logger.isLoggedToConsole(channel) ? "True" : "False");
+		if (changes)
+		{
+			logger.save(plugin.getConfig(), "logs.");
+			plugin.saveConfig();
+		}
+	}
+}

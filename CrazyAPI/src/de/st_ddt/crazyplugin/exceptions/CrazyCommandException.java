@@ -2,11 +2,14 @@ package de.st_ddt.crazyplugin.exceptions;
 
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.locales.Localized;
+
 public class CrazyCommandException extends CrazyException
 {
 
 	private static final long serialVersionUID = 6006689682481259280L;
-	private String command = null;
+	protected String command = null;
 
 	@Override
 	public String getLangPath()
@@ -15,11 +18,13 @@ public class CrazyCommandException extends CrazyException
 	}
 
 	@Override
+	@Localized("CRAZYEXCEPTION.COMMAND $Command$")
 	public void print(final CommandSender sender, final String header)
 	{
-		sender.sendMessage(header + locale.getLocaleMessage(sender, "Head"));
-		if (command != null)
-			sender.sendMessage(header + command);
+		if (command == null)
+			ChatHelper.sendMessage(sender, header, locale, "");
+		else
+			ChatHelper.sendMessage(sender, header, locale, command);
 	}
 
 	public void setCommand(final String commandLabel)
@@ -33,6 +38,11 @@ public class CrazyCommandException extends CrazyException
 		for (final String arg : args)
 			command += " " + arg;
 		this.command = command;
+	}
+
+	public void addCommandPrefix(final String... prefixes)
+	{
+		shiftCommandIndex(prefixes.length);
 	}
 
 	public final void shiftCommandIndex()

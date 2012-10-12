@@ -8,19 +8,19 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 
-public abstract class CrazyPluginMessageListener implements PluginMessageListener
+public abstract class CrazyPluginMessageListener<S extends CrazyPlugin> implements PluginMessageListener
 {
 
-	protected final CrazyPlugin plugin;
+	protected final S plugin;
 	protected final static Charset charset = Charset.forName("UTF-8");
 
-	public CrazyPluginMessageListener(final CrazyPlugin plugin)
+	public CrazyPluginMessageListener(final S plugin)
 	{
 		super();
 		this.plugin = plugin;
 	}
 
-	public final CrazyPlugin getPlugin()
+	public final S getPlugin()
 	{
 		return plugin;
 	}
@@ -37,7 +37,7 @@ public abstract class CrazyPluginMessageListener implements PluginMessageListene
 		if (split.length == 1)
 			args = "";
 		else
-			args = split[2];
+			args = split[1];
 		if (header.startsWith("Q_"))
 		{
 			if (channel.equals(plugin.getName()))
@@ -49,7 +49,7 @@ public abstract class CrazyPluginMessageListener implements PluginMessageListene
 				}
 				else if (header.equalsIgnoreCase("Version"))
 				{
-					sendPluginMessage(player, "A_Version " + plugin.getDescription().getVersion());
+					sendPluginMessage(player, "A_Version " + plugin.getVersion());
 					return;
 				}
 			}

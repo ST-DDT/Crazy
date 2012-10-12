@@ -2,35 +2,29 @@ package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class BasicDatabase<S extends DatabaseEntry> implements Database<S>
 {
 
+	protected final Map<String, S> datas = new TreeMap<String, S>();
 	private final DatabaseType type;
-	protected final Class<S> clazz;
-	protected final String tableName;
-	protected final String[] columnNames;
+	private final Class<S> clazz;
 	protected final Constructor<S> constructor;
+	protected final String[] defaultColumnNames;
 	protected boolean bulkOperation = false;
-	protected final HashMap<String, S> datas = new HashMap<String, S>();
 
-	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final String tableName, final ConfigurationSection config, final String[] columnNames, final Constructor<S> constructor)
+	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final Constructor<S> constructor, final String[] defaultColumnNames)
 	{
 		super();
 		this.type = type;
 		this.clazz = clazz;
-		this.tableName = tableName;
-		this.columnNames = columnNames;
-		for (int i = 0; i < columnNames.length; i++)
-		{
-			final String column = columnNames[i];
-			columnNames[i] = config.getString("database.columns." + column, column);
-			config.set("database.columns." + column, column);
-		}
 		this.constructor = constructor;
+		this.defaultColumnNames = defaultColumnNames;
 	}
 
 	@Override
@@ -40,21 +34,27 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	}
 
 	@Override
+	public Class<S> getEntryClazz()
+	{
+		return clazz;
+	}
+
+	@Override
+	public abstract void initialize() throws Exception;
+
+	@Override
+	public void checkTable() throws Exception
+	{
+	}
+
+	@Override
 	public final boolean isStaticDatabase()
 	{
 		return type.isStaticDatabase();
 	}
 
 	@Override
-	public final String getTableName()
-	{
-		return tableName;
-	}
-
-	@Override
-	public void checkTable() throws Exception
-	{
-	}
+	public abstract boolean isCachedDatabase();
 
 	@Override
 	public boolean hasEntry(final String key)
@@ -69,9 +69,52 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	}
 
 	@Override
+	public final S getOrLoadEntry(final String key)
+	{
+		final S data = getEntry(key);
+		if (isStaticDatabase())
+			return data;
+		else if (data == null)
+			return loadEntry(key);
+		else
+			return data;
+	}
+
+	@Override
 	public final Collection<S> getAllEntries()
 	{
 		return datas.values();
+	}
+
+	@Override
+	public abstract S updateEntry(final String key);
+
+	@Override
+	public abstract S loadEntry(String key);
+
+	@Override
+	public abstract void loadAllEntries();
+
+	@Override
+	public boolean unloadEntry(final String key)
+	{
+		save(key);
+		return datas.remove(key.toLowerCase()) != null;
+	}
+
+	@Override
+	public void unloadAllEntries()
+	{
+		saveAll(getAllEntries());
+		datas.clear();
+	}
+
+	@Override
+	public void save(final String key)
+	{
+		final S entry = datas.get(key.toLowerCase());
+		if (entry != null)
+			save(entry);
 	}
 
 	@Override
@@ -81,7 +124,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	}
 
 	@Override
-	public final void saveAll(final Collection<S> entries)
+	public void saveAll(final Collection<S> entries)
 	{
 		bulkOperation = true;
 		for (final S entry : entries)
@@ -89,9 +132,6 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		bulkOperation = false;
 		saveDatabase();
 	}
-
-	@Override
-	public abstract void saveDatabase();
 
 	@Override
 	public boolean deleteEntry(final String key)
@@ -102,22 +142,24 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	@Override
 	public void deleteAllEntries()
 	{
+		final HashSet<String> keys = new HashSet<String>(datas.keySet());
+		for (final String key : keys)
+			deleteEntry(key);
+	}
+
+	@Override
+	public void purgeDatabase()
+	{
 		datas.clear();
+		saveDatabase();
 	}
 
 	@Override
-	public String[] getColumnNames()
-	{
-		return columnNames;
-	}
+	public abstract void saveDatabase();
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.st_ddt.crazyutil.databases.Database#getEntryClazz()
-	 */
 	@Override
-	public Class<S> getEntryClazz()
+	public void save(final ConfigurationSection config, final String path)
 	{
-		return clazz;
+		config.set(path + "saveType", type.toString());
 	}
 }

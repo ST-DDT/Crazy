@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightPluginInterface
 {
@@ -68,7 +69,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	}
 
 	@Override
-	public String getParameter(int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -77,7 +78,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 			case 1:
 				return getChatHeader();
 			case 2:
-				return getDescription().getVersion();
+				return getVersion();
 			default:
 				return "";
 		}
@@ -89,6 +90,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 		return 3;
 	}
 
+	@Override
 	public String getVersion()
 	{
 		return getDescription().getVersion();
@@ -100,16 +102,17 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	}
 
 	@Override
-	public void show(CommandSender target)
+	public void show(final CommandSender target)
 	{
 		show(target, getChatHeader(), false);
 	}
 
 	@Override
-	public void show(CommandSender target, String chatHeader, boolean showDetailed)
+	@Localized({ "CRAZYPLUGIN.PLUGININFO.HEAD", "CRAZYPLUGIN.PLUGININFO.NAME", "CRAZYPLUGIN.PLUGININFO.DESCRIPTION", "CRAZYPLUGIN.PLUGININFO.VERSION", "CRAZYPLUGIN.PLUGININFO.AUTHORS", "CRAZYPLUGIN.PLUGININFO.DEPENCIES", "CRAZYPLUGIN.PLUGININFO.URL" })
+	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLUGININFO");
-		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), CrazyPluginInterface.DateFormat.format(new Date()));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), DATETIMEFORMAT.format(new Date()));
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("NAME"), getName());
 		if (showDetailed)
 			if (getDescription().getDescription() != null)
@@ -127,6 +130,6 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	@Override
 	public String getShortInfo()
 	{
-		return getName() + " Version " + getDescription().getVersion();
+		return getName() + " (v" + getDescription().getVersion() + ")";
 	}
 }

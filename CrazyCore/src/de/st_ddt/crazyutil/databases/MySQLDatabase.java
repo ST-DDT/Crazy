@@ -11,19 +11,48 @@ import org.bukkit.configuration.ConfigurationSection;
 public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S>
 {
 
-	protected final MySQLConnection connection;
-	protected final MySQLColumn[] columns;
-	protected final MySQLColumn primary;
+	private final String tableName;
+	private final MySQLConnection connection;
+	private final MySQLColumn[] columns;
+	private final String[] columnNames;
+	private final boolean cached;
 
-	public MySQLDatabase(final Class<S> clazz, final String tableName, final ConfigurationSection config, final MySQLColumn[] columns, final int primaryIndex) throws Exception
+	public MySQLDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{
-		super(DatabaseType.MYSQL, clazz, tableName, config, convertColumnNames(columns), getConstructor(clazz));
-		this.connection = MySQLConnection.connect(config);
-		if (connection.isInErrorState())
-			throw new Exception();
+		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
+		if (config == null)
+		{
+			this.tableName = defaultTableName;
+			this.connection = MySQLConnection.getConnection(null);
+			this.columns = columns;
+			this.columnNames = defaultColumnNames;
+			this.cached = true;
+		}
+		else
+		{
+			this.tableName = config.getString("tablename", defaultTableName);
+			this.connection = MySQLConnection.getConnection(config.getConfigurationSection("connection"));
+			this.columns = columns;
+			this.columnNames = new String[defaultColumnNames.length];
+			for (int i = 0; i < defaultColumnNames.length; i++)
+			{
+				columnNames[i] = config.getString("columns." + defaultColumnNames[i], defaultColumnNames[i]);
+				columns[i].setRealName(columnNames[i]);
+			}
+			this.cached = config.getBoolean("cached", true);
+		}
+	}
+
+	public MySQLDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached)
+	{
+		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
+		this.tableName = tableName;
+		this.connection = new MySQLConnection(host, port, database, user, password);
 		this.columns = columns;
-		this.primary = columns[primaryIndex];
-		checkTable();
+		this.columnNames = columnNames;
+		for (int i = 0; i < columns.length; i++)
+			columns[i].setRealName(columnNames[i]);
+		this.cached = cached;
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -37,6 +66,38 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	private static String[] convertColumnNames(final MySQLColumn[] columns)
+	{
+		final int length = columns.length;
+		final String[] names = new String[length];
+		for (int i = 0; i < length; i++)
+			names[i] = columns[i].getName();
+		return names;
+	}
+
+	public static String readName(final ResultSet rawData, final String colName)
+	{
+		try
+		{
+			return rawData.getString(colName);
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			return "ERROR";
+		}
+	}
+
+	public final MySQLColumn[] getColumns()
+	{
+		return columns;
+	}
+
+	public final MySQLConnection getConnection()
+	{
+		return connection;
 	}
 
 	@Override
@@ -68,7 +129,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				query = null;
 				// Spalte hinzufügen
 				query = connection.getConnection().createStatement();
-				query.executeUpdate("ALTER TABLE " + tableName + " ADD " + column.getCreateString());
+				query.executeUpdate("ALTER TABLE " + tableName + " ADD " + column.getCreateString(true));
 				query.close();
 				connection.closeConnection();
 			}
@@ -81,37 +142,19 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		}
 	}
 
-	private static String[] convertColumnNames(final MySQLColumn[] columns)
+	@Override
+	public void initialize() throws Exception
 	{
-		final int length = columns.length;
-		final String[] names = new String[length];
-		for (int i = 0; i < length; i++)
-			names[i] = columns[i].getName();
-		return names;
+		connection.connect();
+		checkTable();
+		if (cached)
+			loadAllEntries();
 	}
 
-	public final MySQLColumn[] getColumns()
+	@Override
+	public final boolean isCachedDatabase()
 	{
-		return columns;
-	}
-
-	public final MySQLColumn getPrimary()
-	{
-		return primary;
-	}
-
-	public final String getPrimaryName()
-	{
-		return primary.getName();
-	}
-
-	public final int getPrimaryIndex()
-	{
-		final int length = columns.length;
-		for (int i = 0; i < length; i++)
-			if (columns[i] == primary)
-				return i;
-		return -1;
+		return cached;
 	}
 
 	@Override
@@ -120,6 +163,50 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		if (super.hasEntry(key))
 			return true;
 		return loadEntry(key) != null;
+	}
+
+	protected boolean containsEntry(final String key)
+	{
+		boolean res = false;
+		Statement query = null;
+		ResultSet result = null;
+		try
+		{
+			query = connection.getConnection().createStatement();
+			result = query.executeQuery("SELECT `" + columnNames[0] + "` FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
+			if (result.next())
+				res = true;
+			query.close();
+		}
+		catch (final SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (result != null)
+				try
+				{
+					result.close();
+				}
+				catch (final Exception e)
+				{}
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (final Exception e)
+				{}
+			connection.closeConnection();
+		}
+		return res;
+	}
+
+	@Override
+	public S updateEntry(final String key)
+	{
+		return loadEntry(key);
 	}
 
 	@Override
@@ -131,11 +218,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		try
 		{
 			query = connection.getConnection().createStatement();
-			result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE " + primary.getName() + "='" + key + "' LIMIT 1");
+			result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
 			if (result.next())
 				try
 				{
-					data = constructor.newInstance(result, columnNames);
+					data = constructor.newInstance(connection, tableName, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
 				}
 				catch (final Exception e)
@@ -148,7 +235,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		catch (final SQLException e)
 		{
 			e.printStackTrace();
-			return null;
 		}
 		finally
 		{
@@ -179,7 +265,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		try
 		{
 			query = connection.getConnection().createStatement();
-			result = query.executeQuery("SELECT * FROM " + tableName + " WHERE 1=1");
+			result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE 1=1");
 			try
 			{
 				while (result.next())
@@ -224,7 +310,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		try
 		{
 			query = connection.getConnection().createStatement();
-			query.executeUpdate("DELETE FROM " + tableName + " WHERE " + primary.getName() + "='" + key + "'");
+			query.executeUpdate("DELETE FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "'");
 		}
 		catch (final SQLException e)
 		{
@@ -245,10 +331,62 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	public synchronized void save(final S entry)
+	public void save(final S entry)
 	{
 		super.save(entry);
-		entry.saveToMySQLDatabase(connection, tableName, getColumnNames());
+		Statement query = null;
+		String sql = null;
+		if (containsEntry(entry.getName()))
+			sql = "UPDATE `" + tableName + "` SET " + entry.saveToMySQLDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
+		else
+			sql = "INSERT INTO `" + tableName + "` SET " + columnNames[0] + "='" + entry.getName() + "', " + entry.saveToMySQLDatabase(columnNames);
+		try
+		{
+			query = connection.getConnection().createStatement();
+			query.executeUpdate(sql);
+		}
+		catch (final SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (final SQLException e)
+				{}
+			connection.closeConnection();
+		}
+	}
+
+	@Override
+	public void purgeDatabase()
+	{
+		Statement query = null;
+		try
+		{
+			query = connection.getConnection().createStatement();
+			query.executeUpdate("DELETE FROM `" + tableName + "`");
+		}
+		catch (final SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (query != null)
+				try
+				{
+					query.close();
+				}
+				catch (final SQLException e)
+				{}
+			connection.closeConnection();
+		}
+		super.purgeDatabase();
 	}
 
 	@Override
@@ -256,16 +394,14 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 	}
 
-	public static String readName(final ResultSet rawData, final String colName)
+	@Override
+	public void save(final ConfigurationSection config, final String path)
 	{
-		try
-		{
-			return rawData.getString(colName);
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-			return "ERROR";
-		}
+		super.save(config, path);
+		connection.save(config, path + "MYSQL.connection.");
+		config.set(path + "MYSQL.tableName", tableName);
+		config.set(path + "MYSQL.cached", cached);
+		for (int i = 0; i < defaultColumnNames.length; i++)
+			config.set(path + "MYSQL.columns." + defaultColumnNames[i], columnNames[i]);
 	}
 }

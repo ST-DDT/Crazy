@@ -2,6 +2,9 @@ package de.st_ddt.crazyplugin.exceptions;
 
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.locales.Localized;
+
 public class CrazyCommandErrorException extends CrazyCommandException
 {
 
@@ -26,14 +29,11 @@ public class CrazyCommandErrorException extends CrazyCommandException
 	}
 
 	@Override
+	@Localized("CRAZYEXCEPTION.COMMAND.EXCEPTION $Command$ $ErrorMessage$")
 	public void print(final CommandSender sender, final String header)
 	{
-		super.print(sender, header);
-		if (exception != null)
-		{
-			sender.sendMessage(header + exception.getMessage());
-			if (printStackTrace)
-				exception.printStackTrace();
-		}
+		ChatHelper.sendMessage(sender, header, locale, command, exception.getMessage());
+		if (printStackTrace)
+			exception.printStackTrace();
 	}
 }

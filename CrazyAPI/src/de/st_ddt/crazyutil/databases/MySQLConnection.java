@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class MySQLConnection
+import de.st_ddt.crazyutil.ConfigurationSaveable;
+
+public class MySQLConnection implements ConfigurationSaveable
 {
 
 	private Connection connection = null;
@@ -15,26 +19,20 @@ public class MySQLConnection
 	private final String database;
 	private final String user;
 	private final String password;
-	protected final boolean error;
 
-	public static MySQLConnection connect(final ConfigurationSection config)
+	public static MySQLConnection getConnection(final ConfigurationSection config)
 	{
-		return connect(config, "localhost", "3306", "database", "root", "password");
+		return getConnection(config, "localhost", "3306", "Crazy", "root", "password");
 	}
 
-	public static MySQLConnection connect(final ConfigurationSection config, final String defaultHost, final String defaultPort, final String defaultDatabase, final String defaultUser, final String defaultPassword)
+	public static MySQLConnection getConnection(final ConfigurationSection config, final String defaultHost, final String defaultPort, final String defaultDatabase, final String defaultUser, final String defaultPassword)
 	{
-		final String host = config.getString("database.host", defaultHost);
-		config.set("database.host", host);
-		final String port = config.getString("database.port", defaultPort);
-		config.set("database.port", port);
-		final String database = config.getString("database.dbname", defaultDatabase);
-		config.set("database.dbname", database);
-		final String user = config.getString("database.user", defaultUser);
-		config.set("database.user", user);
-		final String password = config.getString("database.password", defaultPassword);
-		config.set("database.password", password);
-		return new MySQLConnection(host, port, database, user, password);
+		MySQLConnection connection = null;
+		if (config == null)
+			connection = new MySQLConnection(defaultHost, defaultPort, defaultDatabase, defaultUser, defaultPassword);
+		else
+			connection = new MySQLConnection(config.getString("host", defaultHost), config.getString("port", defaultPort), config.getString("dbname", defaultDatabase), config.getString("user", defaultUser), config.getString("password", defaultPassword));
+		return connection;
 	}
 
 	public MySQLConnection(final String host, final String port, final String database, final String user, final String password)
@@ -51,25 +49,24 @@ public class MySQLConnection
 		}
 		catch (final ClassNotFoundException e)
 		{
-			// TODO Download and retry
-			System.err.println("JBDC-Treiber not found");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "JBDC-Driver not found");
 		}
-		error = !connect();
 	}
 
-	public boolean connect()
+	public void connect() throws SQLException
 	{
 		try
 		{
 			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
-			return true;
 		}
 		catch (final SQLException e)
 		{
-			System.err.println("Connection failed");
-			System.err.println(e.getLocalizedMessage());
-			// e.printStackTrace();
-			return false;
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Connection failed");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Please check:");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 1) Is your database running/online?");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 2) Did you made any mistakes with your server access data?");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 3) Can you connect to your database from this server?");
+			throw e;
 		}
 	}
 
@@ -77,12 +74,10 @@ public class MySQLConnection
 	{
 		try
 		{
-			if (connection.isClosed())
+			if (connection == null)
 				connect();
-		}
-		catch (final NullPointerException e)
-		{
-			connect();
+			else if (connection.isClosed())
+				connect();
 		}
 		catch (final Exception e)
 		{
@@ -101,8 +96,13 @@ public class MySQLConnection
 		{}
 	}
 
-	public boolean isInErrorState()
+	@Override
+	public void save(final ConfigurationSection config, final String path)
 	{
-		return error;
+		config.set(path + "host", host);
+		config.set(path + "port", port);
+		config.set(path + "dbname", database);
+		config.set(path + "user", user);
+		config.set(path + "password", password);
 	}
 }

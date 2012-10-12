@@ -1,30 +1,37 @@
 package de.st_ddt.crazyplugin;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyplugin.commands.CrazyPlayerDataPluginCommandMainReload;
+import de.st_ddt.crazyplugin.commands.CrazyPlayerDataPluginCommandPlayerTree;
+import de.st_ddt.crazyplugin.comparator.PlayerDataComparator;
+import de.st_ddt.crazyplugin.comparator.PlayerDataNameComparator;
+import de.st_ddt.crazyplugin.data.PlayerDataFilter;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
-import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ListFormat;
+import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
-import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S extends T> extends CrazyPlugin implements CrazyPlayerDataPluginInterface<T, S>
 {
 
 	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>> playerDataPlugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>>();
+	protected final Collection<PlayerDataFilter<T>> playerDataFilters = new ArrayList<PlayerDataFilter<T>>();
+	protected final Map<String, PlayerDataComparator<T>> playerDataSorters = new HashMap<String, PlayerDataComparator<T>>();
+	protected final CrazyPlayerDataPluginCommandPlayerTree<T> playerCommand = new CrazyPlayerDataPluginCommandPlayerTree<T>(this);
 	protected PlayerDataDatabase<S> database;
 	protected boolean saveDatabaseOnShutdown;
 
@@ -46,10 +53,28 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		return null;
 	}
 
+	public CrazyPlayerDataPlugin()
+	{
+		super();
+		registerSorters();
+	}
+
+	private void registerSorters()
+	{
+		playerDataSorters.put("name", new PlayerDataNameComparator<T>());
+		playerDataSorters.put("default", getPlayerDataDefaultComparator());
+	}
+
 	@Override
 	public PlayerDataDatabase<S> getCrazyDatabase()
 	{
 		return database;
+	}
+
+	@Override
+	public CrazyPlayerDataPluginCommandPlayerTree<T> getPlayerCommand()
+	{
+		return playerCommand;
 	}
 
 	@Override
@@ -174,113 +199,12 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		if (commandLabel.equalsIgnoreCase("player"))
-		{
-			if (args.length == 0)
-			{
-				commandPlayerInfo(sender, args);
-				return true;
-			}
-			try
-			{
-				final String[] newArgs = ChatHelper.shiftArray(args, 1);
-				if (!commandPlayer(sender, args[0].toLowerCase(), newArgs))
-					commandPlayerInfo(sender, newArgs);
-				return true;
-			}
-			catch (final CrazyCommandException e)
-			{
-				e.shiftCommandIndex();
-				throw e;
-			}
-		}
-		return false;
-	}
-
-	public boolean commandPlayer(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		if (commandLabel.equals("info"))
-		{
-			commandPlayerInfo(sender, args);
-			return true;
-		}
-		else if (commandLabel.equals("delete") || commandLabel.equals("remove"))
-		{
-			commandPlayerDelete(sender, args);
-			return true;
-		}
-		return false;
-	}
-
-	protected void commandPlayerInfo(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		switch (args.length)
-		{
-			case 0:
-				commandPlayerInfo(sender, (String) null, true);
-				return;
-			case 1:
-				commandPlayerInfo(sender, args[0], true);
-				return;
-			default:
-				throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " playerinfo [Player]");
-		}
-	}
-
-	protected void commandPlayerInfo(final CommandSender sender, final String name, final boolean detailed) throws CrazyCommandException
-	{
-		OfflinePlayer target = null;
-		if (name == null)
-		{
-			if (sender instanceof ConsoleCommandSender)
-				throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " player info <Player>");
-			target = (Player) sender;
-		}
-		else if (name.equals(""))
-		{
-			if (sender instanceof ConsoleCommandSender)
-				throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " player info <Player>");
-			target = (Player) sender;
-		}
-		else
-		{
-			target = Bukkit.getPlayer(name);
-			if (target == null)
-				target = Bukkit.getOfflinePlayer(name);
-			if (target == null)
-				throw new CrazyCommandNoSuchException("Player", name);
-		}
-		if (sender == target)
-			if (!sender.hasPermission(getName().toLowerCase() + ".player.info.self"))
-				throw new CrazyCommandPermissionException();
-			else if (!sender.hasPermission(getName().toLowerCase() + ".player.info.other"))
-				throw new CrazyCommandPermissionException();
-		final S data = getPlayerData(target);
-		if (data == null)
-			throw new CrazyCommandNoSuchException("PlayerData", target.getName());
-		data.show(sender, getChatHeader(), detailed);
-	}
-
-	protected void commandPlayerDelete(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (args.length != 1)
-			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " player delete <Player>");
-		if (!sender.hasPermission(getName().toLowerCase() + ".player.delete"))
-			throw new CrazyCommandPermissionException();
-		if (!deletePlayerData(args[0]))
-			throw new CrazyCommandNoSuchException("PlayerData", args[0]);
-		sendLocaleMessage("COMMAND.PLAYERDATA.DELETED", sender, args[0]);
-	}
-
-	@Override
+	@Localized("CRAZYPLUGIN.PLUGININFO.DATABASEENTRIES")
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
-		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLUGININFO");
 		super.show(target, chatHeader, showDetailed);
 		if (database != null)
-			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DATABASEENTRIES"), database.getAllEntries().size());
+			ChatHelper.sendMessage(target, chatHeader, getLocale().getLanguageEntry("PLUGININFO.DATABASEENTRIES"), database.getAllEntries().size());
 	}
 
 	@Override
@@ -295,6 +219,8 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	{
 		saveDatabaseOnShutdown = getConfig().getBoolean("database.saveOnShutdown", true);
 		super.onEnable();
+		mainCommand.addSubCommand(playerCommand, "player", "players");
+		mainCommand.addSubCommand(new CrazyPlayerDataPluginCommandMainReload<T>(this), "reload");
 	}
 
 	@Override
@@ -306,10 +232,22 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
+	public void load()
+	{
+		super.load();
+		loadDatabase();
+	}
+
+	@Localized({ "CRAZYPLUGIN.DATABASE.ACCESSWARN", "CRAZYPLUGIN.DATABASE.LOADED" })
+	public void loadDatabase()
+	{
+	}
+
+	@Override
 	public void save()
 	{
 		saveDatabase();
-		saveConfiguration();
+		super.save();
 	}
 
 	public void saveDatabase()
@@ -317,7 +255,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		final ConfigurationSection config = getConfig();
 		if (database != null)
 		{
-			config.set("database.saveType", database.getType().toString());
+			database.save(config, "database.");
 			database.saveDatabase();
 		}
 	}
@@ -325,8 +263,60 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
+		if (database != null)
+			database.save(config, "database.");
 		config.set("database.saveOnShutdown", saveDatabaseOnShutdown);
-		logger.save(config, "logs.");
-		saveConfig();
+		super.saveConfiguration();
+	}
+
+	@Override
+	public final Collection<? extends PlayerDataFilter<T>> getPlayerDataFilters()
+	{
+		return playerDataFilters;
+	}
+
+	@Override
+	public final Map<String, PlayerDataComparator<T>> getPlayerDataComparators()
+	{
+		return playerDataSorters;
+	}
+
+	@Override
+	public PlayerDataComparator<T> getPlayerDataDefaultComparator()
+	{
+		return new PlayerDataNameComparator<T>();
+	}
+
+	@Override
+	public ListFormat getPlayerDataListFormat()
+	{
+		return new ListFormat()
+		{
+
+			@Override
+			@Localized({ "CRAZYPLUGIN.COMMAND.PLAYER.LIST.HEADER", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.LISTFORMAT", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.ENTRYFORMAT" })
+			public String headFormat(final CommandSender sender)
+			{
+				return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.HEADER").getLanguageText(sender);
+			}
+
+			@Override
+			public String listFormat(final CommandSender sender)
+			{
+				return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.LISTFORMAT").getLanguageText(sender);
+			}
+
+			@Override
+			public String entryFormat(final CommandSender sender)
+			{
+				return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.ENTRYFORMAT").getLanguageText(sender);
+			}
+		};
+	}
+
+	@Override
+	public ListOptionsModder<T> getPlayerDataListModder()
+	{
+		return null;
 	}
 }

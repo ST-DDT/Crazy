@@ -15,27 +15,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
-import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainTree;
 import de.st_ddt.crazyplugin.tasks.LanguageLoadTask;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.CrazyLogger;
-import de.st_ddt.crazyutil.EntryDataGetter;
+import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPluginInterface
 {
 
 	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 	protected final CrazyLogger logger = new CrazyLogger(this);
+	protected final CrazyCommandTreeExecutor<CrazyPluginInterface> mainCommand = new CrazyPluginCommandMainTree(this);
 	protected CrazyLocale locale = null;
 	protected String previousVersion = "0";
 	protected boolean isUpdated = false;
@@ -72,156 +72,9 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public final boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args)
+	public CrazyCommandTreeExecutor<CrazyPluginInterface> getMainCommand()
 	{
-		try
-		{
-			if (command(sender, commandLabel.toLowerCase(), args))
-				return true;
-			if (getDescription().getName().equalsIgnoreCase(commandLabel) || (commandLabel.equalsIgnoreCase(getShortPluginName())))
-			{
-				try
-				{
-					if (args.length == 0)
-					{
-						commandInfo(sender, new String[0]);
-						return true;
-					}
-					final String[] newArgs = ChatHelper.shiftArray(args, 1);
-					final String commandString = args[0].toLowerCase();
-					if (commandMain(sender, commandString, newArgs))
-						return true;
-					if (commandString.equals("info"))
-					{
-						commandInfo(sender, newArgs);
-						return true;
-					}
-					if (commandString.equals("logger") || commandString.equals("log"))
-					{
-						commandLogger(sender, newArgs);
-						return true;
-					}
-					if (commandString.equals("reload"))
-					{
-						commandReload(sender, newArgs);
-						return true;
-					}
-					if (commandString.equals("save"))
-					{
-						commandSave(sender, newArgs);
-						return true;
-					}
-					if (commandString.equals("help"))
-					{
-						commandHelp(sender, newArgs);
-						return true;
-					}
-					throw new CrazyCommandNoSuchException("Function", args[0]);
-				}
-				catch (final CrazyCommandException e)
-				{
-					e.shiftCommandIndex();
-					throw e;
-				}
-			}
-		}
-		catch (final CrazyCommandException e)
-		{
-			e.setCommand(commandLabel, args);
-			e.print(sender, getChatHeader());
-			return true;
-		}
-		catch (final CrazyException e)
-		{
-			e.print(sender, getChatHeader());
-			return true;
-		}
-		return super.onCommand(sender, command, commandLabel, args);
-	}
-
-	@Override
-	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		return false;
-	}
-
-	@Override
-	public boolean commandMain(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		return false;
-	}
-
-	protected void commandInfo(final CommandSender sender, final String[] newArgs)
-	{
-		show(sender, getChatHeader(), true);
-	}
-
-	protected void commandLogger(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (!sender.hasPermission(getName().toLowerCase() + ".logger"))
-			throw new CrazyCommandPermissionException();
-		if (logger.getAllLogChannelCount() == 0)
-		{
-			sendLocaleMessage("COMMAND.CONFIG.NOLOGGERS", sender);
-			return;
-		}
-		if (args.length == 0)
-			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " logger <LogChannel> [NewOption]");
-		final String channel = args[0];
-		if (!logger.hasLogChannel(channel))
-			throw new CrazyCommandNoSuchException("LogChannel", channel, logger.getLogChannelNames());
-		if (args.length == 1)
-		{
-			if (logger.isActiveLogChannel(channel))
-				sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, logger.getPath(channel));
-			else
-				sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, "disabled");
-			return;
-		}
-		String path = ChatHelper.listingString(" ", ChatHelper.shiftArray(args, 1));
-		if (path.equalsIgnoreCase("false"))
-		{
-			logger.createEmptyLogChannels(channel);
-			sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, "disabled");
-			return;
-		}
-		if (path.equalsIgnoreCase("true"))
-			path = "logs/plugin.log";
-		logger.createLogChannel(channel, path, null);
-		sendLocaleMessage("COMMAND.CONFIG.LOGGER", sender, channel, logger.getPath(channel));
-		logger.save(getConfig(), "logs.");
-		saveConfig();
-	}
-
-	private final void commandReload(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (!sender.hasPermission(getName().toLowerCase() + ".reload"))
-			throw new CrazyCommandPermissionException();
-		if (args.length != 0)
-			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " reload");
-		reloadConfig();
-		load();
-		sendLocaleMessage("COMMAND.CONFIG.RELOADED", sender);
-	}
-
-	private final void commandSave(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		if (!sender.hasPermission(getName().toLowerCase() + ".save"))
-			throw new CrazyCommandPermissionException();
-		if (args.length != 0)
-			throw new CrazyCommandUsageException("/" + getName().toLowerCase() + " save");
-		save();
-		sendLocaleMessage("COMMAND.CONFIG.SAVED", sender);
-	}
-
-	public void commandHelp(final CommandSender sender, final String[] args)
-	{
-		sendLocaleMessage("COMMAND.HELP.NOHELP", sender);
-	}
-
-	protected String getShortPluginName()
-	{
-		return null;
+		return mainCommand;
 	}
 
 	@Override
@@ -240,6 +93,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
+	@Localized("CRAZYPLUGIN.UPDATED $Name$ $Version$")
 	public void onEnable()
 	{
 		if (isUpdated)
@@ -248,6 +102,9 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		if (isUpdated)
 			save();
 		super.onEnable();
+		final PluginCommand command = getCommand(getName());
+		if (command != null)
+			command.setExecutor(mainCommand);
 	}
 
 	@Override
@@ -257,14 +114,28 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		super.onDisable();
 	}
 
+	@Override
+	public void load()
+	{
+		loadConfiguration();
+	}
+
+	@Override
+	public void loadConfiguration()
+	{
+	}
+
+	@Override
 	public void save()
+	{
+		saveConfiguration();
+	}
+
+	@Override
+	public void saveConfiguration()
 	{
 		logger.save(getConfig(), "logs.");
 		saveConfig();
-	}
-
-	public void load()
-	{
 	}
 
 	public void checkLocale()
@@ -310,21 +181,37 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public final <E> void sendListMessage(final CommandSender target, final String headLocale, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
+	public void sendLocaleList(final CommandSender target, final ListFormat format, final int amount, final int page, final List<?> datas)
 	{
-		ChatHelper.sendListMessage(target, this, headLocale, null, null, null, amount, page, datas, getter);
+		ChatHelperExtended.sendList(target, getChatHeader(), format, amount, page, datas);
 	}
 
 	@Override
-	public final <E> void sendListMessage(final CommandSender target, final String headLocale, final String seperator, final String entry, final String emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
+	public final void sendLocaleList(final CommandSender target, final String headFormatPath, final String listFormatPath, final String entryFormatPath, final int amount, final int page, final List<?> datas)
 	{
-		ChatHelper.sendListMessage(target, this, headLocale, seperator, entry, emptyPage, amount, page, datas, getter);
+		CrazyLocale headFormat = null;
+		if (headFormatPath != null)
+			headFormat = getLocale().getLanguageEntry(headFormatPath);
+		CrazyLocale listFormat = null;
+		if (listFormatPath != null)
+			listFormat = getLocale().getLanguageEntry(listFormatPath);
+		CrazyLocale entryFormat = null;
+		if (entryFormatPath != null)
+			entryFormat = getLocale().getLanguageEntry(entryFormatPath);
+		sendLocaleList(target, headFormat, listFormat, entryFormat, amount, page, datas);
 	}
 
 	@Override
-	public final <E> void sendListMessage(final CommandSender target, final CrazyLocale headLocale, final CrazyLocale seperator, final CrazyLocale entry, final CrazyLocale emptyPage, final int amount, final int page, final List<? extends E> datas, final EntryDataGetter<E> getter)
+	@Localized({ "CRAZYPLUGIN.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYPLUGIN.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYPLUGIN.LIST.ENTRYFORMAT" })
+	public final void sendLocaleList(final CommandSender target, CrazyLocale headFormat, CrazyLocale listFormat, CrazyLocale entryFormat, final int amount, final int page, final List<?> datas)
 	{
-		ChatHelper.sendListMessage(target, this.getChatHeader(), headLocale, seperator, entry, emptyPage, amount, page, datas, getter);
+		if (headFormat == null)
+			headFormat = getLocale().getLanguageEntry("LIST.HEADER");
+		if (listFormat == null)
+			listFormat = getLocale().getLanguageEntry("LIST.LISTFORMAT");
+		if (entryFormat == null)
+			entryFormat = getLocale().getLanguageEntry("LIST.ENTRYFORMAT");
+		ChatHelperExtended.sendList(target, getChatHeader(), headFormat.getLanguageText(target), listFormat.getLanguageText(target), entryFormat.getLanguageText(target), amount, page, datas);
 	}
 
 	@Override
@@ -402,6 +289,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new LanguageLoadTask(this, language, sender));
 	}
 
+	@Localized({ "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE $Language$ $Plugin$", "CRAZYPLUGIN.LANGUAGE.ERROR.READ $Language$ $Plugin$" })
 	public void loadLanguage(final String language, final CommandSender sender)
 	{
 		if (!isSupportingLanguages())
@@ -416,7 +304,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 				unpackLanguage(language);
 				if (!file.exists())
 				{
-					sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language);
+					sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language, getName());
 					return;
 				}
 			}
@@ -427,7 +315,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		catch (final IOException e)
 		{
-			sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language);
+			sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language, getName());
 		}
 		// Custom files:
 		file = new File(getDataFolder().getPath() + "/lang/custom_" + language + ".lang");
@@ -439,7 +327,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			}
 			catch (final IOException e)
 			{
-				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language + " (Custom)");
+				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language + " (Custom)", getName());
 			}
 		}
 	}
@@ -454,6 +342,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		downloadLanguage(language, Bukkit.getConsoleSender());
 	}
 
+	@Localized("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD $Language$ $Plugin$")
 	public void downloadLanguage(final String language, final CommandSender sender)
 	{
 		try
@@ -486,7 +375,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		catch (final IOException e)
 		{
-			sendLocaleMessage("LANGUAGE.ERROR.DOWNLOAD", sender, language);
+			sendLocaleMessage("LANGUAGE.ERROR.DOWNLOAD", sender, language, getName());
 		}
 	}
 
@@ -495,6 +384,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		updateLanguage(language, Bukkit.getConsoleSender(), reload);
 	}
 
+	@Localized({ "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE $Language$ $Plugin$", "CRAZYPLUGIN.LANGUAGE.ERROR.READ $Language$ $Plugin$" })
 	public void updateLanguage(final String language, final CommandSender sender, final boolean reload)
 	{
 		if (!isSupportingLanguages())
@@ -506,7 +396,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			unpackLanguage(language);
 			if (!file.exists())
 			{
-				sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language);
+				sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language, getName());
 				return;
 			}
 		}
@@ -517,11 +407,17 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			}
 			catch (final IOException e)
 			{
-				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language);
+				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language, getName());
 			}
 	}
 
 	public void unpackLanguage(final String language)
+	{
+		unpackLanguage(language, getServer().getConsoleSender());
+	}
+
+	@Localized("CRAZYPLUGIN.LANGUAGE.ERROR.EXTRACT $Language$ $Plugin$")
+	public void unpackLanguage(final String language, CommandSender sender)
 	{
 		try
 		{
@@ -553,7 +449,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 		catch (final IOException e)
 		{
-			sendLocaleMessage("LANGUAGE.ERROR.EXPORT", getServer().getConsoleSender(), language);
+			sendLocaleMessage("LANGUAGE.ERROR.EXTRACT", sender, language, getName());
 		}
 	}
 
@@ -566,7 +462,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			stream = new FileInputStream(file);
 			reader = new InputStreamReader(stream, "UTF-8");
 			CrazyLocale.readFile(language, reader);
-			// sendLocaleMessage("LANGUAGE.LOADED", sender, language);
 		}
 		finally
 		{

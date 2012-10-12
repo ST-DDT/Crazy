@@ -4,6 +4,7 @@ public class MySQLColumn
 {
 
 	protected final String name;
+	protected String realName;
 	protected final String type;
 	protected final boolean primary;
 	protected final boolean nulled;
@@ -48,6 +49,16 @@ public class MySQLColumn
 		return name;
 	}
 
+	public String getRealName()
+	{
+		return realName;
+	}
+
+	public void setRealName(final String realName)
+	{
+		this.realName = realName;
+	}
+
 	public String getType()
 	{
 		return type;
@@ -75,7 +86,15 @@ public class MySQLColumn
 
 	public String getCreateString()
 	{
-		return name + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL ")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
+		return getCreateString(false);
+	}
+
+	public String getCreateString(final boolean skipPrimary)
+	{
+		if (skipPrimary)
+			return realName + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "" : (nulled ? "NULL " : "NOT NULL ")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
+		else
+			return realName + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL ")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
 	}
 
 	public static String getFullCreateString(final MySQLColumn... columns)

@@ -7,9 +7,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataInterface
 {
@@ -31,11 +32,12 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 	}
 
 	@Override
+	@Localized({ "CRAZYPLUGIN.PLAYERINFO.HEAD", "CRAZYPLUGIN.PLAYERINFO.USERNAME", "CRAZYPLUGIN.PLAYERINFO.DISPLAYNAME", "CRAZYPLUGIN.PLAYERINFO.IPADDRESS", "CRAZYPLUGIN.PLAYERINFO.CONNECTION", "CRAZYPLUGIN.PLAYERINFO.URL", "CRAZYPLUGIN.PLAYERINFO.OP", "CRAZYPLUGIN.PLAYERINFO.WHITELISTED", "CRAZYPLUGIN.PLAYERINFO.BANNED", "CRAZYPLUGIN.PLAYERINFO.SEPARATOR" })
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLAYERINFO");
 		final Player player = getPlayer();
-		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), CrazyPluginInterface.DateFormat.format(new Date()));
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date()));
 		if (player == null)
 		{
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("USERNAME"), getName());

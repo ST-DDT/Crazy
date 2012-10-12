@@ -1,35 +1,36 @@
 package de.st_ddt.crazyplugin;
 
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.Commandable;
-import de.st_ddt.crazyutil.CrazyLogger;
-import de.st_ddt.crazyutil.EntryDataGetter;
+import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutorInterface;
+import de.st_ddt.crazyutil.ListFormat;
+import de.st_ddt.crazyutil.Logger;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface, Commandable
+public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface
 {
-
-	public static SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
 	public boolean isInstalled();
 
 	public boolean isUpdated();
 
-	public CrazyLogger getCrazyLogger();
+	public Logger getCrazyLogger();
 
 	public CrazyLocale getLocale();
 
-	@Override
-	public boolean command(CommandSender sender, String commandLabel, String[] args) throws CrazyException;
+	public void load();
 
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException;
+	public void loadConfiguration();
+
+	public void save();
+
+	public void saveConfiguration();
+
+	public CrazyCommandTreeExecutorInterface<CrazyPluginInterface> getMainCommand();
 
 	public void sendLocaleMessage(String localepath, CommandSender target, Object... args);
 
@@ -43,11 +44,11 @@ public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface, 
 
 	public void sendLocaleMessage(CrazyLocale locale, Collection<? extends CommandSender> targets, Object... args);
 
-	public <E> void sendListMessage(CommandSender target, String headLocale, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter);
+	public void sendLocaleList(final CommandSender target, ListFormat format, int amount, int page, List<?> datas);
 
-	public <E> void sendListMessage(CommandSender target, String headLocale, String seperator, String entry, String emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter);
+	public void sendLocaleList(final CommandSender target, String headFormatPath, String listFormatPath, String entryFormatPath, int amount, int page, List<?> datas);
 
-	public <E> void sendListMessage(CommandSender target, CrazyLocale headLocale, CrazyLocale seperator, CrazyLocale entry, CrazyLocale emptyPage, int amount, int page, List<? extends E> datas, EntryDataGetter<E> getter);
+	public void sendLocaleList(final CommandSender target, CrazyLocale headFormat, CrazyLocale listFormat, CrazyLocale entryFormat, int amount, int page, List<?> datas);
 
 	public void broadcastLocaleMessage(String localepath, Object... args);
 

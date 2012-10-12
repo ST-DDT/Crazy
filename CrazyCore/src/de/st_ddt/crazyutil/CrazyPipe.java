@@ -9,7 +9,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.data.ParameterData;
-import de.st_ddt.crazyplugin.data.PlayerData;
+import de.st_ddt.crazyplugin.data.PlayerDataInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUnsupportedException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
 public abstract class CrazyPipe
 {
@@ -24,7 +26,7 @@ public abstract class CrazyPipe
 		return pipe;
 	}
 
-	public static void pipe(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+	public static void pipe(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
 	{
 		if (disabled)
 			return;
@@ -35,17 +37,17 @@ public abstract class CrazyPipe
 			defaultPipe(sender, datas);
 			return;
 		}
-		if (pipeArgs.length == 0)
+		final int length = pipeArgs.length;
+		if (length == 0)
 		{
 			defaultPipe(sender, datas);
 			return;
 		}
-		int length = pipeArgs.length;
 		for (int i = 0; i < length; i++)
 			if (pipeArgs[i].equals("|"))
 			{
-				pipe(sender, datas, ChatHelper.cutArray(pipeArgs, i));
-				pipe(sender, datas, ChatHelper.shiftArray(pipeArgs, i + 1));
+				pipe(sender, datas, ChatHelperExtended.cutArray(pipeArgs, i));
+				pipe(sender, datas, ChatHelperExtended.shiftArray(pipeArgs, i + 1));
 				return;
 			}
 		final CrazyPipe pipe = pipes.get(pipeArgs[0].toLowerCase());
@@ -55,7 +57,7 @@ public abstract class CrazyPipe
 			return;
 		}
 		else
-			pipe.execute(sender, datas, ChatHelper.shiftArray(pipeArgs, 1));
+			pipe.execute(sender, datas, ChatHelperExtended.shiftArray(pipeArgs, 1));
 	}
 
 	public static void pipe(final CommandSender sender, final ParameterData data, final String... pipeArgs)
@@ -64,24 +66,56 @@ public abstract class CrazyPipe
 			return;
 		if (pipeArgs == null)
 		{
-			data.show(sender);
+			defaultPipe(sender, data);
 			return;
 		}
-		if (pipeArgs.length == 0)
+		final int length = pipeArgs.length;
+		if (length == 0)
 		{
-			data.show(sender);
+			defaultPipe(sender, data);
 			return;
 		}
+		for (int i = 0; i < length; i++)
+			if (pipeArgs[i].equals("|"))
+			{
+				pipe(sender, data, ChatHelperExtended.cutArray(pipeArgs, i));
+				pipe(sender, data, ChatHelperExtended.shiftArray(pipeArgs, i + 1));
+				return;
+			}
 		commandPipe(sender, data, pipeArgs);
 	}
 
-	private static void defaultPipe(final CommandSender sender, final Collection<ParameterData> datas)
+	public static void pipe(final CommandSender sender, final String data, final String... pipeArgs)
+	{
+		if (disabled)
+			return;
+		if (pipeArgs == null)
+			return;
+		final int length = pipeArgs.length;
+		if (length == 0)
+			return;
+		for (int i = 0; i < length; i++)
+			if (pipeArgs[i].equals("|"))
+			{
+				pipe(sender, data, ChatHelperExtended.cutArray(pipeArgs, i));
+				pipe(sender, data, ChatHelperExtended.shiftArray(pipeArgs, i + 1));
+				return;
+			}
+		commandPipe(sender, data, pipeArgs);
+	}
+
+	private static void defaultPipe(final CommandSender sender, final Collection<? extends ParameterData> datas)
 	{
 		for (final ParameterData data : datas)
 			sender.sendMessage(data.getShortInfo());
 	}
 
-	private static void commandPipe(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+	private static void defaultPipe(final CommandSender sender, final ParameterData data)
+	{
+		data.show(sender);
+	}
+
+	private static void commandPipe(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs)
 	{
 		for (final ParameterData data : datas)
 			commandPipe(sender, data, pipeArgs);
@@ -89,8 +123,19 @@ public abstract class CrazyPipe
 
 	private static void commandPipe(final CommandSender sender, final ParameterData data, final String... pipeArgs)
 	{
-		String command = ChatHelper.listingString(" ", pipeArgs);
-		Bukkit.dispatchCommand(sender, shiftPipeEntry(ChatHelper.putArgsPara(command, data)));
+		final String command = ChatHelper.listingString(" ", pipeArgs);
+		Bukkit.dispatchCommand(sender, shiftPipeEntry(ChatHelper.putArgsPara(sender, command, data)));
+	}
+
+	private static void commandPipe(final CommandSender sender, final String data, final String... pipeArgs)
+	{
+		final String command = ChatHelper.listingString(" ", pipeArgs);
+		if (command.startsWith("show "))
+		{
+			ChatHelper.sendMessage(sender, "", command.substring(5), data);
+		}
+		else
+			Bukkit.dispatchCommand(sender, shiftPipeEntry(ChatHelper.putArgs(command, data)));
 	}
 
 	public static String[] shiftPipe(final String... args)
@@ -102,19 +147,19 @@ public abstract class CrazyPipe
 		return newArgs;
 	}
 
-	public static String shiftPipeEntry(String arg)
+	public static String shiftPipeEntry(final String arg)
 	{
 		return arg.replace("$&", "$").replace("|&", "|");
 	}
 
-	public abstract void execute(CommandSender sender, Collection<ParameterData> datas, String... pipeArgs);
+	public abstract void execute(CommandSender sender, Collection<? extends ParameterData> datas, String... pipeArgs) throws CrazyException;
 
 	public static boolean isDisabled()
 	{
 		return disabled;
 	}
 
-	public static void setDisabled(boolean disabled)
+	public static void setDisabled(final boolean disabled)
 	{
 		CrazyPipe.disabled = disabled;
 	}
@@ -125,7 +170,7 @@ public abstract class CrazyPipe
 		{
 
 			@Override
-			public void execute(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
 			{
 				String[] newArgs = null;
 				final LinkedList<ParameterData> newEntries = new LinkedList<ParameterData>();
@@ -137,7 +182,7 @@ public abstract class CrazyPipe
 					final String arg = pipeArgs[a];
 					if (arg.equals(">"))
 					{
-						newArgs = shiftPipe(ChatHelper.shiftArray(pipeArgs, a + 1));
+						newArgs = shiftPipe(ChatHelperExtended.shiftArray(pipeArgs, a + 1));
 						break;
 					}
 					for (final String part : arg.split(","))
@@ -156,9 +201,9 @@ public abstract class CrazyPipe
 		{
 
 			@Override
-			public void execute(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
 			{
-				String[] newArgs = shiftPipe(ChatHelper.shiftArray(pipeArgs, 1));
+				final String[] newArgs = shiftPipe(ChatHelperExtended.shiftArray(pipeArgs, 1));
 				final LinkedList<ParameterData> newEntries = new LinkedList<ParameterData>();
 				final ArrayList<ParameterData> entries = new ArrayList<ParameterData>();
 				entries.addAll(datas);
@@ -170,9 +215,9 @@ public abstract class CrazyPipe
 		{
 
 			@Override
-			public void execute(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
 			{
-				String[] newArgs = shiftPipe(ChatHelper.shiftArray(pipeArgs, 1));
+				final String[] newArgs = shiftPipe(ChatHelperExtended.shiftArray(pipeArgs, 1));
 				final LinkedList<ParameterData> newEntries = new LinkedList<ParameterData>();
 				final ArrayList<ParameterData> entries = new ArrayList<ParameterData>();
 				entries.addAll(datas);
@@ -184,57 +229,40 @@ public abstract class CrazyPipe
 		{
 
 			@Override
-			public void execute(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
 			{
-				int page = 1;
-				int amount = 10;
-				final int length = pipeArgs.length;
-				for (int i = 0; i < length; i++)
-				{
-					final String arg = pipeArgs[i].toLowerCase();
-					if (arg.startsWith("p:"))
-						page = Integer.parseInt(arg.substring(2));
-					else if (arg.startsWith("page:"))
-						page = Integer.parseInt(arg.substring(5));
-					else if (arg.equals("a:*"))
-						amount = -1;
-					else if (arg.startsWith("a:"))
-						amount = Integer.parseInt(arg.substring(2));
-					else if (arg.equals("amount:*"))
-						amount = -1;
-					else if (arg.startsWith("amount:"))
-						amount = Integer.parseInt(arg.substring(7));
-					else if (i == 0)
-						page = Integer.parseInt(arg);
-					else if (arg.equals("*"))
-						amount = -1;
-					else
-						amount = Integer.parseInt(arg);
-				}
-				final ArrayList<ParameterData> entries = new ArrayList<ParameterData>(datas);
-				ChatHelper.sendListMessage(sender, "", "CRAZYPLUGIN.LIST.HEAD", null, null, null, amount, page, entries, new ShowableDataGetter());
+				final String[] args = ChatHelperExtended.processListCommand(sender, pipeArgs, "", null, null, null, null, null, new ArrayList<ParameterData>(datas));
+				if (args != null)
+					throw new CrazyCommandUnsupportedException("PipeCommand", args);
 			}
 		}, "page");
 		registerPipe(new CrazyPipe()
 		{
 
 			@Override
-			public void execute(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs)
 			{
-				String message = ChatHelper.listingString(" ", pipeArgs);
-				for (ParameterData data : datas)
-					sender.sendMessage(ChatHelper.putArgsPara(message, data));
+				final String message = ChatHelper.colorise(ChatHelper.listingString(" ", pipeArgs));
+				for (final ParameterData data : datas)
+					sender.sendMessage(ChatHelper.putArgsPara(sender, message, data));
 			}
 		}, "show");
 		registerPipe(new CrazyPipe()
 		{
 
 			@Override
-			public void execute(final CommandSender sender, final Collection<ParameterData> datas, final String... pipeArgs)
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs)
 			{
-				for (ParameterData data : datas)
-					if (data instanceof PlayerData<?>)
-						((PlayerData<?>) data).show(sender, "", true);
+				String separator = "----------------------------------------";
+				if (pipeArgs.length > 0)
+					separator = ChatHelper.listingString(" ", pipeArgs);
+				for (final ParameterData data : datas)
+					if (data instanceof PlayerDataInterface)
+					{
+						sender.sendMessage(separator);
+						((PlayerDataInterface) data).show(sender, "", true);
+					}
+				sender.sendMessage(separator);
 			}
 		}, "show+");
 	}

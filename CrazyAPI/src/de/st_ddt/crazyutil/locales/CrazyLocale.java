@@ -48,10 +48,9 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN", "CRAZYPLUGIN");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.UPDATED", "$0$ has been updated. Updating language files.");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.READ", "Failed reading $0$ language files!");
-		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.EXPORT", "Failed exporting $0$ language files!");
+		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.EXTRACT", "Failed exporting $0$ language files!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", "Failed downloading $0$ language files!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", "$0$ language files not available!");
-		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.LOADED", "Language $0$ loaded sucessfully!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.DATABASE.LOADED", "Loaded $0$ entries from database!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.DATABASE.ACCESSWARN", "&CWARNING! Cannot access Database!");
 		getLocaleHead().addLanguageEntry("en_en", "LANGUAGE.NAME", "English");
@@ -236,6 +235,12 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 				res = localeTexts.get(it.next());
 			if (res == null)
 				res = getDefaultLanguageText();
+			if (res == null)
+			{
+				res = "LOCALE IS MISSING!";
+				if (this != missing)
+					System.out.println("[CrazyLocale] " + getPath() + " is missing!");
+			}
 		}
 		return res;
 	}
@@ -248,17 +253,14 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	public String getDefaultLanguageText()
 	{
 		String res = localeTexts.get(defaultLanguage);
-		if (res == null)
+		if (res != null)
 		{
 			res = localeTexts.get("en_en");
 			if (res == null)
-			{
 				if (localeTexts.isEmpty())
-					return "EMPTY!";
-				res = localeTexts.values().iterator().next();
-				if (res == null)
-					return "EMPTY!";
-			}
+					return null;
+				else
+					return localeTexts.values().iterator().next();
 		}
 		return res;
 	}
@@ -290,49 +292,67 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 			sendMessage(target, args);
 	}
 
-	public CrazyLocale getLanguageEntry(String path)
+	public CrazyLocale getLanguageEntry(final String path)
 	{
-		path = path.toUpperCase();
-		CrazyLocale locale = this;
-		try
+		CrazyLocale locale = getEntry(path.toUpperCase());
+		if (locale == missing)
+			System.out.println("[CrazyLocale] " + getPath() + "." + path + " is missing!");
+		return locale;
+	}
+
+	protected CrazyLocale getEntry(final String path)
+	{
+		final String[] split = path.split("\\.", 2);
+		CrazyLocale locale = get(split[0]);
+		if (locale == null)
+			locale = missing;
+		else if (split.length == 2)
+			locale = locale.getEntry(split[1]);
+		if (locale == missing)
+			locale = getAlternativeEntry(path);
+		if (locale == missing)
+			locale = getParentialAlternativeEntry(path);
+		return locale;
+	}
+
+	protected CrazyLocale getAlternativeEntry(final String path)
+	{
+		final String[] split = path.split("\\.", 2);
+		CrazyLocale locale = missing;
+		if (alternative != null)
 		{
-			for (final String section : path.split("\\."))
-			{
-				final CrazyLocale alternative = locale.getAlternative();
-				locale = locale.get(section);
-				if (locale == null)
-					if (alternative == null)
-						throw new NullPointerException();
-					else
-						locale = alternative.get(section);
-			}
+			locale = alternative.get(split[0]);
 			if (locale == null)
-				throw new NullPointerException();
+				return missing;
+			else if (split.length == 2)
+				locale = locale.getEntry(split[1]);
 		}
-		catch (final NullPointerException e)
-		{
-			System.out.println("[CrazyLocale] Missing language entry " + this.getPath() + "." + path);
+		return locale;
+	}
+
+	protected CrazyLocale getParentialAlternativeEntry(String path)
+	{
+		if (parent == null)
 			return missing;
-		}
+		path = name + "." + path;
+		CrazyLocale locale = parent.getAlternativeEntry(path);
+		if (locale == missing)
+			locale = parent.getParentialAlternativeEntry(path);
 		return locale;
 	}
 
 	public CrazyLocale getSecureLanguageEntry(String path)
 	{
 		path = path.toUpperCase();
-		CrazyLocale locale = this;
-		for (final String section : path.split("\\."))
+		final String[] split = path.split("\\.", 2);
+		CrazyLocale locale = get(split[0]);
+		if (locale == null)
 		{
-			CrazyLocale temp = locale.get(section);
-			if (temp == null)
-			{
-				temp = new CrazyLocale(locale, section);
-				locale.put(section, temp);
-				if (locale.getAlternative() != null)
-					temp.setAlternative(locale.getAlternative().get(section));
-			}
-			locale = temp;
+			locale = new CrazyLocale(this, split[0]);
+			put(split[0], locale);
 		}
+		if (split.length == 2)
+			locale = locale.getSecureLanguageEntry(split[1]);
 		return locale;
 	}
 
@@ -429,6 +449,8 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static String getUserLanguage(final CommandSender sender)
 	{
+		if (sender == null)
+			return defaultLanguage;
 		return getUserLanguage(sender.getName());
 	}
 
@@ -440,12 +462,12 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		return res;
 	}
 
-	public static String getUserLanguageName(final CommandSender sender, boolean appendLanguage)
+	public static String getUserLanguageName(final CommandSender sender, final boolean appendLanguage)
 	{
 		return getLanguageName(getUserLanguage(sender), appendLanguage);
 	}
 
-	public static String getUserLanguageName(final String name, boolean appendLanguage)
+	public static String getUserLanguageName(final String name, final boolean appendLanguage)
 	{
 		return getLanguageName(getUserLanguage(name), appendLanguage);
 	}

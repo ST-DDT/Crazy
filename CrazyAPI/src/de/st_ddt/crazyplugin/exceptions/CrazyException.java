@@ -2,9 +2,12 @@ package de.st_ddt.crazyplugin.exceptions;
 
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.Showable;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
-public class CrazyException extends Exception
+public class CrazyException extends Exception implements Showable
 {
 
 	private static final long serialVersionUID = -1585496766103859503L;
@@ -27,9 +30,10 @@ public class CrazyException extends Exception
 		return "CRAZYEXCEPTION";
 	}
 
+	@Localized("CRAZYEXCEPTION")
 	public void print(final CommandSender sender, final String header)
 	{
-		sender.sendMessage(header + locale.getLocaleMessage(sender, "Head"));
+		ChatHelper.sendMessage(sender, header, locale);
 		if (printStackTrace)
 			printStackTrace();
 	}
@@ -37,5 +41,26 @@ public class CrazyException extends Exception
 	public final void print(final CommandSender sender)
 	{
 		print(sender, "");
+	}
+
+	@Override
+	public void show(CommandSender target)
+	{
+		print(target);
+	}
+
+	@Override
+	public void show(CommandSender target, String chatHeader, boolean showDetailed)
+	{
+		boolean temp = printStackTrace;
+		printStackTrace = true;
+		print(target, chatHeader);
+		printStackTrace = temp;
+	}
+
+	@Override
+	public String getShortInfo()
+	{
+		return locale.getDefaultLanguageText();
 	}
 }
