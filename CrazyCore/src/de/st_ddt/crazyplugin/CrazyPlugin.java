@@ -185,6 +185,12 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	{
 		ChatHelperExtended.sendList(target, getChatHeader(), format, amount, page, datas);
 	}
+	
+	@Override
+	public final void sendLocaleList(final CommandSender target, final String formatPath, final int amount, final int page, final List<?> datas)
+	{
+		sendLocaleList(target, formatPath+".HEADER", formatPath+".LISTFORMAT", formatPath+".ENTRYFORMAT", amount, page, datas);
+	}
 
 	@Override
 	public final void sendLocaleList(final CommandSender target, final String headFormatPath, final String listFormatPath, final String entryFormatPath, final int amount, final int page, final List<?> datas)

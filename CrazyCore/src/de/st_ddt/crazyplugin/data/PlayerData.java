@@ -61,7 +61,7 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 		}
 		if (showDetailed)
 		{
-			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("SEPERATOR"));
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("SEPARATOR"));
 			showDetailed(target, chatHeader);
 		}
 	}

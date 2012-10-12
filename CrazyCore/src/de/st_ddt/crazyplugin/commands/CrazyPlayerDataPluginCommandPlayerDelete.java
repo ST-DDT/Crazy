@@ -20,7 +20,7 @@ public class CrazyPlayerDataPluginCommandPlayerDelete<T extends PlayerDataInterf
 	}
 
 	@Override
-	@Localized("CRAZYPLUGIN.COMMAND.PLAYER.DELETE.SUCCESS")
+	@Localized("CRAZYPLUGIN.COMMAND.PLAYER.DELETE.SUCCESS $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".player.delete"))
