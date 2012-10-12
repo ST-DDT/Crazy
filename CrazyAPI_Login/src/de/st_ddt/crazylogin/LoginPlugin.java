@@ -15,6 +15,8 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginInterface<LoginData, S>
 {
 
+	static final LoginPluginProvider LOGINPLUGINPROVIDER = new LoginPluginProvider();
+
 	public void playerLogin(Player player, final String password) throws CrazyException;
 
 	public void playerLogout(Player player) throws CrazyException;
@@ -26,8 +28,6 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 	public boolean isLoggedIn(Player player);
 
 	public Set<S> getPlayerDatasPerIP(String IP);
-
-	public void updateAccount(String name);
 
 	public boolean isAlwaysNeedPassword();
 

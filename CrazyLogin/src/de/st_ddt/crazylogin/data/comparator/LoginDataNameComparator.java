@@ -1,4 +1,6 @@
-package de.st_ddt.crazylogin.data;
+package de.st_ddt.crazylogin.data.comparator;
+
+import de.st_ddt.crazylogin.data.LoginData;
 
 public class LoginDataNameComparator implements LoginDataComparator
 {
