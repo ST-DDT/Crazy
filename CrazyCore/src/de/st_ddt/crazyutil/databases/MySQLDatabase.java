@@ -222,7 +222,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			if (result.next())
 				try
 				{
-					data = constructor.newInstance(connection, tableName, columnNames);
+					data = constructor.newInstance(result, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
 				}
 				catch (final Exception e)
