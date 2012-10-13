@@ -34,6 +34,7 @@ public class CrazyCoreCommandLanguageExtract extends CrazyCoreCommandExecutor
 				for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 				{
 					plugin.unpackLanguage(language);
+					plugin.loadLanguage(language, sender);
 					plugin.checkLocale();
 				}
 				plugin.sendLocaleMessage("COMMAND.LANGUAGE.EXTRACTED", sender, language);
@@ -45,6 +46,7 @@ public class CrazyCoreCommandLanguageExtract extends CrazyCoreCommandExecutor
 			for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 			{
 				plugin.unpackLanguage(name, sender);
+				plugin.loadLanguage(name, sender);
 				plugin.checkLocale();
 			}
 			plugin.sendLocaleMessage("COMMAND.LANGUAGE.EXTRACTED", sender, name);
@@ -62,6 +64,7 @@ public class CrazyCoreCommandLanguageExtract extends CrazyCoreCommandExecutor
 		for (final String language : CrazyLocale.getLoadedLanguages())
 		{
 			plugin.unpackLanguage(language, sender);
+			plugin.loadLanguage(language, sender);
 			plugin.checkLocale();
 			plugin.sendLocaleMessage("COMMAND.LANGUAGE.EXTRACTED.PLUGIN", sender, language, plugin.getName());
 		}
