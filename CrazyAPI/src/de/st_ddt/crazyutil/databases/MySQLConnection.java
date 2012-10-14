@@ -13,7 +13,6 @@ import de.st_ddt.crazyutil.ConfigurationSaveable;
 public class MySQLConnection implements ConfigurationSaveable
 {
 
-	private Connection connection = null;
 	private final String host;
 	private final String port;
 	private final String database;
@@ -53,11 +52,11 @@ public class MySQLConnection implements ConfigurationSaveable
 		}
 	}
 
-	public void connect() throws SQLException
+	public Connection openConnection()
 	{
 		try
 		{
-			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
+			return DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
 		}
 		catch (final SQLException e)
 		{
@@ -66,33 +65,18 @@ public class MySQLConnection implements ConfigurationSaveable
 			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 1) Is your database running/online?");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 2) Did you made any mistakes with your server access data?");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 3) Can you connect to your database from this server?");
-			throw e;
-		}
-	}
-
-	public Connection getConnection()
-	{
-		try
-		{
-			if (connection == null)
-				connect();
-			else if (connection.isClosed())
-				connect();
-		}
-		catch (final Exception e)
-		{
 			e.printStackTrace();
+			return null;
 		}
-		return connection;
 	}
 
-	public void closeConnection()
+	public void closeConnection(Connection connection)
 	{
 		try
 		{
 			connection.close();
 		}
-		catch (final SQLException e)
+		catch (SQLException e)
 		{}
 	}
 
