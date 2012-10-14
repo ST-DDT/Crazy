@@ -134,7 +134,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 			@Override
 			public void setValue(final Integer newValue) throws CrazyException
 			{
-				maxNameLength = Math.min(Math.max(newValue, 1), 16);
+				maxNameLength = Math.min(Math.max(newValue, 1), 255);
 				saveConfiguration();
 			}
 
@@ -220,7 +220,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 			filterNames = "[a-zA-Z0-9_]";
 		blockDifferentNameCases = config.getBoolean("blockDifferentNameCases", blockDifferentNameCases);
 		minNameLength = Math.min(Math.max(config.getInt("minNameLength", 3), 1), 16);
-		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 16);
+		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 255);
 	}
 
 	@Override
