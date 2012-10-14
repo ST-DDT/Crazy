@@ -28,7 +28,7 @@ public class CrazyOnlineMySQLDatabase extends MySQLDatabase<OnlinePlayerData> im
 	{
 		final MySQLColumn[] columns = new MySQLColumn[6];
 		final String defaultDate = "'" + CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date(0)) + "'";
-		columns[0] = new MySQLColumn("name", "CHAR(50)", true, false);
+		columns[0] = new MySQLColumn("name", "CHAR(255)", true, false);
 		columns[1] = new MySQLColumn("firstLogin", "CHAR(19)", defaultDate, false, false);
 		columns[2] = new MySQLColumn("lastLogin", "CHAR(19)", defaultDate, false, false);
 		columns[3] = new MySQLColumn("lastLogout", "CHAR(19)", defaultDate, false, false);
