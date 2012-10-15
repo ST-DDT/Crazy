@@ -52,7 +52,7 @@ public class MySQLConnection implements ConfigurationSaveable
 		}
 	}
 
-	public Connection openConnection()
+	public Connection openConnection() throws SQLException
 	{
 		try
 		{
@@ -65,19 +65,8 @@ public class MySQLConnection implements ConfigurationSaveable
 			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 1) Is your database running/online?");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 2) Did you made any mistakes with your server access data?");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + " 3) Can you connect to your database from this server?");
-			e.printStackTrace();
-			return null;
+			throw e;
 		}
-	}
-
-	public void closeConnection(Connection connection)
-	{
-		try
-		{
-			connection.close();
-		}
-		catch (SQLException e)
-		{}
 	}
 
 	@Override

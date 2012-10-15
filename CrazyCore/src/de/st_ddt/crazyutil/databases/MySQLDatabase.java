@@ -14,6 +14,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 
 	private final String tableName;
 	private final MySQLConnection mysqlConnection;
+	private final MySQLConnectionPool mysqlConnectionPool;
 	private final MySQLColumn[] columns;
 	private final String[] columnNames;
 	private final boolean cached;
@@ -25,6 +26,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		{
 			this.tableName = defaultTableName;
 			this.mysqlConnection = MySQLConnection.getConnection(null);
+			this.mysqlConnectionPool = new MySQLConnectionPool(mysqlConnection);
 			this.columns = columns;
 			this.columnNames = defaultColumnNames;
 			this.cached = true;
@@ -33,6 +35,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		{
 			this.tableName = config.getString("tablename", defaultTableName);
 			this.mysqlConnection = MySQLConnection.getConnection(config.getConfigurationSection("connection"));
+			this.mysqlConnectionPool = new MySQLConnectionPool(mysqlConnection);
 			this.columns = columns;
 			this.columnNames = new String[defaultColumnNames.length];
 			for (int i = 0; i < defaultColumnNames.length; i++)
@@ -49,6 +52,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
 		this.tableName = tableName;
 		this.mysqlConnection = new MySQLConnection(host, port, database, user, password);
+		this.mysqlConnectionPool = new MySQLConnectionPool(mysqlConnection);
 		this.columns = columns;
 		this.columnNames = columnNames;
 		for (int i = 0; i < columns.length; i++)
@@ -101,11 +105,16 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		return mysqlConnection;
 	}
 
+	public final MySQLConnectionPool getConnectionpool()
+	{
+		return mysqlConnectionPool;
+	}
+
 	@Override
 	public void checkTable() throws Exception
 	{
 		Statement query = null;
-		Connection connection = mysqlConnection.openConnection();
+		Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			// Create Table if not exists
@@ -149,7 +158,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (SQLException e)
 				{}
-			mysqlConnection.closeConnection(connection);
+			mysqlConnectionPool.releaseConnection(connection);
 		}
 	}
 
@@ -179,7 +188,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		boolean res = false;
 		Statement query = null;
-		Connection connection = mysqlConnection.openConnection();
+		Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -201,7 +210,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final Exception e)
 				{}
-			mysqlConnection.closeConnection(connection);
+			mysqlConnectionPool.releaseConnection(connection);
 		}
 		return res;
 	}
@@ -217,7 +226,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		S data = null;
 		Statement query = null;
-		Connection connection = mysqlConnection.openConnection();
+		Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -248,7 +257,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final Exception e)
 				{}
-			mysqlConnection.closeConnection(connection);
+			mysqlConnectionPool.releaseConnection(connection);
 		}
 		return data;
 	}
@@ -257,7 +266,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void loadAllEntries()
 	{
 		Statement query = null;
-		Connection connection = mysqlConnection.openConnection();
+		Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -287,7 +296,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final Exception e)
 				{}
-			mysqlConnection.closeConnection(connection);
+			mysqlConnectionPool.releaseConnection(connection);
 		}
 	}
 
@@ -295,7 +304,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public boolean deleteEntry(final String key)
 	{
 		Statement query = null;
-		Connection connection = mysqlConnection.openConnection();
+		Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -314,7 +323,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final SQLException e)
 				{}
-			mysqlConnection.closeConnection(connection);
+			mysqlConnectionPool.releaseConnection(connection);
 		}
 		return super.deleteEntry(key);
 	}
@@ -324,7 +333,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		super.save(entry);
 		Statement query = null;
-		Connection connection = mysqlConnection.openConnection();
+		Connection connection = mysqlConnectionPool.getConnection();
 		String sql = null;
 		if (containsEntry(entry.getName()))
 			sql = "UPDATE `" + tableName + "` SET " + entry.saveToMySQLDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
@@ -348,7 +357,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final SQLException e)
 				{}
-			mysqlConnection.closeConnection(connection);
+			mysqlConnectionPool.releaseConnection(connection);
 		}
 	}
 
@@ -356,7 +365,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void purgeDatabase()
 	{
 		Statement query = null;
-		Connection connection = mysqlConnection.openConnection();
+		Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -375,7 +384,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final SQLException e)
 				{}
-			mysqlConnection.closeConnection(connection);
+			mysqlConnectionPool.releaseConnection(connection);
 		}
 		super.purgeDatabase();
 	}
