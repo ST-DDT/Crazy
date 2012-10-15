@@ -40,7 +40,7 @@ public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 			event.callEvent();
 		else
 			event.checkAndCallEvent();
-		plugin.sendLocaleMessage("COMMAND.PLAYER.DELETE.HEAD", sender, name, event.getDeletionsCount());
+		plugin.sendLocaleMessage("COMMAND.PLAYER.DELETE.SUCCESS", sender, name, event.getDeletionsCount());
 		if (event.getDeletionsCount() != 0)
 			plugin.sendLocaleList(sender, "COMMAND.PLAYER.DELETE.LISTHEADER", "COMMAND.PLAYER.DELETE.LISTFORMAT", null, -1, 1, new ArrayList<String>(event.getDeletions()));
 	}
