@@ -23,7 +23,7 @@ public interface CrazyCommandTreeExecutorInterface<S extends CrazyPluginInterfac
 
 	public void setDefaultExecutor(CrazyCommandExecutorInterface defaultExecutor);
 
-	public TreeMap<String, CrazyCommandExecutorInterface> getSubExecutor();
+	public TreeMap<String, CrazyCommandExecutorInterface> getSubExecutors();
 
 	public void command(CommandSender sender, String[] args) throws CrazyException;
 }

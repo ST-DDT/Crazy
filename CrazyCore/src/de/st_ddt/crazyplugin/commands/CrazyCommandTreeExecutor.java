@@ -70,7 +70,7 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 	}
 
 	@Override
-	public TreeMap<String, CrazyCommandExecutorInterface> getSubExecutor()
+	public TreeMap<String, CrazyCommandExecutorInterface> getSubExecutors()
 	{
 		return subExecutor;
 	}
