@@ -1,9 +1,6 @@
 package de.st_ddt.crazyplugin.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
@@ -26,40 +23,21 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		commandPlayerInfo(sender, ChatHelper.listingString(" ", args), true);
+		if (args.length == 0 && !(sender instanceof Player))
+			throw new CrazyCommandUsageException("<Player>");
+		String name = sender.getName();
+		if (args.length > 0)
+			name = ChatHelper.listingString(" ", args);
+		commandPlayerInfo(sender, name, true);
 	}
 
 	protected void commandPlayerInfo(final CommandSender sender, final String name, final boolean detailed) throws CrazyCommandException
 	{
-		OfflinePlayer target = null;
-		if (name == null)
-		{
-			if (sender instanceof ConsoleCommandSender)
-				throw new CrazyCommandUsageException("<Player>");
-			target = (Player) sender;
-		}
-		else if (name.equals(""))
-		{
-			if (sender instanceof ConsoleCommandSender)
-				throw new CrazyCommandUsageException("<Player>");
-			target = (Player) sender;
-		}
-		else
-		{
-			target = Bukkit.getPlayer(name);
-			if (target == null)
-				target = Bukkit.getOfflinePlayer(name);
-			if (target == null)
-				throw new CrazyCommandNoSuchException("Player", name);
-		}
-		if (sender == target)
-			if (!sender.hasPermission(plugin.getName().toLowerCase() + ".player.info.self"))
-				throw new CrazyCommandPermissionException();
-			else if (!sender.hasPermission(plugin.getName().toLowerCase() + ".player.info.other"))
-				throw new CrazyCommandPermissionException();
-		final T data = plugin.getPlayerData(target);
+		final T data = plugin.getPlayerData(name);
 		if (data == null)
-			throw new CrazyCommandNoSuchException("PlayerData", target.getName());
+			throw new CrazyCommandNoSuchException("PlayerData", name);
+		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".player.info." + (sender.getName().equals(name) ? "self" : "other")))
+			throw new CrazyCommandPermissionException();
 		data.show(sender, plugin.getChatHeader(), detailed);
 	}
 }
