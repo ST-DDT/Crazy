@@ -406,6 +406,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		getCommand("psince").setExecutor(sinceCommand);
 		getCommand("pbefore").setExecutor(new CrazyOnlineCommandBefore(this));
 		getCommand("ptop10").setExecutor(new CrazyOnlineCommandTop10(this));
+		getCommand("pinfo").setExecutor(playerCommand.getSubExecutors().get("info"));
 		getCommand("ponlines").setExecutor(onlinesCommand);
 		if (catchListCommand)
 			getCommand("list").setExecutor(onlinesCommand);
