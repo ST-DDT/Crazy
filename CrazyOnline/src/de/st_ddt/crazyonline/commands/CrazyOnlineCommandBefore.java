@@ -33,7 +33,7 @@ public class CrazyOnlineCommandBefore extends CrazyOnlineCommandExecutor
 	@Localized({ "CRAZYONLINE.COMMAND.BEFORE.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYONLINE.COMMAND.BEFORE.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYONLINE.COMMAND.BEFORE.ENTRYFORMAT $Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission("crazylogin.before"))
+		if (!sender.hasPermission("crazyonline.before"))
 			throw new CrazyCommandPermissionException();
 		Date date = null;
 		try
