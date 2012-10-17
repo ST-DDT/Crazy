@@ -1,8 +1,8 @@
 name: CrazyEnchanter
 main: de.st_ddt.crazyenchanter.CrazyEnchanter
 author: ST-DDT
-#C*=needed core version
-version: C8_0.1
+version: 0.2
+# requires CrazyCore v9 or later
 depend: [CrazyCore]
 description: >
             Enchant your items.

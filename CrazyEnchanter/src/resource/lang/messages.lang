@@ -1,0 +1,2 @@
+CRAZYENCHANTER=CrazyEnchanter
+CRAZYENCHANTER.COMMAND.ENCHANT.SUCCESS=$Item$ $Enchantment$ $Level$

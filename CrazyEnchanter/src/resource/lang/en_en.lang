@@ -1,2 +1,2 @@
 ﻿CRAZYENCHANTER=CrazyEnchanter
-CRAZYENCHANTER.COMMAND.ENCHANT.DONE=&FEnchanted &5$0$ &Fsuccessfully (&A$1$ $2$&F)
+CRAZYENCHANTER.COMMAND.ENCHANT.SUCCESS=&FEnchanted &5$0$ &Fsuccessfully (&A$1$ $2$&F)
