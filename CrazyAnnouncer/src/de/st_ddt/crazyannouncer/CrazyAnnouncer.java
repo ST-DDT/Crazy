@@ -47,7 +47,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 	}
 
 	@Override
-	public void load()
+	public void loadConfiguration()
 	{
 		// Cleanup
 		// EDIT eventListener.clearEventRegistrations();
@@ -89,7 +89,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 	}
 
 	@Override
-	public void save()
+	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("triggers", null);
@@ -98,7 +98,7 @@ public class CrazyAnnouncer extends CrazyPlugin
 		config.set("actions", null);
 		for (final NamedRunnable action : actions)
 			action.save(config, "actions." + action.getName() + ".");
-		super.save();
+		super.saveConfiguration();
 	}
 
 	public Set<Trigger> getTriggers()

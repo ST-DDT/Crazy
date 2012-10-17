@@ -22,7 +22,7 @@ public class ScheduledTrigger extends Trigger
 		final String datesString = config.getString("date");
 		try
 		{
-			this.date = CrazyPluginInterface.DateFormat.parse(datesString);
+			this.date = CrazyPluginInterface.DATETIMEFORMAT.parse(datesString);
 		}
 		catch (final ParseException e)
 		{
@@ -77,6 +77,6 @@ public class ScheduledTrigger extends Trigger
 	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
-		config.set(path + "date", CrazyPluginInterface.DateFormat.format(date));
+		config.set(path + "date", CrazyPluginInterface.DATETIMEFORMAT.format(date));
 	}
 }

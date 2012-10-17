@@ -1,8 +1,8 @@
 name: CrazyAnnouncer
 main: de.st_ddt.crazyannouncer.CrazyAnnouncer
 author: ST-DDT
-#C*=needed core version
-version: C8_1.6.2
+version: 1.7
+# requires CrazyCore v9 or later
 depend: [CrazyCore]
 description: >
             Announce messages and commands in defined intervals and on special events.

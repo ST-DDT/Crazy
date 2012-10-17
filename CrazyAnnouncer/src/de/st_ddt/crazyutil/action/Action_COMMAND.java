@@ -30,7 +30,7 @@ public class Action_COMMAND extends Action
 	public void run(final CommandSender sender)
 	{
 		for (final String command : commands)
-			Bukkit.getServer().dispatchCommand(sender, ChatHelper.putArgs(command, sender.getName(), CrazyPluginInterface.DateFormat.format(new Date())));
+			Bukkit.getServer().dispatchCommand(sender, ChatHelper.putArgs(command, sender.getName(), CrazyPluginInterface.DATETIMEFORMAT.format(new Date())));
 	}
 
 	@Override
