@@ -8,13 +8,12 @@ public class CrazyFeather extends CrazyPlugin
 {
 
 	private static CrazyFeather plugin;
+	private CrazyFeatherPlayerListener playerListener;
 
 	public static CrazyFeather getPlugin()
 	{
 		return plugin;
 	}
-
-	protected CrazyFeatherPlayerListener playerListener;
 
 	@Override
 	public void onEnable()
@@ -27,7 +26,7 @@ public class CrazyFeather extends CrazyPlugin
 	public void registerHooks()
 	{
 		this.playerListener = new CrazyFeatherPlayerListener(this);
-		PluginManager pm = this.getServer().getPluginManager();
+		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
 	}
 

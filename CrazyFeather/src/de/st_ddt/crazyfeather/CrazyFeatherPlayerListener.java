@@ -18,24 +18,24 @@ public class CrazyFeatherPlayerListener implements Listener
 	protected final CrazyFeather plugin;
 	protected HashMap<Entity, Date> cooldown = new HashMap<Entity, Date>();
 
-	public CrazyFeatherPlayerListener(CrazyFeather plugin)
+	public CrazyFeatherPlayerListener(final CrazyFeather plugin)
 	{
 		this.plugin = plugin;
 	}
 
 	@EventHandler
-	public void PlayerInteract(PlayerInteractEntityEvent event)
+	public void PlayerInteract(final PlayerInteractEntityEvent event)
 	{
-		Entity entity = event.getRightClicked();
-		Player player = event.getPlayer();
+		final Entity entity = event.getRightClicked();
+		final Player player = event.getPlayer();
 		if (entity.getType() != EntityType.CHICKEN)
 			return;
 		if (player.getItemInHand().getType() != Material.SHEARS)
 			return;
-		for (Entity alive : cooldown.keySet())
+		for (final Entity alive : cooldown.keySet())
 			if (alive.isDead())
 				cooldown.remove(alive);
-		Date date = cooldown.get(entity);
+		final Date date = cooldown.get(entity);
 		if (date != null)
 			if (date.after(new Date()))
 				return;
