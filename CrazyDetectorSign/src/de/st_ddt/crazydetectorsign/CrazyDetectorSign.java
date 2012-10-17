@@ -44,7 +44,7 @@ public class CrazyDetectorSign extends CrazyPlugin
 	}
 
 	@Override
-	public void save()
+	public void saveConfiguration()
 	{
 		int anz = 0;
 		ConfigurationSection config = getConfig();
@@ -55,13 +55,12 @@ public class CrazyDetectorSign extends CrazyPlugin
 			anz++;
 			ObjectSaveLoadHelper.saveLocation(config, "loc" + anz + ".", location, true, false);
 		}
-		super.save();
+		super.saveConfiguration();
 	}
 
 	@Override
-	public void load()
+	public void loadConfiguration()
 	{
-		super.load();
 		ConfigurationSection config = getConfig();
 		config = config.getConfigurationSection("signs");
 		if (config != null)
