@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUnsupportedException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
@@ -30,6 +31,8 @@ public abstract class CrazyPipe
 	{
 		if (disabled)
 			return;
+		if (!sender.hasPermission("crazypipe.use"))
+			throw new CrazyCommandPermissionException();
 		if (datas.size() == 0)
 			return;
 		if (pipeArgs == null)
@@ -60,10 +63,12 @@ public abstract class CrazyPipe
 			pipe.execute(sender, datas, ChatHelperExtended.shiftArray(pipeArgs, 1));
 	}
 
-	public static void pipe(final CommandSender sender, final ParameterData data, final String... pipeArgs)
+	public static void pipe(final CommandSender sender, final ParameterData data, final String... pipeArgs) throws CrazyException
 	{
 		if (disabled)
 			return;
+		if (!sender.hasPermission("crazypipe.use"))
+			throw new CrazyCommandPermissionException();
 		if (pipeArgs == null)
 		{
 			defaultPipe(sender, data);
@@ -85,10 +90,12 @@ public abstract class CrazyPipe
 		commandPipe(sender, data, pipeArgs);
 	}
 
-	public static void pipe(final CommandSender sender, final String data, final String... pipeArgs)
+	public static void pipe(final CommandSender sender, final String data, final String... pipeArgs) throws CrazyException
 	{
 		if (disabled)
 			return;
+		if (!sender.hasPermission("crazypipe.use"))
+			throw new CrazyCommandPermissionException();
 		if (pipeArgs == null)
 			return;
 		final int length = pipeArgs.length;

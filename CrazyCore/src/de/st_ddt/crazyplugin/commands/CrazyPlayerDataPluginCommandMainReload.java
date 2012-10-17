@@ -31,11 +31,11 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".reload"))
 			throw new CrazyCommandPermissionException();
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
-		final BooleanParamitrisable config = new BooleanParamitrisable(false);
+		final BooleanParamitrisable config = new BooleanParamitrisable(args.length == 0);
 		params.put("c", config);
 		params.put("cfg", config);
 		params.put("config", config);
-		final BooleanParamitrisable database = new BooleanParamitrisable(false);
+		final BooleanParamitrisable database = new BooleanParamitrisable(args.length == 0);
 		params.put("d", database);
 		params.put("db", database);
 		params.put("database", database);

@@ -1,7 +1,7 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 9.0.2
+version: 9.0.3
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
 commands:
@@ -29,6 +29,7 @@ permissions:
     default: false
     children:
       crazylanguage.*: true
+      crazypipe.use: true
   crazycore.*:
     description: Access to all commands
     default: false
@@ -62,4 +63,7 @@ permissions:
       crazylanguage.advanced: true
   crazylanguage.advanced:
     description: Allow changing default languages or language reloads.
+    default: op
+  crazypipe.use:
+    description: Allow usage of crazypipes.
     default: op

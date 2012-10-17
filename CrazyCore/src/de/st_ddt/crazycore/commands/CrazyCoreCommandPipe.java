@@ -1,4 +1,4 @@
-package de.st_ddt.crazyplugin.commands;
+package de.st_ddt.crazycore.commands;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandExecutor;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
