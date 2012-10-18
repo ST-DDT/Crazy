@@ -25,12 +25,16 @@ public final class EncryptHelper
 		if (algorithm != null)
 			clazz = encryptors.get(algorithm.toLowerCase());
 		if (clazz == null)
-			try
-			{
-				clazz = Class.forName(config.getString("type")).asSubclass(Encryptor.class);
-			}
-			catch (final ClassNotFoundException e1)
-			{}
+		{
+			final String type = config.getString("type");
+			if (type != null)
+				try
+				{
+					clazz = Class.forName(type).asSubclass(Encryptor.class);
+				}
+				catch (final ClassNotFoundException e)
+				{}
+		}
 		if (clazz == null)
 			return null;
 		try
@@ -72,9 +76,9 @@ public final class EncryptHelper
 		{
 			return clazz.getConstructor(LoginPlugin.class, String[].class).newInstance(plugin, args);
 		}
-		catch (InvocationTargetException e)
+		catch (final InvocationTargetException e)
 		{
-			Throwable t = e.getCause();
+			final Throwable t = e.getCause();
 			if (t instanceof CrazyCommandException)
 				((CrazyCommandException) t).addCommandPrefix(algorithm);
 			if (t instanceof CrazyException)
@@ -104,11 +108,11 @@ public final class EncryptHelper
 		super();
 	}
 
-	public static String byteArrayToHexString(byte... args)
+	public static String byteArrayToHexString(final byte... args)
 	{
-		StringBuilder res = new StringBuilder();
-		String[] chars = new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
-		for (byte arg : args)
+		final StringBuilder res = new StringBuilder();
+		final String[] chars = new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
+		for (final byte arg : args)
 		{
 			res.append(chars[(arg >> 4) + 16]);
 			res.append(chars[arg % 16 + 16]);
