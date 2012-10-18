@@ -1,5 +1,6 @@
 package de.st_ddt.crazylogin.crypt;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -11,7 +12,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
 public final class EncryptHelper
 {
-	
+
 	private static final TreeMap<String, Class<? extends Encryptor>> encryptors = new TreeMap<String, Class<? extends Encryptor>>();
 
 	public static Encryptor getEncryptor(final LoginPlugin<? extends LoginData> plugin, final ConfigurationSection config)
@@ -69,6 +70,14 @@ public final class EncryptHelper
 		try
 		{
 			return clazz.getConstructor(LoginPlugin.class, String[].class).newInstance(plugin, args);
+		}
+		catch (InvocationTargetException e)
+		{
+			Throwable t = e.getCause();
+			if (t instanceof CrazyException)
+				throw (CrazyException) t;
+			e.printStackTrace();
+			return null;
 		}
 		catch (final Exception e)
 		{
