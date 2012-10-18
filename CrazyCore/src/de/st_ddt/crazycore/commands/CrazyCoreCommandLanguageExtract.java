@@ -8,6 +8,7 @@ import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -26,6 +27,8 @@ public class CrazyCoreCommandLanguageExtract extends CrazyCoreCommandExecutor
 	{
 		if (!sender.hasPermission("crazylanguage.advanced"))
 			throw new CrazyCommandPermissionException();
+		if (args.length == 0)
+			throw new CrazyCommandUsageException("<Language>", "<Plugin>", "*");
 		final String name = args[0].toLowerCase();
 		if (name.equalsIgnoreCase("*"))
 		{
