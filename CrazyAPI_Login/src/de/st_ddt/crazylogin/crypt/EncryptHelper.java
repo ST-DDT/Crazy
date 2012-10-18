@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazylogin.LoginPlugin;
 import de.st_ddt.crazylogin.data.LoginData;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
 public final class EncryptHelper
@@ -74,6 +75,8 @@ public final class EncryptHelper
 		catch (InvocationTargetException e)
 		{
 			Throwable t = e.getCause();
+			if (t instanceof CrazyCommandException)
+				((CrazyCommandException) t).addCommandPrefix(algorithm);
 			if (t instanceof CrazyException)
 				throw (CrazyException) t;
 			e.printStackTrace();
