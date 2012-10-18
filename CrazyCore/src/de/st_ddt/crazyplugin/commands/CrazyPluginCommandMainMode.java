@@ -67,7 +67,7 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 			}
 			catch (final CrazyCommandException e)
 			{
-				e.shiftCommandIndex();
+				e.addCommandPrefix(args[0]);
 				throw e;
 			}
 	}
