@@ -12,7 +12,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
 
-public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataInterface
+public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataInterface, Comparable<S>
 {
 
 	protected final String name;
@@ -103,5 +103,30 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 	public String toString()
 	{
 		return "PlayerData " + getName();
+	}
+
+	@Override
+	public int compareTo(S o)
+	{
+		return name.compareToIgnoreCase(o.getName());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return name.toLowerCase().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof PlayerData<?>)
+			return equals((PlayerData<?>) obj);
+		return false;
+	}
+
+	public boolean equals(PlayerData<?> obj)
+	{
+		return name.equalsIgnoreCase(obj.name);
 	}
 }
