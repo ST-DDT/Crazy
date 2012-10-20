@@ -1,6 +1,5 @@
 package de.st_ddt.crazyweather;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -9,7 +8,6 @@ import de.st_ddt.crazyutil.ConfigurationSaveable;
 public class WorldWeather implements ConfigurationSaveable, WeatherData
 {
 
-	private final CrazyWeather plugin = CrazyWeather.getPlugin();
 	private Weather staticWeather = null;
 	private boolean onLoad = false;
 	private final World world;
@@ -71,7 +69,6 @@ public class WorldWeather implements ConfigurationSaveable, WeatherData
 		world.setWeatherDuration(duration);
 		if (weather.isThunderEnabled())
 			world.setThunderDuration(duration);
-		plugin.sendLocaleMessage("WEATHER." + weather.toString(), Bukkit.getConsoleSender(), world.getName());
 		if (keepStatic)
 			staticWeather = weather;
 		else

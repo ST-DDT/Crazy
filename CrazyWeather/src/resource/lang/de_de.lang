@@ -1,8 +1,11 @@
 ﻿CRAZYWEATHER=CrazyWeather
-CRAZYWEATHER.COMMAND.WEATHER.ERROR=Fehler in der Welt (eventuell nicht geladen)
-CRAZYWEATHER.COMMAND.WEATHER.SUCCESS=Wetter erfolgreich geändert!
-CRAZYWEATHER.WEATHER.SUN=$0$ hat jetzt &Esonniges &FWetter!
-CRAZYWEATHER.WEATHER.RAIN=$0$ hat jetzt &9regnerisches &FWetter!
-CRAZYWEATHER.WEATHER.STORM=$0$ hat jetzt &8stürmiges &FWetter!
-CRAZYWEATHER.THUNDERTOOL.GET=Thundertool = &D$0$ ($1$)
-CRAZYWEATHER.THUNDERTOOL.SET=Thundertool geändert zu &D$0$ ($1$)
+CRAZYWEATHER.BROADCAST.WEATHER=$1$ hat jetzt $2$ Wetter!
+CRAZYWEATHER.BROADCAST.WEATHER.RAIN=$1$ hat jetzt &9regnerisches &FWetter!
+CRAZYWEATHER.BROADCAST.WEATHER.SUN=$1$ hat jetzt &Esonniges &FWetter!
+CRAZYWEATHER.BROADCAST.WEATHER.THUNDERRAIN=$1$ wird jetzt durch &8Gewitter &Fbedroht!
+CRAZYWEATHER.COMMAND.STRIKE=Ziel getroffen!
+CRAZYWEATHER.COMMAND.WEATHER=$0$ hat jetzt für $1$ $2$ Wetter (Statisch:$3$, Neustart:$4$)
+CRAZYWEATHER.COMMAND.WEATHER.RAIN=$0$ hat jetzt für $1$ &9regnerisches &FWetter!
+CRAZYWEATHER.COMMAND.WEATHER.SUN=$0$ hat jetzt für $1$ &Esonniges &FWetter!
+CRAZYWEATHER.COMMAND.WEATHER.THUNDERRAIN=$0$ wird jetzt für $1$ durch &8Gewitter &Fbedroht!
+#CRAZYWEATHER.MODE.CHANGE=

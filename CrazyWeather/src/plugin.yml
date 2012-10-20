@@ -1,26 +1,27 @@
 name: CrazyWeather
 main: de.st_ddt.crazyweather.CrazyWeather
 author: ST-DDT
-#C*=needed core version
-version: C8.2_4.3
-softdepend: [PermissionsBukkit]
+version: 5
+# requires CrazyCore v9.0.5 or later
 depend: [CrazyCore]
 commands:
   weather: 
     description: Change weather
-    usage: /<command> <[weather:]Weather> [world:World] [static:True/False] [load:True/False] [duration:Seconds]
+    usage: /<command> <[weather:]Weather> [world:World] [static:True/False] [load:True/False] [duration:Ticks]
   sun:
     description: Cast sun
-    usage: /<command>
+    usage: /<command> [duration:Ticks]
   rain:
     description: Cast rain
-    usage: /<command>|/<command> date|/<command> date time
-  storm:
+    usage: /<command> [duration:Ticks]
+  thunderrain:
     description: Cast thunderstorm
-    usage: /<command>
-  thunder:
+    usage: /<command> [duration:Ticks]
+    aliases: [storm]
+  strike:
     description: Cast a lighting strike on target.
     usage: /<command>|/<command> player
+    aliases: [thunder]
   crazyweather:
     description: Plugin Main Menu
     usage: /<command> [Subcommands...]
@@ -29,68 +30,56 @@ permissions:
     description: Access to all commands
     default: false
     children:
-      crazyweather.change.*: true
-      crazyweather.set.*: true
+      crazyweather.weather.*: true
+      crazyweather.weather.sun: true
+      crazyweather.weather.rain: true
+      crazyweather.weather.thunder: true
+      crazyweather.weather.thunderain: true
+      crazyweather.thunder.*: true
       crazyweather.thunder: true
       crazyweather.thunder.player: true
       crazyweather.thunder.tool: true
-      crazyweather.thunder.toolchange: true
-  crazyweather.change.*:
-    description: Access to all commands for changing weather
+      crazyweather.mode: true
+# use crazyweather.<World>.weather.xxx to allow it for a single world
+  crazyweather.weather.*:
+    description: Allows every weather change on every world.
     default: op
     children:
-      crazyweather.change.sun: true
-      crazyweather.change.rain: true
-      crazyweather.change.thunder: true
-  crazyweather.set.*:
-    description: Access to all commands for freezing weather
+      crazyweather.weather.sun: true
+      crazyweather.weather.rain: true
+      crazyweather.weather.thunder: true
+      crazyweather.weather.thunderain: true
+  crazyweather.weather.sun: 
+    description: Allows sunny weather change on every world.
+    default: op
+  crazyweather.weather.rain: 
+    description: Allows rainy weather change on every world.
+    default: op
+  crazyweather.weather.thunder: 
+    description: Allows thunder weather change on every world.
+    default: op
+  crazyweather.weather.thunderain: 
+    description: Allows thunderrain weather change on every world.
+    default: op
+# use crazyweather.<World>.thunder.xxx to allow it for a single world
+  crazyweather.thunder.*:
+    description: Allows every kind of lightningstrike on every world.
     default: op
     children:
-      crazyweather.change.*: true
-      crazyweather.set.sun: true
-      crazyweather.set.rain: true
-      crazyweather.set.thunder: true
-  crazyweather.change.sun: 
-    description: Allow changing the current weather to sunny
-    default: op
-  crazyweather.change.rain: 
-    description: Allow changing the current weather to rain
-    default: op
-  crazyweather.change.thunder: 
-    description: Allow changing the current weather to thunderstorm
-    default: op
-  crazyweather.set.sun: 
-    description: Allow freezing the weather to sunny
-    default: op
-    children:
-      crazyweather.change.sun: true
-  crazyweather.set.rain: 
-    description: Allow freezing the weather to rain
-    default: op
-    children:
-      crazyweather.change.rain: true
-  crazyweather.set.thunder: 
-    description: Allow freezing the weather to thunderstorm
-    default: op
-    children:
-      crazyweather.change.thunder: true
+      crazyweather.thunder: true
+      crazyweather.thunder.player: true
+      crazyweather.thunder.tool: true
   crazyweather.thunder: 
-    description: Allow casting thunderstrikes
+    description: Allows thunderstrikes via command on every world-
     default: op
   crazyweather.thunder.player: 
-    description: Allow casting thunderstrikes on player
-    default: op
-  crazyweather.mode:
-    description: Allow changing plugin mode
-    default: op
-  crazyweather.thunder.tool: 
-    description: Allow casting thunderstrikes with tool
-    default: op
-    children:
-      crazyweather.mode: true
-  crazyweather.thunder.toolchange: 
-    description: Allow changing thunderstrikes tool
+    description: Allows thunderstrikes on a player via command on every world.
     default: op
     children: 
-      crazyweather.thunder.tool: true
-      crazyweather.mode: true
+      crazyweather.thunder: true
+  crazyweather.thunder.tool: 
+    description: Allows thunderstrikes via tool on every world.
+    default: op
+  crazyweather.mode: 
+    description: Allows changing plugin options.
+    default: op
