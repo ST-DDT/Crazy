@@ -134,12 +134,13 @@ public class ChatHelper
 		final int length = strings.length;
 		if (length == 0)
 			return "";
-		String res = strings[0].toString();
+		final StringBuilder res = new StringBuilder(strings[0].toString());
 		for (int i = 1; i < length; i++)
 		{
-			res = res + seperator + strings[i].toString();
+			res.append(seperator);
+			res.append(strings[i].toString());
 		}
-		return res;
+		return res.toString();
 	}
 
 	public static <S> String listingString(final Collection<S> strings)

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -24,12 +25,12 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	private static final long serialVersionUID = 7789788937594284997L;
 	private final static CrazyLocale locale = getCrazyLocaleHead();
 	private final static CrazyLocale missing = getCrazyLocaleMissing();
-	private final static HashMap<String, String> userLanguages = new HashMap<String, String>();
-	private final static HashSet<String> languages = new HashSet<String>();
-	private final static HashMap<String, HashSet<String>> languageAlternatives = new HashMap<String, HashSet<String>>();
+	private final static Map<String, String> userLanguages = new HashMap<String, String>();
+	private final static Set<String> languages = new HashSet<String>();
+	private final static Map<String, HashSet<String>> languageAlternatives = new HashMap<String, HashSet<String>>();
 	private static String defaultLanguage;
 	private final String name;
-	private final HashMap<String, String> localeTexts = new HashMap<String, String>();
+	private final Map<String, String> localeTexts = new HashMap<String, String>();
 	private final CrazyLocale parent;
 	private CrazyLocale alternative = null;
 
@@ -215,7 +216,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		return ChatHelper.putArgs(getLanguageEntry(localePath).getDefaultLanguageText(), args);
 	}
 
-	public HashMap<String, String> getLanguageTextMap()
+	public Map<String, String> getLanguageTextMap()
 	{
 		return localeTexts;
 	}
