@@ -141,11 +141,6 @@ public interface Database<S extends DatabaseEntry> extends ConfigurationSaveable
 	public boolean deleteEntry(String key);
 
 	/**
-	 * Deletes all loaded entries from database.
-	 */
-	public void deleteAllEntries();
-
-	/**
 	 * Deletes all entries from database. The database will be saved after that.
 	 */
 	public void purgeDatabase();
