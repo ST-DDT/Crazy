@@ -14,14 +14,14 @@ import de.st_ddt.crazyplugin.data.PlayerData;
 import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
-import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
-import de.st_ddt.crazyutil.databases.FlatDatabaseEntry;
+import de.st_ddt.crazyutil.databases.ConfigurationPlayerDataDatabaseEntry;
+import de.st_ddt.crazyutil.databases.FlatPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.databases.MySQLDatabase;
-import de.st_ddt.crazyutil.databases.MySQLDatabaseEntry;
+import de.st_ddt.crazyutil.databases.MySQLPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
 
-public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements ConfigurationDatabaseEntry, MySQLDatabaseEntry, FlatDatabaseEntry, OnlineData
+public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements ConfigurationPlayerDataDatabaseEntry, MySQLPlayerDataDatabaseEntry, FlatPlayerDataDatabaseEntry, OnlineData
 {
 
 	protected Date firstLogin;

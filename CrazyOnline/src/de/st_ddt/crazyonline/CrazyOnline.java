@@ -75,7 +75,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		registerSorter();
 	}
 
-	@Localized("CRAZYONLINE.MODE.CHANGE")
+	@Localized("CRAZYONLINE.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
 		modeCommand.addMode(modeCommand.new Mode<DatabaseType>("saveType", DatabaseType.class)
