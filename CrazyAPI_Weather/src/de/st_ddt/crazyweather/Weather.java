@@ -23,18 +23,29 @@ public enum Weather
 		return thunder;
 	}
 
-	public static Weather getWeather(final String weather)
+	public static Weather getWeather(String weather)
 	{
 		if (weather == null)
 			return null;
-		if (weather.equals("0") || weather.equalsIgnoreCase("sun") || weather.equalsIgnoreCase("sunny") || weather.equalsIgnoreCase("dry") || weather.equalsIgnoreCase("clear"))
+		weather = weather.toLowerCase();
+		if (weather.equals("0") || weather.equals("sun") || weather.equals("sunny") || weather.equals("dry") || weather.equals("clear"))
 			return SUN;
-		if (weather.equals("1") || weather.equalsIgnoreCase("rain") || weather.equalsIgnoreCase("rainy") || weather.equalsIgnoreCase("wet") || weather.equalsIgnoreCase("snow") || weather.equalsIgnoreCase("storm"))
+		if (weather.equals("1") || weather.equals("rain") || weather.equals("rainy") || weather.equals("wet") || weather.equals("snow"))
 			return RAIN;
-		if (weather.equals("2") || weather.equalsIgnoreCase("thunder") || weather.equalsIgnoreCase("lightning"))
+		if (weather.equals("2") || weather.equals("thunder") || weather.equals("lightning"))
 			return THUNDER;
-		if (weather.equals("3") || weather.equalsIgnoreCase("thunderrain") || weather.equalsIgnoreCase("lightningrain"))
-			return THUNDER;
+		if (weather.equals("3") || weather.equals("thunderrain") || weather.equals("lightningrain") || weather.equals("storm"))
+			return THUNDERRAIN;
 		return null;
+	}
+
+	public static String[] getWeatherNames()
+	{
+		Weather[] weathers = values();
+		int length = weathers.length;
+		String[] res = new String[length];
+		for (int i = 0; i < length; i++)
+			res[i] = weathers[i].toString();
+		return res;
 	}
 }
