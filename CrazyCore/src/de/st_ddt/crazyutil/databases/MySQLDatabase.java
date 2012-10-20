@@ -346,12 +346,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		super.save(entry);
 		Statement query = null;
-		final Connection connection = mysqlConnectionPool.getConnection();
 		String sql = null;
 		if (containsEntry(entry.getName()))
 			sql = "UPDATE `" + tableName + "` SET " + entry.saveToMySQLDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
 		else
 			sql = "INSERT INTO `" + tableName + "` SET " + columnNames[0] + "='" + entry.getName() + "', " + entry.saveToMySQLDatabase(columnNames);
+		final Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
