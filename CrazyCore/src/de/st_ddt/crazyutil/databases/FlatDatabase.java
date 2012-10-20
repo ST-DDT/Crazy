@@ -1,15 +1,22 @@
 package de.st_ddt.crazyutil.databases;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,13 +25,28 @@ import de.st_ddt.crazyutil.ChatHelper;
 public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 {
 
-	private final TreeMap<String, String[]> entries = new TreeMap<String, String[]>();
+	private static final String lineSeparator = System.getProperty("line.separator");
+	private final JavaPlugin plugin;
+	private final Map<String, String> entries = new TreeMap<String, String>();
 	private final String filePath;
 	private final File file;
+	private final Lock lock = new ReentrantLock();
+	private final Runnable delayedSave = new Runnable()
+	{
+
+		@Override
+		public void run()
+		{
+			if (requireSave)
+				saveDatabase();
+		}
+	};
+	private boolean requireSave = false;
 
 	public FlatDatabase(final Class<S> clazz, final String[] defaultColumnNames, final String defaultPath, final JavaPlugin plugin, final ConfigurationSection config)
 	{
 		super(DatabaseType.FLAT, clazz, getConstructor(clazz), defaultColumnNames);
+		this.plugin = plugin;
 		this.filePath = config == null ? defaultPath : config.getString("FLAT.filePath", defaultPath);
 		this.file = new File(plugin.getDataFolder().getPath() + File.separator + filePath);
 	}
@@ -32,6 +54,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	public FlatDatabase(final Class<S> clazz, final String[] defaultColumnNames, final JavaPlugin plugin, final String path)
 	{
 		super(DatabaseType.FLAT, clazz, getConstructor(clazz), defaultColumnNames);
+		this.plugin = plugin;
 		this.filePath = path;
 		this.file = new File(plugin.getDataFolder().getPath() + File.separator + filePath);
 	}
@@ -64,7 +87,13 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public boolean isCachedDatabase()
+	public final boolean isStaticDatabase()
+	{
+		return true;
+	}
+
+	@Override
+	public final boolean isCachedDatabase()
 	{
 		return true;
 	}
@@ -78,12 +107,12 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public S loadEntry(final String key)
 	{
-		final String[] rawData = entries.get(key.toLowerCase());
+		final String rawData = entries.get(key.toLowerCase());
 		if (rawData == null)
 			return null;
 		try
 		{
-			final S data = constructor.newInstance(new Object[] { rawData });
+			final S data = constructor.newInstance(new Object[] { rawData.trim().split("\\|") });
 			datas.put(key.toLowerCase(), data);
 			return data;
 		}
@@ -105,18 +134,28 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	public boolean deleteEntry(final String key)
 	{
 		entries.remove(key.toLowerCase());
-		if (!bulkOperation)
-			saveDatabase();
-		return super.deleteEntry(key);
+		boolean res = super.deleteEntry(key);
+		asyncSaveDatabase();
+		return res;
 	}
 
 	@Override
 	public void save(final S entry)
 	{
 		super.save(entry);
-		entries.put(entry.getName().toLowerCase(), entry.saveToFlatDatabase());
-		if (!bulkOperation)
-			saveDatabase();
+		entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+		asyncSaveDatabase();
+	}
+
+	@Override
+	public void saveAll(final Collection<S> entries)
+	{
+		for (final S entry : entries)
+		{
+			super.save(entry);
+			this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+		}
+		asyncSaveDatabase();
 	}
 
 	@Override
@@ -132,96 +171,86 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		saveFile();
 	}
 
-	private synchronized void loadFile()
+	public void asyncSaveDatabase()
 	{
-		FileInputStream fileInputStream = null;
-		InputStreamReader inputStreamReader = null;
-		BufferedReader bufreader = null;
+		if (!requireSave)
+		{
+			requireSave = true;
+			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, delayedSave);
+		}
+	}
+
+	private void loadFile()
+	{
+		lock.lock();
+		BufferedReader reader = null;
 		try
 		{
-			fileInputStream = new FileInputStream(file);
-			inputStreamReader = new InputStreamReader(fileInputStream);
-			bufreader = new BufferedReader(inputStreamReader);
+			if (!file.exists())
+				return;
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 			// ErsteZeile Skippen
-			String zeile = bufreader.readLine();
-			while ((zeile = bufreader.readLine()) != null)
+			String zeile = reader.readLine();
+			while ((zeile = reader.readLine()) != null)
 			{
 				if (zeile.equals(""))
 					continue;
-				final String[] split = zeile.split("\\|");
-				if (split == null)
-					continue;
-				if (split.length == 0)
-					continue;
 				try
 				{
-					entries.put(split[0].toLowerCase(), split);
+					entries.put(zeile.split("\\|", 2)[0].toLowerCase(), zeile + lineSeparator);
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
 					System.err.println("Invalid line " + zeile);
 				}
 			}
+			reader.close();
 		}
-		catch (final FileNotFoundException e)
-		{}
 		catch (final IOException e)
 		{
+			if (reader != null)
+				try
+				{
+					reader.close();
+				}
+				catch (final IOException e1)
+				{}
 			e.printStackTrace();
 		}
 		finally
 		{
-			if (bufreader != null)
-				try
-				{
-					bufreader.close();
-				}
-				catch (final IOException e)
-				{}
-			if (inputStreamReader != null)
-				try
-				{
-					inputStreamReader.close();
-				}
-				catch (final IOException e)
-				{}
-			if (fileInputStream != null)
-				try
-				{
-					fileInputStream.close();
-				}
-				catch (final IOException e)
-				{}
+			lock.unlock();
 		}
 	}
 
-	private synchronized void saveFile()
+	private void saveFile()
 	{
-		FileWriter writer = null;
+		lock.lock();
+		Writer writer = null;
 		try
 		{
-			writer = new FileWriter(file);
-			writer.write(ChatHelper.listingString("|", defaultColumnNames) + System.getProperty("line.separator"));
-			for (final String[] strings : entries.values())
-				if (strings != null)
-					writer.write(ChatHelper.listingString("|", strings) + System.getProperty("line.separator"));
-			writer.flush();
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+			writer.write(ChatHelper.listingString("|", defaultColumnNames));
+			writer.write(lineSeparator);
+			for (final String string : entries.values())
+				writer.write(string);
+			writer.close();
+			requireSave = false;
 		}
 		catch (final IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
 		{
 			if (writer != null)
 				try
 				{
 					writer.close();
 				}
-				catch (final IOException e)
-				{
-					e.printStackTrace();
-				}
+				catch (final IOException e1)
+				{}
+			e.printStackTrace();
+		}
+		finally
+		{
+			lock.unlock();
 		}
 	}
 

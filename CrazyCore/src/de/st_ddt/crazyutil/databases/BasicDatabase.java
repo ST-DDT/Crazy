@@ -3,7 +3,6 @@ package de.st_ddt.crazyutil.databases;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,7 +15,6 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	private final Class<S> clazz;
 	protected final Constructor<S> constructor;
 	protected final String[] defaultColumnNames;
-	protected boolean bulkOperation = false;
 
 	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final Constructor<S> constructor, final String[] defaultColumnNames)
 	{
@@ -48,10 +46,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	}
 
 	@Override
-	public final boolean isStaticDatabase()
-	{
-		return type.isStaticDatabase();
-	}
+	public abstract boolean isStaticDatabase();
 
 	@Override
 	public abstract boolean isCachedDatabase();
@@ -126,10 +121,8 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	@Override
 	public void saveAll(final Collection<S> entries)
 	{
-		bulkOperation = true;
 		for (final S entry : entries)
 			save(entry);
-		bulkOperation = false;
 		saveDatabase();
 	}
 
@@ -137,14 +130,6 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	public boolean deleteEntry(final String key)
 	{
 		return datas.remove(key.toLowerCase()) != null;
-	}
-
-	@Override
-	public void deleteAllEntries()
-	{
-		final HashSet<String> keys = new HashSet<String>(datas.keySet());
-		for (final String key : keys)
-			deleteEntry(key);
 	}
 
 	@Override

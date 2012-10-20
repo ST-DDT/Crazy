@@ -18,6 +18,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	private final MySQLColumn[] columns;
 	private final String[] columnNames;
 	private final boolean cached;
+	private final boolean doNoUpdate;
 
 	public MySQLDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{
@@ -30,6 +31,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			this.columns = columns;
 			this.columnNames = defaultColumnNames;
 			this.cached = true;
+			this.doNoUpdate = false;
 		}
 		else
 		{
@@ -44,10 +46,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				columns[i].setRealName(columnNames[i]);
 			}
 			this.cached = config.getBoolean("cached", true);
+			this.doNoUpdate = config.getBoolean("static", true);
 		}
 	}
 
-	public MySQLDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached)
+	public MySQLDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
 	{
 		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
 		this.tableName = tableName;
@@ -58,6 +61,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		for (int i = 0; i < columns.length; i++)
 			columns[i].setRealName(columnNames[i]);
 		this.cached = cached;
+		this.doNoUpdate = doNoUpdate;
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -114,7 +118,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void checkTable() throws Exception
 	{
 		Statement query = null;
-		Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			// Create Table if not exists
@@ -156,7 +160,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					query.close();
 				}
-				catch (SQLException e)
+				catch (final SQLException e)
 				{}
 			mysqlConnectionPool.releaseConnection(connection);
 		}
@@ -168,6 +172,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		checkTable();
 		if (cached)
 			loadAllEntries();
+	}
+
+	@Override
+	public final boolean isStaticDatabase()
+	{
+		return doNoUpdate;
 	}
 
 	@Override
@@ -188,11 +198,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		boolean res = false;
 		Statement query = null;
-		Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
-			ResultSet result = query.executeQuery("SELECT `" + columnNames[0] + "` FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
+			final ResultSet result = query.executeQuery("SELECT `" + columnNames[0] + "` FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
 			if (result.next())
 				res = true;
 			result.close();
@@ -218,7 +228,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public S updateEntry(final String key)
 	{
-		return loadEntry(key);
+		if (doNoUpdate)
+			return getEntry(key);
+		else
+			return loadEntry(key);
 	}
 
 	@Override
@@ -226,11 +239,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		S data = null;
 		Statement query = null;
-		Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
-			ResultSet result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
+			final ResultSet result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
 			if (result.next())
 				try
 				{
@@ -266,11 +279,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void loadAllEntries()
 	{
 		Statement query = null;
-		Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
-			ResultSet result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE 1=1");
+			final ResultSet result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE 1=1");
 			while (result.next())
 				try
 				{
@@ -304,7 +317,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public boolean deleteEntry(final String key)
 	{
 		Statement query = null;
-		Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -333,7 +346,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		super.save(entry);
 		Statement query = null;
-		Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = mysqlConnectionPool.getConnection();
 		String sql = null;
 		if (containsEntry(entry.getName()))
 			sql = "UPDATE `" + tableName + "` SET " + entry.saveToMySQLDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
@@ -365,7 +378,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void purgeDatabase()
 	{
 		Statement query = null;
-		Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = mysqlConnectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();

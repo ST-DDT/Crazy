@@ -1,7 +1,9 @@
 package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +14,17 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	private final ConfigurationSection config;
 	private final String path;
 	private final String[] columnNames;
+	private final Runnable delayedSave = new Runnable()
+	{
+
+		@Override
+		public void run()
+		{
+			if (requireSave)
+				saveDatabase();
+		}
+	};
+	private boolean requireSave = false;
 
 	public ConfigurationDatabase(final Class<S> clazz, final String[] defaultColumnNames, final String defaultPath, final JavaPlugin plugin, final ConfigurationSection config)
 	{
@@ -61,7 +74,13 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	public boolean isCachedDatabase()
+	public final boolean isStaticDatabase()
+	{
+		return true;
+	}
+
+	@Override
+	public final boolean isCachedDatabase()
 	{
 		return true;
 	}
@@ -115,7 +134,9 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	public boolean deleteEntry(final String key)
 	{
 		config.set(path + "." + key.toLowerCase(), null);
-		return super.deleteEntry(key);
+		final boolean res = super.deleteEntry(key);
+		asyncSaveDatabase();
+		return res;
 	}
 
 	@Override
@@ -123,8 +144,18 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	{
 		super.save(entry);
 		entry.saveToConfigDatabase(config, path + "." + entry.getName().toLowerCase() + ".", columnNames);
-		if (!bulkOperation)
-			saveDatabase();
+		asyncSaveDatabase();
+	}
+
+	@Override
+	public void saveAll(final Collection<S> entries)
+	{
+		for (final S entry : entries)
+		{
+			super.save(entry);
+			entry.saveToConfigDatabase(config, path + "." + entry.getName().toLowerCase() + ".", columnNames);
+		}
+		asyncSaveDatabase();
 	}
 
 	@Override
@@ -138,6 +169,16 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	public void saveDatabase()
 	{
 		plugin.saveConfig();
+		requireSave = false;
+	}
+
+	public void asyncSaveDatabase()
+	{
+		if (!requireSave)
+		{
+			requireSave = true;
+			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, delayedSave);
+		}
 	}
 
 	@Override
