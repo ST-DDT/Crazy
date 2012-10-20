@@ -25,5 +25,11 @@ public interface Paramitrisable
 		{
 			return value;
 		}
+
+		@Override
+		public String toString()
+		{
+			return getValue().toString();
+		}
 	}
 }
