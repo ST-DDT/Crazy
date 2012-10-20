@@ -101,7 +101,7 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 			return clazz;
 		}
 
-		@Localized("CRAZYPLUGIN.MODE.CHANGE")
+		@Localized("CRAZYPLUGIN.MODE.CHANGE $Name$ $Value$")
 		public void showValue(final CommandSender sender)
 		{
 			plugin.sendLocaleMessage("MODE.CHANGE", sender, name, getValue());

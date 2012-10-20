@@ -1,5 +1,8 @@
 package de.st_ddt.crazyutil;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -209,6 +212,31 @@ public class ChatConverter
 				throw new CrazyCommandUsageException("... [[World] <X> <Y> <Z>]", "... [World] <X> <Y> <Z> <Yaw> <Pitch>");
 		}
 		return location;
+	}
+
+	public static long stringToDuration(final CommandSender sender, final String[] args) throws CrazyCommandException
+	{
+		long res = 0;
+		final List<String> units = Arrays.asList("Y", "M", "W", "D", "h", "m", "s", "t");
+		final long[] values = new long[] { 31556952000L, 2629746000L, 604800000L, 86400000L, 3600000L, 60000L, 1000L, 50L };
+		final int length = args.length;
+		for (int i = 0; i < length; i++)
+		{
+			final String arg = args[i];
+			final int len = arg.length();
+			final int unitIndex = units.indexOf(arg.substring(len - 1));
+			if (unitIndex == -1)
+				throw new CrazyCommandNoSuchException("TimeUnit", arg.substring(len - 1), units);
+			try
+			{
+				res += Long.parseLong(arg.substring(0, len - 1)) * values[unitIndex];
+			}
+			catch (final NumberFormatException e)
+			{
+				throw new CrazyCommandParameterException(i, "Number (Long)");
+			}
+		}
+		return res;
 	}
 
 	/**

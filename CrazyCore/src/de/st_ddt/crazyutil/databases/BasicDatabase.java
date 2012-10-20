@@ -2,16 +2,16 @@ package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class BasicDatabase<S extends DatabaseEntry> implements Database<S>
 {
 
-	protected final Map<String, S> datas = new TreeMap<String, S>();
+	protected final Map<String, S> datas = new HashMap<String, S>();
 	private final DatabaseType type;
 	private final Class<S> clazz;
 	protected final Constructor<S> constructor;

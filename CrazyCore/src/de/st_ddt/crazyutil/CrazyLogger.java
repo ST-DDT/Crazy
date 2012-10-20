@@ -105,6 +105,7 @@ public class CrazyLogger implements Logger
 		{
 			logChannelsByName.put(channel, null);
 			logPathsByName.remove(channel);
+			logToConsoleByName.put(channel, false);
 		}
 	}
 
@@ -150,12 +151,12 @@ public class CrazyLogger implements Logger
 		for (final String channel : channels)
 		{
 			logChannelsByName.put(channel, null);
-			if (!config.getBoolean(channel + ".path", config.getBoolean(channel, true)))
-				logToConsoleByName.put(channel, config.getBoolean(channel + ".console", false));
-			else if (config.getBoolean(channel + ".path", config.getBoolean(channel, false)))
+			if (!config.getBoolean(channel + ".path", true))
+				createLogChannel(channel, null, config.getBoolean(channel + ".console", false));
+			else if (config.getBoolean(channel + ".path", false))
 				createLogChannel(channel, "logs/plugin.log", config.getBoolean(channel + ".console", false));
 			else
-				createLogChannel(channel, config.getString(channel + ".path", null), config.getBoolean(channel + ".console", false));
+				createLogChannel(channel, config.getString(channel + ".path"), config.getBoolean(channel + ".console", false));
 		}
 	}
 
