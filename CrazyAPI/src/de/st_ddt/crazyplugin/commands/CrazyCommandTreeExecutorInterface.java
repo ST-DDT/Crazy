@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public interface CrazyCommandTreeExecutorInterface<S extends CrazyPluginInterface>
+public interface CrazyCommandTreeExecutorInterface<S extends CrazyPluginInterface> extends CrazyCommandExecutorInterface
 {
 
 	public void addSubCommand(CrazyCommandExecutorInterface executor, String... subCommandLabels);
