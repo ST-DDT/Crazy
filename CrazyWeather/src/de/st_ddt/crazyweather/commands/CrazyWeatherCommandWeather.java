@@ -42,9 +42,19 @@ public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor
 			@Override
 			public void setParameter(String parameter) throws CrazyException
 			{
-				super.setParameter(parameter);
-				if (value <= 0)
-					throw new CrazyCommandParameterException(0, "positive Number (Integer)");
+				try
+				{
+					super.setParameter(parameter);
+				}
+				catch (CrazyException e)
+				{
+					value = (int) (ChatConverter.stringToDuration(sender, parameter.split(" ")) / 50);
+				}
+				finally
+				{
+					if (value <= 0)
+						throw new CrazyCommandParameterException(0, "positive Number (Integer)");
+				}
 			}
 		};
 		params.put("d", duration);
