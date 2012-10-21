@@ -16,7 +16,7 @@ public class ChatHelper
 
 	private static boolean showChatHeaders;
 
-	private ChatHelper()
+	protected ChatHelper()
 	{
 	}
 

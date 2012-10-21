@@ -25,14 +25,14 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.SortStringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 
-public class ChatHelperExtended
+public class ChatHelperExtended extends ChatHelper
 {
 
 	public final static Pattern PATTERN_OPENER = Pattern.compile("\\{");
 	public final static Pattern PATTERN_CLOSER = Pattern.compile("\\}");
 	public final static Pattern PATTERN_STRING = Pattern.compile("\"");
 
-	private ChatHelperExtended()
+	protected ChatHelperExtended()
 	{
 	}
 
