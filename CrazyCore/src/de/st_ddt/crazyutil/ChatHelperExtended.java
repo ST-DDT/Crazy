@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.command.CommandSender;
 
@@ -25,6 +27,10 @@ import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 
 public class ChatHelperExtended
 {
+
+	public final static Pattern PATTERN_OPENER = Pattern.compile("\\{");
+	public final static Pattern PATTERN_CLOSER = Pattern.compile("\\}");
+	public final static Pattern PATTERN_STRING = Pattern.compile("\"");
 
 	private ChatHelperExtended()
 	{
@@ -202,6 +208,45 @@ public class ChatHelperExtended
 						if (i == length)
 							throw new CrazyCommandUsageException(ChatHelper.listingString(" ", args) + "\"");
 						value += " " + args[i];
+					}
+					final int len = value.length();
+					value = value.substring(1, len - 1);
+				}
+				else if (value.startsWith("{"))
+				{
+					int depth = 1;
+					int start = 1;
+					Matcher matcher = PATTERN_OPENER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth++;
+					}
+					matcher = PATTERN_CLOSER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth--;
+					}
+					while (depth != 0)
+					{
+						i++;
+						if (i == length)
+							throw new CrazyCommandUsageException(ChatHelper.listingString(" ", args) + "}");
+						value += " " + args[i];
+						start = 0;
+						matcher = PATTERN_OPENER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth++;
+						}
+						matcher = PATTERN_CLOSER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth--;
+						}
 					}
 					final int len = value.length();
 					value = value.substring(1, len - 1);
