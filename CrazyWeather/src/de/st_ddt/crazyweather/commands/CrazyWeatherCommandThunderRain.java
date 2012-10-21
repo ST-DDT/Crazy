@@ -32,7 +32,7 @@ public class CrazyWeatherCommandThunderRain extends CrazyWeatherCommandExecutor
 			throw new CrazyCommandPermissionException();
 		int duration = plugin.getRandomDuration() / 2;
 		if (args.length > 0)
-			duration = (int) (ChatConverter.stringToDuration(sender, args) / 50);
+			duration = (int) (ChatConverter.stringToDuration(args) / 50);
 		plugin.getWorldWeather(world).setWeather(Weather.THUNDERRAIN, false, false, duration);
 		plugin.getCrazyLogger().log("Weather", player.getName() + " changed the weather on " + world.getName() + " to THUNDERRAIN for " + duration + " ticks.");
 		plugin.sendLocaleMessage("COMMAND.WEATHER.THUNDERRAIN", player, world.getName(), ChatConverter.timeConverter(duration / 20, 1, player, 2, false));

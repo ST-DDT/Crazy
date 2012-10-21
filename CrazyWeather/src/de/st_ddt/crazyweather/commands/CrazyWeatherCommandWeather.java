@@ -5,14 +5,13 @@ import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
 
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WeatherParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WorldParamitrisable;
@@ -36,27 +35,7 @@ public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor
 		final WeatherParamitrisable weather = new WeatherParamitrisable(null);
 		params.put("weather", weather);
 		params.put("", weather);
-		final IntegerParamitrisable duration = new IntegerParamitrisable(plugin.getRandomDuration())
-		{
-
-			@Override
-			public void setParameter(String parameter) throws CrazyException
-			{
-				try
-				{
-					super.setParameter(parameter);
-				}
-				catch (CrazyException e)
-				{
-					value = (int) (ChatConverter.stringToDuration(sender, parameter.split(" ")) / 50);
-				}
-				finally
-				{
-					if (value <= 0)
-						throw new CrazyCommandParameterException(0, "positive Number (Integer)");
-				}
-			}
-		};
+		final DurationParamitrisable duration = new DurationParamitrisable((long) plugin.getRandomDuration());
 		params.put("d", duration);
 		params.put("duration", duration);
 		final BooleanParamitrisable keepStatic = new BooleanParamitrisable(false);
@@ -72,9 +51,9 @@ public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor
 		if (keepLoad.getValue())
 			if (!sender.hasPermission("crazyweather.weather.load") && !sender.hasPermission("crazyweather." + world.getValue().getName() + ".weather.load"))
 				throw new CrazyCommandPermissionException();
-		plugin.getWorldWeather(world.getValue()).setWeather(weather.getValue(), keepStatic.getValue(), keepLoad.getValue(), duration.getValue());
-		plugin.getCrazyLogger().log("Weather", sender.getName() + " changed the weather on " + world.getValue().getName() + " to " + weather + " for " + duration + " ticks. (Static:" + keepStatic + ", Load:" + keepLoad + ")");
-		plugin.sendLocaleMessage("COMMAND.WEATHER", sender, world.getValue().getName(), ChatConverter.timeConverter(duration.getValue() / 20, 1, sender, 2, false), weather, keepStatic, keepLoad);
+		plugin.getWorldWeather(world.getValue()).setWeather(weather.getValue(), keepStatic.getValue(), keepLoad.getValue(), (int) (duration.getValue() / 50));
+		plugin.getCrazyLogger().log("Weather", sender.getName() + " changed the weather on " + world.getValue().getName() + " to " + weather + " for " + duration + " ms. (Static:" + keepStatic + ", Load:" + keepLoad + ")");
+		plugin.sendLocaleMessage("COMMAND.WEATHER", sender, world.getValue().getName(), ChatConverter.timeConverter(duration.getValue() / 1000, 1, sender, 2, false), weather, keepStatic, keepLoad);
 		plugin.broadcastLocaleMessage("BROADCAST.WEATHER", sender.getName(), world.getValue().getName(), weather, keepStatic, keepLoad);
 	}
 }
