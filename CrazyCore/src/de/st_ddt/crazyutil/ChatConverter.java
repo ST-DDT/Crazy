@@ -27,11 +27,12 @@ public class ChatConverter
 	{
 		Location location = null;
 		World world = null;
-		if (sender instanceof Player)
-		{
-			location = ((Player) sender).getLocation();
-			world = ((Player) sender).getWorld();
-		}
+		if (sender != null)
+			if (sender instanceof Player)
+			{
+				location = ((Player) sender).getLocation();
+				world = ((Player) sender).getWorld();
+			}
 		switch (args.length)
 		{
 			case 0:
@@ -214,7 +215,7 @@ public class ChatConverter
 		return location;
 	}
 
-	public static long stringToDuration(final CommandSender sender, final String[] args) throws CrazyCommandException
+	public static long stringToDuration(final String[] args) throws CrazyCommandException
 	{
 		long res = 0;
 		final List<String> units = Arrays.asList("Y", "M", "W", "D", "h", "m", "s", "t");
