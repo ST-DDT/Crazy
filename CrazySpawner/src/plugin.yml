@@ -1,22 +1,23 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-#C*=needed core version
-version: C8_2.5
-softdepend: [PermissionsBukkit]
+version: 3
+# requires CrazyCore v9.0.7 or later
 depend: [CrazyCore]
+description: >
+            CrazySpawner spawn and remove mobs where ever you like.
 commands:
   crazyspawn:
-    description: Spawn Monster and Animals
-    usage: /<command> <Monstername> [[amount:]Integer] [delay:Integer] [repeat:Integer] [interval:Integer] [playercount:Integer [playerradius:Double]]
-    aliases: [crazymobs, cms]
+    description: Spawn living Creatures...
+    usage: /<command> <Monstername> [amount:Integer] [delay:Integer] [repeat:Integer] [interval:Integer] [monstermaxcount:Integer [monsterradius:Double]] [playermincount:Integer [playerradius:Double]]
+    aliases: [spawn,crazymobs, cms]
   crazykill:
-    description: Kill monsters (and animals if true)
-    usage: /<command> <Range> [killanimals]
-    aliases: [cmk,butcher,killall]
-  mobs:
-    description: Mainmenu
-    usage: /<command>
+    description: Kill living Creatures...
+    usage: /<command> <Range> [monster:Boolean] [animals:Boolean] [golems:Boolean] [villagers:Boolean] [bosses:Boolean]
+    aliases: [butcher,killall,cmk]
+  crazyspawner:
+    description: Plugin Mainmenu
+    usage: /<command> [Subcommands...]
 permissions:
   crazyspawner.*:
     description: Access to all commands
