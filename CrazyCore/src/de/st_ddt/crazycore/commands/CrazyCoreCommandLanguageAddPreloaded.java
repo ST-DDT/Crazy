@@ -19,7 +19,7 @@ public class CrazyCoreCommandLanguageAddPreloaded extends CrazyCoreCommandExecut
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.ADDED $Language$")
+	@Localized("CRAZYCORE.COMMAND.LANGUAGE.PRELOADED.ADDED $LanguageName$ $Language$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (!sender.hasPermission("crazylanguage.advanced"))
@@ -31,6 +31,6 @@ public class CrazyCoreCommandLanguageAddPreloaded extends CrazyCoreCommandExecut
 			throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
 		if (plugin.getPreloadedLanguages().add(language))
 			plugin.loadLanguageFiles(language, true);
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.ADDED", sender, language);
+		plugin.sendLocaleMessage("COMMAND.LANGUAGE.PRELOADED.ADDED", sender, CrazyLocale.getLanguageName(language), language);
 	}
 }

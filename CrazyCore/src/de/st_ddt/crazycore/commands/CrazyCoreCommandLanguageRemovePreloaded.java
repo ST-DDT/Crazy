@@ -19,7 +19,7 @@ public class CrazyCoreCommandLanguageRemovePreloaded extends CrazyCoreCommandExe
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.LANGUAGE.REMOVED $Language$")
+	@Localized("CRAZYCORE.COMMAND.LANGUAGE.PRELOADED.REMOVED $LanguageName$ $Language$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (!sender.hasPermission("crazylanguage.advanced"))
@@ -30,6 +30,6 @@ public class CrazyCoreCommandLanguageRemovePreloaded extends CrazyCoreCommandExe
 		if (!language.matches("[a-z][a-z]_[a-z][a-z]"))
 			throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
 		plugin.getPreloadedLanguages().remove(language);
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.REMOVED", sender, language);
+		plugin.sendLocaleMessage("COMMAND.LANGUAGE.PRELOADED.REMOVED", sender, CrazyLocale.getLanguageName(language), language);
 	}
 }
