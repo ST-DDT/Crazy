@@ -9,9 +9,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -194,20 +193,6 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	public void setAlternative(final CrazyLocale alternative)
 	{
 		this.alternative = alternative;
-		updateAlternative();
-	}
-
-	public void updateAlternative()
-	{
-		if (alternative == null)
-			return;
-		CrazyLocale temp;
-		for (final Entry<String, CrazyLocale> subPath : this.entrySet())
-		{
-			temp = alternative.get(subPath.getKey());
-			if (temp != null)
-				subPath.getValue().setAlternative(temp);
-		}
 	}
 
 	public String getLocaleMessage(final CommandSender target, final String localePath, final Object... args)
@@ -258,7 +243,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	public String getDefaultLanguageText()
 	{
 		String res = localeTexts.get(defaultLanguage);
-		if (res != null)
+		if (res == null)
 		{
 			res = localeTexts.get("en_en");
 			if (res == null)
@@ -299,7 +284,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public CrazyLocale getLanguageEntry(final String path)
 	{
-		CrazyLocale locale = getEntry(path.toUpperCase());
+		final CrazyLocale locale = getEntry(path.toUpperCase());
 		if (locale == missing)
 			System.out.println("[CrazyLocale] " + getPath() + "." + path + " is missing!");
 		return locale;
