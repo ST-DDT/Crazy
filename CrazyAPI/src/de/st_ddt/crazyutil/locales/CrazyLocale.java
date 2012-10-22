@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -23,6 +24,9 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 {
 
 	private static final long serialVersionUID = 7789788937594284997L;
+	private final static Pattern PATTERN_DOT = Pattern.compile("\\.");
+	private final static Pattern PATTERN_UNDERSCORE = Pattern.compile("_");
+	private final static Pattern PATTERN_EQUALSIGN = Pattern.compile("=");
 	private final static CrazyLocale locale = getCrazyLocaleHead();
 	private final static CrazyLocale missing = getCrazyLocaleMissing();
 	private final static Map<String, String> userLanguages = new HashMap<String, String>();
@@ -130,7 +134,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static Set<String> getLanguageAlternatives(final String language)
 	{
-		final String[] split = language.split("_");
+		final String[] split = PATTERN_UNDERSCORE.split(language);
 		HashSet<String> res = null;
 		if (split.length > 1)
 			res = languageAlternatives.get(split[1]);
@@ -303,7 +307,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	protected CrazyLocale getEntry(final String path)
 	{
-		final String[] split = path.split("\\.", 2);
+		final String[] split = PATTERN_DOT.split(path, 2);
 		CrazyLocale locale = get(split[0]);
 		if (locale == null)
 			locale = missing;
@@ -318,7 +322,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	protected CrazyLocale getAlternativeEntry(final String path)
 	{
-		final String[] split = path.split("\\.", 2);
+		final String[] split = PATTERN_DOT.split(path, 2);
 		CrazyLocale locale = missing;
 		if (alternative != null)
 		{
@@ -345,7 +349,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	public CrazyLocale getSecureLanguageEntry(String path)
 	{
 		path = path.toUpperCase();
-		final String[] split = path.split("\\.", 2);
+		final String[] split = PATTERN_DOT.split(path, 2);
 		CrazyLocale locale = get(split[0]);
 		if (locale == null)
 		{
@@ -386,9 +390,9 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 			catch (final IndexOutOfBoundsException e)
 			{}
 			String[] split = null;
-			if (!zeile.equals("") && !zeile.startsWith("#"))
+			if (zeile.length() != 0 && !zeile.startsWith("#"))
 			{
-				split = zeile.split("=", 2);
+				split = PATTERN_EQUALSIGN.split(zeile, 2);
 				try
 				{
 					locale.addLanguageEntry(language, split[0], split[1]);
@@ -402,7 +406,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 			{
 				if (zeile.startsWith("#"))
 					continue;
-				split = zeile.split("=", 2);
+				split = PATTERN_EQUALSIGN.split(zeile, 2);
 				try
 				{
 					locale.addLanguageEntry(language, split[0], split[1]);
@@ -496,7 +500,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 				return;
 			try
 			{
-				final String[] split = language.split("_");
+				final String[] split = PATTERN_UNDERSCORE.split(language);
 				final String shortLang = split[0];
 				if (split.length > 0)
 				{
