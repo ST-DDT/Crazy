@@ -199,6 +199,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 	@Override
 	public void loadConfiguration()
 	{
+		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
 		if (config.getConfigurationSection("serverFilter") == null)
 			serverFilter = new PlayerAccessFilter("serverFilter");
