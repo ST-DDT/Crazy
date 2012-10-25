@@ -2,7 +2,7 @@ package de.st_ddt.crazyutil.databases;
 
 public enum DatabaseType
 {
-	CONFIG(true), MYSQL(false), FLAT(true);
+	CONFIG(true), FLAT(true), MYSQL(false);
 
 	private final boolean staticDatabase;
 
