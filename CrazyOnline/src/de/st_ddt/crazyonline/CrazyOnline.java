@@ -452,6 +452,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 	@Override
 	public void loadConfiguration()
 	{
+		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
 		showOnlineInfo = config.getBoolean("showOnlineInfo", true);
 		deleteShortVisitors = config.getBoolean("deleteShortVisitors", deleteShortVisitors);
