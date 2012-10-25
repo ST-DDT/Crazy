@@ -217,7 +217,6 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	@Override
 	public void onEnable()
 	{
-		saveDatabaseOnShutdown = getConfig().getBoolean("database.saveOnShutdown", true);
 		super.onEnable();
 		mainCommand.addSubCommand(playerCommand, "player", "players");
 		mainCommand.addSubCommand(new CrazyPlayerDataPluginCommandMainReload<T>(this), "reload");
@@ -241,6 +240,12 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	@Localized({ "CRAZYPLUGIN.DATABASE.ACCESSWARN", "CRAZYPLUGIN.DATABASE.LOADED" })
 	public void loadDatabase()
 	{
+	}
+
+	@Override
+	public void loadConfiguration()
+	{
+		saveDatabaseOnShutdown = getConfig().getBoolean("database.saveOnShutdown", true);
 	}
 
 	@Override
