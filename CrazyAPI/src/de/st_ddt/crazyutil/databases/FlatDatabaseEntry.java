@@ -4,5 +4,5 @@ public interface FlatDatabaseEntry extends DatabaseEntry
 {
 
 	// public FlatDatabaseEntry(String[] rawData);
-	public abstract String[] saveToFlatDatabase();
+	public String[] saveToFlatDatabase();
 }

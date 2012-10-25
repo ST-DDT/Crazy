@@ -6,5 +6,5 @@ public interface ConfigurationDatabaseEntry extends DatabaseEntry
 {
 
 	// public ConfigurationDatabaseEntry(ConfigurationSection rawData, String[] columnNames);
-	public abstract void saveToConfigDatabase(ConfigurationSection config, String table, String[] columnNames);
+	public void saveToConfigDatabase(ConfigurationSection config, String table, String[] columnNames);
 }
