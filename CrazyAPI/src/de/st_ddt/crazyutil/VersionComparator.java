@@ -6,20 +6,20 @@ public class VersionComparator implements Comparator<String>
 {
 
 	@Override
-	public int compare(String version1, String version2)
+	public int compare(final String version1, final String version2)
 	{
 		return compareVersions(version1, version2);
 	}
 
-	public static int compareVersions(String version1, String version2)
+	public static int compareVersions(final String version1, final String version2)
 	{
-		String[] split1 = version1.split("\\.");
-		String[] split2 = version2.split("\\.");
-		int length1 = split1.length;
-		int length2 = split2.length;
-		int length = Math.max(length1, length2);
-		Integer[] v1 = new Integer[length];
-		Integer[] v2 = new Integer[length];
+		final String[] split1 = version1.split("\\.");
+		final String[] split2 = version2.split("\\.");
+		final int length1 = split1.length;
+		final int length2 = split2.length;
+		final int length = Math.max(length1, length2);
+		final Integer[] v1 = new Integer[length];
+		final Integer[] v2 = new Integer[length];
 		for (int i = 0; i < length1; i++)
 			v1[i] = Integer.parseInt(split1[i]);
 		for (int i = length1; i < length; i++)

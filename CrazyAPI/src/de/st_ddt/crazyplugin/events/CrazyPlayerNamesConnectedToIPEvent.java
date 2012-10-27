@@ -32,7 +32,7 @@ public class CrazyPlayerNamesConnectedToIPEvent extends CrazyEvent<CrazyLightPlu
 
 	public void addAll(final String... names)
 	{
-		for (String name : names)
+		for (final String name : names)
 			add(name);
 	}
 

@@ -44,15 +44,15 @@ public class CrazyException extends Exception implements Showable
 	}
 
 	@Override
-	public void show(CommandSender target)
+	public void show(final CommandSender target)
 	{
 		print(target);
 	}
 
 	@Override
-	public void show(CommandSender target, String chatHeader, boolean showDetailed)
+	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
-		boolean temp = printStackTrace;
+		final boolean temp = printStackTrace;
 		printStackTrace = true;
 		print(target, chatHeader);
 		printStackTrace = temp;

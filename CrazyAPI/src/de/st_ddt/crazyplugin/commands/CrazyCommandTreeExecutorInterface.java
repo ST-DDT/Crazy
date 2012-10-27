@@ -25,5 +25,6 @@ public interface CrazyCommandTreeExecutorInterface<S extends CrazyPluginInterfac
 
 	public TreeMap<String, CrazyCommandExecutorInterface> getSubExecutors();
 
+	@Override
 	public void command(CommandSender sender, String[] args) throws CrazyException;
 }
