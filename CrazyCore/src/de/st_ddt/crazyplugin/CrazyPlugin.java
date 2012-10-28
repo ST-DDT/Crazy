@@ -29,6 +29,7 @@ import de.st_ddt.crazyutil.CrazyLogger;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPluginInterface
 {
@@ -262,7 +263,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		Player: for (final Player player : Bukkit.getOnlinePlayers())
 		{
 			for (final String permission : permissions)
-				if (!player.hasPermission(permission))
+				if (!PermissionModule.hasPermission(player, permission))
 					continue Player;
 			sendLocaleMessage(locale, player, args);
 		}
