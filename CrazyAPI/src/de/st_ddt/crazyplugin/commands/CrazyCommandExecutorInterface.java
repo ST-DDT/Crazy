@@ -11,7 +11,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public interface CrazyCommandExecutorInterface extends CommandExecutor
 {
 
-	public void command(CommandSender sender, String[] args) throws CrazyException;
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args);
 
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args);
+
+	public void command(CommandSender sender, String[] args) throws CrazyException;
+
+	public List<String> tab(CommandSender sender, String[] args);
 }

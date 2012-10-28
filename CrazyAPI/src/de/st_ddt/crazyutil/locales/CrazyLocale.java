@@ -23,6 +23,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 {
 
 	private static final long serialVersionUID = 7789788937594284997L;
+	public final static Pattern PATTERN_LANGUAGE = Pattern.compile("[a-z]{2,3}_[a-z]{2,3}", Pattern.CASE_INSENSITIVE);
 	private final static Pattern PATTERN_DOT = Pattern.compile("\\.");
 	private final static Pattern PATTERN_UNDERSCORE = Pattern.compile("_");
 	private final static Pattern PATTERN_EQUALSIGN = Pattern.compile("=");
