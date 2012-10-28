@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazycore.CrazyCore;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
@@ -23,8 +22,6 @@ public class CrazyCoreCommandLanguagePrint extends CrazyCoreCommandExecutor
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, "crazylanguage.advanced"))
-			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Path/*>");
 		if (args[0].equalsIgnoreCase("*"))
@@ -62,5 +59,11 @@ public class CrazyCoreCommandLanguagePrint extends CrazyCoreCommandExecutor
 				if (sub.startsWith(path))
 					res.add(sub);
 		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazylanguage.advanced");
 	}
 }

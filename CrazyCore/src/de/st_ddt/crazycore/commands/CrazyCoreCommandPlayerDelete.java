@@ -58,4 +58,10 @@ public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 				res.add(player.getName());
 		return res;
 	}
+
+	@Override
+	public boolean hasAccessPermission(CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazycore.player.delete.self") || PermissionModule.hasPermission(sender, "crazycore.player.delete.other");
+	}
 }

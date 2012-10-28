@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
@@ -29,8 +28,6 @@ public class CrazyCoreCommandLanguageReload extends CrazyCoreCommandExecutor
 	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.RELOADED $Language$", "CRAZYCORE.COMMAND.LANGUAGE.RELOADED.PLUGIN $Language$ $Plugin$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, "crazylanguage.advanced"))
-			throw new CrazyCommandPermissionException();
 		if (args.length == 0)
 			throw new CrazyCommandUsageException("<Plugin/Language/*>");
 		final String name = args[0].toLowerCase();
@@ -90,5 +87,11 @@ public class CrazyCoreCommandLanguageReload extends CrazyCoreCommandExecutor
 			if (pattern.matcher(plugin.getName()).find())
 				res.add(plugin.getName());
 		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazylanguage.advanced");
 	}
 }

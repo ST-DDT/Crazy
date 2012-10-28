@@ -44,7 +44,7 @@ public class CrazyCoreCommandLanguageSelect extends CrazyCoreCommandExecutor
 		if (args.length > 1)
 			return null;
 		final List<String> res = new ArrayList<String>();
-		String arg = args[0];
+		final String arg = args[0];
 		final Pattern pattern = Pattern.compile(arg, Pattern.CASE_INSENSITIVE);
 		for (final String subCommand : plugin.getPreloadedLanguages())
 			if (pattern.matcher(subCommand).find())

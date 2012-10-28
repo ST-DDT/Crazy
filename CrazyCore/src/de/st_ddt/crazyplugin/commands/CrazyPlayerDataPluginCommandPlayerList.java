@@ -11,7 +11,6 @@ import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
 import de.st_ddt.crazyplugin.comparator.PlayerDataComparator;
 import de.st_ddt.crazyplugin.data.PlayerDataFilterInterface;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Filter;
@@ -38,8 +37,6 @@ public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterfac
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.list"))
-			throw new CrazyCommandPermissionException();
 		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), format, Filter.getFilterInstances(availableFilters), availableSorters, defaultSort, plugin.getPlayerDataListModder(), new ArrayList<T>(plugin.getPlayerData()));
 	}
 
@@ -72,5 +69,11 @@ public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterfac
 		if ("entryformat:".startsWith(last))
 			res.add("entryformat:");
 		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.list");
 	}
 }

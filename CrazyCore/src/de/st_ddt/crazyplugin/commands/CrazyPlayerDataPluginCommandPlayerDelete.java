@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -29,8 +28,6 @@ public class CrazyPlayerDataPluginCommandPlayerDelete<T extends PlayerDataInterf
 	@Localized("CRAZYPLUGIN.COMMAND.PLAYER.DELETE.SUCCESS $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.delete"))
-			throw new CrazyCommandPermissionException();
 		final String name = ChatHelper.listingString(" ", args);
 		if (!plugin.deletePlayerData(name))
 			throw new CrazyCommandNoSuchException("PlayerData", name);
@@ -49,5 +46,11 @@ public class CrazyPlayerDataPluginCommandPlayerDelete<T extends PlayerDataInterf
 				if (plugin.hasPlayerData(player))
 					res.add(player.getName());
 		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.delete");
 	}
 }

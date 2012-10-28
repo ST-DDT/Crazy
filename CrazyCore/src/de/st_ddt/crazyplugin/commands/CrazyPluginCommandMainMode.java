@@ -15,7 +15,6 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
@@ -36,8 +35,6 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".mode"))
-			throw new CrazyCommandPermissionException();
 		if (args.length == 0)
 			throw new CrazyCommandNoSuchException("Mode", "(none)", modes.keySet());
 		final String name = args[0].toLowerCase();
@@ -73,6 +70,23 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 				e.addCommandPrefix(args[0]);
 				throw e;
 			}
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		final String last = args[args.length - 1];
+		final List<String> res = new ArrayList<String>();
+		for (final String mode : modes.keySet())
+			if (mode.startsWith(last))
+				res.add(mode + ":");
+		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".mode");
 	}
 
 	public void addMode(final Mode<?> mode)
@@ -279,16 +293,5 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 				throw new CrazyCommandParameterException(0, "Boolean (true/false)");
 			}
 		}
-	}
-
-	@Override
-	public List<String> tab(CommandSender sender, String[] args)
-	{
-		final String last = args[args.length - 1];
-		final List<String> res = new ArrayList<String>();
-		for (String mode : modes.keySet())
-			if (mode.startsWith(last))
-				res.add(mode + ":");
-		return res;
 	}
 }

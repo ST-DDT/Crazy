@@ -13,7 +13,6 @@ import de.st_ddt.crazycore.data.PseudoPlayerData;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -31,8 +30,6 @@ public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
 	@Localized("CRAZYCORE.PLAYERINFO.SEPARATOR")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, "crazycore.player.info"))
-			throw new CrazyCommandPermissionException();
 		final String name = ChatHelper.listingString(" ", args);
 		OfflinePlayer player = Bukkit.getPlayer(name);
 		if (player == null)
@@ -62,5 +59,11 @@ public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
 			if (pattern.matcher(player.getName()).find())
 				res.add(player.getName());
 		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazycore.player.info");
 	}
 }

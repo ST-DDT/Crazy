@@ -47,16 +47,16 @@ public class CrazyCoreCommandPager extends CrazyCoreCommandExecutor
 	}
 
 	@Override
-	public List<String> tab(CommandSender sender, String[] args)
+	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		if (args.length > 1)
 			return null;
 		if (CrazyPages.getPages(sender) == null)
 			return null;
-		List<String> res = new ArrayList<String>();
+		final List<String> res = new ArrayList<String>();
 		res.add("+");
 		res.add("-");
-		int pages = CrazyPages.getPages(sender).getMaxPage();
+		final int pages = CrazyPages.getPages(sender).getMaxPage();
 		for (int i = 1; i <= pages; i++)
 			res.add(Integer.toString(i));
 		return res;

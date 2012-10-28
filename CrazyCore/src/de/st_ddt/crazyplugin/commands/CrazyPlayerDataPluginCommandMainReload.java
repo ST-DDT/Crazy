@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUnsupportedException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -31,8 +30,6 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 	@Localized({ "CRAZYPLUGIN.COMMAND.CONFIG.RELOADED", "CRAZYPLUGIN.COMMAND.DATABASE.RELOADED" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".reload"))
-			throw new CrazyCommandPermissionException();
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 		final BooleanParamitrisable config = new BooleanParamitrisable(args.length == 0);
 		params.put("c", config);
@@ -63,11 +60,17 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 	}
 
 	@Override
-	public List<String> tab(CommandSender sender, String[] args)
+	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		List<String> res = new ArrayList<String>();
+		final List<String> res = new ArrayList<String>();
 		res.add("config:true");
 		res.add("database:true");
 		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".reload");
 	}
 }

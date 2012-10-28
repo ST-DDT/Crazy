@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Logger;
@@ -32,8 +31,6 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Logger logger = plugin.getCrazyLogger();
-		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".logger"))
-			throw new CrazyCommandPermissionException();
 		if (logger.getAllLogChannelCount() == 0)
 		{
 			plugin.sendLocaleMessage("COMMAND.CONFIG.NOLOGGERS", sender);
@@ -98,5 +95,11 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 		if ("console:".startsWith(last))
 			res.add("console:");
 		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".logger");
 	}
 }

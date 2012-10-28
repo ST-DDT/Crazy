@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
 public abstract class CrazyCommandExecutor<S extends CrazyPluginInterface> implements CrazyCommandExecutorInterface
@@ -30,6 +31,8 @@ public abstract class CrazyCommandExecutor<S extends CrazyPluginInterface> imple
 	{
 		try
 		{
+			if (!hasAccessPermission(sender))
+				throw new CrazyCommandPermissionException();
 			command(sender, args);
 		}
 		catch (final CrazyCommandException e)
@@ -51,12 +54,21 @@ public abstract class CrazyCommandExecutor<S extends CrazyPluginInterface> imple
 	@Override
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
 	{
-		return tab(sender, args);
+		if (hasAccessPermission(sender))
+			return tab(sender, args);
+		else
+			return null;
 	}
 
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		return null;
+	}
+
+	@Override
+	public boolean hasAccessPermission(CommandSender sender)
+	{
+		return true;
 	}
 }

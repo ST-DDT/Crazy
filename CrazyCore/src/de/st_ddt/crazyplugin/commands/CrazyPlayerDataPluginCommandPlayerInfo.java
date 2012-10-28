@@ -40,11 +40,11 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 
 	protected void commandPlayerInfo(final CommandSender sender, final String name, final boolean detailed) throws CrazyCommandException
 	{
+		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info." + (sender.getName().equals(name) ? "self" : "other")))
+			throw new CrazyCommandPermissionException();
 		final T data = plugin.getPlayerData(name);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("PlayerData", name);
-		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info." + (sender.getName().equals(name) ? "self" : "other")))
-			throw new CrazyCommandPermissionException();
 		data.show(sender, plugin.getChatHeader(), detailed);
 	}
 

@@ -3,6 +3,7 @@ package de.st_ddt.crazyplugin.commands;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
@@ -10,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 
@@ -86,6 +88,8 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 				final CrazyCommandExecutorInterface executor = subExecutor.get(args[0].toLowerCase());
 				if (executor != null)
 				{
+					if (!executor.hasAccessPermission(sender))
+						throw new CrazyCommandPermissionException();
 					executor.command(sender, ChatHelperExtended.shiftArray(args, 1));
 					return;
 				}
@@ -95,6 +99,8 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 				e.addCommandPrefix(args[0]);
 				throw e;
 			}
+		if (!defaultExecutor.hasAccessPermission(sender))
+			throw new CrazyCommandPermissionException();
 		defaultExecutor.command(sender, args);
 	}
 
@@ -107,13 +113,17 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 		if (executor == null)
 		{
 			List<String> res = defaultExecutor.tab(sender, args);
+			if (res != null)
+				if (!defaultExecutor.hasAccessPermission(sender))
+					res = null;
 			if (defaultExecutor instanceof CrazyCommandTreeDefaultExecutor || args.length > 1)
 				return res;
 			if (res == null)
 				res = new ArrayList<String>();
-			for (final String subCommand : subExecutor.keySet())
-				if (subCommand.toLowerCase().startsWith(args[0]))
-					res.add(subCommand);
+			for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
+				if (subCommand.getKey().toLowerCase().startsWith(args[0]))
+					if (subCommand.getValue().hasAccessPermission(sender))
+						res.add(subCommand.getKey());
 			return res;
 		}
 		else if (args.length == 1)
@@ -124,8 +134,10 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 					res.add(subCommand);
 			return res;
 		}
-		else
+		else if (executor.hasAccessPermission(sender))
 			return executor.tab(sender, ChatHelperExtended.shiftArray(args, 1));
+		else
+			return null;
 	}
 
 	private class CrazyCommandTreeDefaultExecutor<T extends CrazyPluginInterface> extends CrazyCommandExecutor<T>
