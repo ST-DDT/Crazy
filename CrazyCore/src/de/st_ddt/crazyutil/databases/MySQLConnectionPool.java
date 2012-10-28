@@ -42,13 +42,13 @@ public class MySQLConnectionPool
 	public void reset()
 	{
 		lock.lock();
-		Iterator<Connection> it = idleConenctions.iterator();
+		final Iterator<Connection> it = idleConenctions.iterator();
 		while (it.hasNext())
 			try
 			{
 				it.next().close();
 			}
-			catch (SQLException e)
+			catch (final SQLException e)
 			{}
 			finally
 			{

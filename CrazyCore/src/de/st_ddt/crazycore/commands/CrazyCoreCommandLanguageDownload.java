@@ -1,6 +1,9 @@
 package de.st_ddt.crazycore.commands;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.command.CommandSender;
 
@@ -12,6 +15,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
 {
@@ -25,7 +29,7 @@ public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
 	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.DOWNLOADED $Language$", "CRAZYCORE.COMMAND.LANGUAGE.DOWNLOADED.PLUGIN $Language$ $Plugin$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission("crazylanguage.advanced"))
+		if (!PermissionModule.hasPermission(sender, "crazylanguage.advanced"))
 			throw new CrazyCommandPermissionException();
 		if (args.length == 0)
 			throw new CrazyCommandUsageException("<Language>", "<Plugin>", "*");
@@ -43,7 +47,7 @@ public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
 			}
 			return;
 		}
-		if (name.matches("[a-z][a-z]_[a-z][a-z]"))
+		if (CrazyLocale.PATTERN_LANGUAGE.matcher(name).matches())
 		{
 			for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 			{
@@ -62,12 +66,29 @@ public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
 				alternatives.add(temp.getName());
 			throw new CrazyCommandNoSuchException("Languages/Plugins", name, alternatives);
 		}
-		for (final String language : CrazyLocale.getLoadedLanguages())
-		{
-			plugin.updateLanguage(language, sender, true);
-			plugin.checkLocale();
-			plugin.sendLocaleMessage("COMMAND.LANGUAGE.DOWNLOADED.PLUGIN", sender, language, plugin.getName());
-		}
-		return;
+		else
+			for (final String language : CrazyLocale.getLoadedLanguages())
+			{
+				plugin.updateLanguage(language, sender, true);
+				plugin.checkLocale();
+				plugin.sendLocaleMessage("COMMAND.LANGUAGE.DOWNLOADED.PLUGIN", sender, language, plugin.getName());
+			}
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		final List<String> res = new ArrayList<String>();
+		String arg = "";
+		if (args.length > 0)
+			arg = args[args.length - 1];
+		final Pattern pattern = Pattern.compile(arg, Pattern.CASE_INSENSITIVE);
+		for (final String subCommand : CrazyLocale.getActiveLanguages())
+			if (pattern.matcher(subCommand).find())
+				res.add(subCommand);
+		for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
+			if (pattern.matcher(plugin.getName()).find())
+				res.add(plugin.getName());
+		return res;
 	}
 }

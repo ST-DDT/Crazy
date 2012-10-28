@@ -11,7 +11,7 @@ public class MySQLPlayerDataDatabase<S extends MySQLPlayerDataDatabaseEntry> ext
 		super(clazz, columns, defaultTableName, config);
 	}
 
-	public MySQLPlayerDataDatabase(Class<S> clazz, MySQLColumn[] columns, String tableName, String[] columnNames, String host, String port, String database, String user, String password, boolean cached, boolean doNoUpdate)
+	public MySQLPlayerDataDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
 	{
 		super(clazz, columns, tableName, columnNames, host, port, database, user, password, cached, doNoUpdate);
 	}

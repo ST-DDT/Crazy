@@ -237,6 +237,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		loadDatabase();
 	}
 
+	@Override
 	@Localized({ "CRAZYPLUGIN.DATABASE.ACCESSWARN", "CRAZYPLUGIN.DATABASE.LOADED" })
 	public void loadDatabase()
 	{
@@ -255,6 +256,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		super.save();
 	}
 
+	@Override
 	public void saveDatabase()
 	{
 		final ConfigurationSection config = getConfig();
@@ -265,6 +267,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 		}
 	}
 
+	@Override
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();

@@ -1,5 +1,7 @@
 package de.st_ddt.crazyplugin.commands;
 
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -18,7 +20,7 @@ public abstract class CrazyCommandExecutor<S extends CrazyPluginInterface> imple
 		this.plugin = plugin;
 	}
 
-	public S getPlugin()
+	public final S getPlugin()
 	{
 		return plugin;
 	}
@@ -45,4 +47,16 @@ public abstract class CrazyCommandExecutor<S extends CrazyPluginInterface> imple
 
 	@Override
 	public abstract void command(final CommandSender sender, final String[] args) throws CrazyException;
+
+	@Override
+	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+	{
+		return tab(sender, args);
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		return null;
+	}
 }

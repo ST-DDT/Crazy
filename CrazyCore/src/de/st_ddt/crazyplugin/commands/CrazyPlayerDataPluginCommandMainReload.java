@@ -1,5 +1,7 @@
 package de.st_ddt.crazyplugin.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -13,6 +15,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
@@ -28,7 +31,7 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 	@Localized({ "CRAZYPLUGIN.COMMAND.CONFIG.RELOADED", "CRAZYPLUGIN.COMMAND.DATABASE.RELOADED" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".reload"))
+		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".reload"))
 			throw new CrazyCommandPermissionException();
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 		final BooleanParamitrisable config = new BooleanParamitrisable(args.length == 0);
@@ -57,5 +60,14 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 			plugin.sendLocaleMessage("COMMAND.DATABASE.RELOADED", sender);
 			plugin.saveDatabase();
 		}
+	}
+
+	@Override
+	public List<String> tab(CommandSender sender, String[] args)
+	{
+		List<String> res = new ArrayList<String>();
+		res.add("config:true");
+		res.add("database:true");
+		return res;
 	}
 }

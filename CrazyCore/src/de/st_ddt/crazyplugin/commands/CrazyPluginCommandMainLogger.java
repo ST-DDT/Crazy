@@ -1,5 +1,7 @@
 package de.st_ddt.crazyplugin.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
@@ -12,6 +14,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Logger;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
@@ -29,7 +32,7 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Logger logger = plugin.getCrazyLogger();
-		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".logger"))
+		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".logger"))
 			throw new CrazyCommandPermissionException();
 		if (logger.getAllLogChannelCount() == 0)
 		{
@@ -83,5 +86,17 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 			logger.save(plugin.getConfig(), "logs.");
 			plugin.saveConfig();
 		}
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		final String last = args[args.length - 1];
+		final List<String> res = new ArrayList<String>();
+		if ("path:".startsWith(last))
+			res.add("path:");
+		if ("console:".startsWith(last))
+			res.add("console:");
+		return res;
 	}
 }

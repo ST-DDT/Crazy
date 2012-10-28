@@ -1,5 +1,7 @@
 package de.st_ddt.crazyplugin.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -19,6 +21,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPluginInterface>
 {
@@ -33,7 +36,7 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".mode"))
+		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".mode"))
 			throw new CrazyCommandPermissionException();
 		if (args.length == 0)
 			throw new CrazyCommandNoSuchException("Mode", "(none)", modes.keySet());
@@ -276,5 +279,16 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 				throw new CrazyCommandParameterException(0, "Boolean (true/false)");
 			}
 		}
+	}
+
+	@Override
+	public List<String> tab(CommandSender sender, String[] args)
+	{
+		final String last = args[args.length - 1];
+		final List<String> res = new ArrayList<String>();
+		for (String mode : modes.keySet())
+			if (mode.startsWith(last))
+				res.add(mode + ":");
+		return res;
 	}
 }

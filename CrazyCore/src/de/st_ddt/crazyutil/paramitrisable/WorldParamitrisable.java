@@ -39,9 +39,9 @@ public class WorldParamitrisable extends TypedParamitrisable<World>
 
 	private String[] getWorldNames()
 	{
-		List<World> worlds = Bukkit.getWorlds();
-		int length = worlds.size();
-		String[] res = new String[length];
+		final List<World> worlds = Bukkit.getWorlds();
+		final int length = worlds.size();
+		final String[] res = new String[length];
 		for (int i = 0; i < length; i++)
 			res[i] = worlds.get(i).getName();
 		return res;

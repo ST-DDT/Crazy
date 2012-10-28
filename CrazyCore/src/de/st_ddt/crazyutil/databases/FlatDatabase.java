@@ -134,7 +134,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	public boolean deleteEntry(final String key)
 	{
 		entries.remove(key.toLowerCase());
-		boolean res = super.deleteEntry(key);
+		final boolean res = super.deleteEntry(key);
 		asyncSaveDatabase();
 		return res;
 	}

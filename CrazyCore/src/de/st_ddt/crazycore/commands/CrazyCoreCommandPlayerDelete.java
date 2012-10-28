@@ -1,8 +1,11 @@
 package de.st_ddt.crazycore.commands;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,6 +15,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 {
@@ -31,9 +35,9 @@ public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 			name = player.getName();
 		final boolean self = sender.getName().equalsIgnoreCase(name);
 		if (self)
-			if (!sender.hasPermission("crazycore.player.delete.self"))
+			if (!PermissionModule.hasPermission(sender, "crazycore.player.delete.self"))
 				throw new CrazyCommandPermissionException();
-			else if (!sender.hasPermission("crazycore.player.delete.other"))
+			else if (!PermissionModule.hasPermission(sender, "crazycore.player.delete.other"))
 				throw new CrazyCommandPermissionException();
 		final CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, name);
 		if (self)
@@ -43,5 +47,18 @@ public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 		plugin.sendLocaleMessage("COMMAND.PLAYER.DELETE.SUCCESS", sender, name, event.getDeletionsCount());
 		if (event.getDeletionsCount() != 0)
 			plugin.sendLocaleList(sender, "COMMAND.PLAYER.DELETE.LISTHEADER", "COMMAND.PLAYER.DELETE.LISTFORMAT", null, -1, 1, new ArrayList<String>(event.getDeletions()));
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		if (args.length != 1)
+			return null;
+		final List<String> res = new ArrayList<String>();
+		final Pattern pattern = Pattern.compile(args[0], Pattern.CASE_INSENSITIVE);
+		for (final OfflinePlayer player : Bukkit.getOfflinePlayers())
+			if (pattern.matcher(player.getName()).find())
+				res.add(player.getName());
+		return res;
 	}
 }

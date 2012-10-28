@@ -123,11 +123,16 @@ public class CrazyPages
 		this.page = page;
 	}
 
+	public int getMaxPage()
+	{
+		return (datas.size() + amount - 1) / amount;
+	}
+
 	public void show(final CommandSender target)
 	{
 		int lastIndex = datas.size();
 		page = Math.max(1, page);
-		ChatHelper.sendMessage(target, "", headFormat, page, (datas.size() + amount - 1) / amount, chatHeader, CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date()));
+		ChatHelper.sendMessage(target, "", headFormat, page, getMaxPage(), chatHeader, CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date()));
 		if (lastIndex + amount - 1 < page * amount)
 		{
 			return;

@@ -18,7 +18,7 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 	}
 
 	@Override
-	public String getParameter(CommandSender sender, final int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -58,7 +58,7 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYCORE.PLAYERINFO");
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LANGUAGE"), CrazyLocale.getUserLanguageName(name, true));
-		CrazyPlayerAssociatesEvent associatesEvent = new CrazyPlayerAssociatesEvent(getPlugin(), chatHeader);
+		final CrazyPlayerAssociatesEvent associatesEvent = new CrazyPlayerAssociatesEvent(getPlugin(), chatHeader);
 		associatesEvent.callEvent();
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("ASSOCIATES"), ChatHelper.listingString(associatesEvent.getAssociates()));
 	}

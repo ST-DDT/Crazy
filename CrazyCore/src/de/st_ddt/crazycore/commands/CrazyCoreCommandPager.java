@@ -1,5 +1,8 @@
 package de.st_ddt.crazycore.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazycore.CrazyCore;
@@ -10,13 +13,13 @@ import de.st_ddt.crazyutil.CrazyPages;
 public class CrazyCoreCommandPager extends CrazyCoreCommandExecutor
 {
 
-	public CrazyCoreCommandPager(CrazyCore plugin)
+	public CrazyCoreCommandPager(final CrazyCore plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	public void command(CommandSender sender, String[] args) throws CrazyException
+	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length > 1)
 			throw new CrazyCommandUsageException("[+/-]", "[Pagenumber]");
@@ -25,7 +28,7 @@ public class CrazyCoreCommandPager extends CrazyCoreCommandExecutor
 			CrazyPages.showPage(sender);
 			return;
 		}
-		String arg = args[0];
+		final String arg = args[0];
 		if (arg.equals("+"))
 			CrazyPages.showNextPage(sender);
 		else if (arg.equals("-"))
@@ -36,10 +39,26 @@ public class CrazyCoreCommandPager extends CrazyCoreCommandExecutor
 			{
 				CrazyPages.showPage(sender, Integer.parseInt(arg));
 			}
-			catch (NumberFormatException e)
+			catch (final NumberFormatException e)
 			{
 				throw new CrazyCommandUsageException("[+/-]", "[Pagenumber (Integer)]");
 			}
 		}
+	}
+
+	@Override
+	public List<String> tab(CommandSender sender, String[] args)
+	{
+		if (args.length > 1)
+			return null;
+		if (CrazyPages.getPages(sender) == null)
+			return null;
+		List<String> res = new ArrayList<String>();
+		res.add("+");
+		res.add("-");
+		int pages = CrazyPages.getPages(sender).getMaxPage();
+		for (int i = 1; i <= pages; i++)
+			res.add(Integer.toString(i));
+		return res;
 	}
 }

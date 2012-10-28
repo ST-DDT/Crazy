@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.messaging.Messenger;
@@ -13,8 +14,8 @@ import de.st_ddt.crazycore.commands.CrazyCoreCommandLanguageTree;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandList;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPager;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPipe;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerDelete;
+import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
 import de.st_ddt.crazycore.listener.CrazyCoreCrazyListener;
 import de.st_ddt.crazycore.listener.CrazyCoreMessageListener;
 import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
@@ -23,6 +24,7 @@ import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyCore extends CrazyPlugin
 {
@@ -77,6 +79,7 @@ public class CrazyCore extends CrazyPlugin
 	@Override
 	public void onEnable()
 	{
+		PermissionModule.init(getChatHeader(), Bukkit.getConsoleSender());
 		registerHooks();
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
 		super.onEnable();
@@ -104,7 +107,7 @@ public class CrazyCore extends CrazyPlugin
 		// ChatHeader
 		ChatHelper.setShowChatHeaders(config.getBoolean("showChatHeaders", true));
 		// Language
-		String systemLanguage = System.getProperty("user.language").toLowerCase();
+		final String systemLanguage = System.getProperty("user.language").toLowerCase();
 		final String defaultLanguage = config.getString("defaultLanguage", systemLanguage + "_" + systemLanguage);
 		CrazyLocale.setDefaultLanguage(defaultLanguage);
 		preloadedLanguages.add(defaultLanguage);

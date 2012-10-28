@@ -7,6 +7,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyPluginCommandMainReload extends CrazyCommandExecutor<CrazyPluginInterface>
 {
@@ -20,7 +21,7 @@ public class CrazyPluginCommandMainReload extends CrazyCommandExecutor<CrazyPlug
 	@Localized("CRAZYPLUGIN.COMMAND.CONFIG.RELOADED")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".reload"))
+		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".reload"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 0)
 			throw new CrazyCommandUsageException("");

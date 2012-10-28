@@ -106,7 +106,7 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 	}
 
 	@Override
-	public int compareTo(S o)
+	public int compareTo(final S o)
 	{
 		return name.compareToIgnoreCase(o.getName());
 	}
@@ -118,14 +118,14 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj instanceof PlayerData<?>)
 			return equals((PlayerData<?>) obj);
 		return false;
 	}
 
-	public boolean equals(PlayerData<?> obj)
+	public boolean equals(final PlayerData<?> obj)
 	{
 		return name.equalsIgnoreCase(obj.name);
 	}

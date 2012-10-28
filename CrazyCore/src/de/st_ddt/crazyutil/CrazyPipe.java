@@ -13,6 +13,7 @@ import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUnsupportedException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public abstract class CrazyPipe
 {
@@ -31,7 +32,7 @@ public abstract class CrazyPipe
 	{
 		if (disabled)
 			return;
-		if (!sender.hasPermission("crazypipe.use"))
+		if (!PermissionModule.hasPermission(sender, "crazypipe.use"))
 			throw new CrazyCommandPermissionException();
 		if (datas.size() == 0)
 			return;
@@ -67,7 +68,7 @@ public abstract class CrazyPipe
 	{
 		if (disabled)
 			return;
-		if (!sender.hasPermission("crazypipe.use"))
+		if (!PermissionModule.hasPermission(sender, "crazypipe.use"))
 			throw new CrazyCommandPermissionException();
 		if (pipeArgs == null)
 		{
@@ -94,7 +95,7 @@ public abstract class CrazyPipe
 	{
 		if (disabled)
 			return;
-		if (!sender.hasPermission("crazypipe.use"))
+		if (!PermissionModule.hasPermission(sender, "crazypipe.use"))
 			throw new CrazyCommandPermissionException();
 		if (pipeArgs == null)
 			return;

@@ -7,6 +7,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyPluginCommandMainSave extends CrazyCommandExecutor<CrazyPluginInterface>
 {
@@ -20,7 +21,7 @@ public class CrazyPluginCommandMainSave extends CrazyCommandExecutor<CrazyPlugin
 	@Localized("CRAZYPLUGIN.COMMAND.CONFIG.SAVED")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".save"))
+		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".save"))
 			throw new CrazyCommandPermissionException();
 		if (args.length != 0)
 			throw new CrazyCommandUsageException("");

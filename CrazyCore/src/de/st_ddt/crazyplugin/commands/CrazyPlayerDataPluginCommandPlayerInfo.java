@@ -1,5 +1,11 @@
 package de.st_ddt.crazyplugin.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,6 +17,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterface> extends CrazyPlayerDataCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
 {
@@ -36,8 +43,22 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 		final T data = plugin.getPlayerData(name);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("PlayerData", name);
-		if (!sender.hasPermission(plugin.getName().toLowerCase() + ".player.info." + (sender.getName().equals(name) ? "self" : "other")))
+		if (!PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info." + (sender.getName().equals(name) ? "self" : "other")))
 			throw new CrazyCommandPermissionException();
 		data.show(sender, plugin.getChatHeader(), detailed);
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		if (args.length != 1)
+			return null;
+		final List<String> res = new ArrayList<String>();
+		final Pattern pattern = Pattern.compile(args[0], Pattern.CASE_INSENSITIVE);
+		for (final OfflinePlayer player : Bukkit.getOfflinePlayers())
+			if (pattern.matcher(player.getName()).find())
+				if (plugin.hasPlayerData(player))
+					res.add(player.getName());
+		return res;
 	}
 }
