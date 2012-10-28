@@ -19,4 +19,6 @@ public interface CrazyCommandExecutorInterface extends CommandExecutor
 	public void command(CommandSender sender, String[] args) throws CrazyException;
 
 	public List<String> tab(CommandSender sender, String[] args);
+
+	public boolean hasAccessPermission(CommandSender sender);
 }
