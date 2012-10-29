@@ -79,7 +79,7 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 		final List<String> res = new ArrayList<String>();
 		for (final String mode : modes.keySet())
 			if (mode.startsWith(last))
-				res.add(mode + ":");
+				res.add(mode);
 		return res;
 	}
 
