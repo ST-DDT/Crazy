@@ -31,7 +31,7 @@ public abstract class PreSetList implements Named
 
 	static
 	{
-		new PreSetList("op")
+		new PreSetList("ops")
 		{
 
 			@Override
