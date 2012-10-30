@@ -27,7 +27,7 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 	}
 
 	@Override
-	@Localized({ "CRAZYPLUGIN.COMMAND.CONFIG.NOLOGGERS", "CRAZYPLUGIN.COMMAND.CONFIG.LOGGER" })
+	@Localized({ "CRAZYPLUGIN.COMMAND.CONFIG.NOLOGGERS", "CRAZYPLUGIN.COMMAND.CONFIG.LOGGER $Channel$ $Path$ $Console$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Logger logger = plugin.getCrazyLogger();
@@ -88,12 +88,21 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		final String last = args[args.length - 1];
 		final List<String> res = new ArrayList<String>();
-		if ("path:".startsWith(last))
-			res.add("path:");
-		if ("console:".startsWith(last))
-			res.add("console:");
+		if (args.length == 1)
+		{
+			for (String name : plugin.getCrazyLogger().getLogChannelNames())
+				if (name.toLowerCase().startsWith(args[0].toLowerCase()))
+					res.add(name);
+		}
+		else
+		{
+			final String last = args[args.length - 1].toLowerCase();
+			if ("path:".startsWith(last))
+				res.add("path:");
+			if ("console:".startsWith(last))
+				res.add("console:");
+		}
 		return res;
 	}
 
