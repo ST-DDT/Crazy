@@ -18,7 +18,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	private final MySQLColumn[] columns;
 	private final String[] columnNames;
 	private final boolean cached;
-	private final boolean doNoUpdate;
+	private final boolean doNotUpdate;
 
 	public MySQLDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{
@@ -31,7 +31,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			this.columns = columns;
 			this.columnNames = defaultColumnNames;
 			this.cached = true;
-			this.doNoUpdate = false;
+			this.doNotUpdate = false;
 		}
 		else
 		{
@@ -46,7 +46,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				columns[i].setRealName(columnNames[i]);
 			}
 			this.cached = config.getBoolean("cached", true);
-			this.doNoUpdate = config.getBoolean("static", true);
+			this.doNotUpdate = config.getBoolean("static", true);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		for (int i = 0; i < columns.length; i++)
 			columns[i].setRealName(columnNames[i]);
 		this.cached = cached;
-		this.doNoUpdate = doNoUpdate;
+		this.doNotUpdate = doNoUpdate;
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -177,7 +177,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public final boolean isStaticDatabase()
 	{
-		return doNoUpdate;
+		return doNotUpdate;
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public S updateEntry(final String key)
 	{
-		if (doNoUpdate)
+		if (doNotUpdate)
 			return getEntry(key);
 		else
 			return loadEntry(key);
@@ -414,6 +414,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		mysqlConnection.save(config, path + "MYSQL.connection.");
 		config.set(path + "MYSQL.tableName", tableName);
 		config.set(path + "MYSQL.cached", cached);
+		config.set(path + "MYSQL.static", doNotUpdate);
 		for (int i = 0; i < defaultColumnNames.length; i++)
 			config.set(path + "MYSQL.columns." + defaultColumnNames[i], columnNames[i]);
 	}
