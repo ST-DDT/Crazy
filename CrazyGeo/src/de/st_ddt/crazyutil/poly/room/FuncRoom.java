@@ -140,7 +140,7 @@ public class FuncRoom extends BasicRoom
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		region.save(config, path + "region");
+		region.save(config, path + "region.", true);
 		config.set(path + "height", height);
 		config.set(path + "exponent", exponent);
 		config.set(path + "doubleSided", doubleSided);
