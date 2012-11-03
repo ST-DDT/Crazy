@@ -19,7 +19,8 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 		LinkedList<String> res = new LinkedList<String>();
 		for (EntityType type : EntityType.values())
 			if (type.isAlive())
-				res.add(type.toString());
+				if (type.isSpawnable())
+					res.add(type.toString());
 		return res.toArray(new String[0]);
 	}
 
@@ -41,8 +42,10 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 		}
 		finally
 		{
-			if (!value.isAlive())
-				throw new CrazyCommandParameterException(0, "CreatureType", CREATURE_NAMES);
+			if (value != null)
+				if (!value.isAlive())
+					if (value.isSpawnable())
+						throw new CrazyCommandParameterException(0, "CreatureType", CREATURE_NAMES);
 		}
 	}
 }
