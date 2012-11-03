@@ -35,7 +35,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		}
 		else
 		{
-			this.tableName = config.getString("tablename", defaultTableName);
+			this.tableName = config.getString("tableName", defaultTableName);
 			this.mysqlConnection = MySQLConnection.getConnection(config.getConfigurationSection("connection"));
 			this.mysqlConnectionPool = new MySQLConnectionPool(mysqlConnection);
 			this.columns = columns;
