@@ -46,7 +46,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				columns[i].setRealName(columnNames[i]);
 			}
 			this.cached = config.getBoolean("cached", true);
-			this.doNotUpdate = config.getBoolean("static", true);
+			this.doNotUpdate = config.getBoolean("static", false);
 		}
 	}
 
