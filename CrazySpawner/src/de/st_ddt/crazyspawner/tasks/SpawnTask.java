@@ -66,13 +66,14 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 			final Class<? extends Entity> typeClass = type.getEntityClass();
 			for (int i = 0; i < amount; i++)
 				world.spawn(location, typeClass);
-			if (repeat > 0)
-				repeat--;
-			else if (repeat == 0)
-			{
-				plugin.removeSpawnTask(this);
-				return;
-			}
+			if (amount > 0)
+				if (repeat > 0)
+					repeat--;
+				else if (repeat == 0)
+				{
+					plugin.removeSpawnTask(this);
+					return;
+				}
 		}
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, this, interval);
 	}
