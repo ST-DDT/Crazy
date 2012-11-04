@@ -63,6 +63,11 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 		consoleLog("disabled");
 	}
 
+	public boolean showMetrics()
+	{
+		return true;
+	}
+
 	public final void consoleLog(final String message)
 	{
 		getServer().getConsoleSender().sendMessage(getChatHeader() + message);

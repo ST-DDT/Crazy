@@ -1,5 +1,6 @@
 package de.st_ddt.crazycore;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,11 +20,15 @@ import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
 import de.st_ddt.crazycore.listener.CrazyCoreCrazyListener;
 import de.st_ddt.crazycore.listener.CrazyCoreMessageListener;
 import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
+import de.st_ddt.crazyplugin.CrazyLightPlugin;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.metrics.Metrics;
+import de.st_ddt.crazyutil.metrics.Metrics.Graph;
+import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyCore extends CrazyPlugin
@@ -68,6 +73,69 @@ public class CrazyCore extends CrazyPlugin
 		ms.registerIncomingPluginChannel(this, "CrazyCore", messageListener);
 	}
 
+	private void registerMetrics()
+	{
+		final boolean metricsEnabled = getConfig().getBoolean("metrics.enabled", true);
+		getConfig().set("metrics.enabled", metricsEnabled);
+		if (!metricsEnabled)
+			return;
+		try
+		{
+			final Metrics metrics = new Metrics(this);
+			final Graph languageCount = metrics.createGraph("Number of loaded languages");
+			for (int i = 1; i <= 10; i++)
+			{
+				final int j = i;
+				languageCount.addPlotter(new Plotter(Integer.toString(j))
+				{
+
+					@Override
+					public int getValue()
+					{
+						return (CrazyLocale.getActiveLanguages().size() == j) ? 1 : 0;
+					}
+				});
+			}
+			languageCount.addPlotter(new Plotter("> 10")
+			{
+
+				@Override
+				public int getValue()
+				{
+					return (CrazyLocale.getActiveLanguages().size() > 10) ? 1 : 0;
+				}
+			});
+			final Graph languages = metrics.createGraph("Loaded languages");
+			for (final String language : CrazyLocale.getActiveLanguagesNames(true))
+				languages.addPlotter(new Plotter(language)
+				{
+
+					@Override
+					public int getValue()
+					{
+						return 1;
+					}
+				});
+			final Graph crazyplugins = metrics.createGraph("CrazyPlugins");
+			for (final CrazyLightPlugin plugin : CrazyLightPlugin.getCrazyLightPlugins())
+				if (plugin.showMetrics())
+					crazyplugins.addPlotter(new Plotter(plugin.getName())
+					{
+
+						@Override
+						public int getValue()
+						{
+							return 1;
+						}
+					});
+			metrics.start();
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void onLoad()
 	{
@@ -84,6 +152,7 @@ public class CrazyCore extends CrazyPlugin
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
 		super.onEnable();
 		registerCommands();
+		registerMetrics();
 	}
 
 	@Override
@@ -153,6 +222,12 @@ public class CrazyCore extends CrazyPlugin
 		config.set("players", null);
 		CrazyLocale.save(config, "players.");
 		super.save();
+	}
+
+	@Override
+	public boolean showMetrics()
+	{
+		return false;
 	}
 
 	public boolean isWipingPlayerFilesEnabled()
