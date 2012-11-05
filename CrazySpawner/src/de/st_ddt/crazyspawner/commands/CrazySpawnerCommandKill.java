@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -21,6 +22,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
@@ -30,9 +32,13 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 {
 
+	private final boolean v142OrLater;
+
 	public CrazySpawnerCommandKill(final CrazySpawner plugin)
 	{
 		super(plugin);
+		final String mcVersion = Bukkit.getVersion().split("-", 4)[2];
+		v142OrLater = (VersionComparator.compareVersions(mcVersion, "1.4.2") >= 0);
 	}
 
 	@Override
@@ -74,7 +80,10 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 		if (animals.getValue())
 			plugin.sendLocaleMessage("COMMAND.KILLED.VILLAGER", sender, killEntities(world.getEntitiesByClasses(Villager.class), location.getValue(), range.getValue()));
 		if (bosses.getValue())
-			plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class, Wither.class), location.getValue(), range.getValue()));
+			if (v142OrLater)
+				plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class, Wither.class), location.getValue(), range.getValue()));
+			else
+				plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class), location.getValue(), range.getValue()));
 	}
 
 	public int killEntities(final Collection<Entity> entities, final Location location, final double range)
