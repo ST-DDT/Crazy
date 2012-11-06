@@ -252,7 +252,7 @@ public class Metrics
 					}
 					catch (final IOException e)
 					{
-						Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+						// Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
 					}
 				}
 			}, 0, PING_INTERVAL * 1200);
