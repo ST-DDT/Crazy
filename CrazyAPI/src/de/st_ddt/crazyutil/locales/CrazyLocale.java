@@ -98,13 +98,18 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static String getLanguageName(final String language)
 	{
+		return getLanguageName().getExactLanguageText(language);
+	}
+
+	public static String getSaveLanguageName(final String language)
+	{
 		String name = getLanguageName().getExactLanguageText(language);
 		return (name == null ? "UNKNOWN" : name);
 	}
 
-	public static String getLanguageName(final String language, final boolean appendLanguage)
+	public static String getSaveLanguageName(final String language, final boolean appendLanguage)
 	{
-		final String res = getLanguageName(language);
+		final String res = getSaveLanguageName(language);
 		if (res == null)
 			return null;
 		return res + " (" + language + ")";
@@ -125,7 +130,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		final List<String> res = new ArrayList<String>();
 		for (final String language : getActiveLanguages())
 		{
-			final String text = getLanguageName(language, appendLanguage);
+			final String text = getSaveLanguageName(language, appendLanguage);
 			if (text == null)
 				continue;
 			res.add(text);
@@ -456,12 +461,12 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static String getUserLanguageName(final CommandSender sender, final boolean appendLanguage)
 	{
-		return getLanguageName(getUserLanguage(sender), appendLanguage);
+		return getSaveLanguageName(getUserLanguage(sender), appendLanguage);
 	}
 
 	public static String getUserLanguageName(final String name, final boolean appendLanguage)
 	{
-		return getLanguageName(getUserLanguage(name), appendLanguage);
+		return getSaveLanguageName(getUserLanguage(name), appendLanguage);
 	}
 
 	public static void setUserLanguage(final CommandSender sender, final String language)
