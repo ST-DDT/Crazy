@@ -31,7 +31,7 @@ import de.st_ddt.crazyutil.metrics.Metrics.Graph;
 import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public class CrazyCore extends CrazyPlugin
+public final class CrazyCore extends CrazyPlugin
 {
 
 	private static CrazyCore plugin;
@@ -82,30 +82,6 @@ public class CrazyCore extends CrazyPlugin
 		try
 		{
 			final Metrics metrics = new Metrics(this);
-			// EDIT HIERAN LIEGT ES!!!
-			// final Graph languageCount = metrics.createGraph("Number of loaded languages");
-			// for (int i = 1; i <= 10; i++)
-			// {
-			// final int j = i;
-			// languageCount.addPlotter(new Plotter(j + " languages")
-			// {
-			//
-			// @Override
-			// public int getValue()
-			// {
-			// return (CrazyLocale.getActiveLanguages().size() == j) ? 1 : 0;
-			// }
-			// });
-			// }
-			// languageCount.addPlotter(new Plotter("> 10 languages")
-			// {
-			//
-			// @Override
-			// public int getValue()
-			// {
-			// return (CrazyLocale.getActiveLanguages().size() > 10) ? 1 : 0;
-			// }
-			// });
 			final Graph languages = metrics.createGraph("Loaded languages");
 			for (final String language : CrazyLocale.getActiveLanguagesNames(true))
 				languages.addPlotter(new Plotter(language)
