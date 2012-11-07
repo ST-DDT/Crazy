@@ -98,10 +98,15 @@ public class ChatHelper
 
 	public static String putArgs(final String message, final Object... args)
 	{
+		return putArgs(message, 0, args);
+	}
+
+	public static String putArgs(final String message, int start, final Object... args)
+	{
 		String res = message;
 		final int length = args.length;
 		for (int i = 0; i < length; i++)
-			res = StringUtils.replace(res, "$" + i + "$", args[i].toString());
+			res = StringUtils.replace(res, "$" + (i + start) + "$", args[i].toString());
 		return res;
 	}
 
@@ -116,12 +121,17 @@ public class ChatHelper
 
 	public static String putArgsExtended(final CommandSender target, final Object message, final Object... args)
 	{
+		return putArgsExtended(target, message, 0, args);
+	}
+
+	public static String putArgsExtended(final CommandSender target, final Object message, int start, final Object... args)
+	{
 		String res = message.toString();
 		if (message instanceof CrazyLocale)
 			res = ((CrazyLocale) message).getLanguageText(target);
 		final int length = args.length;
 		for (int i = 0; i < length; i++)
-			res = StringUtils.replace(res, "$" + i + "$", (args[i] instanceof CrazyLocale ? ((CrazyLocale) args[i]).getLanguageText(target) : args[i].toString()));
+			res = StringUtils.replace(res, "$" + (i + start) + "$", (args[i] instanceof CrazyLocale ? ((CrazyLocale) args[i]).getLanguageText(target) : args[i].toString()));
 		return res;
 	}
 

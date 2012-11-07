@@ -10,10 +10,10 @@ public class MapParamitrisable<S> extends TypedParamitrisable<S>
 {
 
 	private final String type;
-	private final Map<String, S> values;
+	private final Map<String, ? extends S> values;
 	private final boolean lowercase;
 
-	public MapParamitrisable(String type, Map<String, S> values, S defaultValue)
+	public MapParamitrisable(String type, Map<String, ? extends S> values, S defaultValue)
 	{
 		super(defaultValue);
 		this.type = type;
@@ -21,7 +21,7 @@ public class MapParamitrisable<S> extends TypedParamitrisable<S>
 		this.lowercase = false;
 	}
 
-	public MapParamitrisable(String type, Map<String, S> values, S defaultValue, boolean lowercase)
+	public MapParamitrisable(String type, Map<String, ? extends S> values, S defaultValue, boolean lowercase)
 	{
 		super(defaultValue);
 		this.type = type;

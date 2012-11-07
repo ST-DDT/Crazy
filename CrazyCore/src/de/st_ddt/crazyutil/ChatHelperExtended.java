@@ -22,7 +22,7 @@ import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ColoredStringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
-import de.st_ddt.crazyutil.paramitrisable.SortStringParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.SortParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 
 public class ChatHelperExtended extends ChatHelper
@@ -43,9 +43,23 @@ public class ChatHelperExtended extends ChatHelper
 		processFullListCommand(sender, args, chatHeader, format.headFormat(sender), format.listFormat(sender), format.entryFormat(sender), filters, sorters, defaultSort, modder, datas);
 	}
 
+	public static <S extends ParameterData, T extends S> void processFullListCommand(final CommandSender sender, final String[] args, final String chatHeader, ListFormat format, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, Object... headArgs) throws CrazyException
+	{
+		if (format == null)
+			format = ListFormat.DEFAULTFORMAT;
+		processFullListCommand(sender, args, chatHeader, format.headFormat(sender), format.listFormat(sender), format.entryFormat(sender), filters, sorters, defaultSort, modder, datas, headArgs);
+	}
+
 	public static <S extends ParameterData, T extends S> void processFullListCommand(final CommandSender sender, final String[] args, final String chatHeader, final String headFormat, final String listFormat, final String entryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
 	{
 		final String[] pipe = processListCommand(sender, args, chatHeader, headFormat, listFormat, entryFormat, filters, sorters, defaultSort, modder, datas);
+		if (pipe != null)
+			CrazyPipe.pipe(sender, datas, pipe);
+	}
+
+	public static <S extends ParameterData, T extends S> void processFullListCommand(final CommandSender sender, final String[] args, final String chatHeader, final String headFormat, final String listFormat, final String entryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, Object... headArgs) throws CrazyException
+	{
+		final String[] pipe = processListCommand(sender, args, chatHeader, headFormat, listFormat, entryFormat, filters, sorters, defaultSort, modder, datas, headArgs);
 		if (pipe != null)
 			CrazyPipe.pipe(sender, datas, pipe);
 	}
@@ -55,6 +69,11 @@ public class ChatHelperExtended extends ChatHelper
 		if (format == null)
 			format = ListFormat.DEFAULTFORMAT;
 		return processListCommand(sender, args, chatHeader, format.headFormat(sender), format.listFormat(sender), format.entryFormat(sender), filters, sorters, defaultSort, modder, datas);
+	}
+
+	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, String defaultHeadFormat, String defaultListFormat, String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
+	{
+		return processListCommand(sender, args, defaultChatHeader, defaultHeadFormat, defaultListFormat, defaultEntryFormat, filters, sorters, defaultSort, modder, datas, new Object[0]);
 	}
 
 	/**
@@ -67,7 +86,7 @@ public class ChatHelperExtended extends ChatHelper
 	 * @param defaultChatHeader
 	 *            The chatHeader which should be shown.
 	 * @param defaultHeadFormat
-	 *            Used in {@link CrazyPages#show(CommandSender) CrazyPages} as message head. </br> $0$ = current Page </br> $1$ = max Page </br> $2$ = chatHeader </br> $3$ = current date.
+	 *            Used in {@link CrazyPages#show(CommandSender) CrazyPages} as message head. </br> $0$ = current Page </br> $1$ = max Page </br> $2$ = chatHeader </br> $3$ = current date. </br> $4$, ..., $n$ custom args defined in headArgs.
 	 * @param defaultListFormat
 	 *            Used to show and seperate entries. </br> $0$ = index </br> $1$ = entry </br> $2$ = chatHeader.
 	 * @param defaultEntryFormat
@@ -82,21 +101,16 @@ public class ChatHelperExtended extends ChatHelper
 	 *            Mods parameters and list, can be null.
 	 * @param datas
 	 *            The datas which should be displayed. WARNING: This List will be edited/filtered!
+	 * @param headArgs
+	 *            This datas will be shown in the header. This mustn't be null!
 	 * @return Returns pipeCommands if available otherwise null
 	 * @throws CrazyException
 	 *             Caused by readParameters
 	 * @see de.st_ddt.crazyutil.CrazyPages
 	 */
-	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, String defaultHeadFormat, String defaultListFormat, String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
+	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, String defaultHeadFormat, String defaultListFormat, String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, Object... headArgs) throws CrazyException
 	{
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
-		// add filters
-		if (filters != null)
-			params.putAll(Filter.getFilterMap(filters));
-		// add additional parameters
-		final SortStringParamitrisable<S> sort = new SortStringParamitrisable<S>(sorters, defaultSort);
-		if (sorters != null)
-			params.put("sort", sort);
 		final BooleanParamitrisable reverse = new BooleanParamitrisable(false);
 		params.put("reverse", reverse);
 		final IntegerParamitrisable amount = new IntegerParamitrisable(10)
@@ -143,6 +157,13 @@ public class ChatHelperExtended extends ChatHelper
 			defaultEntryFormat = ListFormat.DEFAULTFORMAT.entryFormat(sender);
 		final StringParamitrisable entryFormat = new ColoredStringParamitrisable(defaultEntryFormat);
 		params.put("entryformat", entryFormat);
+		// add filters
+		if (filters != null)
+			params.putAll(Filter.getFilterMap(filters));
+		// add additional parameters
+		final SortParamitrisable<S> sort = new SortParamitrisable<S>(sorters, defaultSort);
+		if (sorters != null)
+			params.put("sort", sort);
 		// work parameters
 		if (modder != null)
 			modder.modListPreOptions(params, datas);
@@ -154,13 +175,13 @@ public class ChatHelperExtended extends ChatHelper
 			for (final FilterInstanceInterface<S> filter : filters)
 				filter.filter(datas);
 		// Sort
-		if (sort.getSorter() != null)
-			Collections.sort(datas, sort.getSorter());
+		if (sort.getValue() != null)
+			Collections.sort(datas, sort.getValue());
 		if (reverse.getValue())
 			Collections.reverse(datas);
 		// Output
 		if (pipe == null)
-			sendList(sender, chatHeader.getValue(), headFormat.getValue(), listFormat.getValue(), entryFormat.getValue(), amount.getValue(), page.getValue(), datas);
+			sendList(sender, chatHeader.getValue(), ChatHelper.putArgsExtended(sender, headFormat.getValue(), 4, headArgs), listFormat.getValue(), entryFormat.getValue(), amount.getValue(), page.getValue(), datas);
 		else if (pipe[0].equals("page"))
 			pipe = insertArray(pipe, 1, new String[] { "page:" + page.getValue(), "amount:" + amount.getValue(), "headFormat:\"" + headFormat.getValue() + "\"", "listFormat:\"" + listFormat.getValue() + "\"", "entryFormat:\"" + entryFormat.getValue() + "\"", "chatHeader:\"" + chatHeader.getValue() + "\"" });
 		return pipe;
