@@ -1,0 +1,35 @@
+name: CrazyTimeCard
+main: de.st_ddt.crazytimecard.CrazyTimeCard
+author: ST-DDT
+version: 0.2
+# requires CrazyCore v9.2.2 or later
+depend: [CrazyCore]
+description: >
+            Activate a card to get access to the server (as user) for a certain time.
+commands:
+  activatecard:
+    description: Activate a card
+    usage: /<command> <Card>
+    aliases: [activate]
+  registercard:
+    description: Activate a card
+    usage: /<command> <Card>
+  crazytimecard:
+    description: Plugin Main Menu
+    usage: /<command> <SubCommand>
+permissions:
+  crazytimecard.*:
+    description: Access to all commands.
+    default: op
+    children:
+      crazytimecard.register: true
+      crazytimecard.activate: true
+  crazytimecard.register:
+    description: Allow registering of new cards.
+    default: op
+  crazytimecard.activate:
+    description: Allow activation of a card.
+    default: true
+  crazytimecard.commands:
+    descrliption: Allow listing and changing whitelisted commands.
+    default: op
