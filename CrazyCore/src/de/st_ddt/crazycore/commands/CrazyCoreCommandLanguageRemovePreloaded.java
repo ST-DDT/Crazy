@@ -32,7 +32,8 @@ public class CrazyCoreCommandLanguageRemovePreloaded extends CrazyCoreCommandExe
 		if (!CrazyLocale.PATTERN_LANGUAGE.matcher(language).matches())
 			throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
 		plugin.getPreloadedLanguages().remove(language);
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.PRELOADED.REMOVED", sender, CrazyLocale.getLanguageName(language), language);
+		final String languageName = CrazyLocale.getLanguageName(language);
+		plugin.sendLocaleMessage("COMMAND.LANGUAGE.PRELOADED.REMOVED", sender, languageName == null ? "UNKNOWN" : languageName, language);
 	}
 
 	@Override
