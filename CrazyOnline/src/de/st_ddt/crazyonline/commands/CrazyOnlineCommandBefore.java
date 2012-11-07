@@ -14,12 +14,12 @@ import de.st_ddt.crazyonline.data.OnlineData;
 import de.st_ddt.crazyonline.data.comparator.OnlineDataLastLoginComperator;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.FilterInterface;
 import de.st_ddt.crazyutil.FilterInterface.FilterInstanceInterface;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyOnlineCommandBefore extends CrazyOnlineCommandExecutor
 {
@@ -30,11 +30,9 @@ public class CrazyOnlineCommandBefore extends CrazyOnlineCommandExecutor
 	}
 
 	@Override
-	@Localized({ "CRAZYONLINE.COMMAND.BEFORE.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYONLINE.COMMAND.BEFORE.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYONLINE.COMMAND.BEFORE.ENTRYFORMAT $Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$" })
+	@Localized({ "CRAZYONLINE.COMMAND.BEFORE.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $BeforeDateTime$", "CRAZYONLINE.COMMAND.BEFORE.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYONLINE.COMMAND.BEFORE.ENTRYFORMAT $Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission("crazyonline.before"))
-			throw new CrazyCommandPermissionException();
 		Date date = null;
 		try
 		{
@@ -105,6 +103,12 @@ public class CrazyOnlineCommandBefore extends CrazyOnlineCommandExecutor
 		};
 		final ArrayList<FilterInstanceInterface<OnlineData>> filterInstances = new ArrayList<FilterInterface.FilterInstanceInterface<OnlineData>>();
 		filterInstances.add(filter);
-		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry("COMMAND.BEFORE.HEADER").getLanguageText(sender) + " " + filter.toString(), plugin.getLocale().getLanguageEntry("COMMAND.BEFORE.LISTFORMAT").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.BEFORE.ENTRYFORMAT").getLanguageText(sender), filterInstances, plugin.getPlayerDataComparators(), new OnlineDataLastLoginComperator(), null, new ArrayList<OnlineData>(plugin.getPlayerData()));
+		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry("COMMAND.BEFORE.HEADER").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.BEFORE.LISTFORMAT").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.BEFORE.ENTRYFORMAT").getLanguageText(sender), filterInstances, plugin.getPlayerDataComparators(), new OnlineDataLastLoginComperator(), null, new ArrayList<OnlineData>(plugin.getPlayerData()), filter);
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazyonline.before");
 	}
 }

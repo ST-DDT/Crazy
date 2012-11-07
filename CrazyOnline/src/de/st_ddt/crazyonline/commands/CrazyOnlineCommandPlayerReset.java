@@ -5,10 +5,10 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyonline.CrazyOnline;
 import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyOnlineCommandPlayerReset extends CrazyOnlineCommandExecutor
 {
@@ -22,8 +22,6 @@ public class CrazyOnlineCommandPlayerReset extends CrazyOnlineCommandExecutor
 	@Localized("CRAZYONLINE.COMMAND.RESET $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission("crazyonline.player.reset"))
-			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Name>");
 		final String name = args[0];
@@ -33,5 +31,11 @@ public class CrazyOnlineCommandPlayerReset extends CrazyOnlineCommandExecutor
 		data.resetOnlineTime();
 		plugin.sendLocaleMessage("COMMAND.RESET", sender, data.getName());
 		plugin.getCrazyDatabase().save(data);
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazyonline.player.reset");
 	}
 }
