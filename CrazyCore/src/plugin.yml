@@ -1,7 +1,7 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 9.2.1
+version: 9.2.2
 softdepend: [PermissionsEx,GroupManager]
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
