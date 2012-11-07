@@ -7,22 +7,22 @@ import java.util.TreeMap;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.commands.CrazyCommandExecutor;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazytimecard.CrazyTimeCard;
 import de.st_ddt.crazytimecard.data.CardData;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 
-public class CrazyTimeCardCommandRegisterCommand extends CrazyCommandExecutor<CrazyTimeCard>
+public class CrazyTimeCardCommandRegister extends CrazyCommandExecutor<CrazyTimeCard>
 {
 
-	public CrazyTimeCardCommandRegisterCommand(final CrazyTimeCard plugin)
+	public CrazyTimeCardCommandRegister(final CrazyTimeCard plugin)
 	{
 		super(plugin);
 	}
@@ -31,8 +31,6 @@ public class CrazyTimeCardCommandRegisterCommand extends CrazyCommandExecutor<Cr
 	@Localized({ "CRAZYTIMECARD.COMMAND.REGISTER.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYTIMECARD.COMMAND.REGISTER.LISTFORMAT $Index$ $Entry$ $ChatHeader$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission("crazytimecard.register"))
-			throw new CrazyCommandPermissionException();
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 		final StringParamitrisable card = new StringParamitrisable(null);
 		params.put("", card);
@@ -59,5 +57,11 @@ public class CrazyTimeCardCommandRegisterCommand extends CrazyCommandExecutor<Cr
 		for (int i = 0; i < amount.getValue(); i++)
 			database.save(new CardData(cards.get(i), owner.getValue(), duration.getValue()));
 		plugin.sendLocaleList(sender, "COMMAND.REGISTER.HEADER", "COMMAND.REGISTER.LISTFORMAT", null, -1, 1, cards);
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazytimecard.register");
 	}
 }

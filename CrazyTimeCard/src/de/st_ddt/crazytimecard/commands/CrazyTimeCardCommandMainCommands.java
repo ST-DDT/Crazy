@@ -5,12 +5,12 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.commands.CrazyCommandListEditor;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazytimecard.CrazyTimeCard;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyTimeCardCommandMainCommands extends CrazyCommandListEditor<CrazyTimeCard, String>
 {
@@ -44,11 +44,9 @@ public class CrazyTimeCardCommandMainCommands extends CrazyCommandListEditor<Cra
 	}
 
 	@Override
-	public void command(final CommandSender sender, final String[] args) throws CrazyException
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		if (!sender.hasPermission("crazytimecard.commands"))
-			throw new CrazyCommandPermissionException();
-		super.command(sender, args);
+		return PermissionModule.hasPermission(sender, "crazytimecard.commands");
 	}
 
 	@Override

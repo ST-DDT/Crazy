@@ -12,9 +12,9 @@ import org.bukkit.plugin.PluginManager;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazytimecard.commands.CrazyTimeCardCommandActivateCommand;
+import de.st_ddt.crazytimecard.commands.CrazyTimeCardCommandActivate;
 import de.st_ddt.crazytimecard.commands.CrazyTimeCardCommandMainCommands;
-import de.st_ddt.crazytimecard.commands.CrazyTimeCardCommandRegisterCommand;
+import de.st_ddt.crazytimecard.commands.CrazyTimeCardCommandRegister;
 import de.st_ddt.crazytimecard.data.CardData;
 import de.st_ddt.crazytimecard.data.PlayerTimeData;
 import de.st_ddt.crazytimecard.databases.CrazyTimeCardCardConfigurationDatabase;
@@ -226,8 +226,8 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 
 	private void registerCommands()
 	{
-		getCommand("registercard").setExecutor(new CrazyTimeCardCommandRegisterCommand(this));
-		getCommand("activatecard").setExecutor(new CrazyTimeCardCommandActivateCommand(this));
+		getCommand("registercard").setExecutor(new CrazyTimeCardCommandRegister(this));
+		getCommand("activatecard").setExecutor(new CrazyTimeCardCommandActivate(this));
 		mainCommand.addSubCommand(modeCommand, "mode");
 		mainCommand.addSubCommand(new CrazyTimeCardCommandMainCommands(this), "commands");
 	}
