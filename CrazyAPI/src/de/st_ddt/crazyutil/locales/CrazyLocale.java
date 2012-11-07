@@ -98,7 +98,8 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static String getLanguageName(final String language)
 	{
-		return getLanguageName().getExactLanguageText(language);
+		String name = getLanguageName().getExactLanguageText(language);
+		return (name == null ? "UNKNOWN" : name);
 	}
 
 	public static String getLanguageName(final String language, final boolean appendLanguage)
