@@ -17,6 +17,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -178,6 +179,42 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 			{
 				throw new CrazyCommandParameterException(0, "Number (Long)");
 			}
+		}
+	}
+
+	public abstract class DurationMode extends LongMode
+	{
+
+		public DurationMode(final String name)
+		{
+			super(name);
+		}
+
+		@Localized("CRAZYPLUGIN.MODE.CHANGE $Name$ $Value$")
+		public void showValue(final CommandSender sender)
+		{
+			plugin.sendLocaleMessage("MODE.CHANGE", sender, name, ChatConverter.timeConverter(getValue() / 1000, 1, sender, 0, true));
+		}
+
+		@Override
+		public void setValue(final CommandSender sender, final String... args) throws CrazyException
+		{
+			if (args.length > 1)
+			{
+				setValue(ChatConverter.stringToDuration(args));
+				showValue(sender);
+			}
+			else
+				try
+				{
+					setValue(Long.parseLong(args[0]));
+					showValue(sender);
+				}
+				catch (final NumberFormatException e)
+				{
+					setValue(ChatConverter.stringToDuration(args));
+					showValue(sender);
+				}
 		}
 	}
 
