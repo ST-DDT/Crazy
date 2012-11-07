@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -169,5 +170,10 @@ public class ChatHelper
 		for (int i = 0; i < count; i++)
 			res[i] = data.getParameter(sender, i);
 		return res;
+	}
+
+	public static String getMinecraftVersion()
+	{
+		return Bukkit.getVersion().split("-", 4)[2];
 	}
 }

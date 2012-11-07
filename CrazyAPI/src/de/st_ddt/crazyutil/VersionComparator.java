@@ -2,6 +2,8 @@ package de.st_ddt.crazyutil;
 
 import java.util.Comparator;
 
+import de.st_ddt.crazyplugin.CrazyPluginInterface;
+
 public class VersionComparator implements Comparator<String>
 {
 
@@ -36,5 +38,10 @@ public class VersionComparator implements Comparator<String>
 			i++;
 		}
 		return res;
+	}
+
+	public static int compareVersions(final CrazyPluginInterface plugin, final String version)
+	{
+		return compareVersions(plugin.getVersion(), version);
 	}
 }
