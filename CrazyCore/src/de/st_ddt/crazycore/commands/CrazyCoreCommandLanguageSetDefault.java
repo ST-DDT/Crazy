@@ -40,7 +40,7 @@ public class CrazyCoreCommandLanguageSetDefault extends CrazyCoreCommandExecutor
 			plugin.loadLanguageFiles(language, true);
 		}
 		plugin.save();
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.SET", sender, CrazyLocale.getLanguageName(language), language);
+		plugin.sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.SET", sender, CrazyLocale.getSaveLanguageName(language), language);
 	}
 
 	@Override

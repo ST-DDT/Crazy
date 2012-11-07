@@ -23,7 +23,7 @@ public class CrazyCoreMessageListener extends CrazyPluginMessageListener<CrazyCo
 			if (header.equalsIgnoreCase("Language"))
 				sendPluginMessage(player, "A_Language " + ChatHelper.listingString(CrazyLocale.getActiveLanguages()));
 			else if (header.equalsIgnoreCase("LanguageName"))
-				sendPluginMessage(player, "A_LanguageName " + args + " " + CrazyLocale.getLanguageName(args));
+				sendPluginMessage(player, "A_LanguageName " + args + " " + CrazyLocale.getSaveLanguageName(args));
 		}
 	}
 

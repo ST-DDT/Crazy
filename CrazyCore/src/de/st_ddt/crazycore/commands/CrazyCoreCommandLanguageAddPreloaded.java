@@ -33,8 +33,7 @@ public class CrazyCoreCommandLanguageAddPreloaded extends CrazyCoreCommandExecut
 			throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
 		if (plugin.getPreloadedLanguages().add(language))
 			plugin.loadLanguageFiles(language, true);
-		final String languageName = CrazyLocale.getLanguageName(language);
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.PRELOADED.ADDED", sender, languageName == null ? "UNKNOWN" : languageName, language);
+		plugin.sendLocaleMessage("COMMAND.LANGUAGE.PRELOADED.ADDED", sender, CrazyLocale.getSaveLanguageName(language), language);
 	}
 
 	@Override
