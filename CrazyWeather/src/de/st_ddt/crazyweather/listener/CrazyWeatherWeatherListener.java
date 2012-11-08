@@ -1,4 +1,4 @@
-package de.st_ddt.crazyweather;
+package de.st_ddt.crazyweather.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -6,6 +6,9 @@ import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.WorldLoadEvent;
+
+import de.st_ddt.crazyweather.CrazyWeather;
+import de.st_ddt.crazyweather.WorldWeather;
 
 public class CrazyWeatherWeatherListener implements Listener
 {

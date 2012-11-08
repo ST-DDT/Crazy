@@ -20,6 +20,8 @@ import de.st_ddt.crazyweather.commands.CrazyWeatherCommandStrike;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandSun;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandThunderRain;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandWeather;
+import de.st_ddt.crazyweather.listener.CrazyWeatherPlayerListener;
+import de.st_ddt.crazyweather.listener.CrazyWeatherWeatherListener;
 
 public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 {

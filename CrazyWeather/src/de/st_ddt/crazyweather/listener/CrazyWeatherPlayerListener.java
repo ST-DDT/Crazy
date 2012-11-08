@@ -1,4 +1,4 @@
-package de.st_ddt.crazyweather;
+package de.st_ddt.crazyweather.listener;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import de.st_ddt.crazyweather.CrazyWeather;
 import de.st_ddt.crazyweather.events.CrazyWeatherPreThunderToolCastEvent;
 
 public class CrazyWeatherPlayerListener implements Listener
@@ -39,7 +40,7 @@ public class CrazyWeatherPlayerListener implements Listener
 			if (cast.isCancelled())
 				return;
 			plugin.strikeTarget(player, location);
-			plugin.getCrazyLogger().log("ThunderStrike", player.getName() + " send a thunderstrike to " + location.getWorld().getName()+" (Thundertool)");
+			plugin.getCrazyLogger().log("ThunderStrike", player.getName() + " send a thunderstrike to " + location.getWorld().getName() + " (Thundertool)");
 			event.setCancelled(true);
 		}
 	}
