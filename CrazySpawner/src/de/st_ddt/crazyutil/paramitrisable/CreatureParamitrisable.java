@@ -12,7 +12,7 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable.TypedParamitrisable;
 public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 {
 
-	protected final static String[] CREATURE_NAMES = getCreatureNames();
+	public final static String[] CREATURE_NAMES = getCreatureNames();
 
 	private static String[] getCreatureNames()
 	{

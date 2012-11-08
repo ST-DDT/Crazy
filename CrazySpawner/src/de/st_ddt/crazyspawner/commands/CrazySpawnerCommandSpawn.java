@@ -1,5 +1,7 @@
 package de.st_ddt.crazyspawner.commands;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -7,12 +9,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
@@ -32,8 +34,6 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 	@Localized("CRAZYSPAWNER.COMMAND.SPAWNED $Type$ $Amount$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!sender.hasPermission("crazyspawner.spawn"))
-			throw new CrazyCommandPermissionException();
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
 		params.put("", creature);
@@ -41,6 +41,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 		params.put("creature", creature);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
+		location.addAdvancedParams(params, "");
 		final IntegerParamitrisable amount = new IntegerParamitrisable(1)
 		{
 
@@ -151,5 +152,40 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 		plugin.addSpawnTask(task);
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, task, delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		final List<String> res = new LinkedList<String>();
+		final String arg = args[args.length - 1].toLowerCase();
+		for (final String name : CreatureParamitrisable.CREATURE_NAMES)
+			if (name.toLowerCase().startsWith(arg))
+				res.add(name);
+		if ("location:".startsWith(arg))
+			res.add("location:");
+		if ("amount:".startsWith(arg))
+			res.add("amount:");
+		if ("delay:".startsWith(arg))
+			res.add("delay:");
+		if ("interval:".startsWith(arg))
+			res.add("interval:");
+		if ("repeat:".startsWith(arg))
+			res.add("repeat:");
+		if ("creaturemaxcount:".startsWith(arg))
+			res.add("creaturemaxcount:");
+		if ("creaturerange:".startsWith(arg))
+			res.add("creaturerange:");
+		if ("playermincount:".startsWith(arg))
+			res.add("playermincount:");
+		if ("playerrange:".startsWith(arg))
+			res.add("playerrange:");
+		return res;
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazyspawner.spawn");
 	}
 }

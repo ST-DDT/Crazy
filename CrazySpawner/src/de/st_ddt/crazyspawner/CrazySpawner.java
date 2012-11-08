@@ -1,13 +1,20 @@
 package de.st_ddt.crazyspawner;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
+import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandCreatureSpawner;
 import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandKill;
 import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandSpawn;
+import de.st_ddt.crazyspawner.listener.CrazySpawnerPlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 
 public class CrazySpawner extends CrazyPlugin
@@ -15,16 +22,24 @@ public class CrazySpawner extends CrazyPlugin
 
 	private static CrazySpawner plugin;
 	private final Set<SpawnTask> tasks = new HashSet<SpawnTask>();
+	private final Map<String, EntityType> creatureSelection = new HashMap<String, EntityType>();
 
 	public static CrazySpawner getPlugin()
 	{
 		return plugin;
 	}
 
+	public void registerHooks()
+	{
+		final PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(new CrazySpawnerPlayerListener(this, creatureSelection), this);
+	}
+
 	private void registerCommands()
 	{
 		getCommand("crazyspawn").setExecutor(new CrazySpawnerCommandSpawn(this));
 		getCommand("crazykill").setExecutor(new CrazySpawnerCommandKill(this));
+		getCommand("crazycreaturespawner").setExecutor(new CrazySpawnerCommandCreatureSpawner(this, creatureSelection));
 	}
 
 	@Override
