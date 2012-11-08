@@ -1,6 +1,6 @@
 CRAZYONLINE=CrazyOnline
 CRAZYONLINE.COMMAND.BEFORE.ENTRYFORMAT=$Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$
-CRAZYONLINE.COMMAND.BEFORE.HEADER=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$
+CRAZYONLINE.COMMAND.BEFORE.HEADER=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $BeforeDateTime$
 CRAZYONLINE.COMMAND.BEFORE.LISTFORMAT=$Index$ $Entry$ $ChatHeader$
 CRAZYONLINE.COMMAND.DROPOLDDATA.DELETED=$DropCauser$ $KeptDays$ $DroppedAmount$
 CRAZYONLINE.COMMAND.ONLINES.ENTRYFORMAT=$Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$
@@ -8,7 +8,7 @@ CRAZYONLINE.COMMAND.ONLINES.HEADER=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTim
 CRAZYONLINE.COMMAND.ONLINES.LISTFORMAT=$Index$ $Entry$ $ChatHeader$
 CRAZYONLINE.COMMAND.RESET=$Name$
 CRAZYONLINE.COMMAND.SINCE.ENTRYFORMAT=$Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$
-CRAZYONLINE.COMMAND.SINCE.HEADER=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$
+CRAZYONLINE.COMMAND.SINCE.HEADER=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $SinceDateTime$
 CRAZYONLINE.COMMAND.SINCE.LISTFORMAT=$Index$ $Entry$ $ChatHeader$
 CRAZYONLINE.COMMAND.TOP10.ENTRYFORMAT=$Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$
 CRAZYONLINE.COMMAND.TOP10.HEADER=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$
