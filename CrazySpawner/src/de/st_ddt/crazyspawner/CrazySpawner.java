@@ -53,6 +53,7 @@ public class CrazySpawner extends CrazyPlugin
 	public void onEnable()
 	{
 		super.onEnable();
+		registerHooks();
 		registerCommands();
 	}
 

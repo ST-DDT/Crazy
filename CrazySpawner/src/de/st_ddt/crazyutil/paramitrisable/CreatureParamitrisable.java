@@ -16,8 +16,8 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 
 	private static String[] getCreatureNames()
 	{
-		LinkedList<String> res = new LinkedList<String>();
-		for (EntityType type : EntityType.values())
+		final LinkedList<String> res = new LinkedList<String>();
+		for (final EntityType type : EntityType.values())
 			if (type.isAlive())
 				if (type.isSpawnable())
 					res.add(type.toString());
@@ -36,7 +36,7 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 		{
 			value = EntityType.valueOf(parameter.toUpperCase());
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			throw new CrazyCommandNoSuchException("CreatureType", parameter, CREATURE_NAMES);
 		}

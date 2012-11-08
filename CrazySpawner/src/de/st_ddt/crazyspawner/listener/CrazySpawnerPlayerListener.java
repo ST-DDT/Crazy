@@ -2,7 +2,7 @@ package de.st_ddt.crazyspawner.listener;
 
 import java.util.Map;
 
-import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -33,7 +33,7 @@ public class CrazySpawnerPlayerListener implements Listener
 	{
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
-		final Block block = event.getClickedBlock();
+		final BlockState block = event.getClickedBlock().getState();
 		if (!(block instanceof CreatureSpawner))
 			return;
 		final Player player = event.getPlayer();
@@ -41,6 +41,7 @@ public class CrazySpawnerPlayerListener implements Listener
 		final EntityType creature = creatureSelection.remove(player.getName());
 		spawner.setSpawnedType(creature);
 		spawner.update();
+		event.setCancelled(true);
 		plugin.sendLocaleMessage("COMMAND.CREATURESPAWNER.APPLIED", player, creature.toString());
 	}
 }

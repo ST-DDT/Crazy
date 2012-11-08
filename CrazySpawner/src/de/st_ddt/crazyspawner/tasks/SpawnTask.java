@@ -41,7 +41,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		this.playerRange = playerRange;
 	}
 
-	public SpawnTask(CrazySpawner plugin, ConfigurationSection config)
+	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
 	{
 		super();
 		this.plugin = plugin;
@@ -100,7 +100,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		if (repeat == 0)
 			return;
