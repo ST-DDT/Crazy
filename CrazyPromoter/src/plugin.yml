@@ -1,10 +1,12 @@
 name: CrazyPromoter
 main: de.st_ddt.crazypromoter.CrazyPromoter
 author: ST-DDT
-#C*=needed core version
-version: C8_2.9.2
+version: 2.10
+# requires CrazyCore v9.1 or later
 depend: [CrazyCore]
 softdepend: [PermissionsBukkit,PermissionsEx,GroupManager,CrazyOnline,CrazyLogin]
+description: >
+            Add custom promotion scripts to your server.
 commands:
   promotioncheck:
     description: Check promotion status

@@ -4,29 +4,29 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazypromoter.commands.CrazyPromoterCommandCheck;
+import de.st_ddt.crazypromoter.data.Promotion;
+import de.st_ddt.crazypromoter.listener.CrazyPromoterPlayerListener;
+import de.st_ddt.crazypromoter.tasks.CheckTask;
 import de.st_ddt.crazyutil.conditions.ConditionList;
 import de.st_ddt.crazyutil.conditions.Condition_AND;
 import de.st_ddt.crazyutil.conditions.Condition_FALSE;
 import de.st_ddt.crazyutil.conditions.player.ConditionPlayerPermBukkitGroup;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazyPromoter extends CrazyPlugin
 {
 
 	private static CrazyPromoter plugin;
+	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	protected ArrayList<Promotion> promotions = new ArrayList<Promotion>();
-	private CrazyPromoterPlayerListener playerListener = null;
 	private int checkInterval;
 
 	public static CrazyPromoter getPlugin()
@@ -34,12 +34,63 @@ public class CrazyPromoter extends CrazyPlugin
 		return plugin;
 	}
 
+	public CrazyPromoter()
+	{
+		super();
+		registerModes();
+	}
+
+	@Localized("CRAZYPROMOTER.MODE.CHANGE $Name$ $Value$")
+	private void registerModes()
+	{
+		modeCommand.addMode(modeCommand.new IntegerMode("checkInterval")
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				sendLocaleMessage("MODE.CHANGE", sender, name, getValue() == -1 ? "disabled" : getValue() + " seconds");
+			}
+
+			@Override
+			public Integer getValue()
+			{
+				return checkInterval;
+			}
+
+			@Override
+			public void setValue(final Integer newValue) throws CrazyException
+			{
+				checkInterval = Math.max(newValue, -1);
+				saveConfiguration();
+			}
+		});
+	}
+
+	private void registerCommands()
+	{
+		getCommand("promotioncheck").setExecutor(new CrazyPromoterCommandCheck(this));
+	}
+
+	private void registerHooks()
+	{
+		final PluginManager pm = this.getServer().getPluginManager();
+		pm.registerEvents(new CrazyPromoterPlayerListener(this), this);
+	}
+
+	@Override
+	public void onLoad()
+	{
+		plugin = this;
+		super.onLoad();
+	}
+
 	@Override
 	public void onEnable()
 	{
-		plugin = this;
 		registerHooks();
 		super.onEnable();
+		registerCommands();
 	}
 
 	@Override
@@ -52,98 +103,47 @@ public class CrazyPromoter extends CrazyPlugin
 		config = config.getConfigurationSection("promotions");
 		if (config == null)
 		{
-			Promotion promotion = new Promotion("default");
+			final Promotion promotion = new Promotion("default");
 			promotions.add(promotion);
-			ConditionList<Player> condition = new Condition_AND<Player>();
+			final ConditionList<Player> condition = new Condition_AND<Player>();
 			promotion.setCondition(condition);
 			condition.getConditions().add(new Condition_FALSE<Player>());
 			condition.getConditions().add(new ConditionPlayerPermBukkitGroup("default"));
 		}
 		else
-			for (String name : config.getKeys(false))
+			for (final String name : config.getKeys(false))
 				promotions.add(new Promotion(config.getConfigurationSection(name)));
-		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new ScheduledCheckTask(plugin), 100, checkInterval * 20 * 60);
+		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new CheckTask(plugin), 100, checkInterval * 20 * 60);
 	}
 
 	@Override
 	public void save()
 	{
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		config.set("promotions", null);
-		for (Promotion promotion : promotions)
+		for (final Promotion promotion : promotions)
 			promotion.save(config, "promotions." + promotion.getName() + ".");
 		saveConfiguration();
 	}
 
+	@Override
 	public void saveConfiguration()
 	{
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		config.set("checkInterval", checkInterval);
 		saveConfig();
 	}
 
-	public void registerHooks()
-	{
-		this.playerListener = new CrazyPromoterPlayerListener(this);
-		PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvents(playerListener, this);
-	}
-
-	@Override
-	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyCommandException
-	{
-		if (commandLabel.equalsIgnoreCase("promotioncheck"))
-		{
-			commandCheck(sender, args);
-			return true;
-		}
-		return false;
-	}
-
-	private void commandCheck(final CommandSender sender, final String[] args) throws CrazyCommandException
-	{
-		switch (args.length)
-		{
-			case 0:
-				if (sender instanceof ConsoleCommandSender)
-					throw new CrazyCommandUsageException("/promotioncheck <Player>");
-				commandCheck(sender, (Player) sender);
-				return;
-			case 1:
-				String name = args[0];
-				Player player = getServer().getPlayerExact(name);
-				if (player == null)
-				{
-					player = getServer().getPlayer(name);
-					if (player == null)
-						throw new CrazyCommandNoSuchException("OnlinePlayer", name);
-				}
-				commandCheck(sender, player);
-				return;
-			default:
-				throw new CrazyCommandUsageException("/promotioncheck <Player>");
-		}
-	}
-
-	private void commandCheck(final CommandSender sender, final Player player) throws CrazyCommandException
-	{
-		if (!sender.hasPermission(sender == player ? "crazypromoter.check.self" : "crazypromoter.check.other"))
-			throw new CrazyCommandPermissionException();
-		boolean update = checkStatus(player);
-		if (update)
-			return;
-		sendLocaleMessage("COMMAND.CHECK.FAIL", sender, player.getName());
-	}
-
 	public void checkStatus()
 	{
-		for (Player player : Bukkit.getOnlinePlayers())
+		for (final Player player : Bukkit.getOnlinePlayers())
 			checkStatus(player);
 	}
 
+	@Localized("CRAZYPROMOTER.COMMAND.CHECK.SUCCESS $Name$ $Promotion$")
 	public boolean checkStatus(final Player player)
 	{
-		for (Promotion promotion : promotions)
+		for (final Promotion promotion : promotions)
 			if (promotion.isApplyable(player))
 			{
 				promotion.apply(player);
@@ -151,52 +151,5 @@ public class CrazyPromoter extends CrazyPlugin
 				return true;
 			}
 		return false;
-	}
-
-	@Override
-	public boolean commandMain(CommandSender sender, String commandLabel, String[] args) throws CrazyException
-	{
-		if (commandLabel.equalsIgnoreCase("mode"))
-		{
-			commandMainMode(sender, args);
-			return true;
-		}
-		return false;
-	}
-
-	private void commandMainMode(CommandSender sender, String[] args) throws CrazyCommandException
-	{
-		if (!sender.hasPermission("crazylogin.mode"))
-			throw new CrazyCommandPermissionException();
-		switch (args.length)
-		{
-			case 2:
-				if (args[0].equalsIgnoreCase("checkInterval"))
-				{
-					int time = checkInterval;
-					try
-					{
-						time = Integer.parseInt(args[1]);
-					}
-					catch (NumberFormatException e)
-					{
-						throw new CrazyCommandParameterException(1, "Integer", "-1 = disabled", "Time in Seconds > 60");
-					}
-					checkInterval = time;
-					sendLocaleMessage("MODE.CHANGE", sender, "checkInterval", checkInterval == -1 ? "disabled" : checkInterval + " minutes");
-					saveConfiguration();
-					return;
-				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
-			case 1:
-				if (args[0].equalsIgnoreCase("checkInterval"))
-				{
-					sendLocaleMessage("MODE.CHANGE", sender, "checkInterval", checkInterval == -1 ? "disabled" : checkInterval + " minutes");
-					return;
-				}
-				throw new CrazyCommandNoSuchException("Mode", args[0]);
-			default:
-				throw new CrazyCommandUsageException("/crazylogin mode <Mode> [Value]");
-		}
 	}
 }

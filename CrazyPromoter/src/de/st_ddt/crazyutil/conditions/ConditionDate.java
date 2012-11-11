@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
 public class ConditionDate<T> extends ConditionBase<T>
 {
@@ -12,21 +12,21 @@ public class ConditionDate<T> extends ConditionBase<T>
 	protected Date date;
 	protected boolean before;
 
-	public ConditionDate(Date date, boolean before)
+	public ConditionDate(final Date date, final boolean before)
 	{
 		super();
 		this.date = date;
 		this.before = before;
 	}
 
-	public ConditionDate(ConfigurationSection config)
+	public ConditionDate(final ConfigurationSection config)
 	{
 		super(config);
 		try
 		{
-			this.date = CrazyPlugin.DateFormat.parse(config.getString("date"));
+			this.date = CrazyLightPluginInterface.DATETIMEFORMAT.parse(config.getString("date"));
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			this.date = new Date();
 		}
@@ -34,10 +34,10 @@ public class ConditionDate<T> extends ConditionBase<T>
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
-		config.set(path + "date", CrazyPlugin.DateFormat.format(date));
+		config.set(path + "date", CrazyLightPluginInterface.DATETIMEFORMAT.format(date));
 		config.set(path + "before", before);
 	}
 
@@ -48,7 +48,7 @@ public class ConditionDate<T> extends ConditionBase<T>
 	}
 
 	@Override
-	public boolean match(T tester)
+	public boolean match(final T tester)
 	{
 		if (before)
 			return date.after(new Date());

@@ -1,4 +1,4 @@
-package de.st_ddt.crazypromoter;
+package de.st_ddt.crazypromoter.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazypromoter.CrazyPromoter;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.conditions.Condition;
 import de.st_ddt.crazyutil.conditions.ConditionBase;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class Promotion
 {
@@ -47,7 +49,7 @@ public class Promotion
 			if (command.startsWith("§"))
 				Bukkit.broadcastMessage(ChatHelper.colorise(command.substring(1)));
 			else if (command.startsWith("$"))
-				CrazyPromoter.getPlugin().broadcastLocaleRootMessage(command.substring(1), player.getName());
+				CrazyPromoter.getPlugin().broadcastLocaleMessage(CrazyLocale.getLocaleHead().getLanguageEntry(command.substring(1)), player.getName());
 			else
 				Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, player.getName()));
 	}

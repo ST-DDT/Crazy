@@ -1,14 +1,16 @@
-package de.st_ddt.crazypromoter;
+package de.st_ddt.crazypromoter.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import de.st_ddt.crazypromoter.CrazyPromoter;
+
 public class CrazyPromoterPlayerListener implements Listener
 {
 
-	protected final CrazyPromoter plugin;
+	private final CrazyPromoter plugin;
 
 	public CrazyPromoterPlayerListener(CrazyPromoter plugin)
 	{
