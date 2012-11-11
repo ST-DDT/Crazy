@@ -96,15 +96,6 @@ public final class CrazyCore extends CrazyPlugin
 					}
 				});
 			}
-			languageCount.addPlotter(new Plotter("> 10")
-			{
-
-				@Override
-				public int getValue()
-				{
-					return (CrazyLocale.getActiveLanguages().size() > 10) ? 1 : 0;
-				}
-			});
 			final Graph languages = metrics.createGraph("Loaded languages");
 			for (final String language : CrazyLocale.getActiveShortLanguagesNames(true))
 				languages.addPlotter(new Plotter(language)
