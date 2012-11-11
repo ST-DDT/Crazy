@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -103,7 +104,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static String getSaveLanguageName(final String language)
 	{
-		String name = getLanguageName().getExactLanguageText(language);
+		final String name = getLanguageName().getExactLanguageText(language);
 		return (name == null ? "UNKNOWN" : name);
 	}
 
@@ -113,6 +114,14 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		if (res == null)
 			return null;
 		return res + " (" + language + ")";
+	}
+
+	public static String getSaveShortLanguageName(final String language, final boolean appendLanguage)
+	{
+		final String res = getSaveLanguageName(language);
+		if (res == null)
+			return null;
+		return res.split(" - ")[0] + " (" + language + ")";
 	}
 
 	public static boolean isActiveLanguage(final String language)
@@ -138,14 +147,32 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		return res;
 	}
 
+	public static List<String> getActiveShortLanguagesNames(final boolean appendLanguage)
+	{
+		final List<String> res = new ArrayList<String>();
+		for (final String language : getActiveLanguages())
+		{
+			final String text = getSaveShortLanguageName(language, appendLanguage);
+			if (text == null)
+				continue;
+			res.add(text);
+		}
+		return res;
+	}
+
 	public static Set<String> getLanguageAlternatives(final String language)
 	{
 		final String[] split = PATTERN_UNDERSCORE.split(language);
-		HashSet<String> res = null;
+		final Set<String> res = new HashSet<String>();
+		final Collection<String> temp = languageAlternatives.get(split[0]);
+		if (temp != null)
+			res.addAll(temp);
 		if (split.length > 1)
-			res = languageAlternatives.get(split[1]);
-		if (res == null)
-			res = new HashSet<String>();
+		{
+			final Collection<String> temp2 = languageAlternatives.get(split[1]);
+			if (temp != null)
+				res.addAll(temp2);
+		}
 		return res;
 	}
 
@@ -492,13 +519,11 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 				return;
 			try
 			{
-				final String[] split = PATTERN_UNDERSCORE.split(language);
-				final String shortLang = split[0];
-				if (split.length > 0)
+				for (String part : PATTERN_UNDERSCORE.split(language))
 				{
-					if (!languageAlternatives.containsKey(shortLang))
-						languageAlternatives.put(shortLang, new HashSet<String>());
-					languageAlternatives.get(shortLang).add(language);
+					if (!languageAlternatives.containsKey(part))
+						languageAlternatives.put(part, new HashSet<String>());
+					languageAlternatives.get(part).add(language);
 				}
 			}
 			catch (final Exception e)
