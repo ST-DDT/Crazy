@@ -3,6 +3,8 @@ package de.st_ddt.crazyutil.conditions.player;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+
 public class ConditionPlayerPermission extends ConditionPlayer
 {
 
@@ -36,6 +38,6 @@ public class ConditionPlayerPermission extends ConditionPlayer
 	@Override
 	public boolean match(Player tester)
 	{
-		return tester.hasPermission(permission);
+		return PermissionModule.hasPermission(tester, permission);
 	}
 }

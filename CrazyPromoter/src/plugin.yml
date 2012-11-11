@@ -1,8 +1,8 @@
 name: CrazyPromoter
 main: de.st_ddt.crazypromoter.CrazyPromoter
 author: ST-DDT
-version: 2.10
-# requires CrazyCore v9.1 or later
+version: 2.10.1
+# requires CrazyCore v9.2 or later
 depend: [CrazyCore]
 softdepend: [PermissionsBukkit,PermissionsEx,GroupManager,CrazyOnline,CrazyLogin]
 description: >
