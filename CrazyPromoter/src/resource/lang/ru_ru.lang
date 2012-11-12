@@ -1,3 +1,4 @@
 ﻿CRAZYPROMOTER=CrazyPromoter
-CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ был успешно повышен (Ранг: $1$)
 CRAZYPROMOTER.COMMAND.CHECK.FAIL=Извините, пока расти дальше некуда!
+CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ был успешно повышен (Ранг: $1$)
+#CRAZYPROMOTER.MODE.CHANGE=

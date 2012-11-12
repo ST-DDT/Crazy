@@ -1,3 +1,4 @@
 ﻿CRAZYPROMOTER=CrazyPromoter
-CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ has been promoted (Rank: $1$)
 CRAZYPROMOTER.COMMAND.CHECK.FAIL=Sorry, no promotions applyable!
+CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ has been promoted (Rank: $1$)
+#CRAZYPROMOTER.MODE.CHANGE=
