@@ -1,0 +1,4 @@
+﻿CRAZYPROMOTER=CrazyPromoter
+CRAZYPROMOTER.COMMAND.CHECK.FAIL=Przepraszamy, nie zastosowano awansu!
+CRAZYPROMOTER.COMMAND.CHECK.SUCCESS=$0$ zostal awansowany (Ranga: $1$)
+#CRAZYPROMOTER.MODE.CHANGE=
