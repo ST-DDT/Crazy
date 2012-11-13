@@ -25,7 +25,7 @@ public class CrazyCoreCommandLanguageExtract extends CrazyCoreCommandExecutor
 	}
 
 	@Override
-	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.EXTRACTED $Language$", "CRAZYCORE.COMMAND.LANGUAGE.EXTRACTED.PLUGIN $Language$ $Plugin$" })
+	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.EXTRACTED $Language$", "CRAZYPLUGIN.COMMAND.LANGUAGE.EXTRACTED.PLUGIN $Language$ $Plugin$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length == 0)
