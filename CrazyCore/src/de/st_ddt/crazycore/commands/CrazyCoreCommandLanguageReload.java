@@ -25,7 +25,7 @@ public class CrazyCoreCommandLanguageReload extends CrazyCoreCommandExecutor
 	}
 
 	@Override
-	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.RELOADED $Language$", "CRAZYCORE.COMMAND.LANGUAGE.RELOADED.PLUGIN $Language$ $Plugin$" })
+	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.RELOADED $Language$", "CRAZYPLUGIN.COMMAND.LANGUAGE.RELOADED.PLUGIN $Language$ $Plugin$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length == 0)
