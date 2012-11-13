@@ -27,6 +27,7 @@ import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
@@ -44,7 +45,7 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 	}
 
 	@Override
-	@Localized({ "CRAZYSPAWNER.COMMAND.KILLED.MONSTERS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.ANIMALS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.GOLEMS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.VILLAGER $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.BOSSES $Amount$" })
+	@Localized({ "CRAZYSPAWNER.COMMAND.KILLED.MONSTERS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.ANIMALS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.GOLEMS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.VILLAGER $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.BOSSES $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.TYPE $Amount$ $Type$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
@@ -55,7 +56,7 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");
-		final BooleanParamitrisable monster = new BooleanParamitrisable(true);
+		final BooleanParamitrisable monster = new BooleanParamitrisable(checkArgs(args));
 		params.put("m", monster);
 		params.put("monster", monster);
 		final BooleanParamitrisable animals = new BooleanParamitrisable(false);
@@ -70,6 +71,13 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 		final BooleanParamitrisable bosses = new BooleanParamitrisable(false);
 		params.put("b", bosses);
 		params.put("bosses", bosses);
+		final int length = CreatureParamitrisable.CREATURE_TYPES.length;
+		final BooleanParamitrisable[] creatures = new BooleanParamitrisable[length];
+		for (int i = 0; i < length; i++)
+		{
+			creatures[i] = new BooleanParamitrisable(false);
+			params.put(CreatureParamitrisable.CREATURE_NAMES[i].toLowerCase(), creatures[i]);
+		}
 		ChatHelperExtended.readParameters(args, params);
 		final World world = location.getValue().getWorld();
 		if (monster.getValue())
@@ -85,6 +93,9 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 				plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class, Wither.class), location.getValue(), range.getValue()));
 			else
 				plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class), location.getValue(), range.getValue()));
+		for (int i = 0; i < length; i++)
+			if (creatures[i].getValue())
+				plugin.sendLocaleMessage("COMMAND.KILLED.TYPE", sender, killEntities(world.getEntitiesByClasses(CreatureParamitrisable.CREATURE_TYPES[i].getEntityClass()), location.getValue(), range.getValue()), CreatureParamitrisable.CREATURE_NAMES[i]);
 	}
 
 	@Override
@@ -106,6 +117,9 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 			res.add("bosses:");
 		if ("location:".startsWith(arg))
 			res.add("location:");
+		for (final String creature : CreatureParamitrisable.CREATURE_NAMES)
+			if ((creature + ":").toLowerCase().startsWith(arg))
+				res.add(creature + ":");
 		return res;
 	}
 
@@ -125,5 +139,24 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 				res++;
 			}
 		return res;
+	}
+
+	private boolean checkArgs(String... args)
+	{
+		for (String arg : args)
+			try
+			{
+				Integer.parseInt(arg);
+				continue;
+			}
+			catch (NumberFormatException e)
+			{
+				if (arg.startsWith("r:"))
+					continue;
+				else if (arg.startsWith("range:"))
+					continue;
+				return false;
+			}
+		return true;
 	}
 }

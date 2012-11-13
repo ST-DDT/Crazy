@@ -1,7 +1,7 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-version: 3.2.1
+version: 3.3
 # requires CrazyCore v9.2 or later
 depend: [CrazyCore]
 description: >

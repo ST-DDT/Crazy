@@ -12,7 +12,18 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable.TypedParamitrisable;
 public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 {
 
+	public final static EntityType[] CREATURE_TYPES = getCreatureTypes();
 	public final static String[] CREATURE_NAMES = getCreatureNames();
+
+	private static EntityType[] getCreatureTypes()
+	{
+		final LinkedList<EntityType> res = new LinkedList<EntityType>();
+		for (final EntityType type : EntityType.values())
+			if (type.isAlive())
+				if (type.isSpawnable())
+					res.add(type);
+		return res.toArray(new EntityType[0]);
+	}
 
 	private static String[] getCreatureNames()
 	{
