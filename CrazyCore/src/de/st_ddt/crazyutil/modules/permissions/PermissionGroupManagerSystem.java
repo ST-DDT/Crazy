@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.Named;
 import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.PluginDepency;
 
-;
 @Named(name = "GroupManager")
 @PluginDepency(depend = "GroupManager")
 public class PermissionGroupManagerSystem implements PermissionSystem

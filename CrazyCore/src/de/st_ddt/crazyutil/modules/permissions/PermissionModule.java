@@ -16,7 +16,7 @@ public class PermissionModule implements Module
 	public final static List<Class<? extends PermissionSystem>> PERMISSIONSYSTEMS = new ArrayList<Class<? extends PermissionSystem>>();
 	static
 	{
-		PERMISSIONSYSTEMS.add(PermissionPermissionsEXSystem.class);
+		PERMISSIONSYSTEMS.add(PermissionPermissionsExSystem.class);
 		PERMISSIONSYSTEMS.add(PermissionGroupManagerSystem.class);
 		PERMISSIONSYSTEMS.add(PermissionBukkitSystem.class);
 	}

@@ -8,14 +8,14 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.Named;
 import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.PluginDepency;
 
-@Named(name = "PermissionEX")
-@PluginDepency(depend = "PermissionEX")
-public class PermissionPermissionsEXSystem implements PermissionSystem
+@Named(name = "PermissionsEx")
+@PluginDepency(depend = "PermissionsEx")
+public class PermissionPermissionsExSystem implements PermissionSystem
 {
 
 	private final PermissionManager plugin;
 
-	public PermissionPermissionsEXSystem()
+	public PermissionPermissionsExSystem()
 	{
 		super();
 		plugin = PermissionsEx.getPermissionManager();
@@ -24,7 +24,7 @@ public class PermissionPermissionsEXSystem implements PermissionSystem
 	@Override
 	public String getName()
 	{
-		return "PermissionEX";
+		return "PermissionsEx";
 	}
 
 	@Override
