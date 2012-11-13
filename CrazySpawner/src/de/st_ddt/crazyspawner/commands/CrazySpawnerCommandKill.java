@@ -76,9 +76,9 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 			plugin.sendLocaleMessage("COMMAND.KILLED.MONSTERS", sender, killEntities(world.getEntitiesByClasses(Monster.class, Slime.class), location.getValue(), range.getValue()));
 		if (animals.getValue())
 			plugin.sendLocaleMessage("COMMAND.KILLED.ANIMALS", sender, killEntities(world.getEntitiesByClasses(Animals.class, Squid.class), location.getValue(), range.getValue()));
-		if (animals.getValue())
+		if (golems.getValue())
 			plugin.sendLocaleMessage("COMMAND.KILLED.GOLEMS", sender, killEntities(world.getEntitiesByClasses(Golem.class), location.getValue(), range.getValue()));
-		if (animals.getValue())
+		if (villager.getValue())
 			plugin.sendLocaleMessage("COMMAND.KILLED.VILLAGER", sender, killEntities(world.getEntitiesByClasses(Villager.class), location.getValue(), range.getValue()));
 		if (bosses.getValue())
 			if (v142OrLater)
