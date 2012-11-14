@@ -58,6 +58,12 @@ public final class CrazyCaptcha extends CrazyPlugin
 		return plugin;
 	}
 
+	public CrazyCaptcha()
+	{
+		super();
+		registerModes();
+	}
+
 	@Localized("CRAZYCAPTCHA.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{

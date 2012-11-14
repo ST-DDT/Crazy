@@ -26,6 +26,7 @@ permissions:
       crazycaptcha.commands: true
       crazycaptcha.recaptcha: true
       crazycaptcha.donotbotherme: true
+      crazycaptcha.mode: true
   crazycaptcha.commands:
     description: Allow viewing and editing command whitelist.
     default: op   
@@ -34,4 +35,7 @@ permissions:
     default: op
   crazycaptcha.donotbotherme:
     description: This players don't have to enter a captcha on join.
+    default: op
+  crazycaptcha.mode:
+    description: Allow changing plugin options.
     default: op
