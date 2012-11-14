@@ -21,6 +21,7 @@ import de.st_ddt.crazycaptcha.commands.CrazyCommandVerifiedCheck;
 import de.st_ddt.crazycaptcha.listener.CrazyCaptchaPlayerListener;
 import de.st_ddt.crazycaptcha.listener.CrazyCaptchaPlayerListener_125;
 import de.st_ddt.crazycaptcha.listener.CrazyCaptchaPlayerListener_132;
+import de.st_ddt.crazycaptcha.tasks.CaptchaReminderTask;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -42,6 +43,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 	private final Random random = new Random();
 	private CrazyCaptchaPlayerListener playerListener;
 	private List<String> commandWhiteList;
+	private long reminderInterval;
 	private int autoKick;
 	private long autoTempBan;
 	private int autoKickVerificationFailer;
@@ -59,6 +61,21 @@ public final class CrazyCaptcha extends CrazyPlugin
 	@Localized("CRAZYCAPTCHA.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
+		modeCommand.addMode(modeCommand.new DurationMode("reminderInterval")
+		{
+
+			@Override
+			public void setValue(Long newValue) throws CrazyException
+			{
+				reminderInterval = newValue / 1000;
+			}
+
+			@Override
+			public Long getValue()
+			{
+				return reminderInterval * 1000;
+			}
+		});
 		modeCommand.addMode(modeCommand.new IntegerMode("autoKick")
 		{
 
@@ -198,7 +215,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 		super.onEnable();
 		registerCommands();
 		verified.clear();
-		for (Player player : Bukkit.getOnlinePlayers())
+		for (final Player player : Bukkit.getOnlinePlayers())
 			playerListener.PlayerJoin(player);
 	}
 
@@ -215,6 +232,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
 		commandWhiteList = config.getStringList("commandWhitelist");
+		reminderInterval = config.getLong("reminderInterval", 5);
 		autoKick = Math.max(config.getInt("autoKick", -1), -1);
 		autoTempBan = Math.max(config.getInt("autoTempBan", -1), -1);
 		tempBans.clear();
@@ -234,6 +252,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("commandWhitelist", commandWhiteList);
+		config.set("reminderInterval", reminderInterval);
 		config.set("autoKick", autoKick);
 		config.set("autoTempBan", autoTempBan);
 		config.set("autoKickVerificationFailer", autoKickVerificationFailer);
@@ -308,6 +327,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 				verified.add(player.getName().toLowerCase());
 				return true;
 			}
+		new CaptchaReminderTask(player, plugin).startTask(reminderInterval);
 		return false;
 	}
 
@@ -362,10 +382,11 @@ public final class CrazyCaptcha extends CrazyPlugin
 		}
 	}
 
-	public void playerReverify(Player player)
+	public void playerReverify(final Player player)
 	{
 		verified.remove(player.getName().toLowerCase());
 		requestVerification(player);
+		new CaptchaReminderTask(player, plugin).startTask(reminderInterval);
 	}
 
 	private String genCaptcha()
@@ -400,5 +421,10 @@ public final class CrazyCaptcha extends CrazyPlugin
 	public boolean isAutoKickCommandUsers()
 	{
 		return autoKickCommandUsers;
+	}
+
+	public Map<String, String> getCaptchas()
+	{
+		return captchas;
 	}
 }

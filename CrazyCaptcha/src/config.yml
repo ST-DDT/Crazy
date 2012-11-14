@@ -10,7 +10,8 @@ commandWhitelist:
 - /language select.*
 - /language list.*
 - /worldedit cui
-
+# reminds the player to enter the captcha every x seconds.
+reminderInterval: 5
 # when enabled you are kicked when having an account and you did not login after x seconds (-1=disabled)
 autoKick: -1
 # when enabled you are banned for x seconds after being kicked for waiting to long to login (-1=disabled)
