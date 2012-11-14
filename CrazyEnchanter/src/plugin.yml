@@ -1,8 +1,8 @@
 name: CrazyEnchanter
 main: de.st_ddt.crazyenchanter.CrazyEnchanter
 author: ST-DDT
-version: 0.2
-# requires CrazyCore v9 or later
+version: 1
+# requires CrazyCore v9.2 or later
 depend: [CrazyCore]
 description: >
             Enchant your items.
@@ -10,6 +10,10 @@ commands:
   enchant:
     description: Enchant hand held item
     usage: /<command> <Enchantment> [Level [Unsafe]]
+  crazyenchanter:
+    description: Plugin Mainmenu
+    usage: /<command> [Subcommands...]
+    aliases: [ce]
 permissions:
   crazyenchanter.*:
     description: Access to all commands
