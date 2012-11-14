@@ -1,0 +1,37 @@
+name: CrazyCaptcha
+main: de.st_ddt.crazycaptcha.CrazyCaptcha
+author: ST-DDT
+version: 1
+# requires CrazyCore v9.3 or later
+depend: [CrazyCore]
+# requires CrazyLogin v7.3.1 or later
+softdepend: [CrazyLogin]
+description: >
+            CrazyCaptcha protect your server with captcha.
+commands:
+  captcha:
+    description: Are you human?
+    usage: /<command> <Code>
+  recaptcha:
+    description: Force a player to reenter the captcha.
+  crazycaptcha:
+    description: Plugin Main Menu
+    usage: /<command> <Subcommands...>
+    aliases: [ccaptcha]
+permissions:
+  crazycaptcha.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazycaptcha.commands: true
+      crazycaptcha.recaptcha: true
+      crazycaptcha.donotbotherme: true
+  crazycaptcha.commands:
+    description: Allow viewing and editing command whitelist.
+    default: op   
+  crazycaptcha.recaptcha:
+    description: Allow forcing player to reenter the captcha.
+    default: op
+  crazycaptcha.donotbotherme:
+    description: This players don't have to enter a captcha on join.
+    default: op

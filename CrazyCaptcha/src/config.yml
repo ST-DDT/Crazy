@@ -1,0 +1,51 @@
+# CrazyCaptcha config.yml
+# For more information visit
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyCaptcha/src/config.yml
+version: X.Y
+# required plugins +version can be found there
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyCaptcha/src/plugin.yml
+commandWhitelist: 
+- /captcha .*
+- /language [a-z][a-z]_[a-z][a-z]
+- /language select.*
+- /language list.*
+- /worldedit cui
+
+# when enabled you are kicked when having an account and you did not login after x seconds (-1=disabled)
+autoKick: -1
+# when enabled you are banned for x seconds after being kicked for waiting to long to login (-1=disabled)
+autoTempBan: -1
+# when enabled you are kicked when failing verify x times (-1=disabled)
+autoKickVerificationFailer: 3
+# when enabled you are banned for x seconds for failing to verify (-1=disabled)
+autoTempBanVerificationFailer: -1
+# when enabled you are kicked when using a none whitelisted command (true/false)
+autoKickCommandUsers: false
+# length of the generated captchas
+captchaLength: 6
+# chars used in the captchas
+captchaChars: '0123456789'
+# if enabled you don't have to enter a captcha if you have a password created
+skipLoginRegistered: true
+#logs:
+#  ChatBlocked:
+#    path: false
+#    console: false
+#  Captcha:
+#    path: false
+#    console: false
+#  CaptchaFail:
+#    path: false
+#    console: false
+#  CommandBlocked:
+#    path: false
+#    console: false
+#  AccessDenied:
+#    path: false
+#    console: false
+#  Quit:
+#    path: false
+#    console: false
+#  Join:
+#    path: false
+#    console: false
