@@ -1,5 +1,9 @@
 package de.st_ddt.crazyutil.modules;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,4 +19,18 @@ public interface Module extends Named
 	public boolean isActive();
 
 	public boolean initialize(final String chatHeader, final CommandSender sender);
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	public @interface PluginDepency {
+
+		String depend();
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	public @interface Named {
+
+		String name();
+	}
 }

@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyutil.modules.Module;
-import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.PluginDepency;
 
 public class PermissionModule implements Module
 {
@@ -55,7 +54,7 @@ public class PermissionModule implements Module
 		sender.sendMessage(chatHeader + "Checking permission modules:");
 		for (final Class<? extends PermissionSystem> clazz : PERMISSIONSYSTEMS)
 		{
-			final String name = clazz.getAnnotation(de.st_ddt.crazyutil.modules.permissions.PermissionSystem.Named.class).name();
+			final String name = clazz.getAnnotation(Named.class).name();
 			sender.sendMessage(chatHeader + ChatColor.YELLOW + "- " + name);
 			if (registerPermissionModule(clazz))
 			{
@@ -68,7 +67,7 @@ public class PermissionModule implements Module
 
 	public static boolean registerPermissionModule(final Class<? extends PermissionSystem> clazz)
 	{
-		final PluginDepency plugin = clazz.getAnnotation(de.st_ddt.crazyutil.modules.permissions.PermissionSystem.PluginDepency.class);
+		final PluginDepency plugin = clazz.getAnnotation(PluginDepency.class);
 		if (plugin != null)
 			if (Bukkit.getPluginManager().getPlugin(plugin.depend()) == null)
 				return false;

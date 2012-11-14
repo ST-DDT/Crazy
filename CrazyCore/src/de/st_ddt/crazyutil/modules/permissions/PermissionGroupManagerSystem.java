@@ -6,8 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.Named;
-import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.PluginDepency;
+import de.st_ddt.crazyutil.modules.Module.Named;
+import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "GroupManager")
 @PluginDepency(depend = "GroupManager")

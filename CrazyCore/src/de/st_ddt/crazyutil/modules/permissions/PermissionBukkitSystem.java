@@ -2,7 +2,7 @@ package de.st_ddt.crazyutil.modules.permissions;
 
 import org.bukkit.command.CommandSender;
 
-import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.Named;
+import de.st_ddt.crazyutil.modules.Module.Named;
 
 @Named(name = "Bukkit")
 public class PermissionBukkitSystem implements PermissionSystem

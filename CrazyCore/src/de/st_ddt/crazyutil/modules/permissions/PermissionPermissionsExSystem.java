@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.Named;
-import de.st_ddt.crazyutil.modules.permissions.PermissionSystem.PluginDepency;
+import de.st_ddt.crazyutil.modules.Module.Named;
+import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "PermissionsEx")
 @PluginDepency(depend = "PermissionsEx")
