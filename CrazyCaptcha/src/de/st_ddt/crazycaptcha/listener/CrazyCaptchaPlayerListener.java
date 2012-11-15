@@ -45,7 +45,7 @@ public class CrazyCaptchaPlayerListener implements Listener
 		PlayerJoin(event.getPlayer());
 	}
 
-	@Localized("CRAZYCAPTCHA.VERIFICATION.REQUEST")
+	@Localized("CRAZYCAPTCHA.KICKED.NOTVERIFIED")
 	public void PlayerJoin(final Player player)
 	{
 		plugin.getCrazyLogger().log("Join", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " joined the server");
@@ -53,7 +53,7 @@ public class CrazyCaptchaPlayerListener implements Listener
 			return;
 		final int autoKick = plugin.getAutoKick();
 		if (autoKick >= 10)
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ScheduledKickTask(player, plugin.getLocale().getLanguageEntry("VERIFICATION.REQUEST"), plugin.getAutoTempBan()), autoKick * 20);
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ScheduledKickTask(player, plugin.getLocale().getLanguageEntry("KICKED.NOTVERIFIED"), plugin.getAutoTempBan()), autoKick * 20);
 		plugin.requestVerification(player);
 	}
 
