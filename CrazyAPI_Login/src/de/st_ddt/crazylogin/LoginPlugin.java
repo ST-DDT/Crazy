@@ -73,6 +73,10 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 
 	public boolean isHidingInventoryEnabled();
 
+	public boolean isHidingPlayerEnabled();
+
+	public boolean isHidingJoinQuitMessagesEnabled();
+
 	public Encryptor getEncryptor();
 
 	public int getAutoDelete();
