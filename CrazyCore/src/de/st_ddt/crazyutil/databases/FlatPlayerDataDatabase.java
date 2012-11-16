@@ -34,4 +34,10 @@ public class FlatPlayerDataDatabase<S extends FlatPlayerDataDatabaseEntry> exten
 	{
 		return deleteEntry(player.getName());
 	}
+
+	@Override
+	public S updateEntry(OfflinePlayer player)
+	{
+		return updateEntry(player.getName());
+	}
 }
