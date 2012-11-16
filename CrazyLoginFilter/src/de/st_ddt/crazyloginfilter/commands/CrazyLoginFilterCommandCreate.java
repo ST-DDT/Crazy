@@ -1,7 +1,6 @@
 package de.st_ddt.crazyloginfilter.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
@@ -13,16 +12,16 @@ import de.st_ddt.crazyutil.locales.Localized;
 public class CrazyLoginFilterCommandCreate extends CrazyLoginFilterCommandExecutor
 {
 
-	public CrazyLoginFilterCommandCreate(CrazyLoginFilter plugin)
+	public CrazyLoginFilterCommandCreate(final CrazyLoginFilter plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
 	@Localized("CRAZYLOGINFILTER.COMMAND.CREATED $Name$")
-	public void command(CommandSender sender, String[] args) throws CrazyException
+	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (sender instanceof ConsoleCommandSender)
+		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
 		final PlayerAccessFilter data = new PlayerAccessFilter(player);

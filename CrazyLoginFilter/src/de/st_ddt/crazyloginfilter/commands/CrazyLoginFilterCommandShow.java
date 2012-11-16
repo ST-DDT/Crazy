@@ -1,7 +1,6 @@
 package de.st_ddt.crazyloginfilter.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
@@ -21,7 +20,7 @@ public class CrazyLoginFilterCommandShow extends CrazyLoginFilterCommandExecutor
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (sender instanceof ConsoleCommandSender)
+		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
 		show(sender, args, plugin.getPlayerData((Player) sender));
 	}

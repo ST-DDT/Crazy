@@ -2,7 +2,6 @@ package de.st_ddt.crazyloginfilter.commands;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
@@ -26,7 +25,7 @@ public class CrazyLoginFilterCommandIP extends CrazyLoginFilterCommandExecutor
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (sender instanceof ConsoleCommandSender)
+		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
 		ip(sender, args, plugin.getPlayerData(player));
@@ -39,7 +38,7 @@ public class CrazyLoginFilterCommandIP extends CrazyLoginFilterCommandExecutor
 			throw new CrazyCommandCircumstanceException("when AccessFilter is created!");
 		if (args.length != 1 && args.length != 2)
 			throw new CrazyCommandUsageException("show [Page]", "<add/add* (Regex)/remove> <Value>", "whitelist [True/False]");
-		String commandLabel = args[0].toLowerCase();
+		final String commandLabel = args[0].toLowerCase();
 		if (args.length == 1)
 		{
 			if (commandLabel.equals("show") || commandLabel.equals("list"))

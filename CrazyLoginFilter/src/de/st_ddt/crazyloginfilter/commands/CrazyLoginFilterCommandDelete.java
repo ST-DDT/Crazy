@@ -1,7 +1,6 @@
 package de.st_ddt.crazyloginfilter.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
@@ -21,7 +20,7 @@ public class CrazyLoginFilterCommandDelete extends CrazyLoginFilterCommandExecut
 	@Localized("CRAZYLOGINFILTER.COMMAND.DELETED $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (sender instanceof ConsoleCommandSender)
+		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
 		plugin.getCrazyDatabase().deleteEntry(player);

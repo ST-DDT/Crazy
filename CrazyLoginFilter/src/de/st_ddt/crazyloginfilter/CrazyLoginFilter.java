@@ -164,11 +164,11 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 	private void registerCommands()
 	{
 		mainCommand.addSubCommand(new CrazyLoginFilterCommandCreate(this), "create");
-		CrazyLoginFilterCommandShow showCommand = new CrazyLoginFilterCommandShow(this);
+		final CrazyLoginFilterCommandShow showCommand = new CrazyLoginFilterCommandShow(this);
 		mainCommand.addSubCommand(showCommand, "show", "list");
-		CrazyLoginFilterCommandIP ipCommand = new CrazyLoginFilterCommandIP(this);
+		final CrazyLoginFilterCommandIP ipCommand = new CrazyLoginFilterCommandIP(this);
 		mainCommand.addSubCommand(ipCommand, "ip", "ips");
-		CrazyLoginFilterCommandConnection connectionCommand = new CrazyLoginFilterCommandConnection(this);
+		final CrazyLoginFilterCommandConnection connectionCommand = new CrazyLoginFilterCommandConnection(this);
 		mainCommand.addSubCommand(connectionCommand, "connection", "connections");
 		mainCommand.addSubCommand(new CrazyLoginFilterCommandServerFilter(this, showCommand, ipCommand, connectionCommand), "serverfilter");
 		mainCommand.addSubCommand(new CrazyLoginFilterCommandDelete(this), "delete", "remove");

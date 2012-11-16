@@ -10,11 +10,11 @@ import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
 import de.st_ddt.crazyplugin.data.PlayerData;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
-import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
+import de.st_ddt.crazyutil.databases.ConfigurationPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
 
-public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implements ConfigurationDatabaseEntry
+public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implements ConfigurationPlayerDataDatabaseEntry
 {
 
 	protected boolean checkIP;
