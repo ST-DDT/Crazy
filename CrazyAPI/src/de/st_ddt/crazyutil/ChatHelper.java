@@ -43,6 +43,27 @@ public class ChatHelper
 		return ChatColor.translateAlternateColorCodes('&', string);
 	}
 
+	/**
+	 * Replace real colors texts with the Colorcodes
+	 * 
+	 * @param string
+	 *            The string the colors should apply to
+	 * @return The decolorated String
+	 */
+	public static String decolorise(final String string)
+	{
+		char[] b = string.toCharArray();
+		for (int i = 0; i < b.length - 1; i++)
+		{
+			if (b[i] == ChatColor.COLOR_CHAR && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1)
+			{
+				b[i] = '&';
+				b[i + 1] = Character.toUpperCase(b[i + 1]);
+			}
+		}
+		return new String(b);
+	}
+
 	public static void sendMessage(final CommandSender target, final Object message, final Object... args)
 	{
 		sendFinalMessage(target, putArgsExtended(target, message, args));
