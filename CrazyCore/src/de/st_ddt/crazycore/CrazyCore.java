@@ -149,7 +149,7 @@ public final class CrazyCore extends CrazyPlugin
 	@Override
 	public void loadConfiguration()
 	{
-		super.load();
+		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
 		// PlayerWipe
 		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
@@ -212,7 +212,7 @@ public final class CrazyCore extends CrazyPlugin
 		config.set("preloadedLanguages", new ArrayList<String>(preloadedLanguages));
 		config.set("players", null);
 		CrazyLocale.save(config, "players.");
-		super.save();
+		super.saveConfiguration();
 	}
 
 	@Override
