@@ -37,7 +37,12 @@ public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterfac
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), format, Filter.getFilterInstances(availableFilters), availableSorters, defaultSort, plugin.getPlayerDataListModder(), new ArrayList<T>(plugin.getPlayerData()));
+		final List<T> list;
+		synchronized (plugin.getPlayerDataLock())
+		{
+			list = new ArrayList<T>(plugin.getPlayerData());
+		}
+		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), format, Filter.getFilterInstances(availableFilters), availableSorters, defaultSort, plugin.getPlayerDataListModder(), list);
 	}
 
 	@Override
