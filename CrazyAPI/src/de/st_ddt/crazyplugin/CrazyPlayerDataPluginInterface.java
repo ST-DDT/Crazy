@@ -34,13 +34,15 @@ public interface CrazyPlayerDataPluginInterface<T extends PlayerDataInterface, S
 
 	public S getPlayerData(OfflinePlayer player);
 
+	public Object getPlayerDataLock();
+
 	public Collection<S> getPlayerData();
 
 	public T getAvailablePlayerData(final String name);
 
 	public T getAvailablePlayerData(final OfflinePlayer player);
 
-	public Collection<T> getAvailablePlayerData(boolean includeOnline, boolean includeData);
+	public Collection<T> getAvailablePlayerData(boolean includeOnline, boolean includeAllEntries);
 
 	public <E extends OfflinePlayer> Set<S> getPlayerData(Collection<E> players);
 

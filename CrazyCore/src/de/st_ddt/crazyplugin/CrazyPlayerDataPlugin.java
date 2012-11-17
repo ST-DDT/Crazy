@@ -110,11 +110,21 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
+	public Object getPlayerDataLock()
+	{
+		if (database == null)
+			return new Object();
+		else
+			return database.getDatabaseLock();
+	}
+
+	@Override
 	public Collection<S> getPlayerData()
 	{
 		if (database == null)
 			return new HashSet<S>();
-		return database.getAllEntries();
+		else
+			return database.getAllEntries();
 	}
 
 	@Override
@@ -130,12 +140,15 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public HashSet<T> getAvailablePlayerData(final boolean includeOnline, final boolean includeData)
+	public HashSet<T> getAvailablePlayerData(final boolean includeOnline, final boolean includeAllEntries)
 	{
 		final HashSet<T> result = new HashSet<T>();
-		if (includeData)
+		if (includeAllEntries)
 			if (database != null)
-				result.addAll(database.getAllEntries());
+				synchronized (database.getDatabaseLock())
+				{
+					result.addAll(database.getAllEntries());
+				}
 		if (includeOnline)
 			for (final Player player : Bukkit.getOnlinePlayers())
 				result.add(getAvailablePlayerData(player));

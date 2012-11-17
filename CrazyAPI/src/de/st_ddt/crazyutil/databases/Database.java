@@ -65,7 +65,13 @@ public interface Database<S extends DatabaseEntry> extends ConfigurationSaveable
 	public S getOrLoadEntry(String key);
 
 	/**
-	 * Returns a collection containing all datas. (It contains only loaded datas)
+	 * 
+	 * @return The Lock making this database thread safe!
+	 */
+	public Object getDatabaseLock();
+
+	/**
+	 * Returns a collection containing all datas. (It contains only loaded datas), use synchronized(getDatabaseLock())!!!
 	 * 
 	 * @return The collection containing all loaded data.
 	 */
