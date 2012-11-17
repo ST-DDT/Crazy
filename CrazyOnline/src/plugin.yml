@@ -1,7 +1,7 @@
 name: CrazyOnline
 main: de.st_ddt.crazyonline.CrazyOnline
 author: ST-DDT
-version: 6.1
+version: 6.2
 # requires CrazyCore v9.2.2 or later
 depend: [CrazyCore]
 commands:

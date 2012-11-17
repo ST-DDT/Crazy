@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -64,6 +65,12 @@ public class CrazyOnlinePlayerListener implements Listener
 		PlayerQuit(event.getPlayer());
 	}
 
+	@EventHandler(priority = EventPriority.LOW)
+	public void PlayerKick(final PlayerKickEvent event)
+	{
+		PlayerQuit(event.getPlayer());
+	}
+
 	public void PlayerQuit(final Player player)
 	{
 		plugin.getCrazyLogger().log("Quit", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " left the server");
@@ -95,12 +102,22 @@ public class CrazyOnlinePlayerListener implements Listener
 		plugin.getCrazyDatabase().save(data);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void PlayerQuitCheck(final PlayerQuitEvent event)
+	{
+		PlayerQuitCheck(event.getPlayer());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void PlayerKickCheck(final PlayerKickEvent event)
+	{
+		PlayerQuitCheck(event.getPlayer());
+	}
+
+	public void PlayerQuitCheck(final Player player)
 	{
 		if (!plugin.isDeletingShortVisitorsEnabled())
 			return;
-		final Player player = event.getPlayer();
 		final OnlinePlayerData data = plugin.getPlayerData(player);
 		if (data == null)
 			return;
