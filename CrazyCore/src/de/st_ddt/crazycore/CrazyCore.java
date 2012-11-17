@@ -147,7 +147,7 @@ public final class CrazyCore extends CrazyPlugin
 	}
 
 	@Override
-	public void load()
+	public void loadConfiguration()
 	{
 		super.load();
 		final ConfigurationSection config = getConfig();
@@ -194,7 +194,7 @@ public final class CrazyCore extends CrazyPlugin
 	}
 
 	@Override
-	public void save()
+	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
 		// Player Wipe
