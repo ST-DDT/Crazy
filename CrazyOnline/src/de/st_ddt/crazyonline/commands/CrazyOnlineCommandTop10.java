@@ -1,6 +1,7 @@
 package de.st_ddt.crazyonline.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
@@ -25,7 +26,12 @@ public class CrazyOnlineCommandTop10 extends CrazyOnlineCommandExecutor
 	@Localized({ "CRAZYONLINE.COMMAND.TOP10.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYONLINE.COMMAND.TOP10.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYONLINE.COMMAND.TOP10.ENTRYFORMAT $Name$ $FirstLogin$ $LastLogin$ $LastLogout$ $TimeTotalValue$ $IP$ $TimeTotalText$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry("COMMAND.TOP10.HEADER").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.TOP10.LISTFORMAT").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.TOP10.ENTRYFORMAT").getLanguageText(sender), Filter.getFilterInstances(plugin.getPlayerDataFilters()), plugin.getPlayerDataComparators(), new OnlineDataTimeTotalOnlineComparator(), null, new ArrayList<OnlineData>(plugin.getPlayerData()));
+		final List<OnlineData> list;
+		synchronized (plugin.getPlayerDataLock())
+		{
+			list = new ArrayList<OnlineData>(plugin.getPlayerData());
+		}
+		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry("COMMAND.TOP10.HEADER").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.TOP10.LISTFORMAT").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.TOP10.ENTRYFORMAT").getLanguageText(sender), Filter.getFilterInstances(plugin.getPlayerDataFilters()), plugin.getPlayerDataComparators(), new OnlineDataTimeTotalOnlineComparator(), null, list);
 	}
 
 	@Override

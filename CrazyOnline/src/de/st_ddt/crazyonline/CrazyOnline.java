@@ -120,7 +120,10 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 				if (database == null)
 					database = oldDatabase;
 				else if (oldDatabase != null)
-					database.saveAll(oldDatabase.getAllEntries());
+					synchronized (oldDatabase.getDatabaseLock())
+					{
+						database.saveAll(oldDatabase.getAllEntries());
+					}
 				save();
 			}
 		});
@@ -549,12 +552,18 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		return dropInactiveAccounts(compare);
 	}
 
-	protected synchronized int dropInactiveAccounts(final Date limit)
+	protected int dropInactiveAccounts(final Date limit)
 	{
+		if (database == null)
+			return 0;
 		final LinkedList<String> deletions = new LinkedList<String>();
-		for (final OnlinePlayerData data : database.getAllEntries())
-			if (data.getLastLogout().before(limit) && data.getLastLogin().before(limit))
-				deletions.add(data.getName());
+		synchronized (database.getDatabaseLock())
+		{
+			for (final OnlinePlayerData data : database.getAllEntries())
+				if (data.getLastLogout().before(limit) && data.getLastLogin().before(limit))
+					if (!data.isOnline())
+						deletions.add(data.getName());
+		}
 		for (final String name : deletions)
 			new CrazyPlayerRemoveEvent(this, name).checkAndCallEvent();
 		return deletions.size();
@@ -579,10 +588,15 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 	@Override
 	public Set<OnlinePlayerData> getPlayerDatasPerIP(final String IP)
 	{
-		final HashSet<OnlinePlayerData> res = new HashSet<OnlinePlayerData>();
-		for (final OnlinePlayerData data : database.getAllEntries())
-			if (data.getLatestIP().equals(IP))
-				res.add(data);
+		final Set<OnlinePlayerData> res = new HashSet<OnlinePlayerData>();
+		if (database == null)
+			return res;
+		synchronized (database.getDatabaseLock())
+		{
+			for (final OnlinePlayerData data : database.getAllEntries())
+				if (data.getLatestIP().equals(IP))
+					res.add(data);
+		}
 		return res;
 	}
 }

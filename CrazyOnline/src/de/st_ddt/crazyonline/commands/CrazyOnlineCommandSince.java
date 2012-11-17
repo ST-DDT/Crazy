@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -103,7 +104,12 @@ public class CrazyOnlineCommandSince extends CrazyOnlineCommandExecutor
 		};
 		final ArrayList<FilterInstanceInterface<OnlineData>> filterInstances = new ArrayList<FilterInterface.FilterInstanceInterface<OnlineData>>();
 		filterInstances.add(filter);
-		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry("COMMAND.SINCE.HEADER").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.SINCE.LISTFORMAT").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.SINCE.ENTRYFORMAT").getLanguageText(sender), filterInstances, plugin.getPlayerDataComparators(), new OnlineDataLastLoginComperator(), null, new ArrayList<OnlineData>(plugin.getPlayerData()), filter);
+		final List<OnlineData> list;
+		synchronized (plugin.getPlayerDataLock())
+		{
+			list = new ArrayList<OnlineData>(plugin.getPlayerData());
+		}
+		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), plugin.getLocale().getLanguageEntry("COMMAND.SINCE.HEADER").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.SINCE.LISTFORMAT").getLanguageText(sender), plugin.getLocale().getLanguageEntry("COMMAND.SINCE.ENTRYFORMAT").getLanguageText(sender), filterInstances, plugin.getPlayerDataComparators(), new OnlineDataLastLoginComperator(), null, list, filter);
 	}
 
 	@Override
