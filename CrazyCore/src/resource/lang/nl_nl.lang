@@ -1,4 +1,4 @@
-CRAZYCORE=CrazyCore
+﻿CRAZYCORE=CrazyCore
 LANGUAGE.NAME=Dutch - Nederlands
 CRAZYPLUGIN.COMMAND.CONFIG.LOGGER=$0$ : Plaats=&E$1$ &FConsole=&E$2$
 CRAZYPLUGIN.COMMAND.CONFIG.NOLOGGERS=Dit heeft geen log kanalen!
