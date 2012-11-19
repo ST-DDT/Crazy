@@ -19,22 +19,18 @@ public class CrazyCoreMessageListener extends CrazyPluginMessageListener<CrazyCo
 	protected void pluginMessageQuerryRecieved(final String channel, final Player player, final String header, final String args)
 	{
 		if (channel.equals(plugin.getName()))
-		{
 			if (header.equalsIgnoreCase("Language"))
 				sendPluginMessage(player, "A_Language " + ChatHelper.listingString(CrazyLocale.getActiveLanguages()));
 			else if (header.equalsIgnoreCase("LanguageName"))
 				sendPluginMessage(player, "A_LanguageName " + args + " " + CrazyLocale.getSaveLanguageName(args));
-		}
 	}
 
 	@Override
 	protected void pluginMessageAnswerRecieved(final String channel, final Player player, final String header, final String args)
 	{
 		if (channel.equals(plugin.getName()))
-		{
 			if (header.equalsIgnoreCase("Language"))
 				CrazyLocale.setUserLanguage(player, args);
-		}
 	}
 
 	@Override

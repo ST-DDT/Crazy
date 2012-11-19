@@ -39,9 +39,7 @@ public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataI
 		final Player player = getPlayer();
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("HEAD"), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date()));
 		if (player == null)
-		{
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("USERNAME"), getName());
-		}
 		else
 		{
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("USERNAME"), player.getName());

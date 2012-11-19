@@ -36,7 +36,7 @@ public class FlatPlayerDataDatabase<S extends FlatPlayerDataDatabaseEntry> exten
 	}
 
 	@Override
-	public S updateEntry(OfflinePlayer player)
+	public S updateEntry(final OfflinePlayer player)
 	{
 		return updateEntry(player.getName());
 	}

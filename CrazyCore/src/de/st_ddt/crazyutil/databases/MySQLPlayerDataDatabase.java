@@ -35,7 +35,7 @@ public class MySQLPlayerDataDatabase<S extends MySQLPlayerDataDatabaseEntry> ext
 	}
 
 	@Override
-	public S updateEntry(OfflinePlayer player)
+	public S updateEntry(final OfflinePlayer player)
 	{
 		return updateEntry(player.getName());
 	}

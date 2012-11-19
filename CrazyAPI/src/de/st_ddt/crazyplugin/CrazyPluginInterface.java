@@ -63,4 +63,8 @@ public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface
 	public void broadcastLocaleMessage(boolean console, String[] permissions, String localepath, Object... args);
 
 	public void broadcastLocaleMessage(boolean console, String[] permissions, CrazyLocale locale, Object... args);
+
+	public boolean checkForUpdate(boolean force);
+
+	public String getUpdateVersion();
 }

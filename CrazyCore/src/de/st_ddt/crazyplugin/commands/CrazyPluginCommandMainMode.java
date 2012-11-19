@@ -190,6 +190,7 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 			super(name);
 		}
 
+		@Override
 		@Localized("CRAZYPLUGIN.MODE.CHANGE $Name$ $Value$")
 		public void showValue(final CommandSender sender)
 		{

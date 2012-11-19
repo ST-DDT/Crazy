@@ -139,9 +139,7 @@ public abstract class CrazyPipe
 	{
 		final String command = ChatHelper.listingString(" ", pipeArgs);
 		if (command.startsWith("show "))
-		{
 			ChatHelper.sendMessage(sender, "", command.substring(5), data);
-		}
 		else
 			Bukkit.dispatchCommand(sender, shiftPipeEntry(ChatHelper.putArgs(command, data)));
 	}

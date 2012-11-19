@@ -52,15 +52,13 @@ public class ChatHelper
 	 */
 	public static String decolorise(final String string)
 	{
-		char[] b = string.toCharArray();
+		final char[] b = string.toCharArray();
 		for (int i = 0; i < b.length - 1; i++)
-		{
 			if (b[i] == ChatColor.COLOR_CHAR && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1)
 			{
 				b[i] = '&';
 				b[i + 1] = Character.toUpperCase(b[i + 1]);
 			}
-		}
 		return new String(b);
 	}
 
@@ -122,7 +120,7 @@ public class ChatHelper
 		return putArgs(message, 0, args);
 	}
 
-	public static String putArgs(final String message, int start, final Object... args)
+	public static String putArgs(final String message, final int start, final Object... args)
 	{
 		String res = message;
 		final int length = args.length;
@@ -145,7 +143,7 @@ public class ChatHelper
 		return putArgsExtended(target, message, 0, args);
 	}
 
-	public static String putArgsExtended(final CommandSender target, final Object message, int start, final Object... args)
+	public static String putArgsExtended(final CommandSender target, final Object message, final int start, final Object... args)
 	{
 		String res = message.toString();
 		if (message instanceof CrazyLocale)

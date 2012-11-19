@@ -2,6 +2,7 @@ package de.st_ddt.crazyplugin;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,6 +28,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.CrazyLogger;
 import de.st_ddt.crazyutil.ListFormat;
+import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
@@ -39,6 +41,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	protected final CrazyCommandTreeExecutor<CrazyPluginInterface> mainCommand = new CrazyPluginCommandMainTree(this);
 	protected CrazyLocale locale = null;
 	protected String previousVersion = "0";
+	protected String updateVersion = "0";
 	protected boolean isUpdated = false;
 	protected boolean isInstalled = false;
 
@@ -137,6 +140,24 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	{
 		logger.save(getConfig(), "logs.");
 		saveConfig();
+	}
+
+	@Override
+	@Localized("CRAZYPLUGIN.PLUGININFO.UPDATE $NewVersion$")
+	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
+	{
+		super.show(target, chatHeader, showDetailed);
+		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLUGININFO");
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new Runnable()
+		{
+
+			@Override
+			public void run()
+			{
+				if (checkForUpdate(false))
+					ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("UPDATE"), updateVersion);
+			}
+		});
 	}
 
 	public void checkLocale()
@@ -327,7 +348,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		// Custom files:
 		file = new File(getDataFolder().getPath() + "/lang/custom_" + language + ".lang");
 		if (file.exists())
-		{
 			try
 			{
 				loadLanguageFile(language, file);
@@ -336,7 +356,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			{
 				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language + " (Custom)", getName());
 			}
-		}
 	}
 
 	public String getMainDownloadLocation()
@@ -354,12 +373,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	{
 		try
 		{
-			InputStream stream = null;
 			BufferedInputStream in = null;
 			FileOutputStream out = null;
 			try
 			{
-				stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
+				final InputStream stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
 				if (stream == null)
 					return;
 				in = new BufferedInputStream(stream);
@@ -374,8 +392,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			{
 				if (in != null)
 					in.close();
-				if (stream != null)
-					stream.close();
 				if (out != null)
 					out.close();
 			}
@@ -477,5 +493,69 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			if (stream != null)
 				stream.close();
 		}
+	}
+
+	@Override
+	public String getUpdateVersion()
+	{
+		return updateVersion;
+	}
+
+	@Override
+	public boolean checkForUpdate(final boolean force)
+	{
+		if (!force)
+		{
+			if (updateVersion == null)
+				return false;
+			if (!updateVersion.equals("0"))
+			{
+				final int value = VersionComparator.compareVersions(this, updateVersion);
+				if (value == 1)
+					return false;
+				else if (value == -1)
+					return true;
+			}
+		}
+		try
+		{
+			BufferedReader bufreader = null;
+			try
+			{
+				final InputStream stream = new URL("http://dev.bukkit.org/server-mods/" + getName().toLowerCase() + "/files.rss").openStream();
+				if (stream == null)
+				{
+					updateVersion = null;
+					return false;
+				}
+				bufreader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+				String zeile = null;
+				boolean active = false;
+				while ((zeile = bufreader.readLine()) != null)
+				{
+					zeile = zeile.trim();
+					if (active)
+					{
+						updateVersion = zeile.substring(7 + getName().length() + 2).split("<")[0];
+						break;
+					}
+					else if (zeile.equals("<item>"))
+						active = true;
+					else
+						continue;
+				}
+			}
+			finally
+			{
+				if (bufreader != null)
+					bufreader.close();
+			}
+		}
+		catch (final Exception e)
+		{
+			updateVersion = null;
+			return false;
+		}
+		return VersionComparator.compareVersions(this, updateVersion) == -1;
 	}
 }

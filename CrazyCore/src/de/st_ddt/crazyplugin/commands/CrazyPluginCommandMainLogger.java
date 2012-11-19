@@ -91,7 +91,7 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 		final List<String> res = new ArrayList<String>();
 		if (args.length == 1)
 		{
-			for (String name : plugin.getCrazyLogger().getLogChannelNames())
+			for (final String name : plugin.getCrazyLogger().getLogChannelNames())
 				if (name.toLowerCase().startsWith(args[0].toLowerCase()))
 					res.add(name);
 		}

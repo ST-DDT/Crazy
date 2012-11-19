@@ -519,7 +519,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 				return;
 			try
 			{
-				for (String part : PATTERN_UNDERSCORE.split(language))
+				for (final String part : PATTERN_UNDERSCORE.split(language))
 				{
 					if (!languageAlternatives.containsKey(part))
 						languageAlternatives.put(part, new HashSet<String>());

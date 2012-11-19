@@ -41,7 +41,6 @@ public abstract class CrazyPluginMessageListener<S extends CrazyPlugin> implemen
 		if (header.startsWith("Q_"))
 		{
 			if (channel.equals(plugin.getName()))
-			{
 				if (header.equalsIgnoreCase("Ping"))
 				{
 					sendPluginMessage(player, "A_PING " + plugin.getName());
@@ -52,7 +51,6 @@ public abstract class CrazyPluginMessageListener<S extends CrazyPlugin> implemen
 					sendPluginMessage(player, "A_Version " + plugin.getVersion());
 					return;
 				}
-			}
 			pluginMessageQuerryRecieved(channel, player, header.substring(2), args);
 		}
 		if (header.startsWith("A_"))

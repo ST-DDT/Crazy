@@ -41,8 +41,10 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 		plugin.sendLocaleList(sender, listFormat(), amount, page, new ArrayList<T>(getCollection()));
 	}
 
+	// @ // Localized("PATH $Element$")
 	public abstract String addLocale();
 
+	// @ // Localized("PATH $Element$")
 	public abstract String removeLocale();
 
 	private class CrazyCommandCollectionList extends CrazyCommandExecutor<S>
@@ -56,6 +58,7 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
+			// EDIT update this outdated stuff
 			int amount = 10;
 			int page = 1;
 			final int length = args.length;
@@ -90,9 +93,7 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 						}
 				}
 				else if (arg.equals("*"))
-				{
 					page = Integer.MIN_VALUE;
-				}
 				else
 					try
 					{

@@ -36,7 +36,7 @@ public class ConfigurationPlayerDataDatabase<S extends ConfigurationPlayerDataDa
 	}
 
 	@Override
-	public S updateEntry(OfflinePlayer player)
+	public S updateEntry(final OfflinePlayer player)
 	{
 		return updateEntry(player.getName());
 	}

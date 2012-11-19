@@ -134,9 +134,7 @@ public class CrazyPages
 		page = Math.max(1, page);
 		ChatHelper.sendMessage(target, "", headFormat, page, getMaxPage(), chatHeader, CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date()));
 		if (lastIndex + amount - 1 < page * amount)
-		{
 			return;
-		}
 		final StringBuilder formatString = new StringBuilder();
 		for (int i = lastIndex; i > 0; i /= 10)
 			formatString.append(" ");

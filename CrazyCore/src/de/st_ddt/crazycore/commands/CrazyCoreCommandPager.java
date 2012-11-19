@@ -34,7 +34,6 @@ public class CrazyCoreCommandPager extends CrazyCoreCommandExecutor
 		else if (arg.equals("-"))
 			CrazyPages.showPrevPage(sender);
 		else
-		{
 			try
 			{
 				CrazyPages.showPage(sender, Integer.parseInt(arg));
@@ -43,7 +42,6 @@ public class CrazyCoreCommandPager extends CrazyCoreCommandExecutor
 			{
 				throw new CrazyCommandUsageException("[+/-]", "[Pagenumber (Integer)]");
 			}
-		}
 	}
 
 	@Override

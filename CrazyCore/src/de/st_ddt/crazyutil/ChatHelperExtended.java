@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,6 +25,7 @@ import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.SortParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 
 public class ChatHelperExtended extends ChatHelper
 {
@@ -43,7 +45,7 @@ public class ChatHelperExtended extends ChatHelper
 		processFullListCommand(sender, args, chatHeader, format.headFormat(sender), format.listFormat(sender), format.entryFormat(sender), filters, sorters, defaultSort, modder, datas);
 	}
 
-	public static <S extends ParameterData, T extends S> void processFullListCommand(final CommandSender sender, final String[] args, final String chatHeader, ListFormat format, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, Object... headArgs) throws CrazyException
+	public static <S extends ParameterData, T extends S> void processFullListCommand(final CommandSender sender, final String[] args, final String chatHeader, ListFormat format, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, final Object... headArgs) throws CrazyException
 	{
 		if (format == null)
 			format = ListFormat.DEFAULTFORMAT;
@@ -57,7 +59,7 @@ public class ChatHelperExtended extends ChatHelper
 			CrazyPipe.pipe(sender, datas, pipe);
 	}
 
-	public static <S extends ParameterData, T extends S> void processFullListCommand(final CommandSender sender, final String[] args, final String chatHeader, final String headFormat, final String listFormat, final String entryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, Object... headArgs) throws CrazyException
+	public static <S extends ParameterData, T extends S> void processFullListCommand(final CommandSender sender, final String[] args, final String chatHeader, final String headFormat, final String listFormat, final String entryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, final Object... headArgs) throws CrazyException
 	{
 		final String[] pipe = processListCommand(sender, args, chatHeader, headFormat, listFormat, entryFormat, filters, sorters, defaultSort, modder, datas, headArgs);
 		if (pipe != null)
@@ -71,7 +73,7 @@ public class ChatHelperExtended extends ChatHelper
 		return processListCommand(sender, args, chatHeader, format.headFormat(sender), format.listFormat(sender), format.entryFormat(sender), filters, sorters, defaultSort, modder, datas);
 	}
 
-	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, String defaultHeadFormat, String defaultListFormat, String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
+	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, final String defaultHeadFormat, final String defaultListFormat, final String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
 	{
 		return processListCommand(sender, args, defaultChatHeader, defaultHeadFormat, defaultListFormat, defaultEntryFormat, filters, sorters, defaultSort, modder, datas, new Object[0]);
 	}
@@ -108,7 +110,7 @@ public class ChatHelperExtended extends ChatHelper
 	 *             Caused by readParameters
 	 * @see de.st_ddt.crazyutil.CrazyPages
 	 */
-	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, String defaultHeadFormat, String defaultListFormat, String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, Object... headArgs) throws CrazyException
+	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, String defaultHeadFormat, String defaultListFormat, String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, final Object... headArgs) throws CrazyException
 	{
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 		final BooleanParamitrisable reverse = new BooleanParamitrisable(false);
@@ -212,6 +214,7 @@ public class ChatHelperExtended extends ChatHelper
 	public static <S> String[] readParameters(final String[] args, final Map<String, ? extends Paramitrisable> params) throws CrazyException
 	{
 		final int length = args.length;
+		int p = 0;
 		for (int i = 0; i < length; i++)
 		{
 			String header = null;
@@ -277,7 +280,13 @@ public class ChatHelperExtended extends ChatHelper
 				return shiftArray(args, i + 1);
 			else
 				header = "";
-			final Paramitrisable param = params.get(header.toLowerCase());
+			Paramitrisable param = params.get(header.toLowerCase());
+			if (header.length() == 0)
+			{
+				final Paramitrisable tempParam = params.get(Integer.toString(p++));
+				if (tempParam != null)
+					param = tempParam;
+			}
 			if (param == null)
 				if (header.length() == 0)
 					throw new CrazyCommandNoSuchException("Parameter", value, params.keySet());
@@ -294,6 +303,99 @@ public class ChatHelperExtended extends ChatHelper
 			}
 		}
 		return null;
+	}
+
+	public static List<String> tabHelp(final String[] args, final Map<String, ? extends TabbedParamitrisable> params, final TabbedParamitrisable... indexedParams)
+	{
+		final List<String> res = new LinkedList<String>();
+		final int length = args.length;
+		int p = 0;
+		for (int i = 0; i < length; i++)
+		{
+			String header = null;
+			String value = args[i];
+			final String[] split = value.split(":", 2);
+			if (split.length == 2)
+			{
+				header = split[0];
+				value = split[1];
+				if (value.startsWith("\""))
+				{
+					while (!value.endsWith("\""))
+					{
+						i++;
+						if (i == length)
+							break;
+						value += " " + args[i];
+					}
+					final int len = value.length();
+					if (value.endsWith("\""))
+						value = value.substring(1, len - 1);
+				}
+				else if (value.startsWith("{"))
+				{
+					int depth = 1;
+					int start = 1;
+					Matcher matcher = PATTERN_OPENER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth++;
+					}
+					matcher = PATTERN_CLOSER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth--;
+					}
+					while (depth != 0)
+					{
+						i++;
+						if (i == length)
+							break;
+						value += " " + args[i];
+						start = 0;
+						matcher = PATTERN_OPENER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth++;
+						}
+						matcher = PATTERN_CLOSER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth--;
+						}
+					}
+					final int len = value.length();
+					if (value.startsWith("}"))
+						value = value.substring(1, len - 1);
+				}
+			}
+			else if (value.equals(">"))
+				return res;
+			else
+				header = "";
+			if (split.length == 1)
+				for (final String key : params.keySet())
+					if (key.startsWith(value.toLowerCase()))
+						res.add(key + ":");
+			TabbedParamitrisable param = params.get(header.toLowerCase());
+			if (header.length() == 0 && p < indexedParams.length)
+			{
+				final TabbedParamitrisable tempParam = indexedParams[p++];
+				if (tempParam != null)
+					param = tempParam;
+			}
+			if (param != null)
+				if (header.length() == 0)
+					res.addAll(param.tab(value));
+				else
+					for (final String entry : param.tab(value))
+						res.add(header + ":" + entry);
+		}
+		return res;
 	}
 
 	public static <S> S[] cutArray(final S[] args, final int anz)

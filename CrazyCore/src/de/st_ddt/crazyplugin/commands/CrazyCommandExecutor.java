@@ -67,7 +67,7 @@ public abstract class CrazyCommandExecutor<S extends CrazyPluginInterface> imple
 	}
 
 	@Override
-	public boolean hasAccessPermission(CommandSender sender)
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return true;
 	}

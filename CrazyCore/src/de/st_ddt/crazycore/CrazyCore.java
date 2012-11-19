@@ -17,8 +17,11 @@ import de.st_ddt.crazycore.commands.CrazyCoreCommandPager;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPipe;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerDelete;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
+import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeCommands;
+import de.st_ddt.crazycore.commands.CrazyCoreCommandUpdateCheck;
 import de.st_ddt.crazycore.listener.CrazyCoreCrazyListener;
 import de.st_ddt.crazycore.listener.CrazyCoreMessageListener;
+import de.st_ddt.crazycore.tasks.PluginUpdateCheckTask;
 import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
 import de.st_ddt.crazyplugin.CrazyLightPlugin;
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -53,6 +56,8 @@ public final class CrazyCore extends CrazyPlugin
 	{
 		final CrazyCommandTreeExecutor<CrazyCore> players = new CrazyCommandTreeExecutor<CrazyCore>(this);
 		mainCommand.addSubCommand(players, "player", "players");
+		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
+		mainCommand.addSubCommand(new CrazyCoreCommandUpdateCheck(this), "updatecheck");
 		players.addSubCommand(new CrazyCoreCommandPlayerInfo(this), "info");
 		players.addSubCommand(new CrazyCoreCommandPlayerDelete(this), "delete", "remove");
 		final CrazyCommandTreeExecutor<CrazyCore> languages = new CrazyCoreCommandLanguageTree(this);
@@ -140,7 +145,8 @@ public final class CrazyCore extends CrazyPlugin
 	{
 		PermissionModule.init(getChatHeader(), Bukkit.getConsoleSender());
 		registerHooks();
-		getServer().getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
+		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new PluginUpdateCheckTask(), 6000, 432000);
 		super.onEnable();
 		registerCommands();
 		registerMetrics();

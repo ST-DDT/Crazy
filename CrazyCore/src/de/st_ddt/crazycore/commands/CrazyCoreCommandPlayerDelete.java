@@ -60,7 +60,7 @@ public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 	}
 
 	@Override
-	public boolean hasAccessPermission(CommandSender sender)
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.player.delete.self") || PermissionModule.hasPermission(sender, "crazycore.player.delete.other");
 	}

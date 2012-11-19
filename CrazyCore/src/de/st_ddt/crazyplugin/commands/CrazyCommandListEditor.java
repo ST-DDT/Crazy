@@ -36,8 +36,10 @@ public abstract class CrazyCommandListEditor<S extends CrazyPluginInterface, T> 
 		plugin.sendLocaleList(sender, listFormat(), amount, page, getCollection());
 	}
 
+	// @ // Localized("PATH $Element$ $Index$")
 	public abstract String addViaIndexLocale();
 
+	// @ // Localized("PATH $Element$ $Index$")
 	public abstract String removeViaIndexLocale();
 
 	private class CrazyCommandListInsert extends CrazyCommandExecutor<S>
