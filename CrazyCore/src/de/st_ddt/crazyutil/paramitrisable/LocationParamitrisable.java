@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -14,7 +15,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatConverter;
-import de.st_ddt.crazyutil.paramitrisable.Paramitrisable.TypedParamitrisable;
 
 public class LocationParamitrisable extends TypedParamitrisable<Location>
 {
@@ -40,16 +40,16 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 		value = ChatConverter.stringToLocation(sender, PATTERN_SPACE.split(parameter));
 	}
 
-	public void addFullParams(final Map<String, Paramitrisable> params, final String... prefixes)
+	public void addFullParams(final Map<String, TabbedParamitrisable> params, final String... prefixes)
 	{
 		for (final String prefix : prefixes)
 			params.put(prefix, this);
 		addAdvancedParams(params, prefixes);
 	}
 
-	public void addAdvancedParams(final Map<String, Paramitrisable> params, final String... prefixes)
+	public void addAdvancedParams(final Map<String, TabbedParamitrisable> params, final String... prefixes)
 	{
-		final Paramitrisable xParam = new Paramitrisable()
+		final TabbedParamitrisable xParam = new TabbedParamitrisable()
 		{
 
 			@Override
@@ -64,8 +64,14 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 					throw new CrazyCommandParameterException(0, "Number (Double)");
 				}
 			}
+
+			@Override
+			public List<String> tab(final String parameter)
+			{
+				return new LinkedList<String>();
+			}
 		};
-		final Paramitrisable yParam = new Paramitrisable()
+		final TabbedParamitrisable yParam = new TabbedParamitrisable()
 		{
 
 			@Override
@@ -80,8 +86,14 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 					throw new CrazyCommandParameterException(0, "Number (Double)");
 				}
 			}
+
+			@Override
+			public List<String> tab(final String parameter)
+			{
+				return new LinkedList<String>();
+			}
 		};
-		final Paramitrisable zParam = new Paramitrisable()
+		final TabbedParamitrisable zParam = new TabbedParamitrisable()
 		{
 
 			@Override
@@ -96,8 +108,14 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 					throw new CrazyCommandParameterException(0, "Number (Double)");
 				}
 			}
+
+			@Override
+			public List<String> tab(final String parameter)
+			{
+				return new LinkedList<String>();
+			}
 		};
-		final Paramitrisable worldParam = new Paramitrisable()
+		final TabbedParamitrisable worldParam = new TabbedParamitrisable()
 		{
 
 			@Override
@@ -106,6 +124,16 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 				value.setWorld(Bukkit.getWorld(parameter));
 				if (value == null)
 					throw new CrazyCommandNoSuchException("World", parameter, getWorldNames());
+			}
+
+			@Override
+			public List<String> tab(final String parameter)
+			{
+				final List<String> res = new LinkedList<String>();
+				for (final World world : Bukkit.getWorlds())
+					if (world.getName().startsWith(parameter))
+						res.add(world.getName());
+				return res;
 			}
 		};
 		for (final String prefix : prefixes)

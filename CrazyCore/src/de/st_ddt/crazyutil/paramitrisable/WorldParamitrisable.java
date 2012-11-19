@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -9,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.paramitrisable.Paramitrisable.TypedParamitrisable;
 
 public class WorldParamitrisable extends TypedParamitrisable<World>
 {
@@ -44,6 +44,16 @@ public class WorldParamitrisable extends TypedParamitrisable<World>
 		final String[] res = new String[length];
 		for (int i = 0; i < length; i++)
 			res[i] = worlds.get(i).getName();
+		return res;
+	}
+
+	@Override
+	public List<String> tab(final String parameter)
+	{
+		final List<String> res = new LinkedList<String>();
+		for (final World world : Bukkit.getWorlds())
+			if (world.getName().startsWith(parameter))
+				res.add(world.getName());
 		return res;
 	}
 }

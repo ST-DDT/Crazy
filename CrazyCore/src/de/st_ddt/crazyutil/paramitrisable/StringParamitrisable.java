@@ -1,7 +1,6 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.paramitrisable.Paramitrisable.TypedParamitrisable;
 
 public class StringParamitrisable extends TypedParamitrisable<String>
 {

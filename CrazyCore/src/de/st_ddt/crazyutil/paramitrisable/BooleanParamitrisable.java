@@ -1,8 +1,10 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.paramitrisable.Paramitrisable.TypedParamitrisable;
 
 public class BooleanParamitrisable extends TypedParamitrisable<Boolean>
 {
@@ -34,5 +36,17 @@ public class BooleanParamitrisable extends TypedParamitrisable<Boolean>
 			value = false;
 		else
 			throw new CrazyCommandParameterException(0, "Boolean (false/true)");
+	}
+
+	@Override
+	public List<String> tab(String parameter)
+	{
+		parameter = parameter.toLowerCase();
+		final List<String> res = new LinkedList<String>();
+		if ("true".startsWith(parameter))
+			res.add("true");
+		if ("false".startsWith(parameter))
+			res.add("false");
+		return res;
 	}
 }

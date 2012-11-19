@@ -1,10 +1,11 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.paramitrisable.Paramitrisable.TypedParamitrisable;
 
 public class MapParamitrisable<S> extends TypedParamitrisable<S>
 {
@@ -13,7 +14,7 @@ public class MapParamitrisable<S> extends TypedParamitrisable<S>
 	private final Map<String, ? extends S> values;
 	private final boolean lowercase;
 
-	public MapParamitrisable(String type, Map<String, ? extends S> values, S defaultValue)
+	public MapParamitrisable(final String type, final Map<String, ? extends S> values, final S defaultValue)
 	{
 		super(defaultValue);
 		this.type = type;
@@ -21,7 +22,7 @@ public class MapParamitrisable<S> extends TypedParamitrisable<S>
 		this.lowercase = false;
 	}
 
-	public MapParamitrisable(String type, Map<String, ? extends S> values, S defaultValue, boolean lowercase)
+	public MapParamitrisable(final String type, final Map<String, ? extends S> values, final S defaultValue, final boolean lowercase)
 	{
 		super(defaultValue);
 		this.type = type;
@@ -37,5 +38,20 @@ public class MapParamitrisable<S> extends TypedParamitrisable<S>
 		if (!values.containsKey(parameter))
 			throw new CrazyCommandNoSuchException(type, parameter, values.keySet());
 		value = values.get(parameter);
+	}
+
+	@Override
+	public List<String> tab(final String parameter)
+	{
+		return tabHelp(values, parameter);
+	}
+
+	public static List<String> tabHelp(final Map<String, ?> values, final String parameter)
+	{
+		final List<String> res = new LinkedList<String>();
+		for (final String entry : values.keySet())
+			if (entry.startsWith(parameter))
+				res.add(entry);
+		return res;
 	}
 }
