@@ -123,9 +123,7 @@ public class Metrics
 	public Metrics(final Plugin plugin) throws IOException
 	{
 		if (plugin == null)
-		{
 			throw new IllegalArgumentException("Plugin cannot be null");
-		}
 		this.plugin = plugin;
 		// load the config
 		configurationFile = getConfigFile();
@@ -153,9 +151,7 @@ public class Metrics
 	public Graph createGraph(final String name)
 	{
 		if (name == null)
-		{
 			throw new IllegalArgumentException("Graph name cannot be null");
-		}
 		// Construct the graph object
 		final Graph graph = new Graph(name);
 		// Now we can add our graph
@@ -173,9 +169,7 @@ public class Metrics
 	public void addGraph(final Graph graph)
 	{
 		if (graph == null)
-		{
 			throw new IllegalArgumentException("Graph cannot be null");
-		}
 		graphs.add(graph);
 	}
 
@@ -188,9 +182,7 @@ public class Metrics
 	public void addCustomData(final Plotter plotter)
 	{
 		if (plotter == null)
-		{
 			throw new IllegalArgumentException("Plotter cannot be null");
-		}
 		// Add the plotter to the graph o/
 		defaultGraph.addPlotter(plotter);
 		// Ensure the default graph is included in the submitted graphs
@@ -208,14 +200,10 @@ public class Metrics
 		{
 			// Did we opt out?
 			if (isOptOut())
-			{
 				return false;
-			}
 			// Is metrics already running?
 			if (taskId >= 0)
-			{
 				return true;
-			}
 			// Begin hitting the server with glorious data
 			taskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable()
 			{
@@ -237,9 +225,7 @@ public class Metrics
 								taskId = -1;
 								// Tell all plotters to stop gathering information.
 								for (final Graph graph : graphs)
-								{
 									graph.onOptOut();
-								}
 							}
 						}
 						// We use the inverse of firstPost because if it is the first time we are posting,
@@ -306,9 +292,7 @@ public class Metrics
 			}
 			// Enable Task, if it is not running
 			if (taskId < 0)
-			{
 				start();
-			}
 		}
 	}
 
@@ -370,9 +354,7 @@ public class Metrics
 		encodeDataPair(data, "revision", String.valueOf(REVISION));
 		// If we're pinging, append it
 		if (isPing)
-		{
 			encodeDataPair(data, "ping", "true");
-		}
 		// Acquire a lock on the graphs, which lets us make the assumption we also lock everything
 		// inside of the graph (e.g plotters)
 		synchronized (graphs)
@@ -402,13 +384,9 @@ public class Metrics
 		// Mineshafter creates a socks proxy, so we can safely bypass it
 		// It does not reroute POST requests so we need to go around it
 		if (isMineshafterPresent())
-		{
 			connection = url.openConnection(Proxy.NO_PROXY);
-		}
 		else
-		{
 			connection = url.openConnection();
-		}
 		connection.setDoOutput(true);
 		// Write the data
 		final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
@@ -421,28 +399,19 @@ public class Metrics
 		writer.close();
 		reader.close();
 		if (response == null || response.startsWith("ERR"))
-		{
 			throw new IOException(response); // Throw the exception
-		}
-		else
-		{
-			// Is this the first update this hour?
-			if (response.contains("OK This is your first update this hour"))
+		else // Is this the first update this hour?
+		if (response.contains("OK This is your first update this hour"))
+			synchronized (graphs)
 			{
-				synchronized (graphs)
+				final Iterator<Graph> iter = graphs.iterator();
+				while (iter.hasNext())
 				{
-					final Iterator<Graph> iter = graphs.iterator();
-					while (iter.hasNext())
-					{
-						final Graph graph = iter.next();
-						for (final Plotter plotter : graph.getPlotters())
-						{
-							plotter.reset();
-						}
-					}
+					final Graph graph = iter.next();
+					for (final Plotter plotter : graph.getPlotters())
+						plotter.reset();
 				}
 			}
-		}
 	}
 
 	/**
@@ -569,9 +538,7 @@ public class Metrics
 		public boolean equals(final Object object)
 		{
 			if (!(object instanceof Graph))
-			{
 				return false;
-			}
 			final Graph graph = (Graph) object;
 			return graph.name.equals(name);
 		}
@@ -648,9 +615,7 @@ public class Metrics
 		public boolean equals(final Object object)
 		{
 			if (!(object instanceof Plotter))
-			{
 				return false;
-			}
 			final Plotter plotter = (Plotter) object;
 			return plotter.name.equals(name) && plotter.getValue() == getValue();
 		}

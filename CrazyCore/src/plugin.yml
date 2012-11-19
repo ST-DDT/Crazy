@@ -1,7 +1,7 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 9.4.1
+version: 9.5
 softdepend: [PermissionsEx,GroupManager]
 description: >
             CrazyPlugin Core needed for all CrazyPlugins
@@ -29,39 +29,38 @@ permissions:
     description: Access to all crazyplugin commands
     default: false
     children:
-      crazylanguage.*: true
+      crazylanguage.advanced: true
       crazypipe.use: true
   crazycore.*:
     description: Access to all commands
     default: false
     children:
       crazycore.list: true
-      crazycore.infoplayer: true
-      crazycore.deleteplayer: true
-      crazylanguage.*: true
-  crazycore.list:
-    description: Allow showing all enabled CrazyPlugins
-    default: op
-  crazycore.infoplayer:
-    description: Show all available information about a player
-    default: op
-  crazycore.deleteplayer:
-    description: Delete all available information about a player
-    default: op
-    children:
-      crazycore.deleteplayer.self: true
-      crazycore.deleteplayer.other: true
-  crazycore.deleteplayer.self:
-    description: Delete all available information about you
-    default: true
-  crazycore.deleteplayer.other:
-    description: Delete all available information about a player
-    default: op
-  crazylanguage.*:
-    description: Access to all commands (Subsection language)
-    default: op
-    children:
+      crazycore.updatecheck: true
+      crazycore.player.info: true
+      crazycore.player.delete: true
+      crazycore.reload: true
+      crazycore.save: true
       crazylanguage.advanced: true
+      crazypipe.use: true
+  crazycore.list:
+    description: Allow showing all enabled CrazyPlugins.
+    default: op
+  crazycore.updatecheck:
+    description: Allow checking for updates and get informed if updates are available.
+    default: op
+  crazycore.player.info:
+    description: Allow displaying of all available information about a player (stored by CrazyPLugins).
+    default: op
+  crazycore.player.delete:
+    description: Allow deleting a player and all his stored information (CrazyPlugins+Commands).
+    default: op
+  crazycore.reload:
+    description: Allow reload plugin.
+    default: op
+  crazycore.save:
+    description: Allow saving plugin.
+    default: op
   crazylanguage.advanced:
     description: Allow changing default languages or language reloads.
     default: op
