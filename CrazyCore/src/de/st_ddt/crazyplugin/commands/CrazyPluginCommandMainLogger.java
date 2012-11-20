@@ -49,13 +49,12 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 			final TreeMap<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 			final StringParamitrisable pathParam = new StringParamitrisable(logger.getPath(channel));
 			params.put("path", pathParam);
-			params.put("", pathParam);
 			final BooleanParamitrisable consoleParam = new BooleanParamitrisable(logger.isLoggedToConsole(channel));
 			params.put("console", consoleParam);
 			// Read Params
 			try
 			{
-				ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params);
+				ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params, pathParam, consoleParam);
 			}
 			catch (final CrazyCommandException e)
 			{
@@ -65,12 +64,13 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 			// Apply Params
 			final String path = pathParam.getValue();
 			final boolean console = consoleParam.getValue();
-			if (path.equalsIgnoreCase("false"))
-				logger.createEmptyLogChannels(channel);
-			else if (path.equalsIgnoreCase("true"))
-				logger.createLogChannel(channel, "logs/plugin.log", null);
-			else
-				logger.createLogChannel(channel, path, null);
+			if (path != null)
+				if (path.equalsIgnoreCase("false"))
+					logger.createEmptyLogChannels(channel);
+				else if (path.equalsIgnoreCase("true"))
+					logger.createLogChannel(channel, "logs/plugin.log", null);
+				else
+					logger.createLogChannel(channel, path, null);
 			logger.setLoggedToConsole(channel, console);
 		}
 		// Show
