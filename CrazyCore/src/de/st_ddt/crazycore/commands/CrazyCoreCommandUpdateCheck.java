@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazycore.tasks.PluginUpdateCheckTask;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CrazyCoreCommandUpdateCheck extends CrazyCoreCommandExecutor
@@ -17,8 +18,10 @@ public class CrazyCoreCommandUpdateCheck extends CrazyCoreCommandExecutor
 	}
 
 	@Override
+	@Localized("CRAZYCORE.COMMAND.UPDATECHECK")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
+		plugin.sendLocaleMessage("COMMAND.UPDATECHECK", sender);
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new PluginUpdateCheckTask(true));
 	}
 
