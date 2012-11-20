@@ -64,16 +64,55 @@ public class DateParamitrisable extends TypedParamitrisable<Date>
 					break;
 				case 5:
 				case 6:
-					for (int i = 1; i <= 12; i++)
-						res.add(part + Integer.toString(i));
+					res.add(part + "01");
+					res.add(part + "02");
+					res.add(part + "03");
+					res.add(part + "04");
+					res.add(part + "05");
+					res.add(part + "06");
+					res.add(part + "07");
+					res.add(part + "08");
+					res.add(part + "09");
+					res.add(part + "10");
+					res.add(part + "11");
+					res.add(part + "12");
 					break;
 				case 7:
 					res.add(part + ".");
 					break;
 				case 8:
 				case 9:
-					for (int i = 1; i <= 31; i++)
-						res.add(part + Integer.toString(i));
+					res.add(part + "01");
+					res.add(part + "02");
+					res.add(part + "03");
+					res.add(part + "04");
+					res.add(part + "05");
+					res.add(part + "06");
+					res.add(part + "07");
+					res.add(part + "08");
+					res.add(part + "09");
+					res.add(part + "10");
+					res.add(part + "11");
+					res.add(part + "12");
+					res.add(part + "13");
+					res.add(part + "14");
+					res.add(part + "15");
+					res.add(part + "16");
+					res.add(part + "17");
+					res.add(part + "18");
+					res.add(part + "19");
+					res.add(part + "20");
+					res.add(part + "21");
+					res.add(part + "22");
+					res.add(part + "23");
+					res.add(part + "24");
+					res.add(part + "25");
+					res.add(part + "26");
+					res.add(part + "27");
+					res.add(part + "28");
+					res.add(part + "29");
+					res.add(part + "30");
+					res.add(part + "31");
 					break;
 			}
 			return res;

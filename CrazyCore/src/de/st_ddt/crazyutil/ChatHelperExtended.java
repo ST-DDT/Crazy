@@ -4,9 +4,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -213,6 +215,11 @@ public class ChatHelperExtended extends ChatHelper
 
 	public static <S> String[] readParameters(final String[] args, final Map<String, ? extends Paramitrisable> params) throws CrazyException
 	{
+		return readParameters(args, params, new Paramitrisable[0]);
+	}
+
+	public static <S> String[] readParameters(final String[] args, final Map<String, ? extends Paramitrisable> params, final Paramitrisable... indexedParams) throws CrazyException
+	{
 		final int length = args.length;
 		int p = 0;
 		for (int i = 0; i < length; i++)
@@ -280,18 +287,29 @@ public class ChatHelperExtended extends ChatHelper
 				return shiftArray(args, i + 1);
 			else
 				header = "";
+			// search param or use via index
 			Paramitrisable param = params.get(header.toLowerCase());
-			if (header.length() == 0)
+			if (header.length() == 0 && p < indexedParams.length)
 			{
-				final Paramitrisable tempParam = params.get(Integer.toString(p++));
+				final Paramitrisable tempParam = indexedParams[p++];
 				if (tempParam != null)
 					param = tempParam;
 			}
+			// found something?
 			if (param == null)
 				if (header.length() == 0)
 					throw new CrazyCommandNoSuchException("Parameter", value, params.keySet());
 				else
 					throw new CrazyCommandNoSuchException("Parameter", header, params.keySet());
+			else
+			{
+				// remove used params from map
+				Iterator<? extends Entry<String, ? extends Paramitrisable>> it = params.entrySet().iterator();
+				while (it.hasNext())
+					if (it.next().getValue() == param)
+						it.remove();
+			}
+			// save the value
 			try
 			{
 				param.setParameter(value);
@@ -377,10 +395,7 @@ public class ChatHelperExtended extends ChatHelper
 				return res;
 			else
 				header = "";
-			if (split.length == 1)
-				for (final String key : params.keySet())
-					if (key.startsWith(value.toLowerCase()))
-						res.add(key + ":");
+			// search param or use via index
 			TabbedParamitrisable param = params.get(header.toLowerCase());
 			if (header.length() == 0 && p < indexedParams.length)
 			{
@@ -388,6 +403,23 @@ public class ChatHelperExtended extends ChatHelper
 				if (tempParam != null)
 					param = tempParam;
 			}
+			// remove used params from map (without last one)
+			if (param != null && i < length - 1)
+			{
+				Iterator<? extends Entry<String, ? extends TabbedParamitrisable>> it = params.entrySet().iterator();
+				while (it.hasNext())
+					if (it.next().getValue() == param)
+						it.remove();
+			}
+			// searched values for this param?
+			if (i < length - 1)
+				continue;
+			// add remaining params
+			if (split.length == 1)
+				for (final String key : params.keySet())
+					if (key.startsWith(value.toLowerCase()))
+						res.add(key + ":");
+			// add possible values
 			if (param != null)
 				if (header.length() == 0)
 					res.addAll(param.tab(value));
