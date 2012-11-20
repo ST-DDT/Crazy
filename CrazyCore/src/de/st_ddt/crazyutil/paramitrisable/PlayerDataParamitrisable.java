@@ -44,12 +44,17 @@ public class PlayerDataParamitrisable<S extends PlayerDataInterface> extends Typ
 	@Override
 	public List<String> tab(String parameter)
 	{
+		return tabHelp(plugin, parameter);
+	}
+
+	public static List<String> tabHelp(CrazyPlayerDataPlugin<?, ?> plugin, String parameter)
+	{
 		parameter = parameter.toLowerCase();
 		final List<String> res = new LinkedList<String>();
 		int max = 20;
 		synchronized (plugin.getPlayerDataLock())
 		{
-			for (final S entry : plugin.getPlayerData())
+			for (final PlayerDataInterface entry : plugin.getPlayerData())
 				if (entry.getName().toLowerCase().startsWith(parameter))
 				{
 					res.add(entry.getName());
