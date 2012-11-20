@@ -1,8 +1,6 @@
 package de.st_ddt.crazycore.commands;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -17,6 +15,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 
 public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
 {
@@ -53,12 +52,7 @@ public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
 	{
 		if (args.length != 1)
 			return null;
-		final List<String> res = new ArrayList<String>();
-		final Pattern pattern = Pattern.compile(args[0], Pattern.CASE_INSENSITIVE);
-		for (final OfflinePlayer player : Bukkit.getOfflinePlayers())
-			if (pattern.matcher(player.getName()).find())
-				res.add(player.getName());
-		return res;
+		return OfflinePlayerParamitrisable.tabHelp(args[0]);
 	}
 
 	@Override

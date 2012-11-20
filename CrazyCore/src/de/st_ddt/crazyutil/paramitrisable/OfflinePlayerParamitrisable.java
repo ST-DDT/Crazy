@@ -27,7 +27,7 @@ public class OfflinePlayerParamitrisable extends TypedParamitrisable<OfflinePlay
 	}
 
 	@Override
-	public List<String> tab(String parameter)
+	public List<String> tab(final String parameter)
 	{
 		return tabHelp(parameter);
 	}

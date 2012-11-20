@@ -22,6 +22,7 @@ import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 
 public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPluginInterface>
 {
@@ -76,11 +77,20 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		final String last = args[args.length - 1];
 		final List<String> res = new ArrayList<String>();
-		for (final String mode : modes.keySet())
-			if (mode.startsWith(last))
-				res.add(mode);
+		if (args.length == 1)
+		{
+			final String last = args[args.length - 1].toLowerCase();
+			for (final String mode : modes.keySet())
+				if (mode.startsWith(last))
+					res.add(mode);
+		}
+		else
+		{
+			final Mode<?> mode = modes.get(args[0].toLowerCase());
+			if (mode != null)
+				res.addAll(mode.tab(args));
+		}
 		return res;
 	}
 
@@ -130,6 +140,11 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 		public abstract void setValue(CommandSender sender, String... args) throws CrazyException;
 
 		public abstract void setValue(S newValue) throws CrazyException;
+
+		public List<String> tab(final String... args)
+		{
+			return new ArrayList<String>();
+		}
 	}
 
 	public abstract class IntegerMode extends Mode<Integer>
@@ -216,6 +231,12 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 					setValue(ChatConverter.stringToDuration(args));
 					showValue(sender);
 				}
+		}
+
+		@Override
+		public List<String> tab(final String... args)
+		{
+			return DurationParamitrisable.tabHelp(args[args.length - 1]);
 		}
 	}
 

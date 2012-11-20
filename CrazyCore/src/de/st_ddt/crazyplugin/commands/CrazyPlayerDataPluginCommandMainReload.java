@@ -1,6 +1,5 @@
 package de.st_ddt.crazyplugin.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -17,6 +16,7 @@ import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 
 public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterface> extends CrazyPlayerDataCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
 {
@@ -62,10 +62,16 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		final List<String> res = new ArrayList<String>();
-		res.add("config:true");
-		res.add("database:true");
-		return res;
+		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
+		final BooleanParamitrisable config = new BooleanParamitrisable(args.length == 0);
+		params.put("c", config);
+		params.put("cfg", config);
+		params.put("config", config);
+		final BooleanParamitrisable database = new BooleanParamitrisable(args.length == 0);
+		params.put("d", database);
+		params.put("db", database);
+		params.put("database", database);
+		return ChatHelperExtended.tabHelp(args, params, config, database);
 	}
 
 	@Override

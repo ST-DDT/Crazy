@@ -39,16 +39,14 @@ public class CrazyCoreCommandLanguageSelect extends CrazyCoreCommandExecutor
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		if (args.length == 0)
-			return new ArrayList<String>(plugin.getPreloadedLanguages());
-		if (args.length > 1)
+		if (args.length != 1)
 			return null;
 		final List<String> res = new ArrayList<String>();
 		final String arg = args[0];
 		final Pattern pattern = Pattern.compile(arg, Pattern.CASE_INSENSITIVE);
-		for (final String subCommand : plugin.getPreloadedLanguages())
-			if (pattern.matcher(subCommand).find())
-				res.add(subCommand);
+		for (final String language : plugin.getPreloadedLanguages())
+			if (pattern.matcher(language).find() || pattern.matcher(CrazyLocale.getSaveLanguageName(language)).find())
+				res.add(language);
 		return res;
 	}
 }

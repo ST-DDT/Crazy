@@ -28,7 +28,7 @@ public class CrazyCoreCommandLanguageExtract extends CrazyCoreCommandExecutor
 	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.EXTRACTED $Language$", "CRAZYPLUGIN.COMMAND.LANGUAGE.EXTRACTED.PLUGIN $Language$ $Plugin$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (args.length == 0)
+		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Language>", "<Plugin>", "*");
 		final String name = args[0].toLowerCase();
 		if (name.equalsIgnoreCase("*"))
@@ -78,14 +78,14 @@ public class CrazyCoreCommandLanguageExtract extends CrazyCoreCommandExecutor
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
+		if (args.length != 1)
+			return null;
 		final List<String> res = new ArrayList<String>();
-		String arg = "";
-		if (args.length > 0)
-			arg = args[args.length - 1];
+		final String arg = args[0];
 		final Pattern pattern = Pattern.compile(arg, Pattern.CASE_INSENSITIVE);
-		for (final String subCommand : CrazyLocale.getActiveLanguages())
-			if (pattern.matcher(subCommand).find())
-				res.add(subCommand);
+		for (final String language : CrazyLocale.getActiveLanguages())
+			if (pattern.matcher(language).find() || pattern.matcher(CrazyLocale.getSaveLanguageName(language)).find())
+				res.add(language);
 		for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 			if (pattern.matcher(plugin.getName()).find())
 				res.add(plugin.getName());
