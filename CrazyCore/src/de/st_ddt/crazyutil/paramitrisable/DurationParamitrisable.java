@@ -11,7 +11,7 @@ public class DurationParamitrisable extends LongParamitrisable
 {
 
 	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
-	protected final static Pattern PATTERN_NUMERIC = Pattern.compile("[+-]?[0-9]*");
+	protected final static Pattern PATTERN_NUMERIC = Pattern.compile("[+-]?[0-9]+");
 
 	public DurationParamitrisable(final Long defaultValue)
 	{
@@ -34,13 +34,20 @@ public class DurationParamitrisable extends LongParamitrisable
 	@Override
 	public List<String> tab(final String parameter)
 	{
+		return tabHelp(parameter);
+	}
+
+	public static List<String> tabHelp(final String parameter)
+	{
 		final List<String> res = new LinkedList<String>();
 		final String[] split = PATTERN_SPACE.split(parameter);
 		final String part = split[split.length - 1];
-		if (!PATTERN_NUMERIC.matcher(part).matches())
-			return res;
-		for (final String unit : new String[] { "Y", "M", "W", "D", "h", "m", "s", "t" })
-			res.add(part + unit);
+		if (PATTERN_NUMERIC.matcher(part).matches())
+			for (final String unit : new String[] { "Y", "M", "W", "D", "h", "m", "s", "t" })
+				res.add(part + unit);
+		if (parameter.length() == 0)
+			for (final String unit : new String[] { "Y", "M", "W", "D", "h", "m", "s", "t" })
+				res.add(part + "1" + unit);
 		return res;
 	}
 }

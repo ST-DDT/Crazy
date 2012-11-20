@@ -29,6 +29,11 @@ public class OfflinePlayerParamitrisable extends TypedParamitrisable<OfflinePlay
 	@Override
 	public List<String> tab(String parameter)
 	{
+		return tabHelp(parameter);
+	}
+
+	public static List<String> tabHelp(String parameter)
+	{
 		parameter = parameter.toLowerCase();
 		int max = 20;
 		final List<String> res = new LinkedList<String>();

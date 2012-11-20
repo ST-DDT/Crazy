@@ -58,17 +58,9 @@ public class TargetDateParamitrisable extends DateParamitrisable
 	public List<String> tab(final String parameter)
 	{
 		final List<String> res = super.tab(parameter);
-		final String[] split = PATTERN_SPACE.split(parameter);
-		final String part = split[split.length - 1];
-		if (PATTERN_NUMERIC.matcher(part).matches())
-			for (final String unit : new String[] { "Y", "M", "W", "D", "h", "m", "s", "t" })
-				res.add(part + unit);
+		res.addAll(DurationParamitrisable.tabHelp(parameter));
 		if (parameter.length() == 0)
-		{
 			res.add("*");
-			for (final String unit : new String[] { "Y", "M", "W", "D", "h", "m", "s", "t" })
-				res.add(part + "1" + unit);
-		}
 		if (parameter.equals("*"))
 			res.add("*");
 		return res;
