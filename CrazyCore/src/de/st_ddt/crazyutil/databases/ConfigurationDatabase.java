@@ -21,7 +21,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 		public void run()
 		{
 			if (requireSave)
-				saveDatabase();
+				saveDatabaseDelayed();
 		}
 	};
 	private boolean requireSave = false;
@@ -168,17 +168,27 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	@Override
 	public void saveDatabase()
 	{
+		synchronized (getDatabaseLock())
+		{
+			for (final S entry : datas.values())
+				entry.saveToConfigDatabase(config, path + "." + entry.getName().toLowerCase() + ".", columnNames);
+		}
 		plugin.saveConfig();
-		requireSave = false;
 	}
 
-	public void asyncSaveDatabase()
+	protected final void asyncSaveDatabase()
 	{
 		if (!requireSave)
 		{
 			requireSave = true;
 			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, delayedSave);
 		}
+	}
+
+	private void saveDatabaseDelayed()
+	{
+		plugin.saveConfig();
+		requireSave = false;
 	}
 
 	@Override
