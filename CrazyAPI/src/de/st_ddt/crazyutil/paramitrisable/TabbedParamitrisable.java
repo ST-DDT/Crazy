@@ -1,9 +1,7 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
-import java.util.List;
+import de.st_ddt.crazyutil.Tabbed;
 
-public interface TabbedParamitrisable extends Paramitrisable
+public interface TabbedParamitrisable extends Paramitrisable, Tabbed
 {
-
-	public List<String> tab(String parameter);
 }

@@ -22,6 +22,7 @@ import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 
 public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPluginInterface>
@@ -277,6 +278,15 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 		public void showValue(final CommandSender sender)
 		{
 			plugin.sendLocaleMessage("MODE.CHANGE", sender, name, getValue() ? "True" : "False");
+		}
+
+		@Override
+		public List<String> tab(final String... args)
+		{
+			if (args.length != 1)
+				return new ArrayList<String>();
+			else
+				return BooleanParamitrisable.tabHelp(args[0]);
 		}
 	}
 

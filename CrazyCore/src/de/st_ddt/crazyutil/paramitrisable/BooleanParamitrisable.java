@@ -39,7 +39,12 @@ public class BooleanParamitrisable extends TypedParamitrisable<Boolean>
 	}
 
 	@Override
-	public List<String> tab(String parameter)
+	public List<String> tab(final String parameter)
+	{
+		return tabHelp(parameter);
+	}
+
+	public static List<String> tabHelp(String parameter)
 	{
 		parameter = parameter.toLowerCase();
 		final List<String> res = new LinkedList<String>();

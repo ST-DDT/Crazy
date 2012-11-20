@@ -5,7 +5,7 @@ import java.util.Collection;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
-public interface FilterInterface<S> extends Named
+public interface FilterInterface<S> extends Named, Tabbed
 {
 
 	@Override

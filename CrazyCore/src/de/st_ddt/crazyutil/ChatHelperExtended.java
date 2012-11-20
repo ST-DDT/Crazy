@@ -27,7 +27,6 @@ import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.SortParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 
 public class ChatHelperExtended extends ChatHelper
 {
@@ -145,7 +144,6 @@ public class ChatHelperExtended extends ChatHelper
 		};
 		params.put("p", page);
 		params.put("page", page);
-		params.put("", page);
 		// add style params
 		final StringParamitrisable chatHeader = new ColoredStringParamitrisable(defaultChatHeader);
 		params.put("chatheader", chatHeader);
@@ -171,7 +169,7 @@ public class ChatHelperExtended extends ChatHelper
 		// work parameters
 		if (modder != null)
 			modder.modListPreOptions(params, datas);
-		String[] pipe = readParameters(args, params);
+		String[] pipe = readParameters(args, params, page);
 		if (modder != null)
 			pipe = modder.modListPostOptions(datas, pipe);
 		// Filter
@@ -304,7 +302,7 @@ public class ChatHelperExtended extends ChatHelper
 			else
 			{
 				// remove used params from map
-				Iterator<? extends Entry<String, ? extends Paramitrisable>> it = params.entrySet().iterator();
+				final Iterator<? extends Entry<String, ? extends Paramitrisable>> it = params.entrySet().iterator();
 				while (it.hasNext())
 					if (it.next().getValue() == param)
 						it.remove();
@@ -323,7 +321,7 @@ public class ChatHelperExtended extends ChatHelper
 		return null;
 	}
 
-	public static List<String> tabHelp(final String[] args, final Map<String, ? extends TabbedParamitrisable> params, final TabbedParamitrisable... indexedParams)
+	public static List<String> tabHelp(final String[] args, final Map<String, ? extends Tabbed> params, final Tabbed... indexedParams)
 	{
 		final List<String> res = new LinkedList<String>();
 		final int length = args.length;
@@ -396,17 +394,17 @@ public class ChatHelperExtended extends ChatHelper
 			else
 				header = "";
 			// search param or use via index
-			TabbedParamitrisable param = params.get(header.toLowerCase());
+			Tabbed param = params.get(header.toLowerCase());
 			if (header.length() == 0 && p < indexedParams.length)
 			{
-				final TabbedParamitrisable tempParam = indexedParams[p++];
+				final Tabbed tempParam = indexedParams[p++];
 				if (tempParam != null)
 					param = tempParam;
 			}
 			// remove used params from map (without last one)
 			if (param != null && i < length - 1)
 			{
-				Iterator<? extends Entry<String, ? extends TabbedParamitrisable>> it = params.entrySet().iterator();
+				final Iterator<? extends Entry<String, ? extends Tabbed>> it = params.entrySet().iterator();
 				while (it.hasNext())
 					if (it.next().getValue() == param)
 						it.remove();
@@ -428,6 +426,57 @@ public class ChatHelperExtended extends ChatHelper
 						res.add(header + ":" + entry);
 		}
 		return res;
+	}
+
+	public static <S> Tabbed listTabHelp(final Map<String, Tabbed> params, final CommandSender sender, final Collection<? extends FilterInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters)
+	{
+		final BooleanParamitrisable reverse = new BooleanParamitrisable(false);
+		params.put("reverse", reverse);
+		final IntegerParamitrisable amount = new IntegerParamitrisable(10)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				if (parameter.equals("*"))
+					value = -1;
+				else
+					super.setParameter(parameter);
+			}
+		};
+		params.put("a", amount);
+		params.put("amount", amount);
+		final IntegerParamitrisable page = new IntegerParamitrisable(1)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				if (parameter.equals("*"))
+					amount.setParameter(parameter);
+				else
+					super.setParameter(parameter);
+			}
+		};
+		params.put("p", page);
+		params.put("page", page);
+		// add style params
+		final StringParamitrisable chatHeader = new ColoredStringParamitrisable(null);
+		params.put("chatheader", chatHeader);
+		final StringParamitrisable headFormat = new ColoredStringParamitrisable(null);
+		params.put("headformat", headFormat);
+		final StringParamitrisable listFormat = new ColoredStringParamitrisable(null);
+		params.put("listformat", listFormat);
+		final StringParamitrisable entryFormat = new ColoredStringParamitrisable(null);
+		params.put("entryformat", entryFormat);
+		// add filters
+		if (filters != null)
+			params.putAll(Filter.getFilterTabMap(filters));
+		// add additional parameters
+		final SortParamitrisable<S> sort = new SortParamitrisable<S>(sorters, null);
+		if (sorters != null)
+			params.put("sort", sort);
+		return page;
 	}
 
 	public static <S> S[] cutArray(final S[] args, final int anz)

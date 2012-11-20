@@ -1,9 +1,11 @@
 package de.st_ddt.crazyutil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,6 +44,18 @@ public abstract class Filter<S> implements FilterInterface<S>
 		return res;
 	}
 
+	public static <S> Map<String, Tabbed> getFilterTabMap(final Collection<? extends FilterInterface<S>> filters)
+	{
+		final Map<String, Tabbed> res = new HashMap<String, Tabbed>();
+		for (final FilterInterface<S> filter : filters)
+		{
+			res.put(filter.getName(), filter);
+			for (final String alias : filter.getAliases())
+				res.put(alias, filter);
+		}
+		return res;
+	}
+
 	public Filter(final String name, final String... aliases)
 	{
 		super();
@@ -62,6 +76,12 @@ public abstract class Filter<S> implements FilterInterface<S>
 	public final String[] getAliases()
 	{
 		return aliases;
+	}
+
+	@Override
+	public List<String> tab(final String parameter)
+	{
+		return new ArrayList<String>();
 	}
 
 	protected abstract class FilterInstance implements Named, FilterInstanceInterface<S>
