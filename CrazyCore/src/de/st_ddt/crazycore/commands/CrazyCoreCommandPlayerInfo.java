@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazycore.data.PseudoPlayerData;
-import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
+import de.st_ddt.crazyplugin.PlayerDataProvider;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -36,13 +36,13 @@ public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
 		if (player == null)
 			throw new CrazyCommandNoSuchException("Player", name);
 		new PseudoPlayerData(player.getName()).show(sender);
-		for (final CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface> plugin : CrazyPlayerDataPlugin.getCrazyPlayerDataPlugins())
+		for (final PlayerDataProvider provider : PlayerDataProvider.PROVIDERS)
 		{
-			final PlayerDataInterface data = plugin.getAvailablePlayerData(name);
+			final PlayerDataInterface data = provider.getAvailablePlayerData(name);
 			if (data != null)
 			{
 				plugin.sendLocaleMessage("PLAYERINFO.SEPARATOR", sender);
-				data.showDetailed(sender, plugin.getChatHeader());
+				data.showDetailed(sender, provider.getChatHeader());
 			}
 		}
 	}

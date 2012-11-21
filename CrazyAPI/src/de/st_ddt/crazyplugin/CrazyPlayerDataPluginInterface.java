@@ -15,7 +15,7 @@ import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 
-public interface CrazyPlayerDataPluginInterface<T extends PlayerDataInterface, S extends T> extends CrazyPluginInterface
+public interface CrazyPlayerDataPluginInterface<T extends PlayerDataInterface, S extends T> extends CrazyPluginInterface, PlayerDataProvider
 {
 
 	public void loadDatabase();

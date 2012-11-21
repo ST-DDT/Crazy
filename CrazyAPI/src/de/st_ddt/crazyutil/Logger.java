@@ -1,5 +1,7 @@
 package de.st_ddt.crazyutil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +11,8 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 
 public interface Logger
 {
+
+	public final static DateFormat LOGDATETIMEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public abstract CrazyPluginInterface getPlugin();
 

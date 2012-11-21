@@ -224,6 +224,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	public void onLoad()
 	{
 		playerDataPlugins.put(this.getClass(), this);
+		PROVIDERS.add(this);
 		super.onLoad();
 	}
 
