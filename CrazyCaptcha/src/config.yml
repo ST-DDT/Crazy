@@ -5,8 +5,8 @@ version: X.Y
 # required plugins +version can be found there
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyCaptcha/src/plugin.yml
 commandWhitelist: 
-- /captcha .*
-- /language [a-z][a-z]_[a-z][a-z]
+- /captcha[ ]?.*
+- /language [a-z]{2,3}_[a-z]{2,3}
 - /language select.*
 - /language list.*
 - /worldedit cui
