@@ -1,20 +1,20 @@
 ﻿CRAZYPUNISHER=CrazyPunisher
-CRAZYPUNISHER.MESSAGE.HARDBAN=&CJe bent permanent geband door de banhamer!
-CRAZYPUNISHER.MESSAGE.HARDBAN=&CJe bent Geband door de banhamer!
-CRAZYPUNISHER.MESSAGE.JAILED=Je bent &Cin de gevangenis!
-CRAZYPUNISHER.MESSAGE.JAILEDUNTIL=Je bent &Cin de gevangenis! &F$0$
+CRAZYPUNISHER.MESSAGE.HARDBAN=&CJe bent gehammert en permanent gebanned van deze server!
+CRAZYPUNISHER.MESSAGE.HARDBAN=&CJe bent gebanned op deze server!
+CRAZYPUNISHER.MESSAGE.JAILED=je bent &Cgejailed!
+CRAZYPUNISHER.MESSAGE.JAILEDUNTIL=Je bent &Cgejailed! &F$0$
 CRAZYPUNISHER.MESSAGE.KICK=Je bent gekickt!
-CRAZYPUNISHER.BROADCAST.HARDBAN=&5$0$ heeft te maken gekregen met de banhamer en is geband van de server!
-CRAZYPUNISHER.BROADCAST.BAN=&5$0$ is geband van de server!
-CRAZYPUNISHER.BROADCAST.UNBAN=&5$0$ is niet meer geband van de server!
-CRAZYPUNISHER.BROADCAST.JAIL=&5$0$ zit nu in de gevangenis!
-CRAZYPUNISHER.BROADCAST.UNJAIL=&5$0$ zit niet meer in de gevangenis!
-CRAZYPUNISHER.BROADCAST.KICK=&5$0$ is gekickt van de server!
+CRAZYPUNISHER.BROADCAST.HARDBAN=&5$0$ Is gehammerd en gebanned van deze server!
+CRAZYPUNISHER.BROADCAST.BAN=&5$0$ Is gebanned van deze server!
+CRAZYPUNISHER.BROADCAST.UNBAN=&5$0$ Is unbanned van deze server!
+CRAZYPUNISHER.BROADCAST.JAIL=&5$0$ Is gevangen!
+CRAZYPUNISHER.BROADCAST.UNJAIL=&5$0$ Is vrijgelaten!
+CRAZYPUNISHER.BROADCAST.KICK=&5$0$ Is gekickt van deze server!
 CRAZYPUNISHER.COMMAND.SHOW=Je bent nu zichtbaar!
-CRAZYPUNISHER.COMMAND.SHOW.DONE=Zichtbaar succesvol veranderd!
-CRAZYPUNISHER.COMMAND.HIDDEN=Je bent verborgen!
-CRAZYPUNISHER.COMMAND.HIDDEN.DONE=Zichtbaarheid succesvol veranderd!
+CRAZYPUNISHER.COMMAND.SHOW.DONE=Zichtbaarheid succesvol verandert!
+CRAZYPUNISHER.COMMAND.HIDDEN=Je bent onzichtbaar!
+CRAZYPUNISHER.COMMAND.HIDDEN.DONE=Zichtbaarheid succesvol verandert!
 CRAZYPUNISHER.JAILLOCATION=Jaillocation = $0$ $1$ $2$ $3$
-CRAZYPUNISHER.JAILLOCATION.CHANGED=Gevangenisstraf veranderd
+CRAZYPUNISHER.JAILLOCATION.CHANGED=Gevangenislocatie verandert
 CRAZYPUNISHER.JAILRANGE=Jailrange = $0$
-CRAZYPUNISHER.JAILRANGE.CHANGED=Gevangenisruimte veranderd
+CRAZYPUNISHER.JAILRANGE.CHANGED=Gevangenisgrootte verandert!
