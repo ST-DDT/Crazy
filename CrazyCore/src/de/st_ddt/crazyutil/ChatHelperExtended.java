@@ -321,6 +321,14 @@ public class ChatHelperExtended extends ChatHelper
 		return null;
 	}
 
+	public static List<String> tabHelpWithPipe(CommandSender sender, final String[] args, final Map<String, ? extends Tabbed> params, final Tabbed... indexedParams)
+	{
+		for (int i = 0; i < args.length; i++)
+			if (args[i].equals(">"))
+				return CrazyPipe.tabHelp(sender, ChatHelperExtended.shiftArray(args, i + 1));
+		return tabHelp(args, params, indexedParams);
+	}
+
 	public static List<String> tabHelp(final String[] args, final Map<String, ? extends Tabbed> params, final Tabbed... indexedParams)
 	{
 		final List<String> res = new LinkedList<String>();

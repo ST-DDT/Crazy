@@ -1,19 +1,35 @@
 package de.st_ddt.crazyutil;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 
+import de.st_ddt.crazycore.CrazyCore;
+import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUnsupportedException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.ColoredStringParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.FileParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 
 public abstract class CrazyPipe
 {
@@ -62,6 +78,36 @@ public abstract class CrazyPipe
 		}
 		else
 			pipe.execute(sender, datas, ChatHelperExtended.shiftArray(pipeArgs, 1));
+	}
+
+	public static List<String> tabHelp(CommandSender sender, String[] pipeArgs)
+	{
+		final int length = pipeArgs.length;
+		for (int i = 0; i < length; i++)
+			if (pipeArgs[i].equals("|"))
+				return tabHelp(sender, ChatHelperExtended.shiftArray(pipeArgs, i + 1));
+		if (length == 0)
+			return null;
+		final CrazyPipe pipe = pipes.get(pipeArgs[0].toLowerCase());
+		if (pipe == null)
+		{
+			List<String> res = new LinkedList<String>();
+			PluginCommand command = Bukkit.getPluginCommand(pipeArgs[0]);
+			if (pipeArgs.length == 1)
+			{
+				for (String cmd : Bukkit.getCommandAliases().keySet())
+					if (cmd.toLowerCase().startsWith(pipeArgs[0].toLowerCase()))
+						res.add(cmd);
+				for (String cmd : pipes.keySet())
+					if (cmd.startsWith(pipeArgs[0].toLowerCase()))
+						res.add(cmd);
+			}
+			else if (command != null)
+				res.addAll(command.tabComplete(sender, pipeArgs[0], ChatHelperExtended.shiftArray(pipeArgs, 1)));
+			return res;
+		}
+		else
+			return pipe.tab(sender, ChatHelperExtended.shiftArray(pipeArgs, 1));
 	}
 
 	public static void pipe(final CommandSender sender, final ParameterData data, final String... pipeArgs) throws CrazyException
@@ -160,6 +206,11 @@ public abstract class CrazyPipe
 
 	public abstract void execute(CommandSender sender, Collection<? extends ParameterData> datas, String... pipeArgs) throws CrazyException;
 
+	public List<String> tab(CommandSender sender, String[] parameter)
+	{
+		return new LinkedList<String>();
+	}
+
 	public static boolean isDisabled()
 	{
 		return disabled;
@@ -192,13 +243,18 @@ public abstract class CrazyPipe
 						break;
 					}
 					for (final String part : arg.split(","))
-					{
-						final String[] split = part.split("-");
-						final int begin = Math.max(Math.min(entries.size(), Integer.parseInt(split[0])), 0);
-						final int ende = Math.max(Math.min(entries.size(), Integer.parseInt(split[split.length - 1])), begin);
-						for (int i = begin; i <= ende; i++)
-							newEntries.add(entries.get(i - 1));
-					}
+						try
+						{
+							final String[] split = part.split("-");
+							final int begin = Math.max(Math.min(entries.size(), Integer.parseInt(split[0])), 0);
+							final int ende = Math.max(Math.min(entries.size(), Integer.parseInt(split[split.length - 1])), begin);
+							for (int i = begin; i <= ende; i++)
+								newEntries.add(entries.get(i - 1));
+						}
+						catch (NumberFormatException e)
+						{
+							throw new CrazyCommandParameterException(a, "NumberRange");
+						}
 				}
 				pipe(sender, newEntries, newArgs);
 			}
@@ -271,5 +327,81 @@ public abstract class CrazyPipe
 				sender.sendMessage(separator);
 			}
 		}, "show+");
+		registerPipe(new CrazyPipe()
+		{
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
+			{
+				Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+				FileParamitrisable file = new FileParamitrisable(CrazyCore.getPlugin().getDataFolder().getAbsoluteFile().getParentFile().getParentFile(), null);
+				params.put("file", file);
+				BooleanParamitrisable append = new BooleanParamitrisable(false);
+				params.put("append", append);
+				final StringParamitrisable chatHeader = new ColoredStringParamitrisable("");
+				params.put("chatheader", chatHeader);
+				final StringParamitrisable headFormat = new ColoredStringParamitrisable(null);
+				params.put("headformat", headFormat);
+				final StringParamitrisable listFormat = new ColoredStringParamitrisable("$1$\n");
+				params.put("listformat", listFormat);
+				final StringParamitrisable entryFormat = new ColoredStringParamitrisable("$0$");
+				params.put("entryformat", entryFormat);
+				ChatHelperExtended.readParameters(pipeArgs, params, file);
+				int i = 0;
+				try
+				{
+					Writer writer = new FileWriter(file.getValue(), append.getValue());
+					if (headFormat.getValue() != null)
+						writer.write(ChatHelperExtended.putArgs(headFormat.getValue() + "\n", "", "", chatHeader.getValue(), CrazyPlugin.DATETIMEFORMAT.format(new Date())));
+					for (ParameterData data : datas)
+						writer.write(ChatHelperExtended.putArgs(listFormat.getValue(), Integer.toString(i++), ChatHelperExtended.putArgsPara(sender, entryFormat.getValue(), data), chatHeader.getValue()));
+					writer.close();
+				}
+				catch (IOException e)
+				{
+					throw new CrazyCommandErrorException(e);
+				}
+			}
+
+			public List<String> tab(CommandSender sender, String[] args)
+			{
+				Map<String, Tabbed> params = new HashMap<String, Tabbed>();
+				FileParamitrisable file = new FileParamitrisable(CrazyCore.getPlugin().getDataFolder().getAbsoluteFile().getParentFile().getParentFile(), null);
+				params.put("file", file);
+				BooleanParamitrisable append = new BooleanParamitrisable(false);
+				params.put("append", append);
+				final StringParamitrisable chatHeader = new ColoredStringParamitrisable(null);
+				params.put("chatheader", chatHeader);
+				final StringParamitrisable headFormat = new ColoredStringParamitrisable(null);
+				params.put("headformat", headFormat);
+				final StringParamitrisable listFormat = new ColoredStringParamitrisable(null);
+				params.put("listformat", listFormat);
+				final StringParamitrisable entryFormat = new ColoredStringParamitrisable(null);
+				params.put("entryformat", entryFormat);
+				return ChatHelperExtended.tabHelp(args, params, file);
+			}
+		}, "log", "file");
+		registerPipe(new CrazyPipe()
+		{
+
+			@Override
+			public void execute(CommandSender sender, Collection<? extends ParameterData> datas, String... pipeArgs) throws CrazyException
+			{
+				try
+				{
+					pipe(sender, datas, pipeArgs);
+				}
+				catch (CrazyException e)
+				{
+					e.show(sender);
+				}
+			}
+
+			@Override
+			public List<String> tab(CommandSender sender, String[] parameter)
+			{
+				return tabHelp(sender, parameter);
+			}
+		}, "save");
 	}
 }

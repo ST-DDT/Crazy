@@ -52,7 +52,7 @@ public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterfac
 	{
 		final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
 		Tabbed pageTab = ChatHelperExtended.listTabHelp(params, sender, availableFilters, availableSorters);
-		return ChatHelperExtended.tabHelp(args, params, pageTab);
+		return ChatHelperExtended.tabHelpWithPipe(sender, args, params, pageTab);
 	}
 
 	@Override
