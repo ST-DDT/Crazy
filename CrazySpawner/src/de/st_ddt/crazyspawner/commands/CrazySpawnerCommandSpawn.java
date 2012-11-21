@@ -20,7 +20,7 @@ import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 
 public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 {
@@ -34,7 +34,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 	@Localized("CRAZYSPAWNER.COMMAND.SPAWNED $Type$ $Amount$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
+		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
 		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
 		params.put("", creature);
 		params.put("c", creature);

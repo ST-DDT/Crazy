@@ -1,8 +1,8 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-version: 3.3
-# requires CrazyCore v9.2 or later
+version: 3.4
+# requires CrazyCore v9.5 or later
 depend: [CrazyCore]
 description: >
             CrazySpawner spawn and remove mobs where ever you like.

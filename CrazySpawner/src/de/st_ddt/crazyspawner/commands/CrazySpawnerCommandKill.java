@@ -30,7 +30,7 @@ import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 
 public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 {
@@ -48,7 +48,7 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 	@Localized({ "CRAZYSPAWNER.COMMAND.KILLED.MONSTERS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.ANIMALS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.GOLEMS $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.VILLAGER $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.BOSSES $Amount$", "CRAZYSPAWNER.COMMAND.KILLED.TYPE $Amount$ $Type$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
+		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
 		final DoubleParamitrisable range = new DoubleParamitrisable(16D);
 		params.put("", range);
 		params.put("r", range);
@@ -141,15 +141,15 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 		return res;
 	}
 
-	private boolean checkArgs(String... args)
+	private boolean checkArgs(final String... args)
 	{
-		for (String arg : args)
+		for (final String arg : args)
 			try
 			{
 				Integer.parseInt(arg);
 				continue;
 			}
-			catch (NumberFormatException e)
+			catch (final NumberFormatException e)
 			{
 				if (arg.startsWith("r:"))
 					continue;
