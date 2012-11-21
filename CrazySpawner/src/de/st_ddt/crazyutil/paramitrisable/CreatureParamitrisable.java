@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.bukkit.entity.EntityType;
 
@@ -54,5 +55,16 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 				if (!value.isAlive() || !value.isSpawnable())
 					throw new CrazyCommandParameterException(0, "CreatureType", CREATURE_NAMES);
 		}
+	}
+
+	@Override
+	public List<String> tab(String parameter)
+	{
+		parameter = parameter.toUpperCase();
+		List<String> res = new LinkedList<String>();
+		for (String name : CREATURE_NAMES)
+			if (name.startsWith(parameter))
+				res.add(name);
+		return res;
 	}
 }
