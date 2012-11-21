@@ -1,0 +1,132 @@
+name: CrazyChats
+main: de.st_ddt.crazychats.CrazyChats
+author: ST-DDT
+version: 0.9.3
+# requires CrazyCore v9.5 or later
+depend: [CrazyCore]
+softdepend: [TagAPI]
+description: >
+            CrazyChats add chat channels and many usefull features to your chat.
+commands:
+  tell:
+    description: Chat to the given player.
+    usage: /<command> <Players> <Message>
+  chatto:
+    description: Chat to the given players only.
+    usage: /<command> [Players]
+  chatadd:
+    description: Add the given players to the private chat channel targets.
+    usage: /<command> <Players>
+  chatremove:
+    description: Remove the given players from the private chat channel targets.
+    usage: /<command> <Players>
+  chatchannel:
+    description: Get/Change your current chat channel.
+    usage: /<command> [Channel]
+  muteplayer:
+    description: Mute a player.
+    usage: /<command> <Player...>
+  unmuteplayer:
+    description: Unmute a player.
+    usage: /<command> <Player...>
+  mutechannel:
+    description: Mute a channel.
+    usage: /<command> <Channel...>
+  unmutechannel:
+    description: Unmute a channel.
+    usage: /<command> <Channel...>
+  muteall:
+    description: Mute all channels.
+    usage: /<command>
+  crazychats:
+    description: Plugin Main Menu
+    usage: /<command> <Subcommands...>
+    aliases: [crazychat,cchats,cchat]
+permissions:
+  crazychats.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazychats.broadcastchannel.talk: true
+      crazychats.globalchannel.talk: true
+      crazychats.worldchannels.remotetalk: true
+      crazychats.worldchannels.talk: true
+      crazychats.localchannel.talk: true
+      crazychats.talk: true
+      crazychats.player.displayname.self: true
+      crazychats.player.displayname.other: true
+      crazychats.player.headname.self: true
+      crazychats.player.headname.other: true
+      crazychats.player.listname.self: true
+      crazychats.player.listname.other: true
+      crazychats.player.mute: true
+      crazychats.player.silence: true
+      crazychats.player.unmute: true
+      crazychats.coloredchat: true
+      crazychats.chatspy: true
+      crazychats.unmutable: true
+  crazychats.broadcastchannel.talk:
+    description: Allow chatting in Broadcast channel.
+    default: op
+  crazychats.globalchannel.talk:
+    description: Allow chatting in Global channel.
+    default: op
+  crazychats.worldchannels.remotetalk:
+    description: Allow chatting in all World channels (from other world).
+    default: op
+#  crazychats.worldchannel.WORLD.remotetalk:
+#    description: Allow chatting in WORLD's World channel (from other world).
+#    default: op
+  crazychats.worldchannels.talk:
+    description: Allow chatting in all World channels (current world).
+    default: true
+#  crazychats.worldchannel.WORLD.talk:
+#    description: Allow chatting in WORLD's World channel (current world).
+#    default: true
+  crazychats.localchannel.talk:
+    description: Allow chatting in Local channel.
+    default: true
+  crazychats.talk:
+    description: Allow chatting.
+    default: true
+  crazychats.player.displayname.self:
+    description: Allow changing your own display name.
+    default: op
+  crazychats.player.displayname.other:
+    description: Allow changing other player's display names.
+    default: op
+  crazychats.player.headname.self:
+    description: Allow changing your own head name.
+    default: op
+  crazychats.player.headname.other:
+    description: Allow changing other player's head name.
+    default: op
+  crazychats.player.listname.self:
+    description: Allow changing your own list name.
+    default: op
+  crazychats.player.listname.other:
+    description: Allow changing other player's list name.
+    default: op
+  crazychats.player.silence:
+    description: Allow silencing/globally muting a player.
+    default: op
+  crazychats.player.mute:
+    description: Allow muting a player for another player.
+    default: op
+  crazychats.player.unmute:
+    description: Allow unmuting a player for another player.
+    default: op
+  crazychats.coloredchat:
+    description: Allow colored chat.
+    default: op
+  crazychats.chatspy:
+    description: Show all messages to this player.
+    default: false
+    children:
+      crazychats.worldchannels.remotetalk: true
+      crazychats.worldchannels.talk: true
+      crazychats.localchannel.talk: true
+      crazychats.talk: true
+  crazychats.unmutable:
+    description: This player cannot be muted.
+    default: op
