@@ -54,10 +54,6 @@ public class CrazyChatsPlayerCommandChatAdd extends CrazyChatsPlayerCommandExecu
 			plugin.sendLocaleMessage("COMMAND.CHANNEL.PRIVATE.TARGET.ADDED", player, ChatHelper.listingString(getPlayerNames(targetList)));
 		}
 	}
-	
-	
-
-	
 
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)

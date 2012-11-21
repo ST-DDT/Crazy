@@ -1,6 +1,7 @@
 ﻿CRAZYCHATS=CrazyChats
 CRAZYCHATS.CHANNEL.CHANGED=Du sprichst jetzt im $0$ Channel.
 CRAZYCHATS.CHANNEL.CURRENT=Du sprichst gerade im $0$ Channel.
+CRAZYCHATS.CHANNELFORMAT.CHANGE=$0$ = \n$1$\n$2$
 CRAZYCHATS.CHAT.BLOCKED.NOCHANNEL=Du hast keinen Channel gewählt.
 CRAZYCHATS.CHAT.BLOCKED.NOPERMISSION=Du darfst nicht chatten!
 CRAZYCHATS.CHAT.BLOCKED.NOSUCHPLAYER=Den Spieler $0$ gibt es nicht!

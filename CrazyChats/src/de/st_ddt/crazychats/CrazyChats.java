@@ -3,7 +3,6 @@ package de.st_ddt.crazychats;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +26,8 @@ import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerListName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerMute;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerSilence;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerUnmute;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandSay;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandTell;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatAdd;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatChannel;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatRemove;
@@ -34,7 +35,6 @@ import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatTo;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandMuteAll;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandMuteChannel;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandMutePlayer;
-import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandTell;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandUnmuteChannel;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandUnmutePlayer;
 import de.st_ddt.crazychats.data.ChatPlayerData;
@@ -73,6 +73,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private String localChatFormat = "[Local]%1$s: %2$s";
 	private double localChatRange = 50;
 	private String privateChatFormat = "[Private]%1$s: %2$s";
+	private String defaultChannelKey;
 	private boolean tagAPIenabled;
 
 	public static CrazyChats getPlugin()
@@ -86,16 +87,22 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		registerModes();
 	}
 
-	@Localized("CRAZYCHATS.MODE.CHANGE $Name$ $Value$")
+	@Localized({ "CRAZYCHATS.MODE.CHANGE $Name$ $Value$", "CRAZYCHATS.CHANNELFORMAT.CHANGE $FormatName$ $Value$ $Example$ " })
 	private void registerModes()
 	{
 		modeCommand.addMode(modeCommand.new Mode<String>("broadcastChatFormat", String.class)
 		{
 
 			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(broadcastChatFormat, "Sender", "Message"));
+			}
+
+			@Override
 			public String getValue()
 			{
-				return String.format(broadcastChatFormat, "Channel", "Message") + " (" + CrazyChatsChatHelper.unmakeFormat(broadcastChatFormat) + ")";
+				return CrazyChatsChatHelper.unmakeFormat(broadcastChatFormat);
 			}
 
 			@Override
@@ -116,9 +123,15 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		{
 
 			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(globalChatFormat, "Sender", "Message"));
+			}
+
+			@Override
 			public String getValue()
 			{
-				return String.format(globalChatFormat, "Channel", "Message") + " (" + CrazyChatsChatHelper.unmakeFormat(globalChatFormat) + ")";
+				return CrazyChatsChatHelper.unmakeFormat(globalChatFormat);
 			}
 
 			@Override
@@ -139,9 +152,15 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		{
 
 			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(worldChatFormat, "Sender", "Message"));
+			}
+
+			@Override
 			public String getValue()
 			{
-				return String.format(worldChatFormat, "Channel", "Message") + " (" + CrazyChatsChatHelper.unmakeFormat(worldChatFormat) + ")";
+				return CrazyChatsChatHelper.unmakeFormat(worldChatFormat);
 			}
 
 			@Override
@@ -174,21 +193,20 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				localChannel.setEnabled(newValue);
 				saveConfiguration();
 			}
-
-			@Override
-			public List<String> tab(String... args)
-			{
-				System.out.println("TESR");
-				return super.tab(args);
-			}
 		});
 		modeCommand.addMode(modeCommand.new Mode<String>("localChatFormat", String.class)
 		{
 
 			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(localChatFormat, "Sender", "Message"));
+			}
+
+			@Override
 			public String getValue()
 			{
-				return String.format(localChatFormat, "Channel", "Message") + " (" + CrazyChatsChatHelper.unmakeFormat(localChatFormat) + ")";
+				return CrazyChatsChatHelper.unmakeFormat(localChatFormat);
 			}
 
 			@Override
@@ -231,9 +249,15 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		{
 
 			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(privateChatFormat, "Sender", "Message"));
+			}
+
+			@Override
 			public String getValue()
 			{
-				return String.format(privateChatFormat, "Channel", "Message") + " (" + CrazyChatsChatHelper.unmakeFormat(privateChatFormat) + ")";
+				return CrazyChatsChatHelper.unmakeFormat(privateChatFormat);
 			}
 
 			@Override
@@ -250,11 +274,35 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
+		modeCommand.addMode(modeCommand.new Mode<String>("defaultChannelKey", String.class)
+		{
+
+			@Override
+			public String getValue()
+			{
+				return defaultChannelKey;
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(ChatHelper.listingString(" ", args));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				defaultChannelKey = newValue;
+				saveConfiguration();
+			}
+		});
 	}
 
 	private void registerCommands()
 	{
-		getCommand("tell").setExecutor(new CrazyChatsPlayerCommandTell(this));
+		getCommand("tell").setExecutor(new CrazyChatsCommandTell(this));
+		getCommand("say").setExecutor(new CrazyChatsCommandSay(this));
 		getCommand("chatto").setExecutor(new CrazyChatsPlayerCommandChatTo(this));
 		getCommand("chatadd").setExecutor(new CrazyChatsPlayerCommandChatAdd(this));
 		getCommand("chatremove").setExecutor(new CrazyChatsPlayerCommandChatRemove(this));
@@ -370,6 +418,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		localChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("localChatFormat", "&2[Local] &F%1$s&F: &F%2$s"));
 		localChatRange = config.getDouble("localChatRange", 50);
 		privateChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("privateChatFormat", "&7[Private] &F%1$s&F: &F%2$s"));
+		defaultChannelKey = config.getString("defaultChannelKey", "w");
 		// Logger
 		logger.createLogChannels(config, "Chat");
 	}
@@ -385,6 +434,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("localChatFormat", CrazyChatsChatHelper.unmakeFormat(localChatFormat));
 		config.set("localChatRange", localChatRange);
 		config.set("privateChatFormat", CrazyChatsChatHelper.unmakeFormat(privateChatFormat));
+		config.set("defaultChannelKey", defaultChannelKey);
 		super.saveConfiguration();
 	}
 
@@ -446,5 +496,10 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public String getPrivateChatFormat()
 	{
 		return privateChatFormat;
+	}
+
+	public String getDefaultChannelKey()
+	{
+		return defaultChannelKey;
 	}
 }

@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 0.9.3
+version: 0.9.4
 # requires CrazyCore v9.5 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
@@ -11,6 +11,9 @@ commands:
   tell:
     description: Chat to the given player.
     usage: /<command> <Players> <Message>
+  say:
+    description: Send a broadcast to the entire server.
+    usage: /<command> <Message>
   chatto:
     description: Chat to the given players only.
     usage: /<command> [Players]

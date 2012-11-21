@@ -53,13 +53,13 @@ public class CrazyChatsCommandPlayerHeadName extends CrazyChatsCommandExecutor
 			data.setHeadName(null);
 			plugin.sendLocaleMessage("COMMAND.PLAYER.HEADNAME.REMOVED", sender, data.getName());
 		}
-		Player player = data.getPlayer();
+		final Player player = data.getPlayer();
 		if (player.isOnline())
 			try
 			{
 				TagAPI.refreshPlayer(player);
 			}
-			catch (TagAPIException e)
+			catch (final TagAPIException e)
 			{
 				throw new CrazyCommandErrorException(e);
 			}

@@ -28,10 +28,10 @@ public abstract class CrazyChatsPlayerCommandExecutor extends CrazyChatsCommandE
 
 	public abstract void command(Player player, String[] args) throws CrazyException;
 
-	protected String[] getPlayerNames(List<Player> players)
+	protected String[] getPlayerNames(final List<Player> players)
 	{
-		int length = players.size();
-		String[] res = new String[length];
+		final int length = players.size();
+		final String[] res = new String[length];
 		for (int i = 0; i < length; i++)
 			res[i] = players.get(i).getName();
 		return res;
