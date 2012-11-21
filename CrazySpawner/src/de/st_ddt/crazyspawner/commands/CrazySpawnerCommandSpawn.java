@@ -1,6 +1,5 @@
 package de.st_ddt.crazyspawner.commands;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,7 +35,6 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
 		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
-		params.put("", creature);
 		params.put("c", creature);
 		params.put("creature", creature);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
@@ -147,7 +145,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			}
 		};
 		params.put("playerrange", playerRange);
-		ChatHelperExtended.readParameters(args, params);
+		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval);
 		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue());
 		plugin.addSpawnTask(task);
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, task, delay.getValue() / 50);
@@ -157,30 +155,39 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		final List<String> res = new LinkedList<String>();
-		final String arg = args[args.length - 1].toLowerCase();
-		for (final String name : CreatureParamitrisable.CREATURE_NAMES)
-			if (name.toLowerCase().startsWith(arg))
-				res.add(name);
-		if ("location:".startsWith(arg))
-			res.add("location:");
-		if ("amount:".startsWith(arg))
-			res.add("amount:");
-		if ("delay:".startsWith(arg))
-			res.add("delay:");
-		if ("interval:".startsWith(arg))
-			res.add("interval:");
-		if ("repeat:".startsWith(arg))
-			res.add("repeat:");
-		if ("creaturemaxcount:".startsWith(arg))
-			res.add("creaturemaxcount:");
-		if ("creaturerange:".startsWith(arg))
-			res.add("creaturerange:");
-		if ("playermincount:".startsWith(arg))
-			res.add("playermincount:");
-		if ("playerrange:".startsWith(arg))
-			res.add("playerrange:");
-		return res;
+		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
+		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
+		params.put("c", creature);
+		params.put("creature", creature);
+		final LocationParamitrisable location = new LocationParamitrisable(sender);
+		location.addFullParams(params, "l", "loc", "location");
+		location.addAdvancedParams(params, "");
+		final IntegerParamitrisable amount = new IntegerParamitrisable(1);
+		params.put("a", amount);
+		params.put("amount", amount);
+		final DurationParamitrisable delay = new DurationParamitrisable(0L);
+		params.put("d", delay);
+		params.put("delay", delay);
+		final DurationParamitrisable interval = new DurationParamitrisable(1000L);
+		params.put("i", interval);
+		params.put("interval", interval);
+		final IntegerParamitrisable repeat = new IntegerParamitrisable(0);
+		params.put("r", repeat);
+		params.put("repeat", repeat);
+		final IntegerParamitrisable creatureMaxCount = new IntegerParamitrisable(0);
+		params.put("m", creatureMaxCount);
+		params.put("max", creatureMaxCount);
+		params.put("creaturecount", creatureMaxCount);
+		params.put("creaturemaxcount", creatureMaxCount);
+		final DoubleParamitrisable creatureRange = new DoubleParamitrisable(16D);
+		params.put("creaturerange", creatureRange);
+		final IntegerParamitrisable playerCount = new IntegerParamitrisable(0);
+		params.put("min", playerCount);
+		params.put("playercount", playerCount);
+		params.put("playermincount", playerCount);
+		final DoubleParamitrisable playerRange = new DoubleParamitrisable(16D);
+		params.put("playerrange", playerRange);
+		return ChatHelperExtended.tabHelp(args, params, creature, amount, repeat, interval);
 	}
 
 	@Override

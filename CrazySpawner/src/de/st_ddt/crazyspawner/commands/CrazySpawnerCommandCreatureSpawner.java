@@ -1,6 +1,5 @@
 package de.st_ddt.crazyspawner.commands;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,6 +13,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
@@ -38,8 +38,9 @@ public class CrazySpawnerCommandCreatureSpawner extends CrazySpawnerCommandExecu
 			throw new CrazyCommandExecutorException(false);
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
-		params.put("", creature);
-		ChatHelperExtended.readParameters(args, params);
+		params.put("c", creature);
+		params.put("creature", creature);
+		ChatHelperExtended.readParameters(args, params, creature);
 		if (creature.getValue() == null)
 			throw new CrazyCommandUsageException("<Creature>");
 		creatureSelection.put(sender.getName(), creature.getValue());
@@ -49,14 +50,11 @@ public class CrazySpawnerCommandCreatureSpawner extends CrazySpawnerCommandExecu
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		if (args.length != 1)
-			return null;
-		final List<String> res = new LinkedList<String>();
-		final String arg = args[0].toLowerCase();
-		for (final String name : CreatureParamitrisable.CREATURE_NAMES)
-			if (name.toLowerCase().startsWith(arg))
-				res.add(name);
-		return res;
+		final Map<String, Tabbed> params = new TreeMap<String, Tabbed>();
+		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
+		params.put("c", creature);
+		params.put("creature", creature);
+		return ChatHelperExtended.tabHelp(args, params, creature);
 	}
 
 	@Override

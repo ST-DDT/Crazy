@@ -1,7 +1,6 @@
 package de.st_ddt.crazyspawner.commands;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -50,7 +49,6 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
 		final DoubleParamitrisable range = new DoubleParamitrisable(16D);
-		params.put("", range);
 		params.put("r", range);
 		params.put("range", range);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
@@ -78,7 +76,7 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 			creatures[i] = new BooleanParamitrisable(false);
 			params.put(CreatureParamitrisable.CREATURE_NAMES[i].toLowerCase(), creatures[i]);
 		}
-		ChatHelperExtended.readParameters(args, params);
+		ChatHelperExtended.readParameters(args, params, range, monster, animals, golems, villager, bosses);
 		final World world = location.getValue().getWorld();
 		if (monster.getValue())
 			plugin.sendLocaleMessage("COMMAND.KILLED.MONSTERS", sender, killEntities(world.getEntitiesByClasses(Monster.class, Slime.class), location.getValue(), range.getValue()));
@@ -101,26 +99,36 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		final List<String> res = new LinkedList<String>();
-		final String arg = args[args.length - 1].toLowerCase();
-		if ("range:".startsWith(arg))
-			res.add("range:");
-		if ("monster:".startsWith(arg))
-			res.add("monster:");
-		if ("animals:".startsWith(arg))
-			res.add("animals:");
-		if ("golems:".startsWith(arg))
-			res.add("golems:");
-		if ("villager:".startsWith(arg))
-			res.add("villager:");
-		if ("bosses:".startsWith(arg))
-			res.add("bosses:");
-		if ("location:".startsWith(arg))
-			res.add("location:");
-		for (final String creature : CreatureParamitrisable.CREATURE_NAMES)
-			if ((creature + ":").toLowerCase().startsWith(arg))
-				res.add(creature + ":");
-		return res;
+		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
+		final DoubleParamitrisable range = new DoubleParamitrisable(16D);
+		params.put("r", range);
+		params.put("range", range);
+		final LocationParamitrisable location = new LocationParamitrisable(sender);
+		location.addFullParams(params, "l", "loc", "location");
+		location.addAdvancedParams(params, "");
+		final BooleanParamitrisable monster = new BooleanParamitrisable(checkArgs(args));
+		params.put("m", monster);
+		params.put("monster", monster);
+		final BooleanParamitrisable animals = new BooleanParamitrisable(false);
+		params.put("a", animals);
+		params.put("animals", animals);
+		final BooleanParamitrisable golems = new BooleanParamitrisable(false);
+		params.put("g", golems);
+		params.put("golems", golems);
+		final BooleanParamitrisable villager = new BooleanParamitrisable(false);
+		params.put("v", villager);
+		params.put("villager", villager);
+		final BooleanParamitrisable bosses = new BooleanParamitrisable(false);
+		params.put("b", bosses);
+		params.put("bosses", bosses);
+		final int length = CreatureParamitrisable.CREATURE_TYPES.length;
+		final BooleanParamitrisable[] creatures = new BooleanParamitrisable[length];
+		for (int i = 0; i < length; i++)
+		{
+			creatures[i] = new BooleanParamitrisable(false);
+			params.put(CreatureParamitrisable.CREATURE_NAMES[i].toLowerCase(), creatures[i]);
+		}
+		return ChatHelperExtended.tabHelp(args, params, range, monster, animals, golems, villager, bosses);
 	}
 
 	@Override
