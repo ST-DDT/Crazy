@@ -191,9 +191,13 @@ public class CrazyChatsPlayerListener implements Listener
 		}
 		data.setCurrentChannel(channel);
 		final Set<Player> targets = new HashSet<Player>();
-		for (final Player target : channel.getTargets(player))
-			if (!plugin.getAvailablePlayerData(target).isMuted(player) || PermissionModule.hasPermission(player, "crazychats.unmutable"))
-				targets.add(target);
+		final Set<Player> channelTargets = channel.getTargets(player);
+		synchronized (channelTargets)
+		{
+			for (final Player target : channelTargets)
+				if (!plugin.getAvailablePlayerData(target).isMuted(player) || PermissionModule.hasPermission(player, "crazychats.unmutable"))
+					targets.add(target);
+		}
 		targets.add(player);
 		for (final Player online : Bukkit.getOnlinePlayers())
 			if (PermissionModule.hasPermission(online, "crazychats.chatspy"))
