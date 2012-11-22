@@ -9,7 +9,7 @@ description: >
 commands:
   crazyspawn:
     description: Spawn living Creatures...
-    usage: /<command> <Creature> [amount:Integer] [delay:Duration] [repeat:Integer] [interval:Duration] [monstermaxcount:Integer [monsterradius:Double]] [playermincount:Integer [playerradius:Double]] [location:Location]
+    usage: /<command> <Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [monstermaxcount:Integer [monsterradius:Double]] [playermincount:Integer [playerradius:Double]] [location:Location]
     aliases: [spawn,crazymobs, cms]
   crazykill:
     description: Kill living Creatures...

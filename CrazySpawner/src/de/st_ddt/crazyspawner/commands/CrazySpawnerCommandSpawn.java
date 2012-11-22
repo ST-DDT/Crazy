@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
@@ -145,7 +146,9 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			}
 		};
 		params.put("playerrange", playerRange);
-		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval);
+		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval, delay);
+		if (creature.getValue() == null)
+			throw new CrazyCommandUsageException("<Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [monstermaxcount:Integer [monsterradius:Double]] [playermincount:Integer [playerradius:Double]] [location:Location]");
 		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue());
 		plugin.addSpawnTask(task);
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, task, delay.getValue() / 50);
