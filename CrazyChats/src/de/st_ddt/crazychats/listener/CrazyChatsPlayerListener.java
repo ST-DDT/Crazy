@@ -105,9 +105,9 @@ public class CrazyChatsPlayerListener implements Listener
 			while (it.hasNext())
 			{
 				final GroupChannelInterface channel = it.next();
-				if (channel.kick(player))
-					if (channel.canBeDeleted())
-						it.remove();
+				channel.kick(player);
+				if (channel.canBeDeleted())
+					it.remove();
 			}
 		}
 		plugin.getGlobalChannel().unmuteChannel(player);
