@@ -42,7 +42,7 @@ public class CrazyChatsCommandPlayerDisplayName extends CrazyChatsCommandExecuto
 			final String displayName = ChatHelper.colorise(args[1]);
 			if (displayName.length() < 3 || displayName.length() > 16)
 				plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.WARNLENGTH", sender, displayName, displayName.length());
-			data.setListName(displayName);
+			data.setDisplayName(displayName);
 			final Player player = data.getPlayer();
 			if (player != null)
 				player.setDisplayName(displayName);
@@ -50,7 +50,7 @@ public class CrazyChatsCommandPlayerDisplayName extends CrazyChatsCommandExecuto
 		}
 		else
 		{
-			data.setListName(null);
+			data.setDisplayName(null);
 			final Player player = data.getPlayer();
 			if (player != null)
 				player.setDisplayName(null);
