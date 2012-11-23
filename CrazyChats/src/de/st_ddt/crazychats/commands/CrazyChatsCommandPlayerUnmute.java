@@ -31,14 +31,12 @@ public class CrazyChatsCommandPlayerUnmute extends CrazyChatsCommandExecutor
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
 		final PlayerDataParamitrisable<ChatPlayerData> playerData = new PlayerDataParamitrisable<ChatPlayerData>(plugin);
-		params.put("0", playerData);
 		params.put("p", playerData);
 		params.put("player", playerData);
 		final OfflinePlayerParamitrisable muted = new OfflinePlayerParamitrisable(null);
-		params.put("1", muted);
 		params.put("u", muted);
 		params.put("unmuted", muted);
-		ChatHelperExtended.readParameters(args, params);
+		ChatHelperExtended.readParameters(args, params, playerData, muted);
 		final ChatPlayerData data = playerData.getValue();
 		if (data == null || muted.getValue() == null)
 			throw new CrazyCommandUsageException("<player:Player> <unmuted:Player>");
