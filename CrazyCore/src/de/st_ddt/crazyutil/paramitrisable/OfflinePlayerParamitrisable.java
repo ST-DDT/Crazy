@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,12 +48,12 @@ public class OfflinePlayerParamitrisable extends TypedParamitrisable<OfflinePlay
 		return res;
 	}
 
-	public static String[] getPlayerNames(final List<? extends OfflinePlayer> players)
+	public static String[] getPlayerNames(final Collection<? extends OfflinePlayer> players)
 	{
-		final int length = players.size();
-		final String[] res = new String[length];
-		for (int i = 0; i < length; i++)
-			res[i] = players.get(i).getName();
+		final String[] res = new String[players.size()];
+		int i = 0;
+		for (OfflinePlayer player : players)
+			res[i++] = player.getName();
 		return res;
 	}
 }

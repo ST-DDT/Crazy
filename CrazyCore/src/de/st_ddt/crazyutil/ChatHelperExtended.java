@@ -33,7 +33,6 @@ public class ChatHelperExtended extends ChatHelper
 
 	public final static Pattern PATTERN_OPENER = Pattern.compile("\\{");
 	public final static Pattern PATTERN_CLOSER = Pattern.compile("\\}");
-	public final static Pattern PATTERN_STRING = Pattern.compile("\"");
 
 	protected ChatHelperExtended()
 	{
@@ -284,7 +283,60 @@ public class ChatHelperExtended extends ChatHelper
 			else if (value.equals(">"))
 				return shiftArray(args, i + 1);
 			else
+			{
 				header = "";
+				if (value.startsWith("\""))
+				{
+					while (!value.endsWith("\""))
+					{
+						i++;
+						if (i == length)
+							throw new CrazyCommandUsageException(ChatHelper.listingString(" ", args) + "\"");
+						value += " " + args[i];
+					}
+					final int len = value.length();
+					value = value.substring(1, len - 1);
+				}
+				else if (value.startsWith("{"))
+				{
+					int depth = 1;
+					int start = 1;
+					Matcher matcher = PATTERN_OPENER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth++;
+					}
+					matcher = PATTERN_CLOSER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth--;
+					}
+					while (depth != 0)
+					{
+						i++;
+						if (i == length)
+							throw new CrazyCommandUsageException(ChatHelper.listingString(" ", args) + "}");
+						value += " " + args[i];
+						start = 0;
+						matcher = PATTERN_OPENER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth++;
+						}
+						matcher = PATTERN_CLOSER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth--;
+						}
+					}
+					final int len = value.length();
+					value = value.substring(1, len - 1);
+				}
+			}
 			// search param or use via index
 			Paramitrisable param = params.get(header.toLowerCase());
 			if (header.length() == 0 && p < indexedParams.length)
@@ -321,7 +373,7 @@ public class ChatHelperExtended extends ChatHelper
 		return null;
 	}
 
-	public static List<String> tabHelpWithPipe(CommandSender sender, final String[] args, final Map<String, ? extends Tabbed> params, final Tabbed... indexedParams)
+	public static List<String> tabHelpWithPipe(final CommandSender sender, final String[] args, final Map<String, ? extends Tabbed> params, final Tabbed... indexedParams)
 	{
 		for (int i = 0; i < args.length; i++)
 			if (args[i].equals(">"))
@@ -400,7 +452,62 @@ public class ChatHelperExtended extends ChatHelper
 			else if (value.equals(">"))
 				return res;
 			else
+			{
 				header = "";
+				if (value.startsWith("\""))
+				{
+					while (!value.endsWith("\""))
+					{
+						i++;
+						if (i == length)
+							break;
+						value += " " + args[i];
+					}
+					final int len = value.length();
+					if (value.endsWith("\""))
+						value = value.substring(1, len - 1);
+				}
+				else if (value.startsWith("{"))
+				{
+					int depth = 1;
+					int start = 1;
+					Matcher matcher = PATTERN_OPENER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth++;
+					}
+					matcher = PATTERN_CLOSER.matcher(value);
+					while (matcher.find(start))
+					{
+						start = matcher.end();
+						depth--;
+					}
+					while (depth != 0)
+					{
+						i++;
+						if (i == length)
+							break;
+						value += " " + args[i];
+						start = 0;
+						matcher = PATTERN_OPENER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth++;
+						}
+						matcher = PATTERN_CLOSER.matcher(args[i]);
+						while (matcher.find(start))
+						{
+							start = matcher.end();
+							depth--;
+						}
+					}
+					final int len = value.length();
+					if (value.startsWith("}"))
+						value = value.substring(1, len - 1);
+				}
+			}
 			// search param or use via index
 			Tabbed param = params.get(header.toLowerCase());
 			if (header.length() == 0 && p < indexedParams.length)
