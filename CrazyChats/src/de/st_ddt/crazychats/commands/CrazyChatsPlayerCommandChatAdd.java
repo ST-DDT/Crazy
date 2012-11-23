@@ -16,6 +16,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
 public class CrazyChatsPlayerCommandChatAdd extends CrazyChatsPlayerCommandExecutor
@@ -51,7 +52,7 @@ public class CrazyChatsPlayerCommandChatAdd extends CrazyChatsPlayerCommandExecu
 				data.setCurrentChannel(channel);
 				plugin.sendLocaleMessage("CHANNEL.CHANGED", player, channel.getName());
 			}
-			plugin.sendLocaleMessage("COMMAND.CHANNEL.PRIVATE.TARGET.ADDED", player, ChatHelper.listingString(getPlayerNames(targetList)));
+			plugin.sendLocaleMessage("COMMAND.CHANNEL.PRIVATE.TARGET.ADDED", player, ChatHelper.listingString(OfflinePlayerParamitrisable.getPlayerNames(targetList)));
 		}
 	}
 
