@@ -6,10 +6,7 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
-import de.st_ddt.crazyplugin.exceptions.CrazyException;
-
-public class PrivateChannel extends AbstractChannel implements GroupChannelInterface
+public class PrivateChannel extends AbstractChannel implements ControlledChannelInterface
 {
 
 	private final Set<Player> targets = Collections.synchronizedSet(new HashSet<Player>());
@@ -41,24 +38,6 @@ public class PrivateChannel extends AbstractChannel implements GroupChannelInter
 	public String getFormat()
 	{
 		return plugin.getPrivateChatFormat();
-	}
-
-	@Override
-	public boolean canBeDeleted()
-	{
-		return targets.size() == 0;
-	}
-
-	@Override
-	public void join(final Player player) throws CrazyException
-	{
-		throw new CrazyCommandPermissionException();
-	}
-
-	@Override
-	public void leave(final Player player) throws CrazyException
-	{
-		throw new CrazyCommandPermissionException();
 	}
 
 	@Override

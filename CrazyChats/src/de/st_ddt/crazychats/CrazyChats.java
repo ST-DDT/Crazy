@@ -17,7 +17,7 @@ import org.bukkit.plugin.PluginManager;
 import de.st_ddt.crazychats.channels.AbstractChannel;
 import de.st_ddt.crazychats.channels.BroadcastChannel;
 import de.st_ddt.crazychats.channels.GlobalChannel;
-import de.st_ddt.crazychats.channels.GroupChannelInterface;
+import de.st_ddt.crazychats.channels.ControlledChannelInterface;
 import de.st_ddt.crazychats.channels.LocalChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
@@ -45,7 +45,6 @@ import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener;
 import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener_125;
 import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener_132;
 import de.st_ddt.crazychats.listener.CrazyChatsTagAPIListener;
-import de.st_ddt.crazychats.tasks.GroupChannelCleanupTask;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -63,7 +62,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final GlobalChannel globalChannel = new GlobalChannel();
 	private final Map<String, WorldChannel> worldChannels = Collections.synchronizedMap(new HashMap<String, WorldChannel>());
 	private final LocalChannel localChannel = new LocalChannel(this);
-	private final Set<GroupChannelInterface> groupChannels = Collections.synchronizedSet(new HashSet<GroupChannelInterface>());
+	private final Set<ControlledChannelInterface> controlledChannels = Collections.synchronizedSet(new HashSet<ControlledChannelInterface>());
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
 	private String broadcastChatFormat = "[All]%1$s: %2$s";
@@ -352,7 +351,6 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		registerHooks();
 		for (final World world : Bukkit.getWorlds())
 			worldChannels.put(world.getName(), new WorldChannel(world));
-		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new GroupChannelCleanupTask(this), 18000, 36000);
 		super.onEnable();
 		registerCommands();
 		// Online Players
@@ -458,9 +456,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return localChannel;
 	}
 
-	public Set<GroupChannelInterface> getGroupChannels()
+	public Set<ControlledChannelInterface> getControlledChannels()
 	{
-		return groupChannels;
+		return controlledChannels;
 	}
 
 	public String getBroadcastChatFormat()

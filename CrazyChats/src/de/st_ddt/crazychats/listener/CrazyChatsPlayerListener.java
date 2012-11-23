@@ -2,7 +2,6 @@ package de.st_ddt.crazychats.listener;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -19,7 +18,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.channels.ChannelInterface;
-import de.st_ddt.crazychats.channels.GroupChannelInterface;
+import de.st_ddt.crazychats.channels.ControlledChannelInterface;
 import de.st_ddt.crazychats.channels.PrivateChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.data.ChatPlayerData;
@@ -69,7 +68,7 @@ public class CrazyChatsPlayerListener implements Listener
 		channels.add(plugin.getLocalChannel());
 		final PrivateChannel privateChannel = new PrivateChannel(player);
 		data.setPrivateChannel(privateChannel);
-		plugin.getGroupChannels().add(privateChannel);
+		plugin.getControlledChannels().add(privateChannel);
 		if (data.getDisplayName() != null)
 			player.setDisplayName(data.getDisplayName());
 		if (data.getListName() != null)
@@ -87,6 +86,16 @@ public class CrazyChatsPlayerListener implements Listener
 		PlayerQuit(event.getPlayer());
 	}
 
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void PlayerTeleport(final PlayerTeleportEvent event)
+	{
+		final Player player = event.getPlayer();
+		final ChatPlayerData data = plugin.getPlayerData(player);
+		if (data.getCurrentChannel() != null)
+			if (data.getCurrentChannel() instanceof WorldChannel)
+				data.setCurrentChannelForced(plugin.getWorldChannels().get(event.getTo().getWorld().getName()));
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void PlayerKick(final PlayerKickEvent event)
 	{
@@ -96,19 +105,16 @@ public class CrazyChatsPlayerListener implements Listener
 	protected void PlayerQuit(final Player player)
 	{
 		final ChatPlayerData data = plugin.getPlayerData(player);
+		final Set<ControlledChannelInterface> controlledChannels = plugin.getControlledChannels();
 		if (data != null)
-			data.quit();
-		final Set<GroupChannelInterface> groupChannels = plugin.getGroupChannels();
-		synchronized (groupChannels)
 		{
-			final Iterator<GroupChannelInterface> it = groupChannels.iterator();
-			while (it.hasNext())
-			{
-				final GroupChannelInterface channel = it.next();
+			data.quit();
+			controlledChannels.remove(data.getPrivateChannel());
+		}
+		synchronized (controlledChannels)
+		{
+			for (final ControlledChannelInterface channel : controlledChannels)
 				channel.kick(player);
-				if (channel.canBeDeleted())
-					it.remove();
-			}
 		}
 		plugin.getGlobalChannel().unmuteChannel(player);
 		final Collection<WorldChannel> worldChannels = plugin.getWorldChannels().values();
@@ -119,16 +125,6 @@ public class CrazyChatsPlayerListener implements Listener
 		}
 		plugin.getLocalChannel().unmuteChannel(player);
 		plugin.getCrazyDatabase().save(data);
-	}
-
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void PlayerTeleport(final PlayerTeleportEvent event)
-	{
-		final Player player = event.getPlayer();
-		final ChatPlayerData data = plugin.getPlayerData(player);
-		if (data.getCurrentChannel() != null)
-			if (data.getCurrentChannel() instanceof WorldChannel)
-				data.setCurrentChannelForced(plugin.getWorldChannels().get(event.getTo().getWorld().getName()));
 	}
 
 	@Localized({ "CRAZYCHATS.CHAT.BLOCKED.NOPERMISSION", "CRAZYCHATS.CHAT.BLOCKED.SILENCED $UntilDateTime$", "CRAZYCHATS.CHAT.BLOCKED.NOSUCHPLAYER $Player$", "CRAZYCHATS.CHANNEL.CHANGED $Channel$", "CRAZYCHATS.CHAT.BLOCKED.NOCHANNEL" })
