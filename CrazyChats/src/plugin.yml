@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 0.9.5
+version: 0.9.6
 # requires CrazyCore v9.5 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
@@ -65,6 +65,7 @@ permissions:
       crazychats.player.listname.other: true
       crazychats.player.mute: true
       crazychats.player.silence: true
+      crazychats.player.silence.adminbypass: true
       crazychats.player.unmute: true
       crazychats.coloredchat: true
       crazychats.chatspy: true
@@ -116,6 +117,9 @@ permissions:
     default: op
   crazychats.player.silence:
     description: Allow silencing/globally muting a player.
+    default: op
+  crazychats.player.silence.adminbypass:
+    description: Allow silencing/globally muting a player bypassing the max silence limit.
     default: op
   crazychats.player.mute:
     description: Allow muting a player for another player.

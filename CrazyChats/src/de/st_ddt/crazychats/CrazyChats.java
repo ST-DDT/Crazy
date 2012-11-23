@@ -73,6 +73,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private double localChatRange = 50;
 	private String privateChatFormat = "[Private]%1$s: %2$s";
 	private String defaultChannelKey;
+	private long maxSilenceTime;
 	private boolean tagAPIenabled;
 
 	public static CrazyChats getPlugin()
@@ -296,6 +297,22 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
+		modeCommand.addMode(modeCommand.new DurationMode("maxSilenceTime")
+		{
+
+			@Override
+			public Long getValue()
+			{
+				return maxSilenceTime;
+			}
+
+			@Override
+			public void setValue(Long newValue) throws CrazyException
+			{
+				maxSilenceTime = newValue;
+				saveConfiguration();
+			}
+		});
 	}
 
 	private void registerCommands()
@@ -417,6 +434,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		localChatRange = config.getDouble("localChatRange", 30);
 		privateChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("privateChatFormat", "&7[Private] &F%1$s&F: &F%2$s"));
 		defaultChannelKey = config.getString("defaultChannelKey", "w");
+		maxSilenceTime = config.getLong("maxSilenceTime", 31556952000L);
 		// Logger
 		logger.createLogChannels(config, "Chat");
 	}
@@ -433,6 +451,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("localChatRange", localChatRange);
 		config.set("privateChatFormat", CrazyChatsChatHelper.unmakeFormat(privateChatFormat));
 		config.set("defaultChannelKey", defaultChannelKey);
+		config.set("maxSilenceTime", maxSilenceTime);
 		super.saveConfiguration();
 	}
 
@@ -499,5 +518,10 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public String getDefaultChannelKey()
 	{
 		return defaultChannelKey;
+	}
+
+	public long getMaxSilenceTime()
+	{
+		return maxSilenceTime;
 	}
 }

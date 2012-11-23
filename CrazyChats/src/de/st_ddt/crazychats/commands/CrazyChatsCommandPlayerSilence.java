@@ -1,5 +1,6 @@
 package de.st_ddt.crazychats.commands;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
@@ -47,21 +49,30 @@ public class CrazyChatsCommandPlayerSilence extends CrazyChatsCommandExecutor
 		final StringParamitrisable reason = new StringParamitrisable(null);
 		params.put("r", reason);
 		params.put("reason", reason);
+		final BooleanParamitrisable admin = new BooleanParamitrisable(false);
+		params.put("ab", admin);
+		params.put("adminbypass", admin);
 		ChatHelperExtended.readParameters(args, params, playerData, until, quiet, reason);
 		final ChatPlayerData data = playerData.getValue();
 		if (data == null)
 			throw new CrazyCommandUsageException("<player:Player> [until:Date/Duration] [quiet:Boolean] [reason:String]");
-		data.setSilenced(until.getValue());
-		plugin.sendLocaleMessage("COMMAND.PLAYER.SILENCED.DONE", sender, data.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(until.getValue()));
+		if (admin.getValue())
+			if (!PermissionModule.hasPermission(sender, "crazychats.player.silence.adminbypass"))
+				throw new CrazyCommandPermissionException();
+		Date date = until.getValue();
+		if (!admin.getValue())
+			date = new Date(Math.min(date.getTime(), new Date().getTime() + plugin.getMaxSilenceTime()));
+		data.setSilenced(date);
+		plugin.sendLocaleMessage("COMMAND.PLAYER.SILENCED.DONE", sender, data.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(date));
 		if (!quiet.getValue())
 		{
 			final Player player = data.getPlayer();
 			if (player != null)
 				if (player.isOnline())
 					if (reason.getValue() == null)
-						plugin.sendLocaleMessage("COMMAND.PLAYER.SILENCED.MESSAGE", player, sender.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(until.getValue()));
+						plugin.sendLocaleMessage("COMMAND.PLAYER.SILENCED.MESSAGE", player, sender.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(date));
 					else
-						plugin.sendLocaleMessage("COMMAND.PLAYER.SILENCED.MESSAGE2", player, sender.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(until.getValue()), reason.getValue());
+						plugin.sendLocaleMessage("COMMAND.PLAYER.SILENCED.MESSAGE2", player, sender.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(date), reason.getValue());
 		}
 		plugin.getCrazyDatabase().save(data);
 	}
@@ -82,6 +93,9 @@ public class CrazyChatsCommandPlayerSilence extends CrazyChatsCommandExecutor
 		final StringParamitrisable reason = new StringParamitrisable(null);
 		params.put("r", reason);
 		params.put("reason", reason);
+		final BooleanParamitrisable admin = new BooleanParamitrisable(false);
+		params.put("ab", admin);
+		params.put("adminbypass", admin);
 		return ChatHelperExtended.tabHelp(args, params, playerData, until, quiet, reason);
 	}
 
