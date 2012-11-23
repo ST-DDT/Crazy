@@ -416,7 +416,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		worldChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("worldChatFormat", "&A[World] &F%1$s&F: &F%2$s"));
 		localChatEnabled = config.getBoolean("localChatEnabled", true);
 		localChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("localChatFormat", "&2[Local] &F%1$s&F: &F%2$s"));
-		localChatRange = config.getDouble("localChatRange", 50);
+		localChatRange = config.getDouble("localChatRange", 30);
 		privateChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("privateChatFormat", "&7[Private] &F%1$s&F: &F%2$s"));
 		defaultChannelKey = config.getString("defaultChannelKey", "w");
 		// Logger
