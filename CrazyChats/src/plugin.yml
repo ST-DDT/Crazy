@@ -50,6 +50,7 @@ permissions:
     description: Access to all commands
     default: false
     children:
+      crazychats.mode: true
       crazychats.broadcastchannel.talk: true
       crazychats.globalchannel.talk: true
       crazychats.worldchannels.remotetalk: true
@@ -68,6 +69,9 @@ permissions:
       crazychats.coloredchat: true
       crazychats.chatspy: true
       crazychats.unmutable: true
+  crazychats.mode:
+    description: Allow changing plugin options.
+    default: op
   crazychats.broadcastchannel.talk:
     description: Allow chatting in Broadcast channel.
     default: op
