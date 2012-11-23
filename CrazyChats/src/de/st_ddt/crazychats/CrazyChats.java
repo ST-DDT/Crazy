@@ -86,7 +86,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		registerModes();
 	}
 
-	@Localized({ "CRAZYCHATS.MODE.CHANGE $Name$ $Value$", "CRAZYCHATS.CHANNELFORMAT.CHANGE $FormatName$ $Value$ $Example$ " })
+	@Localized({ "CRAZYCHATS.MODE.CHANGE $Name$ $Value$", "CRAZYCHATS.FORMAT.CHANGE $FormatName$ $Value$ $Example$ " })
 	private void registerModes()
 	{
 		modeCommand.addMode(modeCommand.new Mode<String>("broadcastChatFormat", String.class)
@@ -95,7 +95,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(broadcastChatFormat, "Sender", "Message"));
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(broadcastChatFormat, "Sender", "Message"));
 			}
 
 			@Override
@@ -124,7 +124,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(globalChatFormat, "Sender", "Message"));
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(globalChatFormat, "Sender", "Message"));
 			}
 
 			@Override
@@ -153,7 +153,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(worldChatFormat, "Sender", "Message"));
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(worldChatFormat, "Sender", "Message"));
 			}
 
 			@Override
@@ -199,7 +199,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(localChatFormat, "Sender", "Message"));
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(localChatFormat, "Sender", "Message"));
 			}
 
 			@Override
@@ -250,7 +250,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("CHANNELFORMAT.CHANGE", sender, name, getValue(), String.format(privateChatFormat, "Sender", "Message"));
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(privateChatFormat, "Sender", "Message"));
 			}
 
 			@Override
