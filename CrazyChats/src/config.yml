@@ -1,0 +1,46 @@
+# CrazyChats config.yml
+# For more information visit
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/config.yml
+version: X.Y
+# required plugins +version can be found there
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/plugin.yml
+database:
+# database saveTypes can be CONFIG (other saveTypes currently not supported)
+  saveType: CONFIG
+# whether the database should be saved on shutdown
+  saveOnShutdown: true
+# CONFIG Database options
+  CONFIG:
+# path inside config.yml
+    path: accounts
+    columns:
+      name: name
+      muted: muted
+      displayName: displayName
+      listName: listName
+      headName: headName
+      silenced: silenced
+# format used for broadcast Channel $0$=Sender $1$=Message
+broadcastChatFormat: '&C&L[All] &F$0$&F: &E$1$'
+# format used for gloabl Channel $0$=Sender $1$=Message
+globalChatFormat: '&6[Global] &F$0$&F: &F$1$'
+# format used for world Channel $0$=Sender $1$=Message
+worldChatFormat: '&A[World] &F$0$&F: &F$1$'
+# whether the local chat is enabled (true/false)
+localChatEnabled: true
+# format used for local Channel $0$=Sender $1$=Message
+localChatFormat: '&2[Local] &F$0$&F: &F$1$'
+# chat range for local channel (Blocks)
+localChatRange: 30.0
+# format used for private Channel $0$=Sender $1$=Message
+privateChatFormat: '&7[Private] &F$0$&F: &F$1$'
+# default channel when joining the server (w=worldchannel)
+defaultChannelKey: w
+# the max duration for /crazychats player silence <Player> [Duration]
+# can be bypassed with adminbypass:true
+maxSilenceTime: 31556952000
+# additional information about logging can be found here http://dev.bukkit.org/server-mods/crazycore/pages/logging/
+#logs:
+#  Chat:
+#    path: false
+#    console: false
