@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazychats.CrazyChats;
@@ -57,7 +56,7 @@ public class CrazyChatsPlayerCommandChatAdd extends CrazyChatsPlayerCommandExecu
 	}
 
 	@Override
-	public List<String> tab(final CommandSender sender, final String[] args)
+	public List<String> tab(final Player player, final String[] args)
 	{
 		return PlayerParamitrisable.tabHelp(args[args.length - 1]);
 	}

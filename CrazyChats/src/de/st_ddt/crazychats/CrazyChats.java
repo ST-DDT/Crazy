@@ -16,8 +16,8 @@ import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazychats.channels.AbstractChannel;
 import de.st_ddt.crazychats.channels.BroadcastChannel;
-import de.st_ddt.crazychats.channels.GlobalChannel;
 import de.st_ddt.crazychats.channels.ControlledChannelInterface;
+import de.st_ddt.crazychats.channels.GlobalChannel;
 import de.st_ddt.crazychats.channels.LocalChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
@@ -307,7 +307,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
-			public void setValue(Long newValue) throws CrazyException
+			public void setValue(final Long newValue) throws CrazyException
 			{
 				maxSilenceTime = newValue;
 				saveConfiguration();

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazychats.CrazyChats;
@@ -51,10 +50,10 @@ public class CrazyChatsPlayerCommandChatChannel extends CrazyChatsPlayerCommandE
 	}
 
 	@Override
-	public List<String> tab(final CommandSender sender, final String[] args)
+	public List<String> tab(final Player player, final String[] args)
 	{
-		if (!(sender instanceof Player) || args.length != 1)
+		if (args.length != 1)
 			return null;
-		return MapParamitrisable.tabHelp(plugin.getPlayerData((Player) sender).getChannelMap(), args[0].toLowerCase());
+		return MapParamitrisable.tabHelp(plugin.getPlayerData(player).getChannelMap(), args[0].toLowerCase());
 	}
 }
