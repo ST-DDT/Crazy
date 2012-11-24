@@ -1,6 +1,8 @@
 package de.st_ddt.crazyutil;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -24,6 +26,8 @@ import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
 public final class ObjectSaveLoadHelper
 {
+
+	private static DateFormat OLDDATETIMEFORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
 	private ObjectSaveLoadHelper()
 	{
@@ -74,7 +78,14 @@ public final class ObjectSaveLoadHelper
 		}
 		catch (final ParseException e)
 		{
-			return defaultDate;
+			try
+			{
+				return OLDDATETIMEFORMAT.parse(date);
+			}
+			catch (final ParseException e1)
+			{
+				return defaultDate;
+			}
 		}
 	}
 
