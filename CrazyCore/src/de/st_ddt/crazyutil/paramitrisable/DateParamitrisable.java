@@ -15,7 +15,7 @@ public class DateParamitrisable extends TypedParamitrisable<Date>
 
 	protected final Pattern PATTERN_SPACE = Pattern.compile(" ");
 	protected final Pattern PATTERN_DOT = Pattern.compile("\\.");
-	protected final Pattern PATTERN_DATEPART1 = Pattern.compile("[0-9.]*");
+	protected final Pattern PATTERN_DATEPART1 = Pattern.compile("[0-9-]*");
 	protected final Pattern PATTERN_DATEPART2 = Pattern.compile("[0-9:]*");
 
 	public DateParamitrisable(final Date defaultValue)
@@ -35,7 +35,7 @@ public class DateParamitrisable extends TypedParamitrisable<Date>
 		}
 		catch (final ParseException e)
 		{
-			throw new CrazyCommandParameterException(0, "Date (YYYY.MM.DD [hh:mm:ss])");
+			throw new CrazyCommandParameterException(0, "Date (YYYY-MM-DD [hh:mm:ss])");
 		}
 	}
 
@@ -60,7 +60,7 @@ public class DateParamitrisable extends TypedParamitrisable<Date>
 						res.add(dateSplit[0]);
 					break;
 				case 4:
-					res.add(part + ".");
+					res.add(part + "-");
 					break;
 				case 5:
 				case 6:
@@ -78,7 +78,7 @@ public class DateParamitrisable extends TypedParamitrisable<Date>
 					res.add(part + "12");
 					break;
 				case 7:
-					res.add(part + ".");
+					res.add(part + "-");
 					break;
 				case 8:
 				case 9:

@@ -49,7 +49,7 @@ public class TargetDateParamitrisable extends DateParamitrisable
 				}
 				catch (final CrazyCommandException ce)
 				{
-					throw new CrazyCommandParameterException(0, "Date (YYYY.MM.DD [hh:mm:ss])/Duration (2Y 1M -3W 9D 5h 70m -100s 4t)");
+					throw new CrazyCommandParameterException(0, "Date (YYYY-MM-DD [hh:mm:ss])/Duration (2Y 1M -3W 9D 5h 70m -100s 4t)");
 				}
 			}
 	}
