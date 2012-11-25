@@ -2,10 +2,12 @@ package de.st_ddt.crazyutil.modules.permissions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyutil.modules.Module;
 
@@ -40,6 +42,21 @@ public class PermissionModule implements Module
 	public static boolean hasPermission(final CommandSender sender, final String permission)
 	{
 		return permissionModule.hasPermission(sender, permission);
+	}
+
+	public static boolean hasGroup(final Player player, final String name)
+	{
+		return permissionModule.hasGroup(player, name);
+	}
+
+	public static String getGroup(final Player player)
+	{
+		return permissionModule.getGroup(player);
+	}
+
+	public static Set<String> getGroups(final Player player)
+	{
+		return permissionModule.getGroups(player);
 	}
 
 	public PermissionModule()
