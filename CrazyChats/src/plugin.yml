@@ -8,6 +8,9 @@ softdepend: [TagAPI]
 description: >
             CrazyChats add chat channels and many usefull features to your chat.
 commands:
+  colorhelp:
+    description: Shows a string displaying all chat formats.
+    usage: /<command>
   tell:
     description: Chat to the given player.
     usage: /<command> <Players> <Message>

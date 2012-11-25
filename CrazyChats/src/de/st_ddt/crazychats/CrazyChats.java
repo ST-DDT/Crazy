@@ -22,6 +22,7 @@ import de.st_ddt.crazychats.channels.ControlledChannelInterface;
 import de.st_ddt.crazychats.channels.GlobalChannel;
 import de.st_ddt.crazychats.channels.LocalChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandColorHelp;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerHeadName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerListName;
@@ -371,6 +372,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	{
 		getCommand("tell").setExecutor(new CrazyChatsCommandTell(this));
 		getCommand("say").setExecutor(new CrazyChatsCommandSay(this));
+		getCommand("colorhelp").setExecutor(new CrazyChatsCommandColorHelp(this));
 		getCommand("chatto").setExecutor(new CrazyChatsPlayerCommandChatTo(this));
 		getCommand("chatadd").setExecutor(new CrazyChatsPlayerCommandChatAdd(this));
 		getCommand("chatremove").setExecutor(new CrazyChatsPlayerCommandChatRemove(this));
