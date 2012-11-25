@@ -39,9 +39,11 @@ public class CrazyChatsCommandPlayerListName extends CrazyChatsCommandExecutor
 			throw new CrazyCommandPermissionException();
 		if (args.length == 2)
 		{
-			final String listName = ChatHelper.colorise(args[1]);
+			String listName = ChatHelper.colorise(args[1]);
 			if (listName.length() < 3 || listName.length() > 16)
 				plugin.sendLocaleMessage("COMMAND.PLAYER.LISTNAME.WARNLENGTH", sender, listName, listName.length());
+			if (listName.length() > 16)
+				listName = listName.substring(0, 16);
 			data.setListName(listName);
 			final Player player = data.getPlayer();
 			if (player != null)

@@ -42,9 +42,11 @@ public class CrazyChatsCommandPlayerHeadName extends CrazyChatsCommandExecutor
 			throw new CrazyCommandPermissionException();
 		if (args.length == 2)
 		{
-			final String headName = ChatHelper.colorise(args[1]);
+			String headName = ChatHelper.colorise(args[1]);
 			if (headName.length() < 3 || headName.length() > 16)
 				plugin.sendLocaleMessage("COMMAND.PLAYER.HEADNAME.WARNLENGTH", sender, headName, headName.length());
+			if (headName.length() > 16)
+				headName = headName.substring(0, 16);
 			data.setHeadName(headName);
 			plugin.sendLocaleMessage("COMMAND.PLAYER.HEADNAME.DONE", sender, data.getName(), headName);
 		}
