@@ -26,7 +26,7 @@ public class CrazyChatsPlayerListener_125 extends CrazyChatsPlayerListener
 			event.setCancelled(true);
 		else
 		{
-			event.setFormat(result.getFormat());
+			event.setFormat(result.getAdvancedFormat(event.getPlayer()));
 			event.setMessage(result.getMessage());
 			final Set<Player> targets = event.getRecipients();
 			try

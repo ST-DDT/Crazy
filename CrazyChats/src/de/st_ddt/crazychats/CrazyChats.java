@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -56,11 +58,14 @@ import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, ChatPlayerData>
 {
 
 	private static CrazyChats plugin;
+	private final Map<String, String> groupPrefixes = new LinkedHashMap<String, String>();
+	private final Map<String, String> groupSuffixes = new LinkedHashMap<String, String>();
 	private final BroadcastChannel broadcastChannel = new BroadcastChannel();
 	private final GlobalChannel globalChannel = new GlobalChannel();
 	private final Map<String, WorldChannel> worldChannels = Collections.synchronizedMap(new HashMap<String, WorldChannel>());
@@ -91,7 +96,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		registerModes();
 	}
 
-	@Localized({ "CRAZYCHATS.MODE.CHANGE $Name$ $Value$", "CRAZYCHATS.FORMAT.CHANGE $FormatName$ $Value$ $Example$ " })
+	@Localized({ "CRAZYCHATS.MODE.CHANGE $Name$ $Value$", "CRAZYCHATS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYCHATS.FORMAT.EXAMPLE $Example$" })
 	private void registerModes()
 	{
 		modeCommand.addMode(modeCommand.new Mode<String>("broadcastChatFormat", String.class)
@@ -100,7 +105,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(broadcastChatFormat, "Sender", "Message"));
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -139,7 +146,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(globalChatFormat, "Sender", "Message"));
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -178,7 +187,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(worldChatFormat, "Sender", "Message"));
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -234,7 +245,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(localChatFormat, "Sender", "Message"));
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -295,7 +308,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), String.format(privateChatFormat, "Sender", "Message"));
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -510,6 +525,28 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	{
 		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
+		groupPrefixes.clear();
+		groupPrefixes.put("nogroup", "");
+		final ConfigurationSection groupPrefixConfig = config.getConfigurationSection("groupPrefix");
+		if (groupPrefixConfig == null)
+		{
+			groupPrefixes.put("op", "&C[Admin]&F");
+			groupPrefixes.put("default", "&A[User]&F");
+		}
+		else
+			for (final String key : groupPrefixConfig.getKeys(false))
+				groupPrefixes.put(key, ChatHelper.colorise(groupPrefixConfig.getString(key, "")));
+		groupSuffixes.clear();
+		groupSuffixes.put("nogroup", "");
+		final ConfigurationSection groupSuffixConfig = config.getConfigurationSection("groupSuffix");
+		if (groupSuffixConfig == null)
+		{
+			groupSuffixes.put("op", "");
+			groupSuffixes.put("default", "");
+		}
+		else
+			for (final String key : groupSuffixConfig.getKeys(false))
+				groupSuffixes.put(key, ChatHelper.colorise(groupSuffixConfig.getString(key, "")));
 		broadcastChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("broadcastChatFormat", "&C&L[All] &F%1$s&F: &E%2$s"));
 		globalChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("globalChatFormat", "&6[Global] &F%1$s&F: &F%2$s"));
 		worldChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("worldChatFormat", "&A[World] &F%1$s&F: &F%2$s"));
@@ -528,6 +565,12 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
+		config.set("groupPrefix", null);
+		for (final Entry<String, String> entry : groupPrefixes.entrySet())
+			config.set("groupPrefix." + entry.getKey(), ChatHelper.decolorise(entry.getValue()));
+		config.set("groupSuffix", null);
+		for (final Entry<String, String> entry : groupSuffixes.entrySet())
+			config.set("groupSuffix." + entry.getKey(), ChatHelper.decolorise(entry.getValue()));
 		config.set("broadcastChatFormat", CrazyChatsChatHelper.unmakeFormat(broadcastChatFormat));
 		config.set("globalChatFormat", CrazyChatsChatHelper.unmakeFormat(globalChatFormat));
 		config.set("worldChatFormat", CrazyChatsChatHelper.unmakeFormat(worldChatFormat));
@@ -539,6 +582,52 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("defaultChannelKey", defaultChannelKey);
 		config.set("maxSilenceTime", maxSilenceTime);
 		super.saveConfiguration();
+	}
+
+	public String getGroupPrefix(final Player player)
+	{
+		String prefix = PermissionModule.getGroupPrefix(player);
+		if (prefix != null)
+			return prefix;
+		final Set<String> groups = PermissionModule.getGroups(player);
+		if (groups == null)
+		{
+			for (final Entry<String, String> entry : groupPrefixes.entrySet())
+				if (!entry.getKey().equals("nogroup"))
+					if (PermissionModule.hasGroup(player, entry.getKey()))
+						return entry.getValue();
+		}
+		else
+			for (final String group : groups)
+			{
+				final String infix = groupPrefixes.get(group);
+				if (infix != null)
+					return infix;
+			}
+		return groupPrefixes.get("nogroup");
+	}
+
+	public String getGroupSuffix(final Player player)
+	{
+		String suffix = PermissionModule.getGroupPrefix(player);
+		if (suffix != null)
+			return suffix;
+		final Set<String> groups = PermissionModule.getGroups(player);
+		if (groups == null)
+		{
+			for (final Entry<String, String> entry : groupSuffixes.entrySet())
+				if (!entry.getKey().equals("nogroup"))
+					if (PermissionModule.hasGroup(player, entry.getKey()))
+						return entry.getValue();
+		}
+		else
+			for (final String group : groups)
+			{
+				final String infix = groupSuffixes.get(group);
+				if (infix != null)
+					return infix;
+			}
+		return groupSuffixes.get("nogroup");
 	}
 
 	public BroadcastChannel getBroadcastChannel()

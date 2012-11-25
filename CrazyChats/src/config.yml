@@ -20,19 +20,32 @@ database:
       listName: listName
       headName: headName
       silenced: silenced
-# format used for broadcast Channel $0$=Sender $1$=Message
+# group prefixes (only used when PermissionModule.getGroupPrefix() returns null)
+# groupPrefix:
+# groupname: prefix
+# this entry will be used if no matching group is found or an error occured.
+#  nogroup: ''
+#  op: '&C[Admin]&F'
+# group suffixes (only used when PermissionModule.getGroupSuffix() returns null)
+# groupSuffix:
+# groupname: suffix
+# this entry will be used if no matching group is found or an error occured.
+#  nogroup: ''
+#  op: ''
+# formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World
+# format used for broadcast Channel 
 broadcastChatFormat: '&C&L[All] &F$0$&F: &E$1$'
-# format used for gloabl Channel $0$=Sender $1$=Message
+# format used for gloabl Channel
 globalChatFormat: '&6[Global] &F$0$&F: &F$1$'
-# format used for world Channel $0$=Sender $1$=Message
+# format used for world Channel
 worldChatFormat: '&A[World] &F$0$&F: &F$1$'
 # whether the local chat is enabled (true/false)
 localChatEnabled: true
-# format used for local Channel $0$=Sender $1$=Message
+# format used for local Channel
 localChatFormat: '&2[Local] &F$0$&F: &F$1$'
 # chat range for local channel (Blocks)
 localChatRange: 30.0
-# format used for private Channel $0$=Sender $1$=Message
+# format used for private Channel
 privateChatFormat: '&7[Private] &F$0$&F: &F$1$'
 # default channel when joining the server (w=worldchannel)
 defaultChannelKey: w

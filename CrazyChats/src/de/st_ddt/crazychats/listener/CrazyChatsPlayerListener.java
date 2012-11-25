@@ -24,6 +24,7 @@ import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
@@ -254,6 +255,11 @@ public class CrazyChatsPlayerListener implements Listener
 		public String getFormat()
 		{
 			return format;
+		}
+
+		public String getAdvancedFormat(Player player)
+		{
+			return ChatHelperExtended.putArgs(format, "", "", plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName());
 		}
 
 		public Set<Player> getTargets()
