@@ -586,9 +586,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 
 	public String getGroupPrefix(final Player player)
 	{
-		String prefix = PermissionModule.getGroupPrefix(player);
+		final String prefix = PermissionModule.getGroupPrefix(player);
 		if (prefix != null)
-			return prefix;
+			return ChatHelper.colorise(prefix);
 		final Set<String> groups = PermissionModule.getGroups(player);
 		if (groups == null)
 		{
@@ -609,9 +609,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 
 	public String getGroupSuffix(final Player player)
 	{
-		String suffix = PermissionModule.getGroupPrefix(player);
+		final String suffix = PermissionModule.getGroupPrefix(player);
 		if (suffix != null)
-			return suffix;
+			return ChatHelper.colorise(suffix);
 		final Set<String> groups = PermissionModule.getGroups(player);
 		if (groups == null)
 		{
