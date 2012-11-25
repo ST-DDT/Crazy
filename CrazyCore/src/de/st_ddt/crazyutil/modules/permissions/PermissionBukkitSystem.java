@@ -1,6 +1,5 @@
 package de.st_ddt.crazyutil.modules.permissions;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.command.CommandSender;
@@ -44,6 +43,6 @@ public class PermissionBukkitSystem implements PermissionSystem
 	@Override
 	public Set<String> getGroups(final Player player)
 	{
-		return new HashSet<String>();
+		return null;
 	}
 }

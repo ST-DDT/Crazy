@@ -78,10 +78,10 @@ public class PermissionPermissionsExSystem implements PermissionSystem
 	@Override
 	public Set<String> getGroups(final Player player)
 	{
-		final Set<String> groups = new LinkedHashSet<String>();
 		final PermissionUser user = getUser(player);
 		if (user == null)
-			return groups;
+			return null;
+		final Set<String> groups = new LinkedHashSet<String>();
 		for (final String group : user.getGroupsNames())
 			groups.add(group);
 		for (final String group : user.getGroupsNames(player.getWorld().getName()))

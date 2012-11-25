@@ -49,7 +49,11 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 	@Override
 	public boolean hasGroup(final Player player, final String name)
 	{
-		return getGroups(player).contains(name);
+		final Set<String> groups = getGroups(player);
+		if (groups == null)
+			return false;
+		else
+			return groups.contains(name);
 	}
 
 	@Override
@@ -66,6 +70,8 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 	public Set<String> getGroups(final Player player)
 	{
 		final String[] groupArray = getGroupArray(player);
+		if (groupArray == null)
+			return null;
 		final Set<String> groups = new LinkedHashSet<String>(groupArray.length);
 		for (final String group : groupArray)
 			groups.add(group);
@@ -81,7 +87,7 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 	{
 		final AnjoPermissionsHandler handler = getHandler(player);
 		if (handler == null)
-			return new String[0];
+			return null;
 		else
 			return handler.getGroups(player.getName());
 	}
