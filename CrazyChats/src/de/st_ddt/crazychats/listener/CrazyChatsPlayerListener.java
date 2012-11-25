@@ -259,7 +259,7 @@ public class CrazyChatsPlayerListener implements Listener
 
 		public String getAdvancedFormat(Player player)
 		{
-			return ChatHelperExtended.putArgs(format, "", "", plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName());
+			return ChatHelperExtended.putArgs(format, "", "", ChatHelper.colorise(plugin.getGroupPrefix(player)), ChatHelper.colorise(plugin.getGroupSuffix(player)), player.getWorld().getName());
 		}
 
 		public Set<Player> getTargets()
