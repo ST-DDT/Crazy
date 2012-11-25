@@ -47,7 +47,16 @@ public class CrazyChatsPlayerListener_132 extends CrazyChatsPlayerListener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void PlayerChatLog(final AsyncPlayerChatEvent event)
 	{
-		PlayerChatLog(event.getPlayer(), event.getMessage());
+		final Player player = event.getPlayer();
+		final String message = event.getMessage();
+		PlayerChatLog(player, message);
+		try
+		{
+			if (event.getRecipients().remove(player))
+				PlayerChatOwnerMessage(event.getFormat(), player, message);
+		}
+		catch (final UnsupportedOperationException e)
+		{}
 	}
 
 	@EventHandler

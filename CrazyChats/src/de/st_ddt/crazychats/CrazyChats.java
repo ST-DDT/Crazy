@@ -75,6 +75,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private String localChatFormat = "[Local]%1$s: %2$s";
 	private double localChatRange = 50;
 	private String privateChatFormat = "[Private]%1$s: %2$s";
+	private String ownChatNamePrefix = ChatColor.ITALIC.toString();
 	private String defaultChannelKey;
 	private long maxSilenceTime;
 	private boolean tagAPIenabled;
@@ -327,6 +328,35 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				return res;
 			}
 		});
+		modeCommand.addMode(modeCommand.new Mode<String>("ownChatNamePrefix", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), ownChatNamePrefix + "Playername");
+			}
+
+			@Override
+			public String getValue()
+			{
+				return ChatHelper.decolorise(ownChatNamePrefix);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				ownChatNamePrefix = newValue;
+				saveConfiguration();
+			}
+		});
 		modeCommand.addMode(modeCommand.new Mode<String>("defaultChannelKey", String.class)
 		{
 
@@ -487,6 +517,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		localChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("localChatFormat", "&2[Local] &F%1$s&F: &F%2$s"));
 		localChatRange = config.getDouble("localChatRange", 30);
 		privateChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("privateChatFormat", "&7[Private] &F%1$s&F: &F%2$s"));
+		ownChatNamePrefix = ChatHelper.colorise(config.getString("ownChatNamePrefix", ChatColor.ITALIC.toString()));
 		defaultChannelKey = config.getString("defaultChannelKey", "w");
 		maxSilenceTime = config.getLong("maxSilenceTime", 31556952000L);
 		// Logger
@@ -504,6 +535,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("localChatFormat", CrazyChatsChatHelper.unmakeFormat(localChatFormat));
 		config.set("localChatRange", localChatRange);
 		config.set("privateChatFormat", CrazyChatsChatHelper.unmakeFormat(privateChatFormat));
+		config.set("ownChatNamePrefix", ChatHelper.decolorise(ownChatNamePrefix));
 		config.set("defaultChannelKey", defaultChannelKey);
 		config.set("maxSilenceTime", maxSilenceTime);
 		super.saveConfiguration();
@@ -567,6 +599,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public String getPrivateChatFormat()
 	{
 		return privateChatFormat;
+	}
+
+	public String getOwnChatNamePrefix()
+	{
+		return ownChatNamePrefix;
 	}
 
 	public String getDefaultChannelKey()

@@ -22,7 +22,7 @@ public class CrazyChatsCommandColorHelp extends CrazyChatsCommandExecutor
 	{
 		final StringBuilder builder = new StringBuilder();
 		for (final ChatColor color : ChatColor.values())
-			builder.append(color.toString()).append(color.getChar());
+			builder.append(color.toString()).append(Character.toUpperCase(color.getChar())).append(color.getChar()).append(ChatColor.RESET);
 		plugin.sendLocaleMessage("COMMAND.COLORHELP", sender, builder.toString());
 	}
 
