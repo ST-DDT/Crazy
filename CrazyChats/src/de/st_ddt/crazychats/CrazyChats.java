@@ -1,8 +1,10 @@
 package de.st_ddt.crazychats;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -118,6 +120,16 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				broadcastChatFormat = newValue;
 				saveConfiguration();
 			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
 		});
 		modeCommand.addMode(modeCommand.new Mode<String>("globalChatFormat", String.class)
 		{
@@ -147,6 +159,16 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				globalChatFormat = newValue;
 				saveConfiguration();
 			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
 		});
 		modeCommand.addMode(modeCommand.new Mode<String>("worldChatFormat", String.class)
 		{
@@ -175,6 +197,16 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			{
 				worldChatFormat = newValue;
 				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
 			}
 		});
 		modeCommand.addMode(modeCommand.new BooleanTrueMode("localChatEnabled")
@@ -221,6 +253,16 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			{
 				localChatFormat = newValue;
 				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
 			}
 		});
 		modeCommand.addMode(modeCommand.new DoubleMode("localChatRange")
@@ -272,6 +314,16 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			{
 				privateChatFormat = newValue;
 				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
 			}
 		});
 		modeCommand.addMode(modeCommand.new Mode<String>("defaultChannelKey", String.class)
