@@ -41,6 +41,18 @@ public class PermissionBukkitSystem implements PermissionSystem
 	}
 
 	@Override
+	public String getGroupPrefix(Player player)
+	{
+		return null;
+	}
+
+	@Override
+	public String getGroupSuffix(Player player)
+	{
+		return null;
+	}
+
+	@Override
 	public Set<String> getGroups(final Player player)
 	{
 		return null;

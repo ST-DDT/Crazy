@@ -54,6 +54,16 @@ public class PermissionModule implements Module
 		return permissionModule.getGroup(player);
 	}
 
+	public static String getGroupPrefix(final Player player)
+	{
+		return permissionModule.getGroupPrefix(player);
+	}
+
+	public static String getGroupSuffix(final Player player)
+	{
+		return permissionModule.getGroupSuffix(player);
+	}
+
 	public static Set<String> getGroups(final Player player)
 	{
 		return permissionModule.getGroups(player);

@@ -16,5 +16,9 @@ public interface PermissionSystem extends Named
 
 	public String getGroup(Player player);
 
+	public String getGroupPrefix(Player player);
+
+	public String getGroupSuffix(Player player);
+
 	public Set<String> getGroups(Player player);
 }
