@@ -40,7 +40,7 @@ public class CrazySquadsSquadInviteEvent extends CrazySquadsEvent implements Can
 	}
 
 	@Override
-	public void setCancelled(boolean cancel)
+	public void setCancelled(final boolean cancel)
 	{
 		this.cancelled = cancel;
 	}
@@ -50,7 +50,7 @@ public class CrazySquadsSquadInviteEvent extends CrazySquadsEvent implements Can
 		return reason;
 	}
 
-	public void setCancelled(String reason)
+	public void setCancelled(final String reason)
 	{
 		this.cancelled = true;
 		this.reason = reason;

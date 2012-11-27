@@ -23,7 +23,7 @@ public class CrazySquadsSquadPlayerCommandSquadDelete extends CrazySquadsSquadPl
 	@Localized("CRAZYSQUADS.COMMAND.SQUAD.DELETED $Owner$")
 	public void command(final Player player, final Squad squad, final String[] args) throws CrazyException
 	{
-		Set<Player> members = squad.getMembers();
+		final Set<Player> members = squad.getMembers();
 		final Player[] membersArray = members.toArray(new Player[members.size()]);
 		members.clear();
 		for (final Player member : membersArray)

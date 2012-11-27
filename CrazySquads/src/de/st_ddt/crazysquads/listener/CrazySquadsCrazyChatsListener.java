@@ -34,7 +34,7 @@ public class CrazySquadsCrazyChatsListener implements Listener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void SquadCreate(final CrazySquadsSquadCreateEvent event)
 	{
-		Squad squad = event.getSquad();
+		final Squad squad = event.getSquad();
 		chats.put(squad, new SquadChannel(plugin, squad, squad.getMembers()));
 	}
 

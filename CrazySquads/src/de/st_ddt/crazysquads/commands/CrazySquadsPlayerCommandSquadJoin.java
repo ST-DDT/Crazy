@@ -29,7 +29,7 @@ public class CrazySquadsPlayerCommandSquadJoin extends CrazySquadsPlayerCommandE
 		final Squad squad = plugin.getInvites().remove(player);
 		if (squad == null)
 			throw new CrazyCommandUsageException("when being invited to a squad!");
-		Set<Player> members = squad.getMembers();
+		final Set<Player> members = squad.getMembers();
 		if (members.size() >= plugin.getMaxSquadSize())
 			throw new CrazyCommandUsageException("when squad is not full!");
 		final CrazySquadsSquadJoinEvent event = new CrazySquadsSquadJoinEvent(plugin, squad, player);

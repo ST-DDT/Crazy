@@ -27,7 +27,7 @@ public class CrazySquadsPlayerCommandSquadCreate extends CrazySquadsPlayerComman
 		if (plugin.getSquads().get(player) != null)
 			throw new CrazyCommandUsageException("when not in a squad!");
 		final Squad squad = new Squad(player);
-		CrazySquadsSquadCreateEvent createEvent = new CrazySquadsSquadCreateEvent(plugin, squad);
+		final CrazySquadsSquadCreateEvent createEvent = new CrazySquadsSquadCreateEvent(plugin, squad);
 		createEvent.callEvent();
 		if (createEvent.isCancelled())
 		{

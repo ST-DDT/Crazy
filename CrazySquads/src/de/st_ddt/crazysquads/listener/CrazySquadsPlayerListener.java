@@ -95,13 +95,13 @@ public class CrazySquadsPlayerListener implements Listener
 			return;
 		if (squad.getLootRule().isShareEnabled())
 		{
-			Set<Player> members = squad.getMembers();
+			final Set<Player> members = squad.getMembers();
 			final List<Player> activeMembers = new ArrayList<Player>(members.size());
 			synchronized (members)
 			{
-				Location location = player.getLocation();
-				double range = plugin.getMaxShareRange();
-				for (Player member : members)
+				final Location location = player.getLocation();
+				final double range = plugin.getMaxShareRange();
+				for (final Player member : members)
 					if (location.distance(member.getLocation()) < range)
 						activeMembers.add(member);
 			}
