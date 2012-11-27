@@ -134,7 +134,8 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 		this.firstLogin = ObjectSaveLoadHelper.StringToDate(rawData[1], new Date());
 		this.lastLogin = ObjectSaveLoadHelper.StringToDate(rawData[2], new Date());
 		this.lastLogout = ObjectSaveLoadHelper.StringToDate(rawData[3], new Date());
-		this.onlineTime = Integer.parseInt(rawData[4]);
+		if (rawData.length >= 5)
+			this.onlineTime = Integer.parseInt(rawData[4]);
 		if (rawData.length >= 6)
 			this.ip = rawData[5];
 		else
