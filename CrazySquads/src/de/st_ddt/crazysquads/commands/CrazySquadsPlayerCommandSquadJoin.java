@@ -1,5 +1,7 @@
 package de.st_ddt.crazysquads.commands;
 
+import java.util.Set;
+
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
@@ -19,7 +21,7 @@ public class CrazySquadsPlayerCommandSquadJoin extends CrazySquadsPlayerCommandE
 	}
 
 	@Override
-	@Localized("CRAZYSQUADS.COMMAND.SQUAD.JOINED $SquadName$")
+	@Localized({ "CRAZYSQUADS.COMMAND.SQUAD.JOIN.CANCELLED $SquadName$ $Reason$", "CRAZYSQUADS.SQUAD.JOIN $Joined$", "CRAZYSQUADS.COMMAND.SQUAD.JOINED $SquadName$" })
 	public void command(final Player player, final String[] args) throws CrazyException
 	{
 		if (plugin.getSquads().get(player) != null)
@@ -27,12 +29,20 @@ public class CrazySquadsPlayerCommandSquadJoin extends CrazySquadsPlayerCommandE
 		final Squad squad = plugin.getInvites().remove(player);
 		if (squad == null)
 			throw new CrazyCommandUsageException("when being invited to a squad!");
-		if (squad.getMembers().size() >= plugin.getMaxSquadSize())
+		Set<Player> members = squad.getMembers();
+		if (members.size() >= plugin.getMaxSquadSize())
 			throw new CrazyCommandUsageException("when squad is not full!");
-		new CrazySquadsSquadJoinEvent(plugin, squad, player).callEvent();
-		squad.join(player);
-		plugin.getSquads().put(player, squad);
-		plugin.sendLocaleMessage("COMMAND.SQUAD.JOINED", player, squad.getName());
+		final CrazySquadsSquadJoinEvent event = new CrazySquadsSquadJoinEvent(plugin, squad, player);
+		event.callEvent();
+		if (event.isCancelled())
+			plugin.sendLocaleMessage("COMMAND.SQUAD.JOIN.CANCELLED", player, squad.getName(), event.getReason());
+		else
+		{
+			plugin.sendLocaleMessage("SQUAD.JOIN", members, player.getName());
+			members.add(player);
+			plugin.getSquads().put(player, squad);
+			plugin.sendLocaleMessage("COMMAND.SQUAD.JOINED", player, squad.getName());
+		}
 	}
 
 	@Override

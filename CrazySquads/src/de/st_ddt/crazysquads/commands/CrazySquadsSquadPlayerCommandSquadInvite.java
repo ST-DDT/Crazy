@@ -11,6 +11,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
+import de.st_ddt.crazysquads.events.CrazySquadsSquadInviteEvent;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
@@ -23,7 +24,7 @@ public class CrazySquadsSquadPlayerCommandSquadInvite extends CrazySquadsSquadPl
 	}
 
 	@Override
-	@Localized({ "CRAZYSQUADS.COMMAND.SQUAD.INVITED $Player$", "CRAZYSQUADS.COMMAND.SQUAD.INVITED.INVITATION $ByPlayer$", "CRAZYSQUADS.COMMAND.SQUAD.INVITED.ALREADY $Player$" })
+	@Localized({ "CRAZYSQUADS.COMMAND.SQUAD.INVITE.CANCELLED $Invited$ $Reason$", "CRAZYSQUADS.COMMAND.SQUAD.INVITED.ALREADY $Invited$", "CRAZYSQUADS.SQUAD.INVITED $Owner$", "CRAZYSQUADS.COMMAND.SQUAD.INVITED $Invited$" })
 	public void command(final Player player, final Squad squad, final String[] args) throws CrazyException
 	{
 		if (args.length != 1)
@@ -34,11 +35,15 @@ public class CrazySquadsSquadPlayerCommandSquadInvite extends CrazySquadsSquadPl
 			throw new CrazyCommandNoSuchException("Player", name);
 		if (squad.getMembers().contains(invited))
 			throw new CrazyCommandCircumstanceException("when invited is not already member of the squad!");
-		if (plugin.getInvites().put(invited, squad) == squad)
+		final CrazySquadsSquadInviteEvent event = new CrazySquadsSquadInviteEvent(plugin, squad, invited);
+		event.callEvent();
+		if (event.isCancelled())
+			plugin.sendLocaleMessage("COMMAND.SQUAD.INVITE.CANCELLED", player, squad.getName(), event.getReason());
+		else if (plugin.getInvites().put(invited, squad) == squad)
 			plugin.sendLocaleMessage("COMMAND.SQUAD.INVITED.ALREADY", player, invited.getName());
 		else
 		{
-			plugin.sendLocaleMessage("COMMAND.SQUAD.INVITED.INVITATION", invited, player.getName());
+			plugin.sendLocaleMessage("SQUAD.INVITED", invited, player.getName());
 			plugin.sendLocaleMessage("COMMAND.SQUAD.INVITED", player, invited.getName());
 		}
 	}

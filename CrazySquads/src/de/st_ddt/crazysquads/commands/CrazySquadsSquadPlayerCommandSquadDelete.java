@@ -1,10 +1,13 @@
 package de.st_ddt.crazysquads.commands;
 
+import java.util.Set;
+
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
+import de.st_ddt.crazysquads.events.CrazySquadsSquadDeleteEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadLeaveEvent;
 import de.st_ddt.crazyutil.locales.Localized;
 
@@ -17,18 +20,19 @@ public class CrazySquadsSquadPlayerCommandSquadDelete extends CrazySquadsSquadPl
 	}
 
 	@Override
-	@Localized("CRAZYSQUADS.COMMAND.SQUAD.DELETED $Name$")
+	@Localized("CRAZYSQUADS.COMMAND.SQUAD.DELETED $Owner$")
 	public void command(final Player player, final Squad squad, final String[] args) throws CrazyException
 	{
-		for (final Player member : squad.getMembers())
+		Set<Player> members = squad.getMembers();
+		final Player[] membersArray = members.toArray(new Player[members.size()]);
+		members.clear();
+		for (final Player member : membersArray)
 		{
 			plugin.getSquads().remove(member);
 			plugin.sendLocaleMessage("COMMAND.SQUAD.DELETED", member, player.getName());
-		}
-		final Player[] members = squad.getMembers().toArray(new Player[squad.getMembers().size()]);
-		squad.getMembers().clear();
-		for (final Player member : members)
 			new CrazySquadsSquadLeaveEvent(plugin, squad, member).callEvent();
+		}
+		new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
 	}
 
 	@Override

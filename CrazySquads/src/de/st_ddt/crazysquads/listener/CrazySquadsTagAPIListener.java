@@ -49,11 +49,12 @@ public class CrazySquadsTagAPIListener implements Listener
 			@Override
 			public void run()
 			{
-				for (final Player member : list)
-				{
-					TagAPI.refreshPlayer(member, player);
-					TagAPI.refreshPlayer(player, member);
-				}
+				if (player.isOnline())
+					for (final Player member : list)
+					{
+						TagAPI.refreshPlayer(member, player);
+						TagAPI.refreshPlayer(player, member);
+					}
 			}
 		}, 5);
 	}
@@ -64,10 +65,11 @@ public class CrazySquadsTagAPIListener implements Listener
 		final Player player = event.getLeftMember();
 		final Set<Player> members = event.getSquad().getMembers();
 		final Player[] list = members.toArray(new Player[members.size()]);
-		for (final Player member : list)
-		{
-			TagAPI.refreshPlayer(member, player);
-			TagAPI.refreshPlayer(player, member);
-		}
+		if (player.isOnline())
+			for (final Player member : list)
+			{
+				TagAPI.refreshPlayer(member, player);
+				TagAPI.refreshPlayer(player, member);
+			}
 	}
 }

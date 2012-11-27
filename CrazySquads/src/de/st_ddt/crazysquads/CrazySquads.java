@@ -221,7 +221,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		squadChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadChatFormat", "&3[Squad] &F%1$s&F: &B%2$s"));
 		squadHeadNamePrefix = ChatHelper.colorise(config.getString("squadHeadNamePrefix", ChatColor.DARK_BLUE.toString()));
 		maxSquadSize = Math.max(1, config.getInt("maxSquadSize", 5));
-		maxShareRange = config.getDouble("maxShareRange", maxShareRange);
+		maxShareRange = config.getDouble("maxShareRange", 50);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import de.st_ddt.crazychats.CrazyChats;
@@ -12,6 +13,7 @@ import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadCreateEvent;
+import de.st_ddt.crazysquads.events.CrazySquadsSquadDeleteEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadJoinEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadLeaveEvent;
 
@@ -29,13 +31,14 @@ public class CrazySquadsCrazyChatsListener implements Listener
 		this.chatsPlugin = CrazyChats.getPlugin();
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void SquadCreate(final CrazySquadsSquadCreateEvent event)
 	{
-		chats.put(event.getSquad(), new SquadChannel(plugin, event.getSquad(), event.getMembers()));
+		Squad squad = event.getSquad();
+		chats.put(squad, new SquadChannel(plugin, squad, squad.getMembers()));
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void SquadJoin(final CrazySquadsSquadJoinEvent event)
 	{
 		final ChatPlayerData data = chatsPlugin.getPlayerData(event.getNewMember());
@@ -50,7 +53,11 @@ public class CrazySquadsCrazyChatsListener implements Listener
 		final ChatPlayerData data = chatsPlugin.getPlayerData(event.getLeftMember());
 		if (data != null)
 			data.getAccessibleChannels().remove(chats.get(squad));
-		if (squad.getMembers().isEmpty())
-			chats.remove(squad);
+	}
+
+	@EventHandler
+	public void SquadDelete(final CrazySquadsSquadDeleteEvent event)
+	{
+		chats.remove(event.getSquad());
 	}
 }

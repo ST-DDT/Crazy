@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
+import de.st_ddt.crazysquads.events.CrazySquadsSquadDeleteEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadLeaveEvent;
 import de.st_ddt.crazyutil.locales.Localized;
 
@@ -52,8 +53,24 @@ public class CrazySquadsPlayerListener implements Listener
 		plugin.getInvites().remove(player);
 		final Squad squad = plugin.getSquads().remove(player);
 		if (squad != null)
-			if (squad.leave(player))
-				new CrazySquadsSquadLeaveEvent(plugin, squad, player).callEvent();
+		{
+			final Set<Player> members = squad.getMembers();
+			members.remove(player);
+			if (squad.getOwner() == player)
+			{
+				if (members.size() > 0)
+				{
+					final Player newOwner = members.iterator().next();
+					squad.setOwner(newOwner);
+					plugin.sendLocaleMessage("SQUAD.OWNERLEFT", members, player.getName(), newOwner.getName());
+				}
+			}
+			else
+				plugin.sendLocaleMessage("SQUAD.LEFT", members, player.getName());
+			new CrazySquadsSquadLeaveEvent(plugin, squad, player).callEvent();
+			if (members.size() == 0)
+				new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)

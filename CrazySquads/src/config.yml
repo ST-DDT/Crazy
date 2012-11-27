@@ -1,0 +1,19 @@
+# CrazySquads config.yml
+# For more information visit
+# https://github.com/ST-DDT/Crazy/blob/master/CrazySquads/src/config.yml
+version: X.Y
+# required plugins +version can be found there
+# https://github.com/ST-DDT/Crazy/blob/master/CrazySquads/src/plugin.yml
+# formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World
+# format used for squad Channel
+# requires CrazyChats
+squadChatFormat: '&3[Squad] &F$0$&F: &B$1$'
+# use the following to colorise your party members headname
+# this may hide the last characters in long names => Skin changes
+# requrires TagAPI
+squadHeadNamePrefix: '&1'
+# max allowed members per squad.
+maxSquadSize: 5
+# max Range for XP and Loot being shared
+# (to prevent inventory shifting and afk players being trained)
+maxShareRange: 50.0

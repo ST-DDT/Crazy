@@ -1,25 +1,23 @@
 package de.st_ddt.crazysquads.events;
 
-import java.util.Set;
-
-import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
-public class CrazySquadsSquadCreateEvent extends CrazySquadsEvent
+public class CrazySquadsSquadCreateEvent extends CrazySquadsEvent implements Cancellable
 {
 
 	private static final HandlerList handlers = new HandlerList();
 	private final Squad squad;
-	private final Set<Player> members;
+	private boolean cancelled = false;
+	private String reason;
 
-	public CrazySquadsSquadCreateEvent(final CrazySquads plugin, final Squad squad, final Set<Player> members)
+	public CrazySquadsSquadCreateEvent(final CrazySquads plugin, final Squad squad)
 	{
 		super(plugin);
 		this.squad = squad;
-		this.members = members;
 	}
 
 	public Squad getSquad()
@@ -27,9 +25,27 @@ public class CrazySquadsSquadCreateEvent extends CrazySquadsEvent
 		return squad;
 	}
 
-	public Set<Player> getMembers()
+	@Override
+	public boolean isCancelled()
 	{
-		return members;
+		return cancelled;
+	}
+
+	@Override
+	public void setCancelled(boolean cancel)
+	{
+		this.cancelled = cancel;
+	}
+
+	public String getReason()
+	{
+		return reason;
+	}
+
+	public void setCancelled(String reason)
+	{
+		this.cancelled = true;
+		this.reason = reason;
 	}
 
 	@Override

@@ -7,20 +7,20 @@ import org.bukkit.event.HandlerList;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
-public class CrazySquadsSquadJoinEvent extends CrazySquadsEvent implements Cancellable
+public class CrazySquadsSquadInviteEvent extends CrazySquadsEvent implements Cancellable
 {
 
 	private static final HandlerList handlers = new HandlerList();
 	private final Squad squad;
-	private final Player newMember;
+	private final Player invited;
 	private boolean cancelled = false;
 	private String reason;
 
-	public CrazySquadsSquadJoinEvent(final CrazySquads plugin, final Squad squad, final Player newMember)
+	public CrazySquadsSquadInviteEvent(final CrazySquads plugin, final Squad squad, final Player invited)
 	{
 		super(plugin);
 		this.squad = squad;
-		this.newMember = newMember;
+		this.invited = invited;
 	}
 
 	public Squad getSquad()
@@ -28,9 +28,9 @@ public class CrazySquadsSquadJoinEvent extends CrazySquadsEvent implements Cance
 		return squad;
 	}
 
-	public Player getNewMember()
+	public Player getInvited()
 	{
-		return newMember;
+		return invited;
 	}
 
 	@Override
