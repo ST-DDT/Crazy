@@ -1,0 +1,35 @@
+name: CrazySquads
+main: de.st_ddt.crazysquads.CrazySquads
+author: ST-DDT
+version: 0.4
+# requires CrazyCore v9.5 or later
+depend: [CrazyCore]
+softdepend: [CrazyChats,TagAPI]
+description: >
+            CrazySquads allows your users to form squads/parties and fight together against enemies or solve quests.
+commands:
+  squad:
+    description: Access your squad.
+    usage: /<command> [Subcommand...]
+    aliases: [party,p]
+  crazysquads:
+    description: Plugin Main Menu
+    usage: /<command> [Subcommand...]
+    aliases: [cs,csquads]
+permissions:
+  crazysquads.*:
+    description: Access to all commands
+    default: false
+    children:
+      crazysquads.mode: true
+      crazysquads.party.create: true
+      crazysquads.party.join: true
+  crazysquads.mode:
+    description: Allow changing plugin options.
+    default: op
+  crazysquads.squad.create:
+    description: Allow creating new parties.
+    default: true
+  crazysquads.squad.join:
+    description: Allow joining parties.
+    default: true
