@@ -11,9 +11,9 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 {
 
 	private final JavaPlugin plugin;
-	private final ConfigurationSection config;
-	private final String path;
-	private final String[] columnNames;
+	protected final ConfigurationSection config;
+	protected final String path;
+	protected final String[] columnNames;
 	private final Runnable delayedSave = new Runnable()
 	{
 

@@ -12,11 +12,11 @@ import org.bukkit.configuration.ConfigurationSection;
 public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S>
 {
 
-	private final String tableName;
+	protected final String tableName;
 	private final MySQLConnection mysqlConnection;
-	private final MySQLConnectionPool mysqlConnectionPool;
-	private final MySQLColumn[] columns;
-	private final String[] columnNames;
+	protected final MySQLConnectionPool mysqlConnectionPool;
+	protected final MySQLColumn[] columns;
+	protected final String[] columnNames;
 	private final boolean cached;
 	private final boolean doNotUpdate;
 
@@ -345,7 +345,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void save(final S entry)
 	{
 		super.save(entry);
-		String sql = null;
+		final String sql;
 		if (containsEntry(entry.getName()))
 			sql = "UPDATE `" + tableName + "` SET " + entry.saveToMySQLDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
 		else
