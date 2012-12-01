@@ -81,8 +81,9 @@ public class CrazySquadsPlayerListener implements Listener
 		if (!(event.getEntity() instanceof Player))
 			return;
 		final Squad squad = plugin.getSquads().get(event.getEntity());
-		if (squad.getMembers().contains(event.getDamager()))
-			event.setCancelled(true);
+		if (squad != null)
+			if (squad.getMembers().contains(event.getDamager()))
+				event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
