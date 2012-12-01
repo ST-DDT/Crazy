@@ -7,7 +7,7 @@ import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.NamedRunnable;
 
 public class ScheduledTrigger extends Trigger
@@ -22,7 +22,7 @@ public class ScheduledTrigger extends Trigger
 		final String datesString = config.getString("date");
 		try
 		{
-			this.date = CrazyPluginInterface.DATETIMEFORMAT.parse(datesString);
+			this.date = CrazyLightPluginInterface.DATETIMEFORMAT.parse(datesString);
 		}
 		catch (final ParseException e)
 		{
@@ -77,6 +77,6 @@ public class ScheduledTrigger extends Trigger
 	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
-		config.set(path + "date", CrazyPluginInterface.DATETIMEFORMAT.format(date));
+		config.set(path + "date", CrazyLightPluginInterface.DATETIMEFORMAT.format(date));
 	}
 }

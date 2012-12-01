@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
 
 public class Action_COMMAND extends Action
@@ -30,7 +30,7 @@ public class Action_COMMAND extends Action
 	public void run(final CommandSender sender)
 	{
 		for (final String command : commands)
-			Bukkit.getServer().dispatchCommand(sender, ChatHelper.putArgs(command, sender.getName(), CrazyPluginInterface.DATETIMEFORMAT.format(new Date())));
+			Bukkit.getServer().dispatchCommand(sender, ChatHelper.putArgs(command, sender.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date())));
 	}
 
 	@Override

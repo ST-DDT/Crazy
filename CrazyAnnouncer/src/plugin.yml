@@ -1,7 +1,7 @@
 name: CrazyAnnouncer
 main: de.st_ddt.crazyannouncer.CrazyAnnouncer
 author: ST-DDT
-version: 1.7
+version: 1.8
 # requires CrazyCore v9 or later
 depend: [CrazyCore]
 description: >

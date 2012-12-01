@@ -17,7 +17,6 @@ public abstract class ActionList extends Action
 		if (config == null)
 			return;
 		for (final String name : config.getKeys(false))
-		{
 			try
 			{
 				final Action action = Action.load(config.getConfigurationSection(name));
@@ -29,7 +28,6 @@ public abstract class ActionList extends Action
 				System.out.println("Error loading condition: " + name);
 				e.printStackTrace();
 			}
-		}
 	}
 
 	public ActionList(final String name)

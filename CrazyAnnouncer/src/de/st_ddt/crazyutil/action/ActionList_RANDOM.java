@@ -42,7 +42,7 @@ public class ActionList_RANDOM extends ActionList
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "amount", amount);

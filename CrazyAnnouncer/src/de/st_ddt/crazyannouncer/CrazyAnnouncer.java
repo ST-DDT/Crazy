@@ -57,10 +57,8 @@ public class CrazyAnnouncer extends CrazyPlugin
 		EventTrigger.setTriggerEventListener(eventListener);
 		ConfigurationSection config = getConfig().getConfigurationSection("actions");
 		if (config != null)
-		{
 			for (final String name : config.getKeys(false))
 				actions.add(Action.load(config.getConfigurationSection(name)));
-		}
 		else
 		{
 			actions.add(new Action_MESSAGE("example", "This is a default message", "Welcome to the minecraft server of &E" + getServer().getServerName()));

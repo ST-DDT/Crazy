@@ -59,12 +59,12 @@ public abstract class Trigger implements NamedRunnable
 	}
 
 	@Override
-	public String getName()
+	public final String getName()
 	{
 		return name;
 	}
 
-	public boolean isEnabled()
+	public final boolean isEnabled()
 	{
 		return enabled;
 	}
@@ -79,13 +79,13 @@ public abstract class Trigger implements NamedRunnable
 		this.enabled = enabled;
 	}
 
-	public void addAction(final NamedRunnable action)
+	public final void addAction(final NamedRunnable action)
 	{
 		if (!actions.contains(action))
 			actions.add(action);
 	}
 
-	public void removeAction(final NamedRunnable action)
+	public final void removeAction(final NamedRunnable action)
 	{
 		actions.remove(action);
 	}
