@@ -24,7 +24,6 @@ import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
@@ -149,7 +148,10 @@ public class CrazyChatsPlayerListener implements Listener
 				plugin.sendLocaleMessage("CHAT.BLOCKED.NOCHANNEL", player, ChatHelper.listingString(data.getChannelMap().keySet()) + ", <Player,...>");
 			final String[] split = PATTERN_SPACE.split(message, 2);
 			final String channelName = split[0].substring(1).toLowerCase();
-			channel = data.getChannelMap().get(channelName);
+			if (channelName.equals("w") || channelName.equals("world"))
+				channel = plugin.getWorldChannels().get(player.getWorld().getName());
+			else
+				channel = data.getChannelMap().get(channelName);
 			if (channel == null)
 			{
 				final HashSet<Player> targets = new HashSet<Player>();
@@ -257,9 +259,9 @@ public class CrazyChatsPlayerListener implements Listener
 			return format;
 		}
 
-		public String getAdvancedFormat(Player player)
+		public String getAdvancedFormat(final Player player)
 		{
-			return ChatHelperExtended.putArgs(format, "", "", plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName());
+			return ChatHelper.putArgs(format, "", "", plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName());
 		}
 
 		public Set<Player> getTargets()
