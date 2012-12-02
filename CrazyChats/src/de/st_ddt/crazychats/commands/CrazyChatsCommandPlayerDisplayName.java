@@ -35,15 +35,15 @@ public class CrazyChatsCommandPlayerDisplayName extends CrazyChatsCommandExecuto
 		final ChatPlayerData data = plugin.getPlayerData(name);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("Player", name);
-		if (!PermissionModule.hasPermission(sender, "crazychats.player.displayname." + (data.getPlayer().equals(sender) ? "self" : "other")))
+		final Player player = data.getPlayer();
+		if (!PermissionModule.hasPermission(sender, "crazychats.player.displayname." + (player != null && player.equals(sender) ? "self" : "other")))
 			throw new CrazyCommandPermissionException();
-		if (args.length == 2)
+		if (args.length == 2 && !args[1].equals(name))
 		{
 			final String displayName = ChatHelper.colorise(args[1]);
 			if (displayName.length() < 3 || displayName.length() > 16)
 				plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.WARNLENGTH", sender, displayName, displayName.length());
 			data.setDisplayName(displayName);
-			final Player player = data.getPlayer();
 			if (player != null)
 				player.setDisplayName(displayName);
 			plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.DONE", sender, data.getName(), displayName);
@@ -51,7 +51,6 @@ public class CrazyChatsCommandPlayerDisplayName extends CrazyChatsCommandExecuto
 		else
 		{
 			data.setDisplayName(null);
-			final Player player = data.getPlayer();
 			if (player != null)
 				player.setDisplayName(null);
 			plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.REMOVED", sender, data.getName());
