@@ -25,6 +25,9 @@ import de.st_ddt.crazychats.channels.GlobalChannel;
 import de.st_ddt.crazychats.channels.LocalChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandColorHelp;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupListnamePrefix;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupPrefix;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupSuffix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerHeadName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerListName;
@@ -51,6 +54,7 @@ import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener_125;
 import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener_132;
 import de.st_ddt.crazychats.listener.CrazyChatsTagAPIListener;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
+import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -66,6 +70,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private static CrazyChats plugin;
 	private final Map<String, String> groupPrefixes = new LinkedHashMap<String, String>();
 	private final Map<String, String> groupSuffixes = new LinkedHashMap<String, String>();
+	private final Map<String, String> groupListnamePrefixes = new LinkedHashMap<String, String>();
 	private final BroadcastChannel broadcastChannel = new BroadcastChannel();
 	private final GlobalChannel globalChannel = new GlobalChannel();
 	private final Map<String, WorldChannel> worldChannels = Collections.synchronizedMap(new HashMap<String, WorldChannel>());
@@ -435,6 +440,10 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerSilence(this), "silence", "globalmute");
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerMute(this), "mute");
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerUnmute(this), "unmute");
+		final CrazyCommandTreeExecutor<CrazyChats> groupCommand = new CrazyCommandTreeExecutor<CrazyChats>(this);
+		groupCommand.addSubCommand(new CrazyChatsCommandGroupPrefix(this), "prefix");
+		groupCommand.addSubCommand(new CrazyChatsCommandGroupSuffix(this), "suffix");
+		groupCommand.addSubCommand(new CrazyChatsCommandGroupListnamePrefix(this), "lnameprefix", "listnameprefix");
 	}
 
 	private void registerHooks()
@@ -547,6 +556,17 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		else
 			for (final String key : groupSuffixConfig.getKeys(false))
 				groupSuffixes.put(key, ChatHelper.colorise(groupSuffixConfig.getString(key, "")));
+		groupListnamePrefixes.clear();
+		groupListnamePrefixes.put("nogroup", "");
+		final ConfigurationSection groupListnamePrefixConfig = config.getConfigurationSection("groupListnamePrefix");
+		if (groupListnamePrefixConfig == null)
+		{
+			groupListnamePrefixes.put("op", "");
+			groupListnamePrefixes.put("default", "");
+		}
+		else
+			for (final String key : groupListnamePrefixConfig.getKeys(false))
+				groupListnamePrefixes.put(key, ChatHelper.colorise(groupListnamePrefixConfig.getString(key, "")));
 		broadcastChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("broadcastChatFormat", "&C&L[All] &F%1$s&F: &E%2$s"));
 		globalChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("globalChatFormat", "&6[Global] &F%1$s&F: &F%2$s"));
 		worldChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("worldChatFormat", "&A[World] &F%1$s&F: &F%2$s"));
@@ -571,6 +591,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("groupSuffix", null);
 		for (final Entry<String, String> entry : groupSuffixes.entrySet())
 			config.set("groupSuffix." + entry.getKey(), ChatHelper.decolorise(entry.getValue()));
+		config.set("groupListnamePrefix", null);
+		for (final Entry<String, String> entry : groupListnamePrefixes.entrySet())
+			config.set("groupListnamePrefix." + entry.getKey(), ChatHelper.decolorise(entry.getValue()));
 		config.set("broadcastChatFormat", CrazyChatsChatHelper.unmakeFormat(broadcastChatFormat));
 		config.set("globalChatFormat", CrazyChatsChatHelper.unmakeFormat(globalChatFormat));
 		config.set("worldChatFormat", CrazyChatsChatHelper.unmakeFormat(worldChatFormat));
@@ -582,6 +605,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("defaultChannelKey", defaultChannelKey);
 		config.set("maxSilenceTime", maxSilenceTime);
 		super.saveConfiguration();
+	}
+
+	public Map<String, String> getGroupPrefixes()
+	{
+		return groupPrefixes;
 	}
 
 	public String getGroupPrefix(final Player player)
@@ -607,6 +635,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return groupPrefixes.get("nogroup");
 	}
 
+	public Map<String, String> getGroupSuffixes()
+	{
+		return groupSuffixes;
+	}
+
 	public String getGroupSuffix(final Player player)
 	{
 		final String suffix = PermissionModule.getGroupPrefix(player);
@@ -628,6 +661,31 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 					return infix;
 			}
 		return groupSuffixes.get("nogroup");
+	}
+
+	public Map<String, String> getGroupListnamePrefixes()
+	{
+		return groupListnamePrefixes;
+	}
+
+	public String getGroupListnamePrefix(final Player player)
+	{
+		final Set<String> groups = PermissionModule.getGroups(player);
+		if (groups == null)
+		{
+			for (final Entry<String, String> entry : groupListnamePrefixes.entrySet())
+				if (!entry.getKey().equals("nogroup"))
+					if (PermissionModule.hasGroup(player, entry.getKey()))
+						return entry.getValue();
+		}
+		else
+			for (final String group : groups)
+			{
+				final String infix = groupListnamePrefixes.get(group);
+				if (infix != null)
+					return infix;
+			}
+		return groupListnamePrefixes.get("nogroup");
 	}
 
 	public BroadcastChannel getBroadcastChannel()

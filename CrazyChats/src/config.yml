@@ -21,17 +21,22 @@ database:
       headName: headName
       silenced: silenced
 # group prefixes (only used when PermissionModule.getGroupPrefix() returns null)
-# groupPrefix:
+#groupPrefix:
 # groupname: prefix
 # this entry will be used if no matching group is found or an error occured.
 #  nogroup: ''
 #  op: '&C[Admin]&F'
 # group suffixes (only used when PermissionModule.getGroupSuffix() returns null)
-# groupSuffix:
+#groupSuffix:
 # groupname: suffix
 # this entry will be used if no matching group is found or an error occured.
 #  nogroup: ''
 #  op: ''
+# group listname prefixes (only used when no custom listname is set)
+#groupListnamePrefix:
+# groupname: prefix
+#  nogroup: ''
+#  op: '&C'
 # formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World
 # format used for broadcast Channel 
 broadcastChatFormat: '&C&L[All] &F$0$&F: &E$1$'
