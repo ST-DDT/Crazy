@@ -203,6 +203,11 @@ public class ChatHelper
 
 	public static String getMinecraftVersion()
 	{
-		return Bukkit.getVersion().split("-", 4)[2];
+		return Bukkit.getBukkitVersion().split("-", 2)[0];
+	}
+
+	public static String getExtendedMinecraftVersion()
+	{
+		return Bukkit.getBukkitVersion().replace("-R", ".").split("-", 2)[0];
 	}
 }
