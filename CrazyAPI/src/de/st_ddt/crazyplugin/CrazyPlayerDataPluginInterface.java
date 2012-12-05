@@ -38,8 +38,10 @@ public interface CrazyPlayerDataPluginInterface<T extends PlayerDataInterface, S
 
 	public Collection<S> getPlayerData();
 
+	@Override
 	public T getAvailablePlayerData(final String name);
 
+	@Override
 	public T getAvailablePlayerData(final OfflinePlayer player);
 
 	public Collection<T> getAvailablePlayerData(boolean includeOnline, boolean includeAllEntries);

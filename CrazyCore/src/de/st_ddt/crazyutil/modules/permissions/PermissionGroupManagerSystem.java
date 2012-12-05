@@ -67,7 +67,7 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 	}
 
 	@Override
-	public String getGroupPrefix(Player player)
+	public String getGroupPrefix(final Player player)
 	{
 		final AnjoPermissionsHandler handler = getHandler(player);
 		if (handler == null)
@@ -77,7 +77,7 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 	}
 
 	@Override
-	public String getGroupSuffix(Player player)
+	public String getGroupSuffix(final Player player)
 	{
 		final AnjoPermissionsHandler handler = getHandler(player);
 		if (handler == null)

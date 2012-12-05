@@ -76,12 +76,12 @@ public class PermissionPermissionsExSystem implements PermissionSystem
 	}
 
 	@Override
-	public String getGroupPrefix(Player player)
+	public String getGroupPrefix(final Player player)
 	{
 		final PermissionUser user = getUser(player);
 		if (user == null)
 			return null;
-		String prefix = user.getPrefix();
+		final String prefix = user.getPrefix();
 		if (prefix == null)
 			return user.getPrefix(player.getWorld().getName());
 		else
@@ -89,12 +89,12 @@ public class PermissionPermissionsExSystem implements PermissionSystem
 	}
 
 	@Override
-	public String getGroupSuffix(Player player)
+	public String getGroupSuffix(final Player player)
 	{
 		final PermissionUser user = getUser(player);
 		if (user == null)
 			return null;
-		String suffix = user.getSuffix();
+		final String suffix = user.getSuffix();
 		if (suffix == null)
 			return user.getSuffix(player.getWorld().getName());
 		else

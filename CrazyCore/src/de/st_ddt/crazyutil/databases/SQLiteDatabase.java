@@ -9,25 +9,25 @@ import java.util.HashSet;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S>
+public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final String tableName;
-	private final MySQLConnection connection;
-	protected final ConnectionPool mysqlConnectionPool;
+	private final SQLiteConnection connection;
+	protected final ConnectionPool connectionPool;
 	protected final SQLColumn[] columns;
 	protected final String[] columnNames;
 	private final boolean cached;
 	private final boolean doNotUpdate;
 
-	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
+	public SQLiteDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultPath, final String defaultTableName, final ConfigurationSection config)
 	{
-		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
+		super(DatabaseType.SQLITE, clazz, getConstructor(clazz), convertColumnNames(columns));
 		if (config == null)
 		{
 			this.tableName = defaultTableName;
-			this.connection = MySQLConnection.getConnection(null);
-			this.mysqlConnectionPool = new ConnectionPool(connection);
+			this.connection = new SQLiteConnection(defaultPath);
+			this.connectionPool = new SQLiteConnectionPool(connection);
 			this.columns = columns;
 			this.columnNames = defaultColumnNames;
 			this.cached = true;
@@ -36,8 +36,8 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		else
 		{
 			this.tableName = config.getString("tableName", defaultTableName);
-			this.connection = MySQLConnection.getConnection(config.getConfigurationSection("connection"));
-			this.mysqlConnectionPool = new ConnectionPool(connection);
+			this.connection = SQLiteConnection.getConnection(config.getConfigurationSection("connection"), defaultPath);
+			this.connectionPool = new SQLiteConnectionPool(connection);
 			this.columns = columns;
 			this.columnNames = new String[defaultColumnNames.length];
 			for (int i = 0; i < defaultColumnNames.length; i++)
@@ -50,12 +50,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		}
 	}
 
-	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
+	public SQLiteDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String path, final boolean cached, final boolean doNoUpdate)
 	{
-		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
+		super(DatabaseType.SQLITE, clazz, getConstructor(clazz), convertColumnNames(columns));
 		this.tableName = tableName;
-		this.connection = new MySQLConnection(host, port, database, user, password);
-		this.mysqlConnectionPool = new ConnectionPool(connection);
+		this.connection = new SQLiteConnection(path);
+		this.connectionPool = new SQLiteConnectionPool(connection);
 		this.columns = columns;
 		this.columnNames = columnNames;
 		for (int i = 0; i < columns.length; i++)
@@ -104,21 +104,21 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		return columns;
 	}
 
-	public final MySQLConnection getConnection()
+	public final SQLiteConnection getConnection()
 	{
 		return connection;
 	}
 
 	public final ConnectionPool getConnectionpool()
 	{
-		return mysqlConnectionPool;
+		return connectionPool;
 	}
 
 	@Override
 	public void checkTable() throws Exception
 	{
 		Statement query = null;
-		final Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = connectionPool.getConnection();
 		try
 		{
 			// Create Table if not exists
@@ -130,9 +130,9 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			final HashSet<String> columnsNames = new HashSet<String>();
 			query = connection.createStatement();
 			// Vorhandene Spalten abfragen
-			final ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + tableName);
+			final ResultSet result = query.executeQuery("pragma table_info(" + tableName + ")");
 			while (result.next())
-				columnsNames.add(result.getString("Field"));
+				columnsNames.add(result.getString(2));
 			query.close();
 			query = null;
 			for (final SQLColumn column : columns)
@@ -162,7 +162,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final SQLException e)
 				{}
-			mysqlConnectionPool.releaseConnection(connection);
+			connectionPool.releaseConnection(connection);
 		}
 	}
 
@@ -198,7 +198,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		boolean res = false;
 		Statement query = null;
-		final Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = connectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -220,7 +220,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final Exception e)
 				{}
-			mysqlConnectionPool.releaseConnection(connection);
+			connectionPool.releaseConnection(connection);
 		}
 		return res;
 	}
@@ -239,7 +239,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		S data = null;
 		Statement query = null;
-		final Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = connectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -270,7 +270,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final Exception e)
 				{}
-			mysqlConnectionPool.releaseConnection(connection);
+			connectionPool.releaseConnection(connection);
 		}
 		return data;
 	}
@@ -279,7 +279,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void loadAllEntries()
 	{
 		Statement query = null;
-		final Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = connectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -309,7 +309,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final Exception e)
 				{}
-			mysqlConnectionPool.releaseConnection(connection);
+			connectionPool.releaseConnection(connection);
 		}
 	}
 
@@ -317,7 +317,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public boolean deleteEntry(final String key)
 	{
 		Statement query = null;
-		final Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = connectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -336,7 +336,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final SQLException e)
 				{}
-			mysqlConnectionPool.releaseConnection(connection);
+			connectionPool.releaseConnection(connection);
 		}
 		return super.deleteEntry(key);
 	}
@@ -347,10 +347,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		super.save(entry);
 		final String sql;
 		if (containsEntry(entry.getName()))
-			sql = "UPDATE `" + tableName + "` SET " + entry.saveToMySQLDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
+			sql = "UPDATE `" + tableName + "` SET " + entry.saveUpdateToSQLiteDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
 		else
-			sql = "INSERT INTO `" + tableName + "` SET " + columnNames[0] + "='" + entry.getName() + "', " + entry.saveToMySQLDatabase(columnNames);
-		final Connection connection = mysqlConnectionPool.getConnection();
+			sql = "INSERT INTO `" + tableName + "`" + entry.saveInsertToSQLiteDatabase(columnNames);
+		System.out.println(sql);
+		final Connection connection = connectionPool.getConnection();
 		Statement query = null;
 		try
 		{
@@ -370,7 +371,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final SQLException e)
 				{}
-			mysqlConnectionPool.releaseConnection(connection);
+			connectionPool.releaseConnection(connection);
 		}
 	}
 
@@ -378,7 +379,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void purgeDatabase()
 	{
 		Statement query = null;
-		final Connection connection = mysqlConnectionPool.getConnection();
+		final Connection connection = connectionPool.getConnection();
 		try
 		{
 			query = connection.createStatement();
@@ -397,7 +398,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				}
 				catch (final SQLException e)
 				{}
-			mysqlConnectionPool.releaseConnection(connection);
+			connectionPool.releaseConnection(connection);
 		}
 		super.purgeDatabase();
 	}
@@ -411,11 +412,11 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
-		connection.save(config, path + "MYSQL.connection.");
-		config.set(path + "MYSQL.tableName", tableName);
-		config.set(path + "MYSQL.cached", cached);
-		config.set(path + "MYSQL.static", doNotUpdate);
+		connection.save(config, path + "SQLITE.connection.");
+		config.set(path + "SQLITE.tableName", tableName);
+		config.set(path + "SQLITE.cached", cached);
+		config.set(path + "SQLITE.static", doNotUpdate);
 		for (int i = 0; i < defaultColumnNames.length; i++)
-			config.set(path + "MYSQL.columns." + defaultColumnNames[i], columnNames[i]);
+			config.set(path + "SQLITE.columns." + defaultColumnNames[i], columnNames[i]);
 	}
 }

@@ -8,30 +8,30 @@ import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MySQLConnectionPool
+public class ConnectionPool
 {
 
-	private final Queue<Connection> idleConenctions = new LinkedList<Connection>();
-	private int busyConnections = 0;
-	private final int maxConnections;
-	private final MySQLConnection mysqlConnection;
-	private final Lock lock = new ReentrantLock();
+	protected final Queue<Connection> idleConenctions = new LinkedList<Connection>();
+	protected int busyConnections = 0;
+	protected final int maxConnections;
+	protected final MainConnection mainConnection;
+	protected final Lock lock = new ReentrantLock();
 
-	public MySQLConnectionPool(final MySQLConnection mysqlConnection)
+	public ConnectionPool(final MainConnection mysqlConnection)
 	{
 		this(mysqlConnection, 10);
 	}
 
-	public MySQLConnectionPool(final MySQLConnection mysqlConnection, final int maxConnections)
+	public ConnectionPool(final MainConnection mysqlConnection, final int maxConnections)
 	{
 		super();
-		this.mysqlConnection = mysqlConnection;
+		this.mainConnection = mysqlConnection;
 		this.maxConnections = maxConnections;
 	}
 
-	public MySQLConnection getMysqlConnection()
+	public MainConnection getMainConnection()
 	{
-		return mysqlConnection;
+		return mainConnection;
 	}
 
 	public int getActiveConnections()
@@ -70,7 +70,7 @@ public class MySQLConnectionPool
 				else
 				{
 					busyConnections++;
-					return mysqlConnection.openConnection();
+					return mainConnection.openConnection();
 				}
 			else if (connection.isValid(1))
 				return connection;

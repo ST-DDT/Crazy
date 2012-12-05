@@ -6,12 +6,12 @@ import org.bukkit.configuration.ConfigurationSection;
 public class MySQLPlayerDataDatabase<S extends MySQLPlayerDataDatabaseEntry> extends MySQLDatabase<S> implements PlayerDataDatabase<S>
 {
 
-	public MySQLPlayerDataDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
+	public MySQLPlayerDataDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{
 		super(clazz, columns, defaultTableName, config);
 	}
 
-	public MySQLPlayerDataDatabase(final Class<S> clazz, final MySQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
+	public MySQLPlayerDataDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
 	{
 		super(clazz, columns, tableName, columnNames, host, port, database, user, password, cached, doNoUpdate);
 	}

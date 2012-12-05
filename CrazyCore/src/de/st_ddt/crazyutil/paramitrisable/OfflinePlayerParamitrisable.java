@@ -52,7 +52,7 @@ public class OfflinePlayerParamitrisable extends TypedParamitrisable<OfflinePlay
 	{
 		final String[] res = new String[players.size()];
 		int i = 0;
-		for (OfflinePlayer player : players)
+		for (final OfflinePlayer player : players)
 			res[i++] = player.getName();
 		return res;
 	}

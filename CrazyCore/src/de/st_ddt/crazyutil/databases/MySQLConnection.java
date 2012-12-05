@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 
-public class MySQLConnection implements ConfigurationSaveable
+public class MySQLConnection implements ConfigurationSaveable, MainConnection
 {
 
 	private final String host;
@@ -52,11 +52,12 @@ public class MySQLConnection implements ConfigurationSaveable
 		}
 	}
 
+	@Override
 	public Connection openConnection() throws SQLException
 	{
 		try
 		{
-			return DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?" + "user=" + this.user + "&" + "password=" + this.password);
+			return DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, user, password);
 		}
 		catch (final SQLException e)
 		{

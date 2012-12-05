@@ -35,7 +35,7 @@ public class CrazyCoreCommandList extends CrazyCoreCommandExecutor
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
-		Tabbed pageTab = ChatHelperExtended.listTabHelp(params, sender, null, null);
+		final Tabbed pageTab = ChatHelperExtended.listTabHelp(params, sender, null, null);
 		return ChatHelperExtended.tabHelpWithPipe(sender, args, params, pageTab);
 	}
 

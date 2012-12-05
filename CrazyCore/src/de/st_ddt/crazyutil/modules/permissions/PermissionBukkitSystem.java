@@ -41,13 +41,13 @@ public class PermissionBukkitSystem implements PermissionSystem
 	}
 
 	@Override
-	public String getGroupPrefix(Player player)
+	public String getGroupPrefix(final Player player)
 	{
 		return null;
 	}
 
 	@Override
-	public String getGroupSuffix(Player player)
+	public String getGroupSuffix(final Player player)
 	{
 		return null;
 	}

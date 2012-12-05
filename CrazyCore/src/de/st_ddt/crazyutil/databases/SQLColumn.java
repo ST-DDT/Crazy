@@ -1,6 +1,6 @@
 package de.st_ddt.crazyutil.databases;
 
-public class MySQLColumn
+public class SQLColumn
 {
 
 	protected final String name;
@@ -11,10 +11,11 @@ public class MySQLColumn
 	protected final String defaults;
 	protected final boolean autoincrement;
 
-	public MySQLColumn(final String name, final String type)
+	public SQLColumn(final String name, final String type)
 	{
 		super();
 		this.name = name;
+		this.realName = name;
 		this.type = type;
 		this.primary = false;
 		this.nulled = true;
@@ -22,10 +23,11 @@ public class MySQLColumn
 		this.autoincrement = false;
 	}
 
-	public MySQLColumn(final String name, final String type, final boolean primary, final boolean autoincrement)
+	public SQLColumn(final String name, final String type, final boolean primary, final boolean autoincrement)
 	{
 		super();
 		this.name = name;
+		this.realName = name;
 		this.type = type;
 		this.primary = primary;
 		this.nulled = false;
@@ -33,10 +35,11 @@ public class MySQLColumn
 		this.autoincrement = autoincrement;
 	}
 
-	public MySQLColumn(final String name, final String type, final String defaults, final boolean nulled, final boolean autoincrement)
+	public SQLColumn(final String name, final String type, final String defaults, final boolean nulled, final boolean autoincrement)
 	{
 		super();
 		this.name = name;
+		this.realName = name;
 		this.type = type;
 		this.primary = false;
 		this.nulled = nulled;
@@ -97,7 +100,7 @@ public class MySQLColumn
 			return realName + " " + type + " " + (autoincrement ? "auto_increment " : "") + (primary ? "primary key " : (nulled ? "NULL " : "NOT NULL ")) + (defaults == null ? "" : "DEFAULT " + defaults + " ");
 	}
 
-	public static String getFullCreateString(final MySQLColumn... columns)
+	public static String getFullCreateString(final SQLColumn... columns)
 	{
 		final int length = columns.length;
 		if (length == 0)
