@@ -350,7 +350,6 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 			sql = "UPDATE `" + tableName + "` SET " + entry.saveUpdateToSQLiteDatabase(columnNames) + " WHERE " + columnNames[0] + "='" + entry.getName() + "'";
 		else
 			sql = "INSERT INTO `" + tableName + "`" + entry.saveInsertToSQLiteDatabase(columnNames);
-		System.out.println(sql);
 		final Connection connection = connectionPool.getConnection();
 		Statement query = null;
 		try

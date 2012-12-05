@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.ChatHelper;
 
 public final class CrazyCoreCommandLanguageTree extends CrazyCommandTreeExecutor<CrazyCore>
 {
@@ -45,7 +44,6 @@ public final class CrazyCoreCommandLanguageTree extends CrazyCommandTreeExecutor
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
-			System.out.println(ChatHelper.listingString(" ", args));
 			if (args.length == 0)
 				list.command(sender, args);
 			else
