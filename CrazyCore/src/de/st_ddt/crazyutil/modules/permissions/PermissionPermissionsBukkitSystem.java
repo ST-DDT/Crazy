@@ -1,6 +1,6 @@
 package de.st_ddt.crazyutil.modules.permissions;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -48,7 +48,7 @@ public class PermissionPermissionsBukkitSystem extends PermissionBukkitSystem
 	@Override
 	public Set<String> getGroups(final Player player)
 	{
-		final Set<String> res = new HashSet<String>();
+		final Set<String> res = new LinkedHashSet<String>();
 		for (final Group group : plugin.getGroups(player.getName()))
 			res.add(group.getName());
 		return res;
