@@ -10,20 +10,20 @@ public class ConditionPlayerPermission extends ConditionPlayer
 
 	protected String permission;
 
-	public ConditionPlayerPermission(ConfigurationSection config)
+	public ConditionPlayerPermission(final ConfigurationSection config)
 	{
 		super(config);
 		permission = config.getString("permission", "sample");
 	}
 
-	public ConditionPlayerPermission(String permission)
+	public ConditionPlayerPermission(final String permission)
 	{
 		super();
 		this.permission = permission;
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		config.set(path + "permission", permission);
@@ -36,7 +36,7 @@ public class ConditionPlayerPermission extends ConditionPlayer
 	}
 
 	@Override
-	public boolean match(Player tester)
+	public boolean match(final Player tester)
 	{
 		return PermissionModule.hasPermission(tester, permission);
 	}

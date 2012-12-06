@@ -12,15 +12,15 @@ public class CrazyPromoterPlayerListener implements Listener
 
 	private final CrazyPromoter plugin;
 
-	public CrazyPromoterPlayerListener(CrazyPromoter plugin)
+	public CrazyPromoterPlayerListener(final CrazyPromoter plugin)
 	{
 		this.plugin = plugin;
 	}
 
 	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event)
+	public void onPlayerJoin(final PlayerJoinEvent event)
 	{
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		plugin.checkStatus(player);
 	}
 }

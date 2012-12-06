@@ -21,7 +21,7 @@ public class Promotion
 	protected ConditionBase<Player> condition;
 	protected List<String> commands;
 
-	public Promotion(ConfigurationSection config)
+	public Promotion(final ConfigurationSection config)
 	{
 		super();
 		name = config.getString("name");
@@ -29,7 +29,7 @@ public class Promotion
 		condition = ConditionBase.load(config.getConfigurationSection("condition"));
 	}
 
-	public Promotion(String name)
+	public Promotion(final String name)
 	{
 		super();
 		this.name = name;
@@ -37,15 +37,15 @@ public class Promotion
 		this.commands.add("say Please edit Promotion because $0$ wants to promote!");
 	}
 
-	public boolean isApplyable(Player player)
+	public boolean isApplyable(final Player player)
 	{
 		return condition.match(player);
 	}
 
-	public void apply(Player player)
+	public void apply(final Player player)
 	{
-		CommandSender console = Bukkit.getConsoleSender();
-		for (String command : commands)
+		final CommandSender console = Bukkit.getConsoleSender();
+		for (final String command : commands)
 			if (command.startsWith("§"))
 				Bukkit.broadcastMessage(ChatHelper.colorise(command.substring(1)));
 			else if (command.startsWith("$"))
@@ -59,7 +59,7 @@ public class Promotion
 		return name;
 	}
 
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "name", name);
 		config.set(path + "commands", commands);
@@ -71,7 +71,7 @@ public class Promotion
 		return condition;
 	}
 
-	public void setCondition(ConditionBase<Player> condition)
+	public void setCondition(final ConditionBase<Player> condition)
 	{
 		this.condition = condition;
 	}

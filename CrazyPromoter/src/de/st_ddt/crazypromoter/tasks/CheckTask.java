@@ -7,7 +7,7 @@ public class CheckTask implements Runnable
 
 	private final CrazyPromoter plugin;
 
-	public CheckTask(CrazyPromoter plugin)
+	public CheckTask(final CrazyPromoter plugin)
 	{
 		super();
 		this.plugin = plugin;

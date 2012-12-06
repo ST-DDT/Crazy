@@ -18,14 +18,14 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 public class CrazyPromoterCommandCheck extends CrazyPromoterCommandExecutor
 {
 
-	public CrazyPromoterCommandCheck(CrazyPromoter plugin)
+	public CrazyPromoterCommandCheck(final CrazyPromoter plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
 	@Localized("CRAZYPROMOTER.COMMAND.CHECK.FAIL $Name$")
-	public void command(CommandSender sender, String[] args) throws CrazyException
+	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length > 2)
 			throw new CrazyCommandUsageException("[Player]");
@@ -46,20 +46,20 @@ public class CrazyPromoterCommandCheck extends CrazyPromoterCommandExecutor
 	}
 
 	@Override
-	public List<String> tab(CommandSender sender, String[] args)
+	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		if (args.length != 1)
 			return null;
-		List<String> res = new LinkedList<String>();
-		String arg = args[0].toLowerCase();
-		for (Player player : Bukkit.getOnlinePlayers())
+		final List<String> res = new LinkedList<String>();
+		final String arg = args[0].toLowerCase();
+		for (final Player player : Bukkit.getOnlinePlayers())
 			if (player.getName().toLowerCase().startsWith(arg))
 				res.add(player.getName());
 		return res;
 	}
 
 	@Override
-	public boolean hasAccessPermission(CommandSender sender)
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazypromoter.check.self") || PermissionModule.hasPermission(sender, "crazypromoter.check.other");
 	}

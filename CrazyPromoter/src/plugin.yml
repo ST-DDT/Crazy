@@ -1,8 +1,8 @@
 name: CrazyPromoter
 main: de.st_ddt.crazypromoter.CrazyPromoter
 author: ST-DDT
-version: 2.10.1
-# requires CrazyCore v9.2 or later
+version: 2.11
+# requires CrazyCore v9.6 or later
 depend: [CrazyCore]
 softdepend: [PermissionsBukkit,PermissionsEx,GroupManager,CrazyOnline,CrazyLogin]
 description: >
@@ -16,14 +16,14 @@ commands:
     usage: /<command> ...
 permissions:
   crazypromoter.check:
-    description: Check promotions status
+    description: Check promotions status.
     default: op
     children: 
       crazypromoter.check.self: true
       crazypromoter.check.other: true
   crazypromoter.check.self:
-    description: Check your promotion status
+    description: Check your promotion status.
     default: true
   crazypromoter.check.other:
-    description: Check players promotion status
+    description: Check other players promotion status.
     default: op
