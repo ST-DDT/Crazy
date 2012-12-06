@@ -74,7 +74,13 @@ public class CrazyChatsPlayerListener implements Listener
 		if (data.getListName() != null)
 			player.setPlayerListName(data.getListName());
 		else
-			player.setPlayerListName(plugin.getGroupListnamePrefix(player) + player.getName());
+		{
+			final String name = plugin.getGroupListnamePrefix(player) + player.getName();
+			if (name.length() > 16)
+				player.setPlayerListName(name.substring(0, 16));
+			else
+				player.setPlayerListName(name);
+		}
 		final ChannelInterface channel = data.getChannelMap().get(plugin.getDefaultChannelKey());
 		if (channel != null)
 			data.setCurrentChannelForced(channel);

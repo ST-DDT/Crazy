@@ -51,9 +51,9 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 		final List<String> muted = config.getStringList(columnNames[1]);
 		if (muted != null)
 			mutedPlayers.addAll(muted);
-		displayName = CrazyChatsChatHelper.makeFormat(config.getString(columnNames[2], null));
-		listName = CrazyChatsChatHelper.makeFormat(config.getString(columnNames[3], null));
-		headName = CrazyChatsChatHelper.makeFormat(config.getString(columnNames[4], null));
+		setDisplayName(CrazyChatsChatHelper.makeFormat(config.getString(columnNames[2], null)));
+		setListName(CrazyChatsChatHelper.makeFormat(config.getString(columnNames[3], null)));
+		setHeadName(CrazyChatsChatHelper.makeFormat(config.getString(columnNames[4], null)));
 		silenced = ObjectSaveLoadHelper.StringToDate(config.getString(columnNames[5]), new Date());
 	}
 
@@ -230,7 +230,10 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 
 	public void setListName(final String listName)
 	{
-		this.listName = listName;
+		if (listName.length() > 16)
+			this.listName = listName.substring(0, 16);
+		else
+			this.listName = listName;
 	}
 
 	public String getHeadName()
@@ -240,7 +243,10 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 
 	public void setHeadName(final String headName)
 	{
-		this.headName = headName;
+		if (headName.length() > 16)
+			this.headName = headName.substring(0, 16);
+		else
+			this.headName = headName;
 	}
 
 	public boolean isSilenced()
