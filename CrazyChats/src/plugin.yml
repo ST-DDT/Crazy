@@ -14,6 +14,7 @@ commands:
   tell:
     description: Chat to the given player.
     usage: /<command> <Players> <Message>
+    aliases: [pm]
   say:
     description: Send a broadcast to the entire server.
     usage: /<command> <Message>
