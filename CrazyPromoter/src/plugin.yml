@@ -4,7 +4,7 @@ author: ST-DDT
 version: 2.11
 # requires CrazyCore v9.6 or later
 depend: [CrazyCore]
-softdepend: [PermissionsBukkit,PermissionsEx,GroupManager,CrazyOnline,CrazyLogin]
+softdepend: [CrazyOnline,CrazyLogin]
 description: >
             Add custom promotion scripts to your server.
 commands:
