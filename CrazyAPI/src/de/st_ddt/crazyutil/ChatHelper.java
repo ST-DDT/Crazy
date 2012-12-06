@@ -1,7 +1,6 @@
 package de.st_ddt.crazyutil;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -159,18 +158,9 @@ public class ChatHelper
 		return listingString(", ", strings);
 	}
 
-	public static <S> String listingString(final String seperator, final S... strings)
+	public static <S> String listingString(final String separator, final S... strings)
 	{
-		final int length = strings.length;
-		if (length == 0)
-			return "";
-		final StringBuilder res = new StringBuilder(strings[0].toString());
-		for (int i = 1; i < length; i++)
-		{
-			res.append(seperator);
-			res.append(strings[i].toString());
-		}
-		return res.toString();
+		return StringUtils.join(strings, separator);
 	}
 
 	public static <S> String listingString(final Collection<S> strings)
@@ -180,16 +170,7 @@ public class ChatHelper
 
 	public static <S> String listingString(final String seperator, final Collection<S> strings)
 	{
-		if (strings.size() == 0)
-			return "";
-		final Iterator<S> it = strings.iterator();
-		final StringBuilder res = new StringBuilder(it.next().toString());
-		while (it.hasNext())
-		{
-			res.append(seperator);
-			res.append(it.next().toString());
-		}
-		return res.toString();
+		return StringUtils.join(strings, seperator);
 	}
 
 	public static String[] toList(final CommandSender sender, final ParameterData data)
