@@ -230,7 +230,7 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 
 	public void setListName(final String listName)
 	{
-		if (listName.length() > 16)
+		if (listName != null && listName.length() > 16)
 			this.listName = listName.substring(0, 16);
 		else
 			this.listName = listName;
@@ -243,7 +243,7 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 
 	public void setHeadName(final String headName)
 	{
-		if (headName.length() > 16)
+		if (headName != null && headName.length() > 16)
 			this.headName = headName.substring(0, 16);
 		else
 			this.headName = headName;
