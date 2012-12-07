@@ -65,47 +65,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	@Localized({ "CRAZYSQUADS.MODE.CHANGE $Name$ $Value$", "CRAZYSQUADS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYSQUADS.FORMAT.EXAMPLE $Example$" })
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new Mode<String>("squadChatFormat", String.class)
-		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
-
-			@Override
-			public String getValue()
-			{
-				return CrazyChatsChatHelper.unmakeFormat(squadChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
-			}
-
-			@Override
-			public void setValue(final String newValue) throws CrazyException
-			{
-				squadChatFormat = newValue;
-				saveConfiguration();
-			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
-			}
-		});
 		modeCommand.addMode(modeCommand.new Mode<String>("squadHeadNamePrefix", String.class)
 		{
 
@@ -169,6 +128,51 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		});
 	}
 
+	private void registerModesCrazyChats()
+	{
+		modeCommand.addMode(modeCommand.new Mode<String>("squadChatFormat", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+			}
+
+			@Override
+			public String getValue()
+			{
+				return CrazyChatsChatHelper.unmakeFormat(squadChatFormat);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				squadChatFormat = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
+	}
+
 	private void registerCommands()
 	{
 		mainCommand.addSubCommand(modeCommand, "mode");
@@ -209,6 +213,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	public void onEnable()
 	{
 		registerHooks();
+		if (crazyChatsEnabled)
+			registerModesCrazyChats();
 		super.onEnable();
 		registerCommands();
 	}
@@ -218,7 +224,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	{
 		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
-		squadChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadChatFormat", "&3[Squad] &F%1$s&F: &B%2$s"));
+		if (crazyChatsEnabled)
+			squadChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadChatFormat", "&3[Squad] &F%1$s&F: &B%2$s"));
 		squadHeadNamePrefix = ChatHelper.colorise(config.getString("squadHeadNamePrefix", ChatColor.DARK_BLUE.toString()));
 		maxSquadSize = Math.max(1, config.getInt("maxSquadSize", 5));
 		maxShareRange = config.getDouble("maxShareRange", 50);
@@ -228,7 +235,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		config.set("squadChatFormat", CrazyChatsChatHelper.unmakeFormat(squadChatFormat));
+		if (crazyChatsEnabled)
+			config.set("squadChatFormat", CrazyChatsChatHelper.unmakeFormat(squadChatFormat));
 		config.set("squadHeadNamePrefix", ChatHelper.decolorise(squadHeadNamePrefix));
 		config.set("maxSquadSize", maxSquadSize);
 		config.set("maxShareRange", maxShareRange);
