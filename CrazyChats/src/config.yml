@@ -4,6 +4,8 @@
 version: X.Y
 # required plugins +version can be found there
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/plugin.yml
+# the chat header used ingame (this can only be changed, when server is shut down)
+chatHeader: '&C[&ACrazyChats&C] &F'
 database:
 # database saveTypes can be CONFIG (other saveTypes currently not supported)
   saveType: CONFIG
