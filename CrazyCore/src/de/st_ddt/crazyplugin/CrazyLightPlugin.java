@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazyutil.ChatHelper;
@@ -22,8 +23,13 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	public final String getChatHeader()
 	{
 		if (chatHeader == null)
-			chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + getDescription().getName() + ChatColor.RED + "] " + ChatColor.WHITE;
+			chatHeader = getDefaultChatHeader();
 		return chatHeader;
+	}
+
+	protected String getDefaultChatHeader()
+	{
+		return ChatColor.RED + "[" + ChatColor.GREEN + getDescription().getName() + ChatColor.RED + "] " + ChatColor.WHITE;
 	}
 
 	public static Collection<CrazyLightPlugin> getCrazyLightPlugins()
@@ -48,7 +54,9 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	public void onLoad()
 	{
 		lightplugins.put(this.getClass(), this);
-		super.onLoad();
+		final ConfigurationSection config = getConfig();
+		chatHeader = ChatHelper.colorise(config.getString("chatHeader", getDefaultChatHeader()));
+		config.set("chatHeader", ChatHelper.decolorise(chatHeader));
 	}
 
 	@Override
