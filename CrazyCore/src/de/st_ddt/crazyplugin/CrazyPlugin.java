@@ -142,6 +142,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		saveConfig();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Localized("CRAZYPLUGIN.PLUGININFO.UPDATE $NewVersion$")
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
@@ -312,6 +313,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		loadLanguage(language, Bukkit.getConsoleSender());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void loadLanguageDelayed(final String language, final CommandSender sender)
 	{
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new LanguageLoadTask(this, language, sender));

@@ -42,12 +42,14 @@ public class PlayerWipeTask implements Runnable
 				it.remove();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void execute()
 	{
 		if (!fileCheck())
 			Bukkit.getScheduler().scheduleAsyncDelayedTask(CrazyCore.getPlugin(), this, 20);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run()
 	{

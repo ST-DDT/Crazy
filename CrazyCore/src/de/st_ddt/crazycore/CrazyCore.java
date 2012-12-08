@@ -140,6 +140,7 @@ public final class CrazyCore extends CrazyPlugin
 		super.onLoad();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable()
 	{

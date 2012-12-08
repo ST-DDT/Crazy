@@ -84,6 +84,7 @@ public class CrazyCoreCrazyListener implements Listener
 			event.markDeletion((Named) plugin);
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void CrazyPlayerRemoveCommandEvent(final CrazyPlayerRemoveEvent event)
 	{

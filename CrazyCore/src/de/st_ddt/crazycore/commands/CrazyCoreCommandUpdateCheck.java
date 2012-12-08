@@ -17,6 +17,7 @@ public class CrazyCoreCommandUpdateCheck extends CrazyCoreCommandExecutor
 		super(plugin);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Localized("CRAZYCORE.COMMAND.UPDATECHECK")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException

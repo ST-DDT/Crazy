@@ -176,6 +176,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 		plugin.saveConfig();
 	}
 
+	@SuppressWarnings("deprecation")
 	protected final void asyncSaveDatabase()
 	{
 		if (!requireSave)

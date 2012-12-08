@@ -171,6 +171,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		saveFile();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void asyncSaveDatabase()
 	{
 		if (!requireSave)
