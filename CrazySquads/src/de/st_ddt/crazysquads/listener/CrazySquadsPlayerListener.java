@@ -162,12 +162,21 @@ public class CrazySquadsPlayerListener implements Listener
 			return;
 		if (squad.getXPRule().isShareEnabled())
 		{
-			final List<Player> members = new ArrayList<Player>(squad.getMembers());
-			Collections.shuffle(members);
+			final Set<Player> members = squad.getMembers();
+			final List<Player> activeMembers = new ArrayList<Player>(members.size());
+			synchronized (members)
+			{
+				final Location location = player.getLocation();
+				final double range = plugin.getMaxShareRange();
+				for (final Player member : members)
+					if (location.distance(member.getLocation()) < range)
+						activeMembers.add(member);
+			}
+			Collections.shuffle(activeMembers);
 			final int amount = event.getAmount();
-			final int shared = amount / members.size();
-			int overhead = amount % members.size();
-			for (final Player target : members)
+			final int shared = amount / activeMembers.size();
+			int overhead = amount % activeMembers.size();
+			for (final Player target : activeMembers)
 				if (overhead-- > 0)
 				{
 					target.giveExp(shared + 1);
