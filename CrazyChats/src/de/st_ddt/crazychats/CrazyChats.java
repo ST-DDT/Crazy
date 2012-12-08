@@ -483,6 +483,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			playerListener.PlayerJoinComplete(player);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Localized({ "CRAZYCHATS.DATABASE.ACCESSWARN $SaveType$", "CRAZYCHATS.DATABASE.LOADED $EntryCount$" })
 	public void loadDatabase()
