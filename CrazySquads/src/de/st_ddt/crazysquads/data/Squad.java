@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 
@@ -13,8 +14,8 @@ public class Squad implements Named
 {
 
 	private Player owner;
-	private Loot_Rules loot = Loot_Rules.LOOT_SHARESILENT;
-	private XP_Rules xp = XP_Rules.XP_SHARESILENT;
+	private Loot_Rules loot = CrazySquads.getPlugin().getDefaultLootRules();
+	private XP_Rules xp = CrazySquads.getPlugin().getDefaultXPRules();
 	private final Set<Player> members = Collections.synchronizedSet(new LinkedHashSet<Player>());
 
 	public Squad(final Player owner)
