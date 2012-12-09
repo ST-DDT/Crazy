@@ -42,8 +42,8 @@ public class ParticipantClass implements ConfigurationSaveable
 			leggins = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("leggins"));
 		if (config.contains("helmet"))
 			boots = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("boots"));
-		ConfigurationSection config2 = config.getConfigurationSection("inventory");
-		for (String name : config2.getKeys(false))
+		final ConfigurationSection config2 = config.getConfigurationSection("inventory");
+		for (final String name : config2.getKeys(false))
 			items.add(ObjectSaveLoadHelper.loadItemStack(config2.getConfigurationSection(name)));
 	}
 
@@ -58,8 +58,8 @@ public class ParticipantClass implements ConfigurationSaveable
 	public ParticipantClass(final String name, final Player player)
 	{
 		this(name);
-		PlayerInventory inventory = player.getInventory();
-		for (ItemStack item : inventory)
+		final PlayerInventory inventory = player.getInventory();
+		for (final ItemStack item : inventory)
 			this.items.add(item.clone());
 		if (inventory.getHelmet() != null)
 			this.helmet = inventory.getHelmet().clone();
@@ -87,9 +87,9 @@ public class ParticipantClass implements ConfigurationSaveable
 
 	public void activate(final Player player)
 	{
-		PlayerInventory inventory = player.getInventory();
+		final PlayerInventory inventory = player.getInventory();
 		inventory.clear();
-		for (ItemStack item : items)
+		for (final ItemStack item : items)
 			inventory.addItem(item.clone());
 		if (helmet != null)
 			inventory.setHelmet(helmet.clone());
@@ -124,6 +124,6 @@ public class ParticipantClass implements ConfigurationSaveable
 			ObjectSaveLoadHelper.saveItemStack(config, path + "boots", boots);
 		config.set(path + "inventory", null);
 		for (int i = 0; i < items.size(); i++)
-			ObjectSaveLoadHelper.saveItemStack(config, path + "inventory.item" + i+".", items.get(i));
+			ObjectSaveLoadHelper.saveItemStack(config, path + "inventory.item" + i + ".", items.get(i));
 	}
 }

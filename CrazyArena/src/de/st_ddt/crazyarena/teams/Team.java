@@ -23,7 +23,7 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 	protected ChatColor color = null;
 	private boolean autosetcolors = false;
 
-	public Team(T arena, String name, int maxSize)
+	public Team(final T arena, final String name, final int maxSize)
 	{
 		super();
 		this.arena = arena;
@@ -31,6 +31,7 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 		this.maxSize = maxSize;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
@@ -41,7 +42,7 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 		return arena;
 	}
 
-	public void setMaxSize(int maxSize)
+	public void setMaxSize(final int maxSize)
 	{
 		this.maxSize = maxSize;
 	}
@@ -51,14 +52,14 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 		return maxSize;
 	}
 
-	public void setAutoColors(boolean autosetcolors)
+	public void setAutoColors(final boolean autosetcolors)
 	{
 		this.autosetcolors = autosetcolors;
 		if (autosetcolors)
 			setTeamColor();
 	}
 
-	public void add(Player player) throws CrazyArenaTeamExceedingMemberLimitException
+	public void add(final Player player) throws CrazyArenaTeamExceedingMemberLimitException
 	{
 		if (isMember(player))
 			return;
@@ -69,7 +70,7 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 			setTeamColor(player);
 	}
 
-	public void remove(Player player)
+	public void remove(final Player player)
 	{
 		members.remove(player.getName().toLowerCase());
 	}
@@ -81,8 +82,8 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 
 	public HashSet<Player> getMemberPlayers()
 	{
-		HashSet<Player> players = new HashSet<Player>();
-		for (String name : getMembers())
+		final HashSet<Player> players = new HashSet<Player>();
+		for (final String name : getMembers())
 			players.add(Bukkit.getPlayerExact(name));
 		players.remove(null);
 		return players;
@@ -90,14 +91,14 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 
 	public HashSet<S> getMemberParticipants()
 	{
-		HashSet<S> participants = new HashSet<S>();
-		for (String name : getMembers())
+		final HashSet<S> participants = new HashSet<S>();
+		for (final String name : getMembers())
 			participants.add(arena.getParticipant(name));
 		participants.remove(null);
 		return participants;
 	}
 
-	public boolean isMember(Player player)
+	public boolean isMember(final Player player)
 	{
 		return members.contains(player.getName().toLowerCase());
 	}
@@ -117,7 +118,7 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 		return color;
 	}
 
-	public void setColor(ChatColor color)
+	public void setColor(final ChatColor color)
 	{
 		this.color = color;
 		if (autosetcolors)
@@ -126,11 +127,11 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 
 	public void setTeamColor()
 	{
-		for (Player player : getMemberPlayers())
+		for (final Player player : getMemberPlayers())
 			setTeamColor(player);
 	}
 
-	public void setTeamColor(Player player)
+	public void setTeamColor(final Player player)
 	{
 		ItemStack helmet = null;
 		switch (color)

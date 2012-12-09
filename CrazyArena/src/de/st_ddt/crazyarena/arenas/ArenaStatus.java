@@ -40,7 +40,7 @@ public enum ArenaStatus
 		this.active = false;
 	}
 
-	private ArenaStatus(boolean spectator, boolean join, boolean active)
+	private ArenaStatus(final boolean spectator, final boolean join, final boolean active)
 	{
 		this.enabled = true;
 		this.spectator = spectator;

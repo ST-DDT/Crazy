@@ -125,7 +125,7 @@ public class TeamList<S extends Participant<S, T>, T extends Arena<S>>
 	 */
 	public void clean()
 	{
-		Iterator<Team<S, T>> it = teams.iterator();
+		final Iterator<Team<S, T>> it = teams.iterator();
 		while (it.hasNext())
 			if (it.next().getMemberCount() == 0)
 				it.remove();

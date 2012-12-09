@@ -23,7 +23,7 @@ public enum ParticipantType
 	}
 
 	// PLAYER
-	private ParticipantType(boolean waiting, boolean playing, boolean quited, boolean dead)
+	private ParticipantType(final boolean waiting, final boolean playing, final boolean quited, final boolean dead)
 	{
 		this.player = true;
 		this.waiting = waiting;
@@ -34,7 +34,7 @@ public enum ParticipantType
 	}
 
 	// JUDGE
-	private ParticipantType(boolean quited)
+	private ParticipantType(final boolean quited)
 	{
 		this.player = false;
 		this.waiting = false;

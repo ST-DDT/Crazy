@@ -5,7 +5,8 @@ import de.st_ddt.crazyarena.participants.Participant;
 public class ParticipantNameComparator implements ParticipantComparator
 {
 
-	public int compare(Participant<?, ?> o1, Participant<?, ?> o2)
+	@Override
+	public int compare(final Participant<?, ?> o1, final Participant<?, ?> o2)
 	{
 		return o1.getName().compareTo(o2.getName());
 	}

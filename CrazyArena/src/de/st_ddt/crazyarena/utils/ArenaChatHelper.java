@@ -8,7 +8,7 @@ public class ArenaChatHelper
 		super();
 	}
 
-	public static String timeConverter(long timeTotal)
+	public static String timeConverter(final long timeTotal)
 	{
 		final StringBuilder res = new StringBuilder();
 		long time = timeTotal;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
@@ -14,25 +15,26 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
+import de.st_ddt.crazyarena.command.CrazyArenaArenaPlayerCommandExecutor;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaUnsupportedException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.Commandable;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public abstract class Arena<S extends Participant<S, ?>> implements Named, ParameterData, Commandable
+public abstract class Arena<S extends Participant<S, ?>> implements Named, ParameterData
 {
 
 	public static final String arenaDataRootPath = "plugins" + File.separator + "CrazyArena" + File.separator + "arenas" + File.separator;
 	protected final String name;
 	protected final YamlConfiguration config = new YamlConfiguration();
 	protected final String chatHeader;
-	protected final HashMap<String, S> participants = new HashMap<String, S>();
+	protected final Map<String, S> participants = new HashMap<String, S>();
 	protected final CrazyLocale locale;
 	protected ArenaStatus status = ArenaStatus.INITIALIZING;
 
@@ -304,12 +306,6 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		return participants.get(name.toLowerCase());
 	}
 
-	@Override
-	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		return false;
-	}
-
 	public boolean setEnabled(final CommandSender sender, final boolean enabled)
 	{
 		if (enabled)
@@ -356,7 +352,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 	}
 
 	@Override
-	public String getParameter(final int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -385,6 +381,8 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		// Separator
 		// Participants sorted by TypeAndName
 	}
+
+	public abstract CrazyArenaArenaPlayerCommandExecutor<Arena<S>> getCommandExecutor();
 
 	public CrazyLocale getLocale()
 	{
@@ -505,17 +503,17 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 
 	public boolean hasPermission(final CommandSender sender, final String permissionSuffix)
 	{
-		if (sender.hasPermission("crazyarena." + permissionSuffix))
+		if (PermissionModule.hasPermission(sender, "crazyarena." + permissionSuffix))
 			return true;
-		if (sender.hasPermission("crazyarena.*"))
+		else if (PermissionModule.hasPermission(sender, "crazyarena.*"))
 			return true;
-		else if (sender.hasPermission("crazyarena." + getType() + "." + permissionSuffix))
+		else if (PermissionModule.hasPermission(sender, "crazyarena." + getType() + "." + permissionSuffix))
 			return true;
-		else if (sender.hasPermission("crazyarena." + getType() + ".*"))
+		else if (PermissionModule.hasPermission(sender, "crazyarena." + getType() + ".*"))
 			return true;
-		else if (sender.hasPermission("crazyarena." + getName() + "." + permissionSuffix))
+		else if (PermissionModule.hasPermission(sender, "crazyarena." + getName() + "." + permissionSuffix))
 			return true;
-		else if (sender.hasPermission("crazyarena." + getName() + ".*"))
+		else if (PermissionModule.hasPermission(sender, "crazyarena." + getName() + ".*"))
 			return true;
 		else
 			return false;

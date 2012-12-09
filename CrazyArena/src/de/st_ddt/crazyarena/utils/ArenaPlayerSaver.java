@@ -12,33 +12,33 @@ public class ArenaPlayerSaver extends PlayerSaver
 	protected String displayName;
 	protected String listName;
 
-	public ArenaPlayerSaver(Player player, boolean clearAfterBackup)
+	public ArenaPlayerSaver(final Player player, final boolean clearAfterBackup)
 	{
 		super(player, clearAfterBackup);
 	}
 
-	public ArenaPlayerSaver(Player player)
+	public ArenaPlayerSaver(final Player player)
 	{
 		super(player);
 	}
 
-	public ArenaPlayerSaver(String name, File file)
+	public ArenaPlayerSaver(final String name, final File file)
 	{
 		super(name, file);
 	}
 
-	public ArenaPlayerSaver(String name, String path)
+	public ArenaPlayerSaver(final String name, final String path)
 	{
 		super(name, path);
 	}
 
-	public ArenaPlayerSaver(String name)
+	public ArenaPlayerSaver(final String name)
 	{
 		super(name);
 	}
 
 	@Override
-	public void backup(Player player)
+	public void backup(final Player player)
 	{
 		super.backup(player);
 		displayName = player.getDisplayName();
@@ -46,7 +46,7 @@ public class ArenaPlayerSaver extends PlayerSaver
 	}
 
 	@Override
-	public void restore(Player player)
+	public void restore(final Player player)
 	{
 		if (!backup)
 			return;
@@ -56,7 +56,7 @@ public class ArenaPlayerSaver extends PlayerSaver
 	}
 
 	@Override
-	public void clear(Player player)
+	public void clear(final Player player)
 	{
 		super.clear(player);
 		player.setDisplayName(player.getName());

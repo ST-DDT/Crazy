@@ -8,7 +8,7 @@ public class CrazyArenaTeamNotEmptyException extends CrazyArenaTeamException
 
 	private static final long serialVersionUID = -5779151059736556417L;
 
-	public <S extends Arena<?>> CrazyArenaTeamNotEmptyException(S arena, Team<?, S> team)
+	public <S extends Arena<?>> CrazyArenaTeamNotEmptyException(final S arena, final Team<?, S> team)
 	{
 		super(arena, team);
 	}

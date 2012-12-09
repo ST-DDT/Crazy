@@ -1,0 +1,61 @@
+package de.st_ddt.crazyarena.command;
+
+import java.io.File;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+
+import de.st_ddt.crazyarena.CrazyArena;
+import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandAlreadyExistsException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+
+public class CrazyArenaCommandMainImport extends CrazyArenaCommandExecutor
+{
+
+	public CrazyArenaCommandMainImport(final CrazyArena plugin)
+	{
+		super(plugin);
+	}
+
+	@Override
+	@Localized("CRAZYARENA.COMMAND.ARENA.LOADED $Name$ $Type$")
+	public void command(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (args.length != 1)
+			throw new CrazyCommandUsageException("<Name>");
+		final String name = args[0];
+		Arena<?> arena = plugin.getArena(name);
+		if (arena != null)
+			throw new CrazyCommandAlreadyExistsException("Arena", name);
+		final File file = new File(Arena.arenaDataRootPath + name + File.separator + "config.yml");
+		if (!file.exists())
+			throw new CrazyCommandNoSuchException("ArenaFile", name);
+		try
+		{
+			arena = Arena.loadFromFile(name, file);
+		}
+		catch (final Exception e)
+		{
+			throw new CrazyCommandErrorException(e);
+		}
+		plugin.getArenas().add(arena);
+		plugin.getArenasByName().put(name, arena);
+		CrazyArena.getArenasByType().get(arena.getType()).add(arena);
+		plugin.sendLocaleMessage("COMMAND.ARENA.LOADED", sender, arena.getName(), arena.getType());
+		if (sender != Bukkit.getConsoleSender())
+			plugin.sendLocaleMessage("COMMAND.ARENA.LOADED", Bukkit.getConsoleSender(), arena.getName(), arena.getType());
+		arena.show(sender);
+	}
+
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazyarena.arena.import");
+	}
+}

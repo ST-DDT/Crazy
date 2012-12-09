@@ -1,18 +1,45 @@
 name: CrazyArena
 main: de.st_ddt.crazyarena.CrazyArena
 author: ST-DDT
-version: 0.2
-# requires CrazyCore v8.4
+version: 0.3
+# requires CrazyCore v9.7
 # requires CrazyGeo v0.1
-softdepend: [PermissionsBukkit]
 depend: [CrazyCore,CrazyGeo]
 description: >
-            Arena Plugin
+            CrazyArenaPlugin Core needed for all CrazyArenaPlugins.
 commands:
   crazyarena:
-    description: Maincommand
-    usage: /<command> <Action> [Parameter...]
+    description: Plugin Main Menu.
+    usage: /<command> [subcommands]
     aliases: [ca]
+  arenajoin:
+    description: Join an arena as player.
+    usage: /<command> [Arena/Player]
+    aliases: [ajoin,join]
+  arenaspectate:
+    description: Join an arena as spectator. 
+    usage: /<command> [Arena/Player]
+    aliases: [aspectate,spectate]
+  arenajudge:
+    description: Join an arena as judge. 
+    usage: /<command> [Arena/Player]
+    aliases: [ajudge,judge]
+  arenainvite:
+    description: Invite a player to your arena.
+    usage: /<command> <Player.../*>
+    aliases: [ainvite,invite]
+  arenaready:
+    description: Flag yourself as ready.
+    usage: /<command>
+    aliases: [aready,ready]
+  arenateam:
+    description: Choose a team inside your arena.
+    usage: /<command> [subcommands]
+    aliases: [ateam,team]
+  arenaleave:
+    description: Leave your arena.
+    usage: /<command> [subcommands]
+    aliases: [aleave,leave,aquit,quit]
 permissions:
   crazyarena.*:
     description: Gives access to all crazyarena functions

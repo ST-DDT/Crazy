@@ -13,7 +13,7 @@ public class CountDownTask implements Runnable
 	protected final CrazyLocale locale;
 	protected final Object[] args;
 
-	public CountDownTask(Arena<?> arena, String localePath, Object[] args)
+	public CountDownTask(final Arena<?> arena, final String localePath, final Object[] args)
 	{
 		super();
 		this.arena = arena;
@@ -21,7 +21,7 @@ public class CountDownTask implements Runnable
 		this.args = args;
 	}
 
-	public CountDownTask(Arena<?> arena, CrazyLocale locale, Object[] args)
+	public CountDownTask(final Arena<?> arena, final CrazyLocale locale, final Object[] args)
 	{
 		super();
 		this.arena = arena;
@@ -35,22 +35,23 @@ public class CountDownTask implements Runnable
 		arena.broadcastLocaleMessage(false, locale, args);
 	}
 
-	public static void startCountDown(int start, Arena<?> arena, String localePath, Runnable zero)
+	public static void startCountDown(final int start, final Arena<?> arena, final String localePath, final Runnable zero)
 	{
 		startCountDown(start, arena, arena.getLocale().getLanguageEntry(localePath), zero);
 	}
 
-	public static void startCountDown(int start, Arena<?> arena, CrazyLocale locale, Runnable zero)
+	public static void startCountDown(final int start, final Arena<?> arena, final CrazyLocale locale, final Runnable zero)
 	{
 		startCountDown(start, arena, locale, new Object[1], 0, zero);
 	}
 
-	public static void startCountDown(int start, Arena<?> arena, String localePath, Object[] args, int timeIndex, Runnable zero)
+	public static void startCountDown(final int start, final Arena<?> arena, final String localePath, final Object[] args, final int timeIndex, final Runnable zero)
 	{
 		startCountDown(start, arena, arena.getLocale().getLanguageEntry(localePath), args, timeIndex, zero);
 	}
 
-	public static void startCountDown(int start, Arena<?> arena, CrazyLocale locale, Object[] args, int timeIndex, Runnable zero)
+	@SuppressWarnings("deprecation")
+	public static void startCountDown(final int start, final Arena<?> arena, final CrazyLocale locale, final Object[] args, final int timeIndex, final Runnable zero)
 	{
 		for (int i = start; i > 0; i--)
 		{

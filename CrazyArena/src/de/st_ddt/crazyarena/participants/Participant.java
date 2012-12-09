@@ -61,7 +61,7 @@ public abstract class Participant<S extends Participant<S, T>, T extends Arena<S
 	public abstract void showDetailed(CommandSender target, String chatHeader);
 
 	@Override
-	public String getParameter(final int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -142,7 +142,7 @@ public abstract class Participant<S extends Participant<S, T>, T extends Arena<S
 	}
 
 	@Override
-	public int compareTo(Participant<S, T> o)
+	public int compareTo(final Participant<S, T> o)
 	{
 		return getName().compareTo(o.getName());
 	}

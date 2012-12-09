@@ -11,7 +11,7 @@ public class CrazyArenaException extends CrazyException
 	private static final long serialVersionUID = -5638998288487141423L;
 	protected final Arena<?> arena;
 
-	public CrazyArenaException(Arena<?> arena)
+	public CrazyArenaException(final Arena<?> arena)
 	{
 		super();
 		this.arena = arena;
@@ -29,7 +29,7 @@ public class CrazyArenaException extends CrazyException
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "HEAD", arena.getName()));
 		if (printStackTrace)

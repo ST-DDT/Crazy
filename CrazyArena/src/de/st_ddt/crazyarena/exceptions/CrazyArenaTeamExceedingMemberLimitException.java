@@ -11,7 +11,7 @@ public class CrazyArenaTeamExceedingMemberLimitException extends CrazyArenaTeamE
 	private static final long serialVersionUID = -6289593070900257339L;
 	protected final int maxCount;
 
-	public <S extends Arena<?>> CrazyArenaTeamExceedingMemberLimitException(S arena, Team<?, S> team, int maxCount)
+	public <S extends Arena<?>> CrazyArenaTeamExceedingMemberLimitException(final S arena, final Team<?, S> team, final int maxCount)
 	{
 		super(arena, team);
 		this.maxCount = maxCount;
@@ -29,7 +29,7 @@ public class CrazyArenaTeamExceedingMemberLimitException extends CrazyArenaTeamE
 	}
 
 	@Override
-	public void print(CommandSender sender, String header)
+	public void print(final CommandSender sender, final String header)
 	{
 		super.print(sender, header);
 		sender.sendMessage(header + locale.getLocaleMessage(sender, "MAX", maxCount));

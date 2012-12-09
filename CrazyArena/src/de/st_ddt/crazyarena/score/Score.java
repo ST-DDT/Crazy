@@ -2,6 +2,7 @@ package de.st_ddt.crazyarena.score;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 
@@ -12,8 +13,8 @@ public class Score extends PlayerData<Score> implements Comparable<Score>
 {
 
 	protected final Arena<?> arena;
-	protected final LinkedHashMap<String, String> strings = new LinkedHashMap<String, String>();
-	protected final LinkedHashMap<String, Double> values = new LinkedHashMap<String, Double>();
+	protected final Map<String, String> strings = new LinkedHashMap<String, String>();
+	protected final Map<String, Double> values = new LinkedHashMap<String, Double>();
 
 	public Score(final String name, final Arena<?> arena, final String[] stringnames, final String[] valuenames)
 	{
@@ -91,13 +92,13 @@ public class Score extends PlayerData<Score> implements Comparable<Score>
 	}
 
 	@Override
-	public void showDetailed(CommandSender target, String chatHeader)
+	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		// EDIT Automatisch generierter Methodenstub
 	}
 
 	@Override
-	public String getParameter(int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{

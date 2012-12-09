@@ -25,10 +25,8 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 	{
 		super();
 		if (config != null)
-		{
 			for (final String key : config.getKeys(false))
 				this.add(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection(key), null));
-		}
 	}
 
 	public void teleport(final LivingEntity entity)
@@ -47,6 +45,8 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 
 	public Location randomSpawn()
 	{
+		if (size() == 0)
+			return null;
 		return get((int) (Math.random() * size()));
 	}
 
@@ -73,6 +73,6 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 	{
 		int anz = 0;
 		for (final Location location : this)
-			ObjectSaveLoadHelper.saveLocation(config, path + "Location_" + (anz++), location, true, true);
+			ObjectSaveLoadHelper.saveLocation(config, path + "Location_" + (anz++) + ".", location, true, true);
 	}
 }
