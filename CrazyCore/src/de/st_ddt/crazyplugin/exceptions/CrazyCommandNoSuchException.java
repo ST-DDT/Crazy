@@ -12,31 +12,31 @@ public class CrazyCommandNoSuchException extends CrazyCommandException
 {
 
 	private static final long serialVersionUID = -7687691927850799497L;
-	private final String searched;
 	private final String type;
+	private final String searched;
 	private final Collection<String> alternatives;
 
 	public CrazyCommandNoSuchException(final String type, final String searched)
 	{
 		super();
-		this.searched = searched;
 		this.type = type;
+		this.searched = searched;
 		this.alternatives = new ArrayList<String>(0);
 	}
 
 	public CrazyCommandNoSuchException(final String type, final String searched, final Collection<String> alternatives)
 	{
 		super();
-		this.searched = searched;
 		this.type = type;
+		this.searched = searched;
 		this.alternatives = alternatives;
 	}
 
 	public CrazyCommandNoSuchException(final String type, final String searched, final String... alternatives)
 	{
 		super();
-		this.searched = searched;
 		this.type = type;
+		this.searched = searched;
 		this.alternatives = new ArrayList<String>(alternatives.length);
 		for (final String alternative : alternatives)
 			this.alternatives.add(alternative);
@@ -55,6 +55,16 @@ public class CrazyCommandNoSuchException extends CrazyCommandException
 		ChatHelper.sendMessage(sender, header, locale, command, type, searched);
 		if (alternatives.size() > 0)
 			ChatHelper.sendMessage(sender, header, locale.getLanguageEntry("ALTERNATIVES"), ChatHelper.listingString(alternatives));
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public String getSearched()
+	{
+		return searched;
 	}
 
 	public Collection<String> getAlternatives()
