@@ -30,6 +30,11 @@ public class FileParamitrisable extends TypedParamitrisable<File>
 	@Override
 	public List<String> tab(final String parameter)
 	{
+		return tabHelp(root, parameter);
+	}
+
+	public static List<String> tabHelp(File root, final String parameter)
+	{
 		final String[] split = PATTERN_PATHSPERERATOR.split(parameter);
 		final String part = split[split.length - 1].toLowerCase();
 		final File temp = new File(root, parameter).getParentFile();
