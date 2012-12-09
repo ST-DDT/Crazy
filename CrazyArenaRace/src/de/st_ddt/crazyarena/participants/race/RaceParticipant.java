@@ -14,7 +14,7 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 	protected final Location start;
 	protected RaceTarget target;
 
-	public RaceParticipant(Player player, RaceArena arena, Location start, RaceTarget target)
+	public RaceParticipant(final Player player, final RaceArena arena, final Location start, final RaceTarget target)
 	{
 		super(player, arena);
 		this.start = start;
@@ -31,7 +31,7 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 		return target;
 	}
 
-	public void setTarget(RaceTarget target)
+	public void setTarget(final RaceTarget target)
 	{
 		this.target = target;
 	}
@@ -40,17 +40,17 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 	{
 		target = target.getNext();
 		if (target == null)
-			((RaceArena) arena).reachFinish(this);
+			arena.reachFinish(this);
 	}
 
 	@Override
-	public void showDetailed(CommandSender target, String chatHeader)
+	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		// EDIT Auto-generated method stub
 	}
 
 	@Override
-	public String getParameter(int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{

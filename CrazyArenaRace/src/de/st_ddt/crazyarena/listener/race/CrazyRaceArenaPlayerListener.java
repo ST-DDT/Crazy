@@ -18,7 +18,7 @@ public class CrazyRaceArenaPlayerListener implements Listener
 
 	private final RaceArena arena;
 
-	public CrazyRaceArenaPlayerListener(RaceArena arena)
+	public CrazyRaceArenaPlayerListener(final RaceArena arena)
 	{
 		this.arena = arena;
 	}
@@ -26,8 +26,8 @@ public class CrazyRaceArenaPlayerListener implements Listener
 	@EventHandler
 	public void PlayerMove(final PlayerMoveEvent event)
 	{
-		Player player = event.getPlayer();
-		RaceParticipant participant = arena.getParticipant(player);
+		final Player player = event.getPlayer();
+		final RaceParticipant participant = arena.getParticipant(player);
 		if (participant == null)
 			return;
 		if (!participant.isPlayer())
@@ -38,20 +38,18 @@ public class CrazyRaceArenaPlayerListener implements Listener
 			player.teleport(participant.getStart(), TeleportCause.PLUGIN);
 		}
 		else if (arena.getStatus() == ArenaStatus.PLAYING)
-		{
 			if (participant.getTarget().isInside(player))
 				participant.reachTarget();
-		}
 	}
 
 	@EventHandler
 	public void VehicleMoveEvent(final VehicleMoveEvent event)
 	{
-		Vehicle vehicle = event.getVehicle();
+		final Vehicle vehicle = event.getVehicle();
 		if (!(vehicle.getPassenger() instanceof Player))
 			return;
-		Player player = (Player) vehicle.getPassenger();
-		RaceParticipant participant = arena.getParticipant(player);
+		final Player player = (Player) vehicle.getPassenger();
+		final RaceParticipant participant = arena.getParticipant(player);
 		if (participant == null)
 			return;
 		if (!participant.isPlayer())
@@ -62,9 +60,7 @@ public class CrazyRaceArenaPlayerListener implements Listener
 			vehicle.teleport(participant.getStart(), TeleportCause.PLUGIN);
 		}
 		else if (arena.getStatus() == ArenaStatus.PLAYING)
-		{
 			if (participant.getTarget().isInside(player))
 				participant.reachTarget();
-		}
 	}
 }

@@ -3,6 +3,7 @@ package de.st_ddt.crazyarena.arenas.race;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,6 +15,7 @@ import org.bukkit.event.HandlerList;
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.arenas.ArenaStatus;
+import de.st_ddt.crazyarena.command.CrazyArenaArenaPlayerCommandExecutor;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaExceedingParticipantsLimitException;
 import de.st_ddt.crazyarena.listener.race.CrazyRaceArenaPlayerListener;
 import de.st_ddt.crazyarena.participants.ParticipantType;
@@ -22,7 +24,7 @@ import de.st_ddt.crazyarena.tasks.CountDownTask;
 import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
 import de.st_ddt.crazyarena.utils.SpawnList;
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -30,7 +32,8 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ChatConverter;
+import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class RaceArena extends Arena<RaceParticipant>
@@ -38,7 +41,7 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	protected ArrayList<Location> starts = new ArrayList<Location>();
 	protected SpawnList spectatorSpawns = new SpawnList();
-	protected final HashMap<String, Location> quitLocation = new HashMap<String, Location>();
+	protected final Map<String, Location> quitLocation = new HashMap<String, Location>();
 	protected ArrayList<RaceTarget> targets = new ArrayList<RaceTarget>();
 	private int runnumber = 0;
 	// Match Variables
@@ -83,31 +86,34 @@ public class RaceArena extends Arena<RaceParticipant>
 		return "Race";
 	}
 
-	@Override
 	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
-		if (commandLabel.equals("player") || commandLabel.equals("players"))
-		{
-			if (status != ArenaStatus.CONSTRUCTING)
-				throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
-			commandPlayerSpawns(sender, args);
-			return true;
-		}
-		if (commandLabel.equals("spectator") || commandLabel.equals("spectators"))
-		{
-			if (status != ArenaStatus.CONSTRUCTING)
-				throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
-			commandSpectatorSpawns(sender, args);
-			return true;
-		}
-		if (commandLabel.equals("target") || commandLabel.equals("targets"))
-		{
-			if (status != ArenaStatus.CONSTRUCTING)
-				throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
-			// Targets
-			return true;
-		}
-		if (commandLabel.equals("options"))
+		// EDIT OUTSOURCEN!
+		if (commandLabel.startsWith("p"))
+			if (commandLabel.equals("p") || commandLabel.equals("player") || commandLabel.equals("players"))
+			{
+				if (status != ArenaStatus.CONSTRUCTING)
+					throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
+				commandPlayerSpawns(sender, args);
+				return true;
+			}
+		if (commandLabel.startsWith("s"))
+			if (commandLabel.equals("s") || commandLabel.equals("spectator") || commandLabel.equals("spectators"))
+			{
+				if (status != ArenaStatus.CONSTRUCTING)
+					throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
+				commandSpectatorSpawns(sender, args);
+				return true;
+			}
+		if (commandLabel.startsWith("t"))
+			if (commandLabel.equals("t") || commandLabel.equals("target") || commandLabel.equals("targets"))
+			{
+				if (status != ArenaStatus.CONSTRUCTING)
+					throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
+				// Targets
+				return true;
+			}
+		if (commandLabel.equals("options") || commandLabel.equals("mode"))
 		{
 			if (status.isActive())
 				throw new CrazyCommandCircumstanceException("while arena is idle", status.toString());
@@ -127,7 +133,7 @@ public class RaceArena extends Arena<RaceParticipant>
 			return;
 		}
 		final String commandLabel = args[0].toLowerCase();
-		final String[] newArgs = ChatHelper.shiftArray(args, 1);
+		final String[] newArgs = ChatHelperExtended.shiftArray(args, 1);
 		try
 		{
 			if (commandLabel.equals("add"))
@@ -161,7 +167,7 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	private void commandPlayerSpawnsAdd(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		starts.add(ChatHelper.stringToLocation(sender, args));
+		starts.add(ChatConverter.stringToLocation(sender, args));
 		saveToFile();
 		sendLocaleMessage("PLAYERSPAWNS.ADDED", sender, starts.size());
 	}
@@ -173,7 +179,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		try
 		{
 			final int pos = Integer.parseInt(args[0]);
-			starts.add(pos, ChatHelper.stringToLocation(sender, ChatHelper.shiftArray(args, 1)));
+			starts.add(pos, ChatConverter.stringToLocation(sender, ChatHelperExtended.shiftArray(args, 1)));
 			saveToFile();
 			sendLocaleMessage("PLAYERSPAWNS.ADDED", sender, pos);
 		}
@@ -233,7 +239,7 @@ public class RaceArena extends Arena<RaceParticipant>
 			return;
 		}
 		final String commandLabel = args[0].toLowerCase();
-		final String[] newArgs = ChatHelper.shiftArray(args, 1);
+		final String[] newArgs = ChatHelperExtended.shiftArray(args, 1);
 		try
 		{
 			if (commandLabel.equals("add"))
@@ -267,7 +273,7 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	private void commandSpectatorSpawnsAdd(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		spectatorSpawns.add(ChatHelper.stringToLocation(sender, args));
+		spectatorSpawns.add(ChatConverter.stringToLocation(sender, args));
 		saveToFile();
 		sendLocaleMessage("SPECTATORSPAWNS.ADDED", sender, spectatorSpawns.size());
 	}
@@ -279,7 +285,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		try
 		{
 			final int pos = Integer.parseInt(args[0]);
-			spectatorSpawns.add(pos, ChatHelper.stringToLocation(sender, ChatHelper.shiftArray(args, 1)));
+			spectatorSpawns.add(pos, ChatConverter.stringToLocation(sender, ChatHelperExtended.shiftArray(args, 1)));
 			saveToFile();
 			sendLocaleMessage("SPECTATORSPAWNS.ADDED", sender, pos);
 		}
@@ -417,7 +423,7 @@ public class RaceArena extends Arena<RaceParticipant>
 							{
 								runnumber++;
 								arena.status = ArenaStatus.PLAYING;
-								broadcastLocaleMessage(false, "START.STARTED", CrazyPluginInterface.DateFormat.format(new Date()));
+								broadcastLocaleMessage(false, "START.STARTED", CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date()));
 							}
 							else
 								broadcastLocaleMessage(false, "START.ABORTED");
@@ -509,5 +515,12 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 		quitLocation.clear();
 		super.stop();
+	}
+
+	@Override
+	public CrazyArenaArenaPlayerCommandExecutor<Arena<RaceParticipant>> getCommandExecutor()
+	{
+		// EDIT Automatisch generierter Methodenstub
+		return null;
 	}
 }

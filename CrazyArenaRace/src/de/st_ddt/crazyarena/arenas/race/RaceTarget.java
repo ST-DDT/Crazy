@@ -18,12 +18,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.Named;
-import de.st_ddt.crazyutil.PlayerCommandable;
 import de.st_ddt.crazyutil.poly.room.FuncRoom;
 import de.st_ddt.crazyutil.poly.room.Room;
 import de.st_ddt.crazyutil.poly.room.Sphere;
 
-public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandable
+public class RaceTarget implements Named, ConfigurationSaveable
 {
 
 	protected final RaceArena arena;
@@ -49,7 +48,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		this.next = next;
 	}
 
-	public RaceTarget(final RaceArena arena, ConfigurationSection config)
+	public RaceTarget(final RaceArena arena, final ConfigurationSection config)
 	{
 		super();
 		this.arena = arena;
@@ -79,12 +78,12 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		this.goal = goal;
 	}
 
-	public boolean isInside(Entity entity)
+	public boolean isInside(final Entity entity)
 	{
 		return goal.isInside(entity);
 	}
 
-	public boolean isInside(Location location)
+	public boolean isInside(final Location location)
 	{
 		return goal.isInside(location);
 	}
@@ -99,9 +98,9 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		this.next = next;
 	}
 
-	@Override
 	public boolean command(final Player player, final String commandLabel, final String[] args) throws CrazyException
 	{
+		// EDIT Outsourcen!
 		if (commandLabel.equals("name"))
 		{
 			CommandName(player, args);
@@ -125,7 +124,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		return false;
 	}
 
-	private void CommandName(Player player, String[] args) throws CrazyCommandException
+	private void CommandName(final Player player, final String[] args) throws CrazyCommandException
 	{
 		switch (args.length)
 		{
@@ -148,7 +147,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, goal.getBasis().getWorld().getName(), goal.getBasis().getX(), goal.getBasis().getY(), goal.getBasis().getZ());
 				return;
 			case 1:
-				String parameter = args[0].toLowerCase();
+				final String parameter = args[0].toLowerCase();
 				if (parameter.equals("set") || parameter.equals("here"))
 				{
 					goal.setBasis(player.getLocation());
@@ -169,7 +168,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				{
 					x = Double.parseDouble(args[0]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(0, "Integer/Double");
 				}
@@ -178,7 +177,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				{
 					y = Double.parseDouble(args[1]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(1, "Integer/Double");
 				}
@@ -187,7 +186,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				{
 					z = Double.parseDouble(args[2]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(2, "Integer/Double");
 				}
@@ -199,7 +198,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				{
 					x = Double.parseDouble(args[1]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(1, "Integer/Double");
 				}
@@ -207,7 +206,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				{
 					y = Double.parseDouble(args[2]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(2, "Integer/Double");
 				}
@@ -215,7 +214,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				{
 					z = Double.parseDouble(args[3]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(3, "Integer/Double");
 				}
@@ -229,7 +228,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		throw new CrazyCommandUsageException("/crazyarena targets " + name + " center [set/here/tp]", "/crazyarena targets " + name + " center [World] <X> <Y> <Z>");
 	}
 
-	private void CommandRadius(Player player, String[] args) throws CrazyCommandException
+	private void CommandRadius(final Player player, final String[] args) throws CrazyCommandException
 	{
 		switch (args.length)
 		{
@@ -245,7 +244,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 				{
 					radius = Double.parseDouble(args[0]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(0, "Integer/Double");
 				}
@@ -256,12 +255,12 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		throw new CrazyCommandUsageException("/crazyarena targets " + name + " radius [Radius]");
 	}
 
-	private void CommandGeo(Player player, String[] args) throws CrazyException
+	private void CommandGeo(final Player player, final String[] args) throws CrazyException
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("/crazyarena targets " + name + " geo <Get/GetToWE/Set/SetFromWE>");
-		String parameter = args[0].toLowerCase();
-		CrazyGeo geo = CrazyGeo.getPlugin();
+		final String parameter = args[0].toLowerCase();
+		final CrazyGeo geo = CrazyGeo.getPlugin();
 		if (parameter.equals("get"))
 		{
 			if (goal == null)
@@ -276,7 +275,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		}
 		else if (parameter.equals("set"))
 		{
-			RealRoom<Room> sel = geo.getPlayerSelection(player);
+			final RealRoom<Room> sel = geo.getPlayerSelection(player);
 			if (sel == null)
 				throw new CrazyCommandCircumstanceException("when a region is set");
 			else
@@ -284,7 +283,7 @@ public class RaceTarget implements Named, ConfigurationSaveable, PlayerCommandab
 		}
 		else if (parameter.equals("setfromwe"))
 		{
-			RealRoom<FuncRoom> sel = geo.directImportWE(player);
+			final RealRoom<FuncRoom> sel = geo.directImportWE(player);
 			if (sel == null)
 				throw new CrazyCommandCircumstanceException("when a region is set");
 			else
