@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazychats.channels.AbstractChannel;
+import de.st_ddt.crazychats.channels.AdminChannel;
 import de.st_ddt.crazychats.channels.BroadcastChannel;
 import de.st_ddt.crazychats.channels.ControlledChannelInterface;
 import de.st_ddt.crazychats.channels.GlobalChannel;
@@ -75,6 +76,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final GlobalChannel globalChannel = new GlobalChannel();
 	private final Map<String, WorldChannel> worldChannels = Collections.synchronizedMap(new HashMap<String, WorldChannel>());
 	private final LocalChannel localChannel = new LocalChannel(this);
+	private final AdminChannel adminChannel = new AdminChannel();
 	private final Set<ControlledChannelInterface> controlledChannels = Collections.synchronizedSet(new HashSet<ControlledChannelInterface>());
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
@@ -85,6 +87,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private String localChatFormat = "[Local]%1$s: %2$s";
 	private double localChatRange = 50;
 	private String privateChatFormat = "[Private]%1$s: %2$s";
+	private String adminChatFormat = "[Admin]%1$s: %2$s";
 	private String ownChatNamePrefix = ChatColor.ITALIC.toString();
 	private String defaultChannelKey;
 	private long maxSilenceTime;
@@ -348,6 +351,47 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				return res;
 			}
 		});
+		modeCommand.addMode(modeCommand.new Mode<String>("adminChatFormat", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+			}
+
+			@Override
+			public String getValue()
+			{
+				return CrazyChatsChatHelper.unmakeFormat(adminChatFormat);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				adminChatFormat = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
 		modeCommand.addMode(modeCommand.new Mode<String>("ownChatNamePrefix", String.class)
 		{
 
@@ -575,6 +619,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		localChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("localChatFormat", "&2[Local] &F%1$s&F: &F%2$s"));
 		localChatRange = config.getDouble("localChatRange", 30);
 		privateChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("privateChatFormat", "&7[Private] &F%1$s&F: &F%2$s"));
+		adminChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("adminChatFormat", "&C[Admin] &F%1$s&F: &F%2$s"));
 		ownChatNamePrefix = ChatHelper.colorise(config.getString("ownChatNamePrefix", ChatColor.ITALIC.toString()));
 		defaultChannelKey = config.getString("defaultChannelKey", "w");
 		maxSilenceTime = config.getLong("maxSilenceTime", 31556952000L);
@@ -602,6 +647,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("localChatFormat", CrazyChatsChatHelper.unmakeFormat(localChatFormat));
 		config.set("localChatRange", localChatRange);
 		config.set("privateChatFormat", CrazyChatsChatHelper.unmakeFormat(privateChatFormat));
+		config.set("adminChatFormat", CrazyChatsChatHelper.unmakeFormat(adminChatFormat));
 		config.set("ownChatNamePrefix", ChatHelper.decolorise(ownChatNamePrefix));
 		config.set("defaultChannelKey", defaultChannelKey);
 		config.set("maxSilenceTime", maxSilenceTime);
@@ -709,6 +755,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return localChannel;
 	}
 
+	public AdminChannel getAdminChannel()
+	{
+		return adminChannel;
+	}
+
 	public Set<ControlledChannelInterface> getControlledChannels()
 	{
 		return controlledChannels;
@@ -747,6 +798,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public String getPrivateChatFormat()
 	{
 		return privateChatFormat;
+	}
+
+	public String getAdminChatFormat()
+	{
+		return adminChatFormat;
 	}
 
 	public String getOwnChatNamePrefix()

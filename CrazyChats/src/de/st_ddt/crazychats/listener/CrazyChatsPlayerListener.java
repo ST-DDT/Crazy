@@ -68,6 +68,7 @@ public class CrazyChatsPlayerListener implements Listener
 		channels.add(plugin.getLocalChannel());
 		final PrivateChannel privateChannel = new PrivateChannel(player);
 		data.setPrivateChannel(privateChannel);
+		channels.add(plugin.getAdminChannel());
 		plugin.getControlledChannels().add(privateChannel);
 		if (data.getDisplayName() != null)
 			player.setDisplayName(data.getDisplayName());

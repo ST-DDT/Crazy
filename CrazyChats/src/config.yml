@@ -54,6 +54,8 @@ localChatFormat: '&2[Local] &F$0$&F: &F$1$'
 localChatRange: 30.0
 # format used for private Channel
 privateChatFormat: '&7[Private] &F$0$&F: &F$1$'
+# format used for admin Channel (admins only)
+privateChatFormat: '&C[Admin] &F$0$&F: &F$1$'
 # default channel when joining the server (w=worldchannel)
 defaultChannelKey: w
 # the max duration for /crazychats player silence <Player> [Duration]

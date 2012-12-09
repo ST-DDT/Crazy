@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.2
+version: 1.3
 # requires CrazyCore v9.6 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
@@ -60,6 +60,8 @@ permissions:
       crazychats.worldchannels.remotetalk: true
       crazychats.worldchannels.talk: true
       crazychats.localchannel.talk: true
+      crazychats.adminchannel.talk: true
+      crazychats.adminchannel.listen: true
       crazychats.talk: true
       crazychats.player.displayname.self: true
       crazychats.player.displayname.other: true
@@ -98,6 +100,14 @@ permissions:
   crazychats.localchannel.talk:
     description: Allow chatting in Local channel.
     default: true
+  crazychats.adminchannel.talk:
+    description: Allow chatting in Admin channel.
+    default: op
+    children:
+      crazychats.adminchannel.listen: true
+  crazychats.adminchannel.listen:
+    description: Allow listening to Admin channel.
+    default: op
   crazychats.talk:
     description: Allow chatting.
     default: true

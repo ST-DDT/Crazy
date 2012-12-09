@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.kitteh.tag.TagAPI;
-import org.kitteh.tag.TagAPIException;
 
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.data.ChatPlayerData;
@@ -61,7 +60,7 @@ public class CrazyChatsCommandPlayerHeadName extends CrazyChatsCommandExecutor
 			{
 				TagAPI.refreshPlayer(player);
 			}
-			catch (final TagAPIException e)
+			catch (final Exception e)
 			{
 				throw new CrazyCommandErrorException(e);
 			}
