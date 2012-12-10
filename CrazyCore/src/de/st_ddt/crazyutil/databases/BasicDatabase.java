@@ -180,7 +180,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 			shortPrintStackTrace2(ourCause, trace);
 	}
 
-	private final void shortPrintStackTrace2(final Throwable throwable, StackTraceElement[] causedTrace)
+	private final void shortPrintStackTrace2(final Throwable throwable, final StackTraceElement[] causedTrace)
 	{
 		final StackTraceElement[] trace = throwable.getStackTrace();
 		int m = trace.length - 1, n = causedTrace.length - 1;
@@ -198,6 +198,6 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		// Recurse if we have a cause
 		final Throwable ourCause = throwable.getCause();
 		if (ourCause != null)
-			shortPrintStackTrace(throwable, ourCause);
+			shortPrintStackTrace2(ourCause, trace);
 	}
 }
