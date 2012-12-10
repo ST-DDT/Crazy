@@ -18,6 +18,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +29,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 {
 
 	private final static String lineSeparator = System.getProperty("line.separator");
-	protected final static Pattern PATTERN_SEPARATOR = Pattern.compile("\\|");
+	protected final static Pattern PATTERN_DATASEPARATOR = Pattern.compile("\\|");
 	private final JavaPlugin plugin;
 	private final Map<String, String> entries = new TreeMap<String, String>();
 	private final String filePath;
@@ -51,7 +52,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		super(DatabaseType.FLAT, clazz, getConstructor(clazz), defaultColumnNames);
 		this.plugin = plugin;
 		this.filePath = config == null ? defaultPath : config.getString("FLAT.filePath", defaultPath);
-		this.file = new File(plugin.getDataFolder().getPath() + File.separator + filePath);
+		this.file = new File(plugin.getDataFolder().getPath(), filePath);
 	}
 
 	public FlatDatabase(final Class<S> clazz, final String[] defaultColumnNames, final JavaPlugin plugin, final String path)
@@ -115,7 +116,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 			return null;
 		try
 		{
-			final S data = constructor.newInstance(new Object[] { PATTERN_SEPARATOR.split(rawData.trim()) });
+			final S data = constructor.newInstance(new Object[] { PATTERN_DATASEPARATOR.split(rawData.trim()) });
 			datas.put(key.toLowerCase(), data);
 			return data;
 		}
@@ -123,6 +124,21 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		{
 			System.err.println("Error loading entry: " + key);
 			shortPrintStackTrace(e, e.getCause());
+			if (e.getCause() instanceof ArrayIndexOutOfBoundsException)
+			{
+				final int count = defaultColumnNames.length - StringUtils.countMatches(rawData, "|") - 1;
+				if (count > 0)
+				{
+					final StringBuilder builder = new StringBuilder(rawData.trim());
+					for (int i = 0; i < count; i++)
+						builder.append("|");
+					builder.append(".|");
+					builder.append(lineSeparator);
+					entries.put(key, builder.toString());
+					asyncSaveDatabase();
+					return loadEntry(key);
+				}
+			}
 			return null;
 		}
 		catch (final Exception e)
@@ -208,7 +224,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 					continue;
 				try
 				{
-					entries.put(zeile.split("\\|", 2)[0].toLowerCase(), zeile + lineSeparator);
+					entries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0].toLowerCase(), zeile + lineSeparator);
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
