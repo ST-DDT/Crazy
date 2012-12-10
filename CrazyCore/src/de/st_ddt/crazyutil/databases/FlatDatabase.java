@@ -151,7 +151,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		}
 		catch (final Exception e)
 		{
-			System.err.println("Error loading entry: " + key);
+			System.err.println("Error occured while trying to load entry: " + key);
 			e.printStackTrace();
 			return null;
 		}

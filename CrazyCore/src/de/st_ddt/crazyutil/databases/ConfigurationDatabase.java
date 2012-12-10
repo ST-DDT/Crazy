@@ -117,12 +117,13 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 		}
 		catch (final InvocationTargetException e)
 		{
-			System.err.println("Error loading entry: " + key);
+			System.err.println("Error occured while trying to load entry: " + key);
 			shortPrintStackTrace(e, e.getCause());
 			return null;
 		}
 		catch (final Exception e)
 		{
+			System.err.println("Error occured while trying to load entry: " + key);
 			e.printStackTrace();
 			return null;
 		}

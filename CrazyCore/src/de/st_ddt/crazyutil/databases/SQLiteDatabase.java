@@ -238,7 +238,6 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	@Override
 	public S loadEntry(final String key)
 	{
-		S data = null;
 		Statement query = null;
 		final Connection connection = connectionPool.getConnection();
 		try
@@ -248,24 +247,28 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 			if (result.next())
 				try
 				{
-					data = constructor.newInstance(result, columnNames);
+					final S data = constructor.newInstance(result, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
+					result.close();
+					return data;
 				}
 				catch (final InvocationTargetException e)
 				{
-					System.err.println("Error loading entry: " + key);
+					System.err.println("Error occured while trying to load entry: " + key);
 					shortPrintStackTrace(e, e.getCause());
 				}
 				catch (final Exception e)
 				{
-					data = null;
+					System.err.println("Error occured while trying to load entry: " + key);
 					e.printStackTrace();
 				}
 			result.close();
+			return null;
 		}
 		catch (final SQLException e)
 		{
 			e.printStackTrace();
+			return null;
 		}
 		finally
 		{
@@ -278,7 +281,6 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 				{}
 			connectionPool.releaseConnection(connection);
 		}
-		return data;
 	}
 
 	@Override

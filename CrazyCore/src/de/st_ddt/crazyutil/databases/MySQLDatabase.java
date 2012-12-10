@@ -249,15 +249,17 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					final S data = constructor.newInstance(result, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
+					result.close();
 					return data;
 				}
 				catch (final InvocationTargetException e)
 				{
-					System.err.println("Error loading entry: " + key);
+					System.err.println("Error occured while trying to load entry: " + key);
 					shortPrintStackTrace(e, e.getCause());
 				}
 				catch (final Exception e)
 				{
+					System.err.println("Error occured while trying to load entry: " + key);
 					e.printStackTrace();
 				}
 			result.close();
