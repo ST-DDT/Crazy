@@ -23,3 +23,5 @@ maxShareRange: 50.0
 defaultLootRules: LOOT_SHARE
 # default xp share rules for every new squad. (XP_SHARE, XP_SHARESILENT, XP_PRIVATE, XP_PRIVATESILENT)
 defaultXPRules: XP_SHARE
+# when rejoining the server within this amount of time you will automatically rejoin your last squad. (time in seconds,0=disabled)
+squadAutoRejoinTime: 60

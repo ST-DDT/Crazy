@@ -54,6 +54,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	private double maxShareRange;
 	private Loot_Rules defaultLootRules;
 	private XP_Rules defaultXPRules;
+	private long squadAutoRejoinTime;
 	private boolean crazyChatsEnabled;
 	private boolean tagAPIEnabled;
 
@@ -142,7 +143,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			}
 
 			@Override
-			public void setValue(CommandSender sender, String... args) throws CrazyException
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
 			{
 				final String lootType = args[0].toUpperCase();
 				try
@@ -157,20 +158,20 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			}
 
 			@Override
-			public void setValue(Loot_Rules newValue) throws CrazyException
+			public void setValue(final Loot_Rules newValue) throws CrazyException
 			{
 				defaultLootRules = newValue;
 				saveConfiguration();
 			}
 
 			@Override
-			public List<String> tab(String... args)
+			public List<String> tab(final String... args)
 			{
 				if (args.length != 1)
 					return null;
-				List<String> res = new LinkedList<String>();
-				String name = args[0].toUpperCase();
-				for (Loot_Rules rule : Loot_Rules.values())
+				final List<String> res = new LinkedList<String>();
+				final String name = args[0].toUpperCase();
+				for (final Loot_Rules rule : Loot_Rules.values())
 					if (rule.toString().startsWith(name))
 						res.add(rule.toString());
 				return res;
@@ -186,7 +187,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			}
 
 			@Override
-			public void setValue(CommandSender sender, String... args) throws CrazyException
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
 			{
 				final String xpType = args[0].toUpperCase();
 				try
@@ -201,23 +202,39 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			}
 
 			@Override
-			public void setValue(XP_Rules newValue) throws CrazyException
+			public void setValue(final XP_Rules newValue) throws CrazyException
 			{
 				defaultXPRules = newValue;
 				saveConfiguration();
 			}
 
 			@Override
-			public List<String> tab(String... args)
+			public List<String> tab(final String... args)
 			{
 				if (args.length != 1)
 					return null;
-				List<String> res = new LinkedList<String>();
-				String name = args[0].toUpperCase();
-				for (XP_Rules rule : XP_Rules.values())
+				final List<String> res = new LinkedList<String>();
+				final String name = args[0].toUpperCase();
+				for (final XP_Rules rule : XP_Rules.values())
 					if (rule.toString().startsWith(name))
 						res.add(rule.toString());
 				return res;
+			}
+		});
+		modeCommand.addMode(modeCommand.new LongMode("squadAutoRejoinTime")
+		{
+
+			@Override
+			public void setValue(final Long newValue) throws CrazyException
+			{
+				squadAutoRejoinTime = Math.max(newValue, 0);
+				saveConfiguration();
+			}
+
+			@Override
+			public Long getValue()
+			{
+				return squadAutoRejoinTime;
 			}
 		});
 	}
@@ -343,6 +360,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			consoleLog(ChatColor.RED + "NO SUCH XPRULE " + xpType);
 			defaultXPRules = XP_Rules.XP_SHARE;
 		}
+		squadAutoRejoinTime = Math.max(config.getLong("squadAutoRejoinTime", 60), 0);
 	}
 
 	@Override
@@ -356,6 +374,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		config.set("maxShareRange", maxShareRange);
 		config.set("defaultLootRules", defaultLootRules.toString());
 		config.set("defaultXPRules", defaultXPRules.toString());
+		config.set("squadAutoRejoinTime", squadAutoRejoinTime);
 		super.saveConfiguration();
 	}
 
@@ -420,5 +439,10 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	public XP_Rules getDefaultXPRules()
 	{
 		return defaultXPRules;
+	}
+
+	public long getSquadAutoRejoinTime()
+	{
+		return squadAutoRejoinTime;
 	}
 }

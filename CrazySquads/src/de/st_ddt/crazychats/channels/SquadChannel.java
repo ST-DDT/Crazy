@@ -1,5 +1,7 @@
 package de.st_ddt.crazychats.channels;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
@@ -7,22 +9,35 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
-public class SquadChannel extends AbstractChannel
+public class SquadChannel implements ChannelInterface
 {
 
-	private final CrazySquads plugin;
-	private final Squad squad;
-	private final Set<Player> members;
+	protected final CrazySquads plugin;
+	protected final List<String> aliases = new ArrayList<String>();
+	protected final Squad squad;
+	protected final Set<Player> members;
 
-	public SquadChannel(final CrazySquads plugin, final Squad squad, final Set<Player> members)
+	public SquadChannel(final CrazySquads plugin, final Squad squad)
 	{
-		super(squad.getName());
+		super();
 		aliases.add("p");
 		aliases.add("party");
 		aliases.add("squad");
 		this.plugin = plugin;
 		this.squad = squad;
-		this.members = members;
+		members = squad.getMembers();
+	}
+
+	@Override
+	public String getName()
+	{
+		return squad.getName();
+	}
+
+	@Override
+	public List<String> getAliases()
+	{
+		return aliases;
 	}
 
 	@Override

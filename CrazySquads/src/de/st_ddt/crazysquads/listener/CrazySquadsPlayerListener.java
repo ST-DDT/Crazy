@@ -3,10 +3,13 @@ package de.st_ddt.crazysquads.listener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -22,18 +26,48 @@ import org.bukkit.inventory.ItemStack;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadDeleteEvent;
+import de.st_ddt.crazysquads.events.CrazySquadsSquadJoinEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadLeaveEvent;
+import de.st_ddt.crazysquads.tasks.RejoinTimeoutTask;
 import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazySquadsPlayerListener implements Listener
 {
 
 	protected final CrazySquads plugin;
+	private final Map<String, Squad> rejoins = Collections.synchronizedMap(new HashMap<String, Squad>());
 
 	public CrazySquadsPlayerListener(final CrazySquads plugin)
 	{
 		super();
 		this.plugin = plugin;
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void PlayerRejoin(final PlayerJoinEvent event)
+	{
+		PlayerJoin(event.getPlayer());
+	}
+
+	private void PlayerJoin(final Player player)
+	{
+		final Squad squad = rejoins.remove(player.getName());
+		if (squad == null)
+			return;
+		if (squad.getMembers().size() == 0)
+			return;
+		final CrazySquadsSquadJoinEvent event = new CrazySquadsSquadJoinEvent(plugin, squad, player);
+		event.callEvent();
+		if (event.isCancelled())
+			plugin.sendLocaleMessage("COMMAND.SQUAD.JOIN.CANCELLED", player, squad.getName(), event.getReason());
+		else
+		{
+			final Set<Player> members = squad.getMembers();
+			plugin.sendLocaleMessage("SQUAD.JOIN", members, player.getName());
+			members.add(player);
+			plugin.getSquads().put(player, squad);
+			plugin.sendLocaleMessage("COMMAND.SQUAD.JOINED", player, squad.getName());
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -48,7 +82,8 @@ public class CrazySquadsPlayerListener implements Listener
 		PlayerQuit(event.getPlayer());
 	}
 
-	public void PlayerQuit(final Player player)
+	@SuppressWarnings("deprecation")
+	protected void PlayerQuit(final Player player)
 	{
 		plugin.getInvites().remove(player);
 		final Squad squad = plugin.getSquads().remove(player);
@@ -70,6 +105,11 @@ public class CrazySquadsPlayerListener implements Listener
 			new CrazySquadsSquadLeaveEvent(plugin, squad, player).callEvent();
 			if (members.size() == 0)
 				new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+			else if (plugin.getSquadAutoRejoinTime() > 0)
+			{
+				rejoins.put(player.getName(), squad);
+				Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new RejoinTimeoutTask(rejoins, player.getName()), plugin.getSquadAutoRejoinTime() * 20);
+			}
 		}
 	}
 
