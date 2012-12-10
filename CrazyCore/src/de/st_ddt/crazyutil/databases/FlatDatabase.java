@@ -122,23 +122,31 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		}
 		catch (final InvocationTargetException e)
 		{
-			System.err.println("Error loading entry: " + key);
-			shortPrintStackTrace(e, e.getCause());
+			System.err.println("Error occured while trying to load entry: " + key);
 			if (e.getCause() instanceof ArrayIndexOutOfBoundsException)
 			{
 				final int count = defaultColumnNames.length - StringUtils.countMatches(rawData, "|") - 1;
 				if (count > 0)
 				{
+					System.out.println("Trying to fix entry");
 					final StringBuilder builder = new StringBuilder(rawData.trim());
 					for (int i = 0; i < count; i++)
 						builder.append("|");
 					builder.append(".|");
 					builder.append(lineSeparator);
 					entries.put(key, builder.toString());
-					asyncSaveDatabase();
-					return loadEntry(key);
+					final S data = loadEntry(key);
+					if (data != null)
+					{
+						save(data);
+						System.out.println("Entry FIXED!");
+					}
+					else
+						System.err.println("Repair FAILED!");
+					return data;
 				}
 			}
+			shortPrintStackTrace(e, e.getCause());
 			return null;
 		}
 		catch (final Exception e)
@@ -203,7 +211,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		if (!requireSave)
 		{
 			requireSave = true;
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, delayedSave);
+			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, delayedSave, 1);
 		}
 	}
 
