@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
@@ -113,6 +114,12 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 				save(data);
 			}
 			return data;
+		}
+		catch (final InvocationTargetException e)
+		{
+			System.err.println("Error loading entry: " + key);
+			shortPrintStackTrace(e, e.getCause());
+			return null;
 		}
 		catch (final Exception e)
 		{

@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -250,6 +251,11 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 					data = constructor.newInstance(result, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
 				}
+				catch (final InvocationTargetException e)
+				{
+					System.err.println("Error loading entry: " + key);
+					shortPrintStackTrace(e, e.getCause());
+				}
 				catch (final Exception e)
 				{
 					data = null;
@@ -289,6 +295,10 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 				{
 					final S data = constructor.newInstance(result, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
+				}
+				catch (final InvocationTargetException e)
+				{
+					shortPrintStackTrace(e, e.getCause());
 				}
 				catch (final Exception e)
 				{

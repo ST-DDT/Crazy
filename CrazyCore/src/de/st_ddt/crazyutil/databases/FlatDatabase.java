@@ -10,11 +10,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,7 +27,8 @@ import de.st_ddt.crazyutil.ChatHelper;
 public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 {
 
-	private static final String lineSeparator = System.getProperty("line.separator");
+	private final static String lineSeparator = System.getProperty("line.separator");
+	protected final static Pattern PATTERN_SEPARATOR = Pattern.compile("\\|");
 	private final JavaPlugin plugin;
 	private final Map<String, String> entries = new TreeMap<String, String>();
 	private final String filePath;
@@ -56,7 +59,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		super(DatabaseType.FLAT, clazz, getConstructor(clazz), defaultColumnNames);
 		this.plugin = plugin;
 		this.filePath = path;
-		this.file = new File(plugin.getDataFolder().getPath() + File.separator + filePath);
+		this.file = new File(plugin.getDataFolder(), filePath);
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -112,12 +115,19 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 			return null;
 		try
 		{
-			final S data = constructor.newInstance(new Object[] { rawData.trim().split("\\|") });
+			final S data = constructor.newInstance(new Object[] { PATTERN_SEPARATOR.split(rawData.trim()) });
 			datas.put(key.toLowerCase(), data);
 			return data;
 		}
+		catch (final InvocationTargetException e)
+		{
+			System.err.println("Error loading entry: " + key);
+			shortPrintStackTrace(e, e.getCause());
+			return null;
+		}
 		catch (final Exception e)
 		{
+			System.err.println("Error loading entry: " + key);
 			e.printStackTrace();
 			return null;
 		}

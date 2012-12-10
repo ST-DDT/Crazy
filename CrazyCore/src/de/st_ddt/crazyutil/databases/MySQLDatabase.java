@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil.databases;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -237,7 +238,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public S loadEntry(final String key)
 	{
-		S data = null;
 		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
 		try
@@ -247,19 +247,26 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			if (result.next())
 				try
 				{
-					data = constructor.newInstance(result, columnNames);
+					final S data = constructor.newInstance(result, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
+					return data;
+				}
+				catch (final InvocationTargetException e)
+				{
+					System.err.println("Error loading entry: " + key);
+					shortPrintStackTrace(e, e.getCause());
 				}
 				catch (final Exception e)
 				{
-					data = null;
 					e.printStackTrace();
 				}
 			result.close();
+			return null;
 		}
 		catch (final SQLException e)
 		{
 			e.printStackTrace();
+			return null;
 		}
 		finally
 		{
@@ -272,7 +279,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{}
 			mysqlConnectionPool.releaseConnection(connection);
 		}
-		return data;
 	}
 
 	@Override
@@ -289,6 +295,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{
 					final S data = constructor.newInstance(result, columnNames);
 					datas.put(data.getName().toLowerCase(), data);
+				}
+				catch (final InvocationTargetException e)
+				{
+					shortPrintStackTrace(e, e.getCause());
 				}
 				catch (final Exception e)
 				{
