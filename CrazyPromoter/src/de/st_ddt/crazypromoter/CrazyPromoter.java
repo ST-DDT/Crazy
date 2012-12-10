@@ -93,15 +93,16 @@ public class CrazyPromoter extends CrazyPlugin
 		registerCommands();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void load()
+	public void loadConfiguration()
 	{
-		super.load();
-		ConfigurationSection config = getConfig();
+		super.loadConfiguration();
+		final ConfigurationSection config = getConfig();
 		checkInterval = config.getInt("checkInterval", 60);
 		promotions.clear();
-		config = config.getConfigurationSection("promotions");
-		if (config == null)
+		final ConfigurationSection promotionConfig = config.getConfigurationSection("promotions");
+		if (promotionConfig == null)
 		{
 			final Promotion promotion = new Promotion("default");
 			promotions.add(promotion);
@@ -111,19 +112,9 @@ public class CrazyPromoter extends CrazyPlugin
 			condition.getConditions().add(new ConditionPlayerPermissionGroup("default"));
 		}
 		else
-			for (final String name : config.getKeys(false))
-				promotions.add(new Promotion(config.getConfigurationSection(name)));
+			for (final String name : promotionConfig.getKeys(false))
+				promotions.add(new Promotion(promotionConfig.getConfigurationSection(name)));
 		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new CheckTask(plugin), 100, checkInterval * 20 * 60);
-	}
-
-	@Override
-	public void save()
-	{
-		final ConfigurationSection config = getConfig();
-		config.set("promotions", null);
-		for (final Promotion promotion : promotions)
-			promotion.save(config, "promotions." + promotion.getName() + ".");
-		saveConfiguration();
 	}
 
 	@Override
@@ -131,7 +122,10 @@ public class CrazyPromoter extends CrazyPlugin
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("checkInterval", checkInterval);
-		saveConfig();
+		config.set("promotions", null);
+		for (final Promotion promotion : promotions)
+			promotion.save(config, "promotions." + promotion.getName() + ".");
+		super.saveConfiguration();
 	}
 
 	public void checkStatus()
