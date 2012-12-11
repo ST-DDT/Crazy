@@ -2,6 +2,7 @@ package de.st_ddt.crazygeo.region;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
@@ -97,5 +98,10 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 	public final RealRoom<Room> cloneAsRealRoom()
 	{
 		return new RealRoom<Room>(room.clone(), basis);
+	}
+
+	public void show(final CommandSender target)
+	{
+		// EDIT add show method
 	}
 }
