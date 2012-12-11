@@ -2,14 +2,20 @@ package de.st_ddt.crazyplugin.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.ListFormat;
+import de.st_ddt.crazyutil.Tabbed;
+import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
 public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterface, T> extends CrazyCommandTreeExecutor<S>
 {
@@ -58,53 +64,33 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
-			// EDIT update this outdated stuff
-			int amount = 10;
-			int page = 1;
-			final int length = args.length;
-			if (length > 2)
-				throw new CrazyCommandUsageException("[amount:Integer] [[page:]Integer]");
-			for (int i = 0; i < length; i++)
+			if (args.length > 2)
+				throw new CrazyCommandUsageException("[page:Integer] [amount:Integer]");
+			final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+			final IntegerParamitrisable page = new IntegerParamitrisable(1)
 			{
-				final String arg = args[i].toLowerCase();
-				if (arg.startsWith("page:"))
-					try
-					{
-						page = Integer.parseInt(arg.substring(5));
-						if (page < 0)
-							throw new CrazyCommandParameterException(i, "positive Integer");
-					}
-					catch (final NumberFormatException e)
-					{
-						throw new CrazyCommandParameterException(i, "Number (Integer)");
-					}
-				else if (arg.startsWith("amount:"))
+
+				@Override
+				public void setParameter(final String parameter) throws CrazyException
 				{
-					if (arg.substring(7).equals("*"))
-						amount = -1;
+					if (parameter.equals("*"))
+						value = Integer.MIN_VALUE;
 					else
-						try
-						{
-							amount = Integer.parseInt(arg.substring(7));
-						}
-						catch (final NumberFormatException e)
-						{
-							throw new CrazyCommandParameterException(i, "Number (Integer)");
-						}
+						super.setParameter(parameter);
 				}
-				else if (arg.equals("*"))
-					page = Integer.MIN_VALUE;
-				else
-					try
-					{
-						page = Integer.parseInt(arg);
-					}
-					catch (final NumberFormatException e)
-					{
-						throw new CrazyCommandUsageException("[amount:Integer] [[page:]Integer]");
-					}
-			}
-			showList(sender, amount, page);
+			};
+			final IntegerParamitrisable amount = new IntegerParamitrisable(10);
+			ChatHelperExtended.readParameters(args, params, page, amount);
+			showList(sender, amount.getValue(), page.getValue());
+		}
+
+		@Override
+		public List<String> tab(final CommandSender sender, final String[] args)
+		{
+			final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
+			final IntegerParamitrisable page = new IntegerParamitrisable(1);
+			final IntegerParamitrisable amount = new IntegerParamitrisable(10);
+			return ChatHelperExtended.tabHelp(args, params, page, amount);
 		}
 	}
 
