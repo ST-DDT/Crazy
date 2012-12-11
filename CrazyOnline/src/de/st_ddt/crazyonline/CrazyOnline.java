@@ -37,6 +37,7 @@ import de.st_ddt.crazyonline.data.comparator.OnlineDataTimeTotalOnlineComparator
 import de.st_ddt.crazyonline.databases.CrazyOnlineConfigurationDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineFlatDatabase;
 import de.st_ddt.crazyonline.databases.CrazyOnlineMySQLDatabase;
+import de.st_ddt.crazyonline.databases.CrazyOnlineSQLiteDatabase;
 import de.st_ddt.crazyonline.listener.CrazyOnlineCrazyListener;
 import de.st_ddt.crazyonline.listener.CrazyOnlinePlayerListener;
 import de.st_ddt.crazyonline.tasks.DropInactiveAccountsTask;
@@ -496,10 +497,12 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 			final DatabaseType type = DatabaseType.valueOf(saveType);
 			if (type == DatabaseType.CONFIG)
 				database = new CrazyOnlineConfigurationDatabase(this, config.getConfigurationSection("database.CONFIG"));
-			else if (type == DatabaseType.MYSQL)
-				database = new CrazyOnlineMySQLDatabase(config.getConfigurationSection("database.MYSQL"));
 			else if (type == DatabaseType.FLAT)
 				database = new CrazyOnlineFlatDatabase(this, config.getConfigurationSection("database.FLAT"));
+			else if (type == DatabaseType.MYSQL)
+				database = new CrazyOnlineMySQLDatabase(config.getConfigurationSection("database.MYSQL"));
+			else if (type == DatabaseType.SQLITE)
+				database = new CrazyOnlineSQLiteDatabase(config.getConfigurationSection("database.SQLITE"));
 		}
 		catch (final Exception e)
 		{
