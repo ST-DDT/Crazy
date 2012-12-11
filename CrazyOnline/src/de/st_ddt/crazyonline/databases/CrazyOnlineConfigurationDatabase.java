@@ -12,11 +12,11 @@ public class CrazyOnlineConfigurationDatabase extends ConfigurationPlayerDataDat
 
 	public CrazyOnlineConfigurationDatabase(final JavaPlugin plugin, final ConfigurationSection config)
 	{
-		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, "accounts", plugin, config);
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "onlineTimeMonth", "onlineTimeWeek", "onlineTimeDay", "ip" }, "accounts", plugin, config);
 	}
 
 	public CrazyOnlineConfigurationDatabase(final JavaPlugin plugin, final String path, final String[] columnNames)
 	{
-		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, plugin, path, columnNames);
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "onlineTimeMonth", "onlineTimeWeek", "onlineTimeDay", "ip" }, plugin, path, columnNames);
 	}
 }

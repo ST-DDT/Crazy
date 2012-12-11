@@ -1,6 +1,11 @@
 package de.st_ddt.crazyonline;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -35,6 +40,7 @@ import de.st_ddt.crazyonline.databases.CrazyOnlineMySQLDatabase;
 import de.st_ddt.crazyonline.listener.CrazyOnlineCrazyListener;
 import de.st_ddt.crazyonline.listener.CrazyOnlinePlayerListener;
 import de.st_ddt.crazyonline.tasks.DropInactiveAccountsTask;
+import de.st_ddt.crazyonline.tasks.StatsTask;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.data.PlayerDataFilter;
@@ -44,6 +50,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -61,6 +68,9 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 	private boolean deleteShortVisitors;
 	private int autoDelete;
 	private boolean catchListCommand;
+	private final String monthlyStatsPath = "stats/month/$0$.stats";
+	private final String weeklyStatsPath = "stats/week/$0$.stats";
+	private final String dailyStatsPath = "stats/daily/$0$.stats";
 
 	public static CrazyOnline getPlugin()
 	{
@@ -158,6 +168,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 				return autoDelete;
 			}
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void setValue(final Integer newValue) throws CrazyException
 			{
@@ -432,15 +443,20 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		super.onLoad();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable()
 	{
 		registerHooks();
 		super.onEnable();
 		registerCommands();
+		new File(getDataFolder(), monthlyStatsPath).getAbsoluteFile().getParentFile().mkdirs();
+		new File(getDataFolder(), weeklyStatsPath).getAbsoluteFile().getParentFile().mkdirs();
+		new File(getDataFolder(), dailyStatsPath).getAbsoluteFile().getParentFile().mkdirs();
 		// OnlinePlayer
 		for (final Player player : Bukkit.getOnlinePlayers())
 			playerListener.PlayerJoin(player);
+		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new StatsTask(this), 1728000 - new Date().getTime() / 50 % 1728000 + 5, 1728000);
 	}
 
 	@Override
@@ -452,6 +468,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		super.onDisable();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void loadConfiguration()
 	{
@@ -467,6 +484,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 		logger.createLogChannels(config.getConfigurationSection("logs"), "Join", "Quit");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Localized({ "CRAZYONLINE.DATABASE.ACCESSWARN $SaveType$", "CRAZYONLINE.DATABASE.LOADED $EntryCount$" })
 	public void loadDatabase()
@@ -598,5 +616,60 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					res.add(data);
 		}
 		return res;
+	}
+
+	public void dayChange()
+	{
+		for (final OnlinePlayerData data : getOnlinePlayerDatas())
+			data.dayChange();
+	}
+
+	private static final DateFormat MONTHFORMAT = new SimpleDateFormat("yyyy-MM");
+	private static final DateFormat WEEKFORMAT = new SimpleDateFormat("yyyy-ww");
+	private static final DateFormat DAYFORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+	public void statsMonth(final String name, final Date date, final long time)
+	{
+		try
+		{
+			final FileWriter writer = new FileWriter(new File(plugin.getDataFolder(), ChatHelper.putArgs(monthlyStatsPath, name)), true);
+			writer.write(MONTHFORMAT.format(date));
+			writer.write(" - ");
+			writer.write(Long.toString(time));
+			writer.write('\n');
+			writer.close();
+		}
+		catch (final IOException e)
+		{}
+	}
+
+	public void statsWeek(final String name, final Date date, final long time)
+	{
+		try
+		{
+			final FileWriter writer = new FileWriter(new File(plugin.getDataFolder(), ChatHelper.putArgs(weeklyStatsPath, name)), true);
+			writer.write(WEEKFORMAT.format(date));
+			writer.write(" - ");
+			writer.write(Long.toString(time));
+			writer.write('\n');
+			writer.close();
+		}
+		catch (final IOException e)
+		{}
+	}
+
+	public void statsDay(final String name, final Date date, final long time)
+	{
+		try
+		{
+			final FileWriter writer = new FileWriter(new File(plugin.getDataFolder(), ChatHelper.putArgs(dailyStatsPath, name)), true);
+			writer.write(DAYFORMAT.format(date));
+			writer.write(" - ");
+			writer.write(Long.toString(time));
+			writer.write('\n');
+			writer.close();
+		}
+		catch (final IOException e)
+		{}
 	}
 }

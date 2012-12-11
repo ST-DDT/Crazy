@@ -3,7 +3,9 @@
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyOnline/src/config.yml
 version: X_Y
 # required plugins +version can be found there
-# https://github.com/ST-DDT/Crazy/blob/master/CrazyLogin/src/plugin.yml
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyOnline/src/plugin.yml
+# the chat header used ingame (this can only be changed, when server is shut down)
+chatHeader: '&C[&ACrazyOnline&C] &F'
 database:
 # the table/file/section name of the database
   tableName: CrazyOnline_players
@@ -27,6 +29,11 @@ deleteShortVisitors: false
 # automatically delete accounts that haven't been used for x days(-1=disabled)
 # WARNING: deletes all data belonging to this player (including those saved in other plugins; equals "/crazycore delete Player")
 autoDelete: -1
-logs:
-  Quit: false
-  Join: false
+# additional information about logging can be found here http://dev.bukkit.org/server-mods/crazycore/pages/logging/
+#logs:
+#  Join:
+#    path: false
+#    console: false
+#  Quit:
+#    path: false
+#    console: false

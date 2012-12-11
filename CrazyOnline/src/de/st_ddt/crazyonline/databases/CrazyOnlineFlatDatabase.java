@@ -12,11 +12,11 @@ public class CrazyOnlineFlatDatabase extends FlatPlayerDataDatabase<OnlinePlayer
 
 	public CrazyOnlineFlatDatabase(final JavaPlugin plugin, final ConfigurationSection config)
 	{
-		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, "accounts.db", plugin, config);
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "onlineTimeMonth", "onlineTimeWeek", "onlineTimeDay", "ip" }, "accounts.db", plugin, config);
 	}
 
 	public CrazyOnlineFlatDatabase(final JavaPlugin plugin, final String path)
 	{
-		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "ip" }, plugin, path);
+		super(OnlinePlayerData.class, new String[] { "name", "firstLogin", "lastLogin", "lastLogout", "onlineTime", "onlineTimeMonth", "onlineTimeWeek", "onlineTimeDay", "ip" }, plugin, path);
 	}
 }

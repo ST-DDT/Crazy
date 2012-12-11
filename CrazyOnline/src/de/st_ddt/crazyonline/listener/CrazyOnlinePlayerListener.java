@@ -71,6 +71,7 @@ public class CrazyOnlinePlayerListener implements Listener
 		PlayerQuit(event.getPlayer());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void PlayerQuit(final Player player)
 	{
 		plugin.getCrazyLogger().log("Quit", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " left the server");
@@ -114,6 +115,7 @@ public class CrazyOnlinePlayerListener implements Listener
 		PlayerQuitCheck(event.getPlayer());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void PlayerQuitCheck(final Player player)
 	{
 		if (!plugin.isDeletingShortVisitorsEnabled())
