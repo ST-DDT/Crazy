@@ -681,10 +681,10 @@ public class CrazyPunisher extends CrazyPlugin
 				if (!sender.hasPermission("crazypunisher.admin.jail.set"))
 					throw new CrazyCommandPermissionException();
 				if (world == null)
-					if (sender instanceof ConsoleCommandSender)
-						throw new CrazyCommandExecutorException(false);
-					else
+					if (sender instanceof Player)
 						world = ((Player) sender).getWorld();
+					else
+						throw new CrazyCommandExecutorException(false);
 				int x,
 				y,
 				z;
@@ -719,10 +719,10 @@ public class CrazyPunisher extends CrazyPlugin
 				if (args[0].equalsIgnoreCase("here") || args[0].equalsIgnoreCase("set"))
 				{
 					if (loc == null)
-						if (sender instanceof ConsoleCommandSender)
-							throw new CrazyCommandExecutorException(false);
-						else
+						if (sender instanceof Player)
 							loc = ((Player) sender).getLocation();
+						else
+							throw new CrazyCommandExecutorException(false);
 					jailcenter = loc;
 					jailworld = jailcenter.getWorld();
 					jailsphere.setBasis(loc);
