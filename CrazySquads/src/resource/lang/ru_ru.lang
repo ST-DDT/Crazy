@@ -1,6 +1,6 @@
 ﻿CRAZYSQUADS=CrazySquads
 CRAZYSQUADS.COMMAND.SQUAD.CREATE.CANCELLED=Вы не можете создать команду еще, $0$.
-CRAZYSQUADS.COMMAND.SQUAD.CREATED=команда создана.\nВы можете пригласить игроков командой &3/squad invite <Name>&F!
+CRAZYSQUADS.COMMAND.SQUAD.CREATED=Команда создана.\nВы можете пригласить игроков командой &3/squad invite <Name>&F!
 CRAZYSQUADS.COMMAND.SQUAD.DELETED=$0$ отряд расформирован.
 CRAZYSQUADS.COMMAND.SQUAD.INVITE.CANCELLED=Вы не можете пригласить $0$ в команду, $1$.
 CRAZYSQUADS.COMMAND.SQUAD.INVITED=Вы пригласили $0$.
@@ -16,7 +16,7 @@ CRAZYSQUADS.FORMAT.CHANGE=$0$ = \n$1$\n$2$
 CRAZYSQUADS.FORMAT.EXAMPLE=$0$
 #CRAZYSQUADS.MODE.CHANGE=
 CRAZYSQUADS.PLAYERINFO.SQUAD.MEMBERS=Участники: $0$
-CRAZYSQUADS.PLAYERINFO.SQUAD.NAME=члены отряда в $0$
+CRAZYSQUADS.PLAYERINFO.SQUAD.NAME=Члены отряда в $0$
 CRAZYSQUADS.SQUAD.INVITED=&6$0$ пригласил Вас в свой отряд.\nВведите &3/squad join &Fчтобы подтвердить приглашение.
 CRAZYSQUADS.SQUAD.JOIN=$0$ присоединился к отряду.
 CRAZYSQUADS.SQUAD.KICKED=$0$ кикнул Вас.
