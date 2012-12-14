@@ -1,4 +1,4 @@
-CRAZYCAPTCHA=CrazyCaptcha
+﻿CRAZYCAPTCHA=CrazyCaptcha
 CRAZYCAPTCHA.COMMAND.COMMANDS.ADDED=Добавлена комманда вайтлиста\n($0$)
 CRAZYCAPTCHA.COMMAND.COMMANDS.LISTHEAD=$2$Комманды вайтлиста (Page $0$ / $1$)
 CRAZYCAPTCHA.COMMAND.COMMANDS.REMOVED=Удалена комманда вайтлиста\n($0$)
