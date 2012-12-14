@@ -1,0 +1,12 @@
+CRAZYCAPTCHA=CrazyCaptcha
+CRAZYCAPTCHA.COMMAND.COMMANDS.ADDED=Добавлена комманда вайтлиста\n($0$)
+CRAZYCAPTCHA.COMMAND.COMMANDS.LISTHEAD=$2$Комманды вайтлиста (Page $0$ / $1$)
+CRAZYCAPTCHA.COMMAND.COMMANDS.REMOVED=Удалена комманда вайтлиста\n($0$)
+CRAZYCAPTCHA.COMMAND.REVERIFY=$0$ будет проверена позже.
+CRAZYCAPTCHA.KICKED.BANNED.UNTIL=&CВы забанены до $0$.
+CRAZYCAPTCHA.KICKED.COMMANDUSAGE=Вам не разрешается выполнять эту команду!
+CRAZYCAPTCHA.KICKED.NOTVERIFIED=Вы должны ввести капчу!
+#CRAZYCAPTCHA.MODE.CHANGE=
+CRAZYCAPTCHA.VERIFICATION.FAILED=&CНе правильная капча!
+CRAZYCAPTCHA.VERIFICATION.REQUEST=&CПожалуйста введитее эту капчу:\n&E/captcha $0$
+CRAZYCAPTCHA.VERIFICATION.SUCCESS=&AКапча принята!
