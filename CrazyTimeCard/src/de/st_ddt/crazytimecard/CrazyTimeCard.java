@@ -43,6 +43,8 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 	private long startDuration;
 	private long defaultDuration;
 	private int defaultKeyLength;
+	private double enabledAfter;
+	private double enabledUntil;
 	private int autoKick;
 	private String filterNames;
 	private boolean blockDifferentNameCases;
@@ -54,6 +56,12 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 	public static CrazyTimeCard getPlugin()
 	{
 		return plugin;
+	}
+
+	public CrazyTimeCard()
+	{
+		super();
+		registerModes();
 	}
 
 	@Localized("CRAZYTIMECARD.MODE.CHANGE $Name$ $Value$")
@@ -104,6 +112,38 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 			public void setValue(final Integer newValue) throws CrazyException
 			{
 				defaultKeyLength = Math.max(newValue, 1);
+				saveConfiguration();
+			}
+		});
+		modeCommand.addMode(modeCommand.new DoubleMode("enabledAfter")
+		{
+
+			@Override
+			public Double getValue()
+			{
+				return enabledAfter;
+			}
+
+			@Override
+			public void setValue(final Double newValue) throws CrazyException
+			{
+				enabledAfter = Math.max(0, newValue);
+				saveConfiguration();
+			}
+		});
+		modeCommand.addMode(modeCommand.new DoubleMode("enabledUntil")
+		{
+
+			@Override
+			public Double getValue()
+			{
+				return enabledUntil;
+			}
+
+			@Override
+			public void setValue(final Double newValue) throws CrazyException
+			{
+				enabledUntil = Math.max(0, newValue);
 				saveConfiguration();
 			}
 		});
@@ -278,6 +318,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 		super.onDisable();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Localized({ "CRAZYTIMECARD.DATABASE.ACCESSWARN $SaveType$", "CRAZYTIMECARD.DATABASE.LOADED $EntryCount$" })
 	public void loadDatabase()
@@ -295,10 +336,10 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 		}
 		if (type == DatabaseType.CONFIG)
 			database = new CrazyTimeCardConfigurationDatabase(this, config.getConfigurationSection("database.CONFIG"));
-		else if (type == DatabaseType.MYSQL)
-			database = new CrazyTimeCardMySQLDatabase(config.getConfigurationSection("database.MYSQL"));
 		else if (type == DatabaseType.FLAT)
 			database = new CrazyTimeCardFlatDatabase(this, config.getConfigurationSection("database.FLAT"));
+		else if (type == DatabaseType.MYSQL)
+			database = new CrazyTimeCardMySQLDatabase(config.getConfigurationSection("database.MYSQL"));
 		if (database != null)
 			try
 			{
@@ -325,9 +366,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 			}, 600, 600);
 		}
 		else
-		{
 			sendLocaleMessage("DATABASE.LOADED", Bukkit.getConsoleSender(), database.getAllEntries().size());
-		}
 		// Database Cards
 		final String cardSaveType = config.getString("cardDatabase.saveType", "FLAT").toUpperCase();
 		type = null;
@@ -371,9 +410,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 			}, 600, 600);
 		}
 		else
-		{
 			sendLocaleMessage("DATABASE.LOADED", Bukkit.getConsoleSender(), cardDatabase.getAllEntries().size());
-		}
 	}
 
 	@Override
@@ -385,18 +422,22 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 		startDuration = config.getLong("startDuration", 86400000L * 5);
 		defaultDuration = config.getLong("defaultDuration", 86400000L * 30);
 		defaultKeyLength = config.getInt("defaultKeyLength", 20);
+		enabledAfter = config.getDouble("enabledAfter", 0D);
+		enabledUntil = config.getDouble("enabledUntil", 24D);
 		autoKick = Math.max(config.getInt("autoKick", -1), -1);
 		commandWhiteList = config.getStringList("commandWhitelist");
 		if (isInstalled)
 			if (commandWhiteList.size() == 0)
 			{
-				commandWhiteList.add("/activatecard .*");
-				commandWhiteList.add("/activate .*");
+				commandWhiteList.add("/activatecard[ ]?.*");
+				commandWhiteList.add("/activate[ ]?.*");
 				if (Bukkit.getPluginManager().getPlugin("CrazyLogin") != null)
 				{
-					commandWhiteList.add("/login .*");
-					commandWhiteList.add("/register .*");
+					commandWhiteList.add("/login[ ]?.*");
+					commandWhiteList.add("/register[ ]?.*");
 				}
+				if (Bukkit.getPluginManager().getPlugin("CrazyCaptcha") != null)
+					commandWhiteList.add("/captcha[ ]?.*");
 			}
 		filterNames = config.getString("filterNames", "false");
 		if (filterNames.equals("false"))
@@ -429,6 +470,8 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 		config.set("startDuration", startDuration);
 		config.set("defaultDuration", defaultDuration);
 		config.set("defaultKeyLength", defaultKeyLength);
+		config.set("enabledAfter", enabledAfter);
+		config.set("enabledUntil", enabledUntil);
 		config.set("autoKick", autoKick);
 		config.set("commandWhitelist", commandWhiteList);
 		if (filterNames.equals("."))
@@ -467,6 +510,16 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 					return key;
 			}
 		}
+	}
+
+	public double getEnabledAfter()
+	{
+		return enabledAfter;
+	}
+
+	public double getEnabledUntil()
+	{
+		return enabledUntil;
 	}
 
 	public String getNameFilter()

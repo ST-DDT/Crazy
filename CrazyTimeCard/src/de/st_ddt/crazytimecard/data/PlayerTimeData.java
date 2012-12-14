@@ -162,7 +162,12 @@ public class PlayerTimeData extends PlayerData<PlayerTimeData> implements Config
 
 	public boolean isActive()
 	{
-		return limit.after(new Date());
+		final double timeofday = new Date().getTime() / 1000 / 60 / 60D % 24;
+		System.out.println(timeofday);
+		if (getPlugin().getEnabledAfter() > timeofday || timeofday > getPlugin().getEnabledUntil())
+			return true;
+		else
+			return limit.after(new Date());
 	}
 
 	public Date getLimit()

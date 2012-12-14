@@ -1,7 +1,7 @@
 name: CrazyTimeCard
 main: de.st_ddt.crazytimecard.CrazyTimeCard
 author: ST-DDT
-version: 0.2.1
+version: 0.3
 # requires CrazyCore v9.2.2 or later
 depend: [CrazyCore]
 description: >
