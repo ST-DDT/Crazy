@@ -6,14 +6,6 @@ version: X.Y
 # https://github.com/ST-DDT/Crazy/blob/master/CrazySquads/src/plugin.yml
 # the chat header used ingame (this can only be changed, when server is shut down)
 chatHeader: '&C[&ACrazySquads&C] &F'
-# formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World
-# format used for squad Channel
-# requires CrazyChats
-squadChatFormat: '&3[Squad] &F$0$&F: &B$1$'
-# use the following to colorise your party members headname
-# this may hide the last characters in long names => Skin changes
-# requrires TagAPI
-squadHeadNamePrefix: '&1'
 # max allowed members per squad.
 maxSquadSize: 5
 # max Range for XP and Loot being shared
@@ -25,3 +17,11 @@ defaultLootRules: LOOT_SHARE
 defaultXPRules: XP_SHARE
 # when rejoining the server within this amount of time you will automatically rejoin your last squad. (time in seconds,0=disabled)
 squadAutoRejoinTime: 60
+# formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World
+# format used for squad Channel
+# requires CrazyChats
+squadChatFormat: '&3[Squad] &F$0$&F: &B$1$'
+# use the following to colorise your party members headname
+# this may hide the last characters in long names => Skin changes
+# requrires TagAPI
+squadHeadNamePrefix: '&1'

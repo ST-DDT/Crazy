@@ -48,15 +48,15 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	private final Map<Player, Squad> invites = new HashMap<Player, Squad>();
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazySquadsPlayerListener playerListener;
-	private String squadChatFormat = "[Squad]%1$s: %2$s";
-	private String squadHeadNamePrefix = ChatColor.YELLOW.toString();
 	private int maxSquadSize = 1;
 	private double maxShareRange;
 	private Loot_Rules defaultLootRules;
 	private XP_Rules defaultXPRules;
 	private long squadAutoRejoinTime;
 	private boolean crazyChatsEnabled;
+	private String squadChatFormat = "[Squad]%1$s: %2$s";
 	private boolean tagAPIEnabled;
+	private String squadHeadNamePrefix = ChatColor.YELLOW.toString();
 
 	public static CrazySquads getPlugin()
 	{
@@ -72,35 +72,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	@Localized({ "CRAZYSQUADS.MODE.CHANGE $Name$ $Value$", "CRAZYSQUADS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYSQUADS.FORMAT.EXAMPLE $Example$" })
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new Mode<String>("squadHeadNamePrefix", String.class)
-		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), squadHeadNamePrefix + "Playername");
-			}
-
-			@Override
-			public String getValue()
-			{
-				return ChatHelper.decolorise(squadHeadNamePrefix);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
-				showValue(sender);
-			}
-
-			@Override
-			public void setValue(final String newValue) throws CrazyException
-			{
-				squadHeadNamePrefix = newValue;
-				saveConfiguration();
-			}
-		});
 		modeCommand.addMode(modeCommand.new IntegerMode("maxSquadSize")
 		{
 
@@ -284,6 +255,39 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		});
 	}
 
+	private void registerModesTagAPI()
+	{
+		modeCommand.addMode(modeCommand.new Mode<String>("squadHeadNamePrefix", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), squadHeadNamePrefix + "Playername");
+			}
+
+			@Override
+			public String getValue()
+			{
+				return ChatHelper.decolorise(squadHeadNamePrefix);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				squadHeadNamePrefix = newValue;
+				saveConfiguration();
+			}
+		});
+	}
+
 	private void registerCommands()
 	{
 		mainCommand.addSubCommand(modeCommand, "mode");
@@ -326,6 +330,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		registerHooks();
 		if (crazyChatsEnabled)
 			registerModesCrazyChats();
+		if (tagAPIEnabled)
+			registerModesTagAPI();
 		super.onEnable();
 		registerCommands();
 	}
@@ -335,9 +341,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	{
 		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
-		if (crazyChatsEnabled)
-			squadChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadChatFormat", "&3[Squad] &F%1$s&F: &B%2$s"));
-		squadHeadNamePrefix = ChatHelper.colorise(config.getString("squadHeadNamePrefix", ChatColor.DARK_BLUE.toString()));
 		maxSquadSize = Math.max(1, config.getInt("maxSquadSize", 5));
 		maxShareRange = config.getDouble("maxShareRange", 50);
 		final String lootType = config.getString("defaultLootRules", Loot_Rules.LOOT_SHARE.toString()).toUpperCase();
@@ -361,20 +364,25 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			defaultXPRules = XP_Rules.XP_SHARE;
 		}
 		squadAutoRejoinTime = Math.max(config.getLong("squadAutoRejoinTime", 60), 0);
+		if (crazyChatsEnabled)
+			squadChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadChatFormat", "&3[Squad] &F%1$s&F: &B%2$s"));
+		if (tagAPIEnabled)
+			squadHeadNamePrefix = ChatHelper.colorise(config.getString("squadHeadNamePrefix", ChatColor.DARK_BLUE.toString()));
 	}
 
 	@Override
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		if (crazyChatsEnabled)
-			config.set("squadChatFormat", CrazyChatsChatHelper.unmakeFormat(squadChatFormat));
-		config.set("squadHeadNamePrefix", ChatHelper.decolorise(squadHeadNamePrefix));
 		config.set("maxSquadSize", maxSquadSize);
 		config.set("maxShareRange", maxShareRange);
 		config.set("defaultLootRules", defaultLootRules.toString());
 		config.set("defaultXPRules", defaultXPRules.toString());
 		config.set("squadAutoRejoinTime", squadAutoRejoinTime);
+		if (crazyChatsEnabled)
+			config.set("squadChatFormat", CrazyChatsChatHelper.unmakeFormat(squadChatFormat));
+		if (tagAPIEnabled)
+			config.set("squadHeadNamePrefix", ChatHelper.decolorise(squadHeadNamePrefix));
 		super.saveConfiguration();
 	}
 
@@ -411,16 +419,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		return invites;
 	}
 
-	public String getSquadChatFormat()
-	{
-		return squadChatFormat;
-	}
-
-	public String getSquadHeadNamePrefix()
-	{
-		return squadHeadNamePrefix;
-	}
-
 	public int getMaxSquadSize()
 	{
 		return maxSquadSize;
@@ -444,5 +442,15 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	public long getSquadAutoRejoinTime()
 	{
 		return squadAutoRejoinTime;
+	}
+
+	public String getSquadChatFormat()
+	{
+		return squadChatFormat;
+	}
+
+	public String getSquadHeadNamePrefix()
+	{
+		return squadHeadNamePrefix;
 	}
 }
