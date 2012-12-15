@@ -49,10 +49,9 @@ public class CrazySquadsCrazyChatsListener implements Listener
 	@EventHandler
 	public void SquadLeave(final CrazySquadsSquadLeaveEvent event)
 	{
-		final Squad squad = event.getSquad();
 		final ChatPlayerData data = chatsPlugin.getPlayerData(event.getLeftMember());
 		if (data != null)
-			data.getAccessibleChannels().remove(chats.get(squad));
+			data.getAccessibleChannels().remove(chats.get(event.getSquad()));
 	}
 
 	@EventHandler
