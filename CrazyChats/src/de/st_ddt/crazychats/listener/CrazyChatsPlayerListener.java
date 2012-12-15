@@ -24,6 +24,7 @@ import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
@@ -211,6 +212,10 @@ public class CrazyChatsPlayerListener implements Listener
 			if (PermissionModule.hasPermission(online, "crazychats.chatspy"))
 				if (!plugin.getAvailablePlayerData(online).isMuted(player) || PermissionModule.hasPermission(player, "crazychats.unmutable"))
 					targets.add(online);
+		if (plugin.isCleaningRepetitionsEnabled() && !PermissionModule.hasPermission(player, "crazychats.nocleaning"))
+			message = CrazyChatsChatHelper.cleanRepetitions(message);
+		if (plugin.isCleaningCapsEnabled() && !PermissionModule.hasPermission(player, "crazychats.nocleaning"))
+			message = CrazyChatsChatHelper.cleanCaps(message);
 		if (PermissionModule.hasPermission(player, "crazychats.coloredchat"))
 			message = ChatHelper.colorise(message);
 		return new ChatResult(channel.getFormat(), targets, message);

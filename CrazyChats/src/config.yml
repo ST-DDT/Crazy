@@ -61,6 +61,10 @@ defaultChannelKey: w
 # the max duration for /crazychats player silence <Player> [Duration]
 # can be bypassed with adminbypass:true
 maxSilenceTime: 31556952000
+# remove long repetitions of chars (true/false).
+cleanRepetitions: true
+# remove captial letters (true/false).
+cleanCaps: true
 # additional information about logging can be found here http://dev.bukkit.org/server-mods/crazycore/pages/logging/
 #logs:
 #  Chat:

@@ -91,6 +91,8 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private String ownChatNamePrefix = ChatColor.ITALIC.toString();
 	private String defaultChannelKey;
 	private long maxSilenceTime;
+	private boolean cleanRepetitions;
+	private boolean cleanCaps;
 	private boolean tagAPIenabled;
 
 	public static CrazyChats getPlugin()
@@ -460,6 +462,38 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
+		modeCommand.addMode(modeCommand.new BooleanFalseMode("cleanRepetitions")
+		{
+
+			@Override
+			public Boolean getValue()
+			{
+				return cleanRepetitions;
+			}
+
+			@Override
+			public void setValue(Boolean newValue) throws CrazyException
+			{
+				cleanRepetitions = newValue;
+				saveConfiguration();
+			}
+		});
+		modeCommand.addMode(modeCommand.new BooleanFalseMode("cleanCaps")
+		{
+
+			@Override
+			public Boolean getValue()
+			{
+				return cleanCaps;
+			}
+
+			@Override
+			public void setValue(Boolean newValue) throws CrazyException
+			{
+				cleanCaps = newValue;
+				saveConfiguration();
+			}
+		});
 	}
 
 	private void registerCommands()
@@ -623,6 +657,8 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		ownChatNamePrefix = ChatHelper.colorise(config.getString("ownChatNamePrefix", ChatColor.ITALIC.toString()));
 		defaultChannelKey = config.getString("defaultChannelKey", "w");
 		maxSilenceTime = config.getLong("maxSilenceTime", 31556952000L);
+		cleanRepetitions = config.getBoolean("cleanRepetitions", true);
+		cleanCaps = config.getBoolean("cleanCaps", true);
 		// Logger
 		logger.createLogChannels(config, "Chat");
 	}
@@ -651,6 +687,8 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("ownChatNamePrefix", ChatHelper.decolorise(ownChatNamePrefix));
 		config.set("defaultChannelKey", defaultChannelKey);
 		config.set("maxSilenceTime", maxSilenceTime);
+		config.set("cleanRepetitions", cleanRepetitions);
+		config.set("cleanCaps", cleanCaps);
 		super.saveConfiguration();
 	}
 
@@ -818,5 +856,15 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public long getMaxSilenceTime()
 	{
 		return maxSilenceTime;
+	}
+
+	public boolean isCleaningRepetitionsEnabled()
+	{
+		return cleanRepetitions;
+	}
+
+	public boolean isCleaningCapsEnabled()
+	{
+		return cleanCaps;
 	}
 }

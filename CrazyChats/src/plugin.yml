@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.3
+version: 1.4
 # requires CrazyCore v9.6 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
@@ -76,6 +76,7 @@ permissions:
       crazychats.coloredchat: true
       crazychats.chatspy: true
       crazychats.unmutable: true
+      crazychats.nocleaning: true
   crazychats.mode:
     description: Allow changing plugin options.
     default: op
@@ -154,4 +155,7 @@ permissions:
       crazychats.talk: true
   crazychats.unmutable:
     description: This player cannot be muted.
+    default: op
+  crazychats.nocleaning:
+    description: This player's chat will not be cleaned.
     default: op
