@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
@@ -260,18 +261,18 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		return participants;
 	}
 
-	public HashSet<Player> getParticipatingPlayers()
+	public Set<Player> getParticipatingPlayers()
 	{
-		final HashSet<Player> players = new HashSet<Player>();
+		final Set<Player> players = new HashSet<Player>();
 		for (final S participant : getParticipants())
 			players.add(participant.getPlayer());
 		players.remove(null);
 		return players;
 	}
 
-	public HashSet<Player> getParticipatingPlayers(final ParticipantType type)
+	public Set<Player> getParticipatingPlayers(final ParticipantType type)
 	{
-		final HashSet<Player> players = new HashSet<Player>();
+		final Set<Player> players = new HashSet<Player>();
 		for (final S participant : getParticipants(type))
 			players.add(participant.getPlayer());
 		players.remove(null);

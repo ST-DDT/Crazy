@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyarena.events.CrazyArenaArenaCreateEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandAlreadyExistsException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -68,6 +69,7 @@ public class CrazyArenaCommandMainCreate extends CrazyArenaPlayerCommandExecutor
 		plugin.getArenasByName().put(name.toLowerCase(), arena);
 		CrazyArena.getArenasByType().get(arena.getType()).add(arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.CREATED", player, arena.getName(), arena.getType());
+		new CrazyArenaArenaCreateEvent(plugin, arena).callEvent();
 		plugin.getSelections().put(player.getName().toLowerCase(), arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
 	}

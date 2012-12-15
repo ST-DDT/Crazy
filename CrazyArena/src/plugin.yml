@@ -5,6 +5,7 @@ version: 0.3
 # requires CrazyCore v9.7
 # requires CrazyGeo v0.1
 depend: [CrazyCore,CrazyGeo]
+softdepend: [CrazyChats]
 description: >
             CrazyArenaPlugin Core needed for all CrazyArenaPlugins.
 commands:

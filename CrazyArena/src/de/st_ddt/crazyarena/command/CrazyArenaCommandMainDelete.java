@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyarena.events.CrazyArenaArenaDeleteEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -47,6 +48,7 @@ public class CrazyArenaCommandMainDelete extends CrazyArenaCommandExecutor
 			if (it.next().getValue() == arena)
 				it.remove();
 		plugin.sendLocaleMessage("COMMAND.ARENA.DELETED", sender, arena.getName(), arena.getType());
+		new CrazyArenaArenaDeleteEvent(plugin, arena).callEvent();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package de.st_ddt.crazyarena;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,6 +14,7 @@ import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 
@@ -34,8 +36,14 @@ import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandLeave;
 import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandReady;
 import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandSpectate;
 import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandTeam;
+import de.st_ddt.crazyarena.events.CrazyArenaArenaCreateEvent;
+import de.st_ddt.crazyarena.listener.CrazyArenaCrazyChatsListener;
 import de.st_ddt.crazyarena.listener.CrazyArenaPlayerListener;
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazyArena extends CrazyPlugin
@@ -45,14 +53,62 @@ public class CrazyArena extends CrazyPlugin
 	private final static Map<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
 	private final static Map<String, Set<Arena<?>>> arenasByType = new TreeMap<String, Set<Arena<?>>>();
 	private static CrazyArena plugin;
+	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private final Map<String, Arena<?>> arenasByName = new TreeMap<String, Arena<?>>();
 	private final Map<String, Arena<?>> arenasByPlayer = new HashMap<String, Arena<?>>();
 	private final Map<String, Arena<?>> invitations = new HashMap<String, Arena<?>>();
 	private final Map<String, Arena<?>> selections = new HashMap<String, Arena<?>>();
+	private boolean crazyChatsEnabled;
+	private String arenaChatFormat = "[Arena]%1$s: %2$s";
 
 	public static CrazyArena getPlugin()
 	{
 		return plugin;
+	}
+
+	private void registerModesCrazyChats()
+	{
+		modeCommand.addMode(modeCommand.new Mode<String>("squadChatFormat", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+			}
+
+			@Override
+			public String getValue()
+			{
+				return CrazyChatsChatHelper.unmakeFormat(arenaChatFormat);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				arenaChatFormat = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
 	}
 
 	private void registerCommands()
@@ -73,6 +129,7 @@ public class CrazyArena extends CrazyPlugin
 		mainCommand.addSubCommand(new CrazyArenaCommandMainForceStop(this), "forcestop");
 		mainCommand.addSubCommand(new CrazyArenaCommandMainDisable(this), "disable");
 		mainCommand.addSubCommand(new CrazyArenaCommandMainDelete(this), "delete", "remove");
+		mainCommand.addSubCommand(modeCommand, "mode");
 		mainCommand.setDefaultExecutor(new CrazyArenaCommandMainTreeDefault(this));
 	}
 
@@ -80,6 +137,9 @@ public class CrazyArena extends CrazyPlugin
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new CrazyArenaPlayerListener(this), this);
+		crazyChatsEnabled = Bukkit.getPluginManager().getPlugin("CrazyChats") != null;
+		if (crazyChatsEnabled)
+			pm.registerEvents(new CrazyArenaCrazyChatsListener(this), this);
 	}
 
 	@Override
@@ -93,6 +153,8 @@ public class CrazyArena extends CrazyPlugin
 	public void onEnable()
 	{
 		registerHooks();
+		if (crazyChatsEnabled)
+			registerModesCrazyChats();
 		super.onEnable();
 		registerCommands();
 	}
@@ -121,6 +183,7 @@ public class CrazyArena extends CrazyPlugin
 					arenas.add(arena);
 					arenasByName.put(name.toLowerCase(), arena);
 					arenasByType.get(arena.getType().toLowerCase()).add(arena);
+					new CrazyArenaArenaCreateEvent(this, arena).callEvent();
 				}
 				catch (final FileNotFoundException e)
 				{
@@ -129,6 +192,8 @@ public class CrazyArena extends CrazyPlugin
 				catch (final Exception e)
 				{}
 		sendLocaleMessage("ARENA.LOADED", Bukkit.getConsoleSender(), loadedArenas);
+		if (crazyChatsEnabled)
+			arenaChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("arenaChatFormat", "&A[Arena] &F%1$s&F: &B%2$s"));
 	}
 
 	@Override
@@ -143,6 +208,8 @@ public class CrazyArena extends CrazyPlugin
 			names.add(arena.getName());
 		}
 		config.set("arenas", names);
+		if (crazyChatsEnabled)
+			config.set("arenaChatFormat", CrazyChatsChatHelper.unmakeFormat(arenaChatFormat));
 		super.saveConfiguration();
 	}
 
@@ -230,5 +297,10 @@ public class CrazyArena extends CrazyPlugin
 	public Map<String, Arena<?>> getInvitations()
 	{
 		return invitations;
+	}
+
+	public String getArenaChatFormat()
+	{
+		return arenaChatFormat;
 	}
 }
