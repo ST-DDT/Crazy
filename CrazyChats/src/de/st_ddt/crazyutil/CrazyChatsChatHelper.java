@@ -34,14 +34,14 @@ public class CrazyChatsChatHelper extends ChatHelperExtended
 		int count = 0;
 		char last = 0;
 		for (final char cur : message.toCharArray())
-			if (cur == last)
+			if (Character.toLowerCase(cur) == last)
 				if (++count >= limit)
 					continue;
 				else
 					newMessage.append(cur);
 			else
 			{
-				last = cur;
+				last = Character.toLowerCase(cur);
 				count = 0;
 				newMessage.append(cur);
 			}
