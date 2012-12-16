@@ -42,12 +42,12 @@ public class CrazyEnchanterCommandEnchant extends CrazyEnchanterCommandExecutor
 		final ItemStack item = player.getItemInHand();
 		if (item == null)
 			throw new CrazyCommandCircumstanceException("when helding an enchantable item in hand!");
-		if (item.getMaxStackSize() > 1)
-			throw new CrazyCommandCircumstanceException("when helding an enchantable item in hand!");
 		final Map<String, Enchantment> applicableEnchantments = new TreeMap<String, Enchantment>();
 		for (final Enchantment enchantment : Enchantment.values())
 			if (enchantment.canEnchantItem(item))
 				applicableEnchantments.put(enchantment.getName(), enchantment);
+		if (applicableEnchantments.size() == 0)
+			throw new CrazyCommandCircumstanceException("when helding an enchantable item in hand!");
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
 		final MapParamitrisable<Enchantment> enchantment = new MapParamitrisable<Enchantment>("Enchantment", applicableEnchantments, null);
 		params.put("e", enchantment);
