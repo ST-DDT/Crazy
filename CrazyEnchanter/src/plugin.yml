@@ -1,15 +1,18 @@
 name: CrazyEnchanter
 main: de.st_ddt.crazyenchanter.CrazyEnchanter
 author: ST-DDT
-version: 1.1.1
+version: 1.2
 # requires CrazyCore v9.5 or later
 depend: [CrazyCore]
 description: >
-            Enchant your items.
+            Enchant and repair your items.
 commands:
   enchant:
-    description: Enchant hand held item
-    usage: /<command> <Enchantment> [Level [Unsafe]]
+    description: Enchant the item you held in your hand.
+    usage: /<command> <enchantment:Enchantment> [level:Integer] [unsafe:Boolean]
+  repair:
+    description: Repair the item you held in your hand.
+    usage: /<command> [level:Double]
   crazyenchanter:
     description: Plugin Mainmenu
     usage: /<command> [Subcommands...]
@@ -20,6 +23,10 @@ permissions:
     default: false
     children:
       crazyenchanter.enchant: true
+      crazyenchanter.repair: true
   crazyenchanter.enchant:
     description: Allow enchanting your item.
+    default: op
+  crazyenchanter.repair:
+    description: Allow repairing your item.
     default: op
