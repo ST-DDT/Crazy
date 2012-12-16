@@ -45,7 +45,7 @@ public class CrazyEnchanterPlayerCommandRepair extends CrazyEnchanterPlayerComma
 			level = 1;
 		if (level <= 0 || level > 1)
 			throw new CrazyCommandParameterException(0, "Numeric (Double)", "0 < x <= 1");
-		short quota = (short) Math.round(max * level);
+		short quota = (short) Math.round(max * (1 - level));
 		item.setDurability(quota);
 		plugin.sendLocaleMessage("COMMAND.REPAIR.SUCCESS", player, item.getType().toString(), level * 100);
 	}
