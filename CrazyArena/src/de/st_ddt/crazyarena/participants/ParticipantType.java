@@ -4,6 +4,9 @@ public enum ParticipantType
 {
 	SELECTING(true, false, false, false), READY(true, true, false, false), PARTICIPANT(false, true, false, false), DEFEADED(false, false, false, true), RESPAWNING(false, true, false, true), SPECTATOR, JUDGE(false), QUITEDPARTICIPANT(false, false, true, false), QUITEDJUDGE(true);
 
+	public final static ParticipantType[] SPECTATORTYPES = new ParticipantType[] { SPECTATOR };
+	public final static ParticipantType[] PLAYERTYPES = new ParticipantType[] { SELECTING, READY, PARTICIPANT, DEFEADED, RESPAWNING, QUITEDPARTICIPANT };
+	public final static ParticipantType[] JUDGETYPES = new ParticipantType[] { JUDGE, QUITEDJUDGE };
 	private final boolean player;
 	private final boolean waiting;
 	private final boolean playing;

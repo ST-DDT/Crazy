@@ -252,12 +252,13 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 	 */
 	public abstract long getRejoinTime();
 
-	public HashSet<S> getParticipants(final ParticipantType type)
+	public Set<S> getParticipants(final ParticipantType... types)
 	{
-		final HashSet<S> participants = new HashSet<S>();
-		for (final S participant : getParticipants())
-			if (participant.getParticipantType() == type)
-				participants.add(participant);
+		final Set<S> participants = new HashSet<S>();
+		for (final ParticipantType type : types)
+			for (final S participant : getParticipants())
+				if (participant.getParticipantType() == type)
+					participants.add(participant);
 		return participants;
 	}
 
@@ -270,10 +271,10 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		return players;
 	}
 
-	public Set<Player> getParticipatingPlayers(final ParticipantType type)
+	public Set<Player> getParticipatingPlayers(final ParticipantType... types)
 	{
 		final Set<Player> players = new HashSet<Player>();
-		for (final S participant : getParticipants(type))
+		for (final S participant : getParticipants(types))
 			players.add(participant.getPlayer());
 		players.remove(null);
 		return players;
@@ -288,10 +289,10 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		return names;
 	}
 
-	public TreeSet<String> getParticipatingPlayerNames(final ParticipantType type)
+	public TreeSet<String> getParticipatingPlayerNames(final ParticipantType... types)
 	{
 		final TreeSet<String> names = new TreeSet<String>();
-		for (final Player player : getParticipatingPlayers(type))
+		for (final S player : getParticipants(types))
 			names.add(player.getName());
 		names.remove(null);
 		return names;

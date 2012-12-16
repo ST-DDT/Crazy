@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -60,6 +61,9 @@ public class CrazyArena extends CrazyPlugin
 	private final Map<String, Arena<?>> selections = new HashMap<String, Arena<?>>();
 	private boolean crazyChatsEnabled;
 	private String arenaChatFormat = "[Arena]%1$s: %2$s";
+	private String arenaSpectatorChatFormat = "[Arena/S]%1$s: %2$s";
+	private String arenaPlayerChatFormat = "[Arena/P]%1$s: %2$s";
+	private String arenaJudgeChatFormat = "[Arena/J]%1$s: %2$s";
 
 	public static CrazyArena getPlugin()
 	{
@@ -76,7 +80,7 @@ public class CrazyArena extends CrazyPlugin
 			{
 				final String raw = getValue();
 				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(StringUtils.replace(raw, "$A0$", "ParticipantType")), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -96,6 +100,129 @@ public class CrazyArena extends CrazyPlugin
 			public void setValue(final String newValue) throws CrazyException
 			{
 				arenaChatFormat = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
+		modeCommand.addMode(modeCommand.new Mode<String>("arenaSpectatorChatFormat", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(StringUtils.replace(raw, "$A0$", "ParticipantType")), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+			}
+
+			@Override
+			public String getValue()
+			{
+				return CrazyChatsChatHelper.unmakeFormat(arenaSpectatorChatFormat);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				arenaSpectatorChatFormat = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
+		modeCommand.addMode(modeCommand.new Mode<String>("arenaPlayerChatFormat", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(StringUtils.replace(raw, "$A0$", "ParticipantType")), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+			}
+
+			@Override
+			public String getValue()
+			{
+				return CrazyChatsChatHelper.unmakeFormat(arenaPlayerChatFormat);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				arenaPlayerChatFormat = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
+		modeCommand.addMode(modeCommand.new Mode<String>("arenaJudgeChatFormat", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(StringUtils.replace(raw, "$A0$", "ParticipantType")), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+			}
+
+			@Override
+			public String getValue()
+			{
+				return CrazyChatsChatHelper.unmakeFormat(arenaJudgeChatFormat);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				arenaJudgeChatFormat = newValue;
 				saveConfiguration();
 			}
 
@@ -193,7 +320,12 @@ public class CrazyArena extends CrazyPlugin
 				{}
 		sendLocaleMessage("ARENA.LOADED", Bukkit.getConsoleSender(), loadedArenas);
 		if (crazyChatsEnabled)
-			arenaChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("arenaChatFormat", "&A[Arena] &F%1$s&F: &B%2$s"));
+		{
+			arenaChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("arenaChatFormat", "&A[Arena:$A0$] &F%1$s&F: &B%2$s"));
+			arenaSpectatorChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("arenaSpectatorChatFormat", "&A[Arena/S:$A0$] &F%1$s&F: &B%2$s"));
+			arenaPlayerChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("arenaPlayerChatFormat", "&A[Arena/P:$A0$] &F%1$s&F: &B%2$s"));
+			arenaJudgeChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("arenaJudgeChatFormat", "&A[Arena/&CJ&A:$A0$] &F%1$s&F: &B%2$s"));
+		}
 	}
 
 	@Override
@@ -302,5 +434,20 @@ public class CrazyArena extends CrazyPlugin
 	public String getArenaChatFormat()
 	{
 		return arenaChatFormat;
+	}
+
+	public String getArenaSpectatorChatFormat()
+	{
+		return arenaSpectatorChatFormat;
+	}
+
+	public String getArenaPlayerChatFormat()
+	{
+		return arenaPlayerChatFormat;
+	}
+
+	public String getArenaJudgeChatFormat()
+	{
+		return arenaJudgeChatFormat;
 	}
 }

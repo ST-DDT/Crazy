@@ -11,7 +11,7 @@ public class CrazyArenaArenaPlayerLeaveEvent extends CrazyArenaArenaPlayerEvent<
 
 	private static final HandlerList handlers = new HandlerList();
 
-	public CrazyArenaArenaPlayerLeaveEvent(final CrazyArena plugin, final Arena<?> arena, Player player)
+	public CrazyArenaArenaPlayerLeaveEvent(final CrazyArena plugin, final Arena<?> arena, final Player player)
 	{
 		super(plugin, arena, player);
 	}

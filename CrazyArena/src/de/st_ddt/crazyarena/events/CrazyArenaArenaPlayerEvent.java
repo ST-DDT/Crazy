@@ -12,7 +12,7 @@ public class CrazyArenaArenaPlayerEvent<S extends Arena<?>> extends CrazyArenaAr
 	private static final HandlerList handlers = new HandlerList();
 	protected final Player player;
 
-	public CrazyArenaArenaPlayerEvent(final CrazyArena plugin, final S arena, Player player)
+	public CrazyArenaArenaPlayerEvent(final CrazyArena plugin, final S arena, final Player player)
 	{
 		super(plugin, arena);
 		this.player = player;

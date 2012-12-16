@@ -11,7 +11,7 @@ public class CrazyArenaArenaPlayerJoinEvent extends CrazyArenaArenaPlayerEvent<A
 
 	private static final HandlerList handlers = new HandlerList();
 
-	public CrazyArenaArenaPlayerJoinEvent(final CrazyArena plugin, final Arena<?> arena, Player player)
+	public CrazyArenaArenaPlayerJoinEvent(final CrazyArena plugin, final Arena<?> arena, final Player player)
 	{
 		super(plugin, arena, player);
 	}

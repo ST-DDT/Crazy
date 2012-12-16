@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
@@ -18,9 +19,13 @@ public class ArenaChannel implements ChannelInterface
 
 	public ArenaChannel(final CrazyArena plugin, final Arena<?> arena)
 	{
-		super();
+		this(plugin, arena, true);
 		aliases.add("a");
 		aliases.add("arena");
+	}
+
+	protected ArenaChannel(final CrazyArena plugin, final Arena<?> arena, final boolean foo)
+	{
 		this.plugin = plugin;
 		this.arena = arena;
 	}
@@ -32,7 +37,7 @@ public class ArenaChannel implements ChannelInterface
 	}
 
 	@Override
-	public List<String> getAliases()
+	public final List<String> getAliases()
 	{
 		return aliases;
 	}
@@ -43,12 +48,12 @@ public class ArenaChannel implements ChannelInterface
 		return arena.isParticipant(player);
 	}
 
-	public CrazyArena getPlugin()
+	public final CrazyArena getPlugin()
 	{
 		return plugin;
 	}
 
-	public Arena<?> getArena()
+	public final Arena<?> getArena()
 	{
 		return arena;
 	}
@@ -60,8 +65,8 @@ public class ArenaChannel implements ChannelInterface
 	}
 
 	@Override
-	public String getFormat()
+	public String getFormat(final Player player)
 	{
-		return plugin.getArenaChatFormat();
+		return StringUtils.replace(plugin.getArenaChatFormat(), "$A0$", arena.getParticipant(player).getParticipantType().toString());
 	}
 }
