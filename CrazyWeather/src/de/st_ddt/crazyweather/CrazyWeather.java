@@ -111,6 +111,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 		getCommand("thunderrain").setExecutor(new CrazyWeatherCommandThunderRain(this));
 		getCommand("weather").setExecutor(new CrazyWeatherCommandWeather(this));
 		getCommand("strike").setExecutor(new CrazyWeatherCommandStrike(this));
+		mainCommand.addSubCommand(modeCommand, "mode");
 	}
 
 	private void registerHooks()
