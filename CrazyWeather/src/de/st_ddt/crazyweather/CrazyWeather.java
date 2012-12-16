@@ -55,7 +55,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				sendLocaleMessage("MODE.CHANGE", sender, "thundertool", tool == -1 ? "DISABLED" : new ItemStack(tool).getType().toString(), tool);
+				sendLocaleMessage("MODE.CHANGE", sender, "thundertool", tool == -1 ? "DISABLED" : new ItemStack(tool).getType().toString() + " (" + tool + ")");
 			}
 
 			@Override
