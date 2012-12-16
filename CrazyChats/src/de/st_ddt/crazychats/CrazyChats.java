@@ -472,7 +472,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
-			public void setValue(Boolean newValue) throws CrazyException
+			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				cleanRepetitions = newValue;
 				saveConfiguration();
@@ -488,7 +488,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
-			public void setValue(Boolean newValue) throws CrazyException
+			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				cleanCaps = newValue;
 				saveConfiguration();

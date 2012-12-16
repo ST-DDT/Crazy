@@ -218,7 +218,7 @@ public class CrazyChatsPlayerListener implements Listener
 			message = CrazyChatsChatHelper.cleanCaps(message);
 		if (PermissionModule.hasPermission(player, "crazychats.coloredchat"))
 			message = ChatHelper.colorise(message);
-		return new ChatResult(channel.getFormat(), targets, message);
+		return new ChatResult(channel.getFormat(player), targets, message);
 	}
 
 	protected void PlayerChatOwnerMessage(final String format, final Player player, final String message)

@@ -47,7 +47,7 @@ public final class LocalChannel extends AbstractMuteableChannel
 	}
 
 	@Override
-	public String getFormat()
+	public String getFormat(final Player player)
 	{
 		return plugin.getLocalChatFormat();
 	}

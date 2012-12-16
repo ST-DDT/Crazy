@@ -35,7 +35,7 @@ public class BroadcastChannel extends AbstractChannel
 	}
 
 	@Override
-	public String getFormat()
+	public String getFormat(final Player player)
 	{
 		return plugin.getBroadcastChatFormat();
 	}

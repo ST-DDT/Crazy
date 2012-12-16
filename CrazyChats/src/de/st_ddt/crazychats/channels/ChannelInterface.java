@@ -16,5 +16,5 @@ public interface ChannelInterface extends Named
 
 	public Set<Player> getTargets(Player player);
 
-	public String getFormat();
+	public String getFormat(Player player);
 }

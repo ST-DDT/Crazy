@@ -35,7 +35,7 @@ public class PrivateChannel extends AbstractChannel implements ControlledChannel
 	}
 
 	@Override
-	public String getFormat()
+	public String getFormat(final Player player)
 	{
 		return plugin.getPrivateChatFormat();
 	}
