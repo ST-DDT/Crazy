@@ -40,11 +40,11 @@ public class CrazyEnchanterPlayerCommandEnchant extends CrazyEnchanterPlayerComm
 		final Map<String, Enchantment> applicableEnchantments = new TreeMap<String, Enchantment>();
 		for (final Enchantment enchantment : Enchantment.values())
 			if (enchantment.canEnchantItem(item))
-				applicableEnchantments.put(enchantment.getName(), enchantment);
+				applicableEnchantments.put(enchantment.getName().toLowerCase(), enchantment);
 		if (applicableEnchantments.size() == 0)
 			throw new CrazyCommandCircumstanceException("when helding an enchantable item in hand!");
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
-		final MapParamitrisable<Enchantment> enchantment = new MapParamitrisable<Enchantment>("Enchantment", applicableEnchantments, null);
+		final MapParamitrisable<Enchantment> enchantment = new MapParamitrisable<Enchantment>("Enchantment", applicableEnchantments, null, true);
 		params.put("e", enchantment);
 		params.put("enchantment", enchantment);
 		params.put("enchantments", enchantment);
@@ -76,11 +76,11 @@ public class CrazyEnchanterPlayerCommandEnchant extends CrazyEnchanterPlayerComm
 		final Map<String, Enchantment> applicableEnchantments = new TreeMap<String, Enchantment>();
 		for (final Enchantment enchantment : Enchantment.values())
 			if (enchantment.canEnchantItem(item))
-				applicableEnchantments.put(enchantment.getName(), enchantment);
+				applicableEnchantments.put(enchantment.getName().toLowerCase(), enchantment);
 		if (applicableEnchantments.size() == 0)
 			return null;
 		final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
-		final MapParamitrisable<Enchantment> enchantment = new MapParamitrisable<Enchantment>("Enchantment", applicableEnchantments, null);
+		final MapParamitrisable<Enchantment> enchantment = new MapParamitrisable<Enchantment>("Enchantment", applicableEnchantments, null, true);
 		params.put("e", enchantment);
 		params.put("enchantment", enchantment);
 		params.put("enchantments", enchantment);
