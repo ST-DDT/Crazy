@@ -3,6 +3,7 @@ package de.st_ddt.crazyenchanter;
 import org.bukkit.enchantments.Enchantment;
 
 import de.st_ddt.crazyenchanter.commands.CrazyEnchanterPlayerCommandEnchant;
+import de.st_ddt.crazyenchanter.commands.CrazyEnchanterPlayerCommandRepair;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 
 public class CrazyEnchanter extends CrazyPlugin
@@ -18,6 +19,7 @@ public class CrazyEnchanter extends CrazyPlugin
 	private void registerCommands()
 	{
 		getCommand("enchant").setExecutor(new CrazyEnchanterPlayerCommandEnchant(this));
+		getCommand("repair").setExecutor(new CrazyEnchanterPlayerCommandRepair(this));
 	}
 
 	@Override
