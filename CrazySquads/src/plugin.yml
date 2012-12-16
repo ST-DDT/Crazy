@@ -4,6 +4,7 @@ author: ST-DDT
 version: 0.9
 # requires CrazyCore v9.5 or later
 depend: [CrazyCore]
+# requires CrazyChats v1.5 or later
 softdepend: [CrazyChats,TagAPI]
 description: >
             CrazySquads allows your users to form squads/parties and fight together against enemies or solve quests.

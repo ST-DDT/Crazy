@@ -63,8 +63,8 @@ public class SquadChannel implements ChannelInterface
 	}
 
 	@Override
-	public String getFormat()
+	public String getFormat(final Player player)
 	{
-		return plugin.getSquadChatFormat();
+		return player.equals(squad.getOwner()) ? plugin.getSquadLeaderChatFormat() : plugin.getSquadChatFormat();
 	}
 }

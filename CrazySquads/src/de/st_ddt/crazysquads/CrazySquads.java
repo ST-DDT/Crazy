@@ -55,6 +55,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	private long squadAutoRejoinTime;
 	private boolean crazyChatsEnabled;
 	private String squadChatFormat = "[Squad]%1$s: %2$s";
+	private String squadLeaderChatFormat = "[Squad]*%1$s*: %2$s";
 	private boolean tagAPIEnabled;
 	private String squadHeadNamePrefix = ChatColor.YELLOW.toString();
 
@@ -253,6 +254,47 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				return res;
 			}
 		});
+		modeCommand.addMode(modeCommand.new Mode<String>("squadLeaderChatFormat", String.class)
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				final String raw = getValue();
+				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+			}
+
+			@Override
+			public String getValue()
+			{
+				return CrazyChatsChatHelper.unmakeFormat(squadLeaderChatFormat);
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				squadLeaderChatFormat = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
 	}
 
 	private void registerModesTagAPI()
@@ -365,7 +407,10 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		}
 		squadAutoRejoinTime = Math.max(config.getLong("squadAutoRejoinTime", 60), 0);
 		if (crazyChatsEnabled)
+		{
 			squadChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadChatFormat", "&3[Squad] &F%1$s&F: &B%2$s"));
+			squadLeaderChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadLeaderChatFormat", "&3[Squad] &C*%1$s&C*&F: &B%2$s"));
+		}
 		if (tagAPIEnabled)
 			squadHeadNamePrefix = ChatHelper.colorise(config.getString("squadHeadNamePrefix", ChatColor.DARK_BLUE.toString()));
 	}
@@ -380,7 +425,10 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		config.set("defaultXPRules", defaultXPRules.toString());
 		config.set("squadAutoRejoinTime", squadAutoRejoinTime);
 		if (crazyChatsEnabled)
+		{
 			config.set("squadChatFormat", CrazyChatsChatHelper.unmakeFormat(squadChatFormat));
+			config.set("squadLeaderChatFormat", CrazyChatsChatHelper.unmakeFormat(squadLeaderChatFormat));
+		}
 		if (tagAPIEnabled)
 			config.set("squadHeadNamePrefix", ChatHelper.decolorise(squadHeadNamePrefix));
 		super.saveConfiguration();
@@ -447,6 +495,11 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	public String getSquadChatFormat()
 	{
 		return squadChatFormat;
+	}
+
+	public String getSquadLeaderChatFormat()
+	{
+		return squadLeaderChatFormat;
 	}
 
 	public String getSquadHeadNamePrefix()

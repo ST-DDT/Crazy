@@ -17,11 +17,13 @@ defaultLootRules: LOOT_SHARE
 defaultXPRules: XP_SHARE
 # when rejoining the server within this amount of time you will automatically rejoin your last squad. (time in seconds,0=disabled)
 squadAutoRejoinTime: 60
+# requires CrazyChats
 # formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World
 # format used for squad Channel
-# requires CrazyChats
 squadChatFormat: '&3[Squad] &F$0$&F: &B$1$'
+# format used for squad Channel (leaders)
+squadLeaderChatFormat: '&3[Squad] &F$0$&F: &B$1$'
+# requrires TagAPI
 # use the following to colorise your party members headname
 # this may hide the last characters in long names => Skin changes
-# requrires TagAPI
 squadHeadNamePrefix: '&1'
