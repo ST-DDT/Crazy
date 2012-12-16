@@ -35,7 +35,7 @@ public class CrazyArenaCommandMainSelect extends CrazyArenaPlayerCommandExecutor
 					plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
 				return;
 			case 1:
-				arena = plugin.getArena(args[0]);
+				arena = plugin.getArenaByName(args[0]);
 				if (arena == null)
 					throw new CrazyCommandNoSuchException("Arena", args[0]);
 				plugin.getSelections().put(player.getName().toLowerCase(), arena);

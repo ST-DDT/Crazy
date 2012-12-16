@@ -33,11 +33,11 @@ public class CrazyArenaCommandMainCreate extends CrazyArenaPlayerCommandExecutor
 		if (args.length != 2)
 			throw new CrazyCommandUsageException("<Name> <ArenaClass/Type>");
 		final String name = args[0];
-		if (plugin.getArena(name) != null)
+		if (plugin.getArenaByName(name) != null)
 			throw new CrazyCommandAlreadyExistsException("Arena", name);
 		final String type = args[1];
 		@SuppressWarnings("rawtypes")
-		Class<? extends Arena> clazz = CrazyArena.getArenaTypes().get(type.toLowerCase());
+		Class<? extends Arena> clazz = plugin.getArenaTypes().get(type.toLowerCase());
 		if (clazz == null)
 			try
 			{
@@ -67,7 +67,7 @@ public class CrazyArenaCommandMainCreate extends CrazyArenaPlayerCommandExecutor
 			throw new CrazyCommandException();
 		plugin.getArenas().add(arena);
 		plugin.getArenasByName().put(name.toLowerCase(), arena);
-		CrazyArena.getArenasByType().get(arena.getType()).add(arena);
+		plugin.getArenasByType().get(arena.getType()).add(arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.CREATED", player, arena.getName(), arena.getType());
 		new CrazyArenaArenaCreateEvent(plugin, arena).callEvent();
 		plugin.getSelections().put(player.getName().toLowerCase(), arena);
@@ -81,7 +81,7 @@ public class CrazyArenaCommandMainCreate extends CrazyArenaPlayerCommandExecutor
 			return null;
 		final List<String> res = new LinkedList<String>();
 		final String arg = args[1].toLowerCase();
-		for (final String type : CrazyArena.getArenaTypes().keySet())
+		for (final String type : plugin.getArenaTypes().keySet())
 			if (type.startsWith(arg))
 				res.add(type);
 		return res;

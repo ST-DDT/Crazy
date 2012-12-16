@@ -3,6 +3,7 @@ package de.st_ddt.crazyarena;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import de.st_ddt.crazyarena.arenas.Arena;
@@ -11,7 +12,8 @@ import de.st_ddt.crazyplugin.CrazyPlugin;
 public abstract class CrazyArenaPlugin extends CrazyPlugin
 {
 
-	private static final LinkedHashMap<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin> arenaPlugins = new LinkedHashMap<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin>();
+	private final static Map<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin> arenaPlugins = new LinkedHashMap<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin>();
+	protected final CrazyArena arenaPlugin = CrazyArena.getPlugin();
 
 	public static Collection<CrazyArenaPlugin> getCrazyArenaPlugins()
 	{
@@ -30,24 +32,18 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 
 	public abstract String[] getArenaTypes();
 
-	protected static void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
+	protected void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
 	{
-		CrazyArena.registerArenaType(mainType, clazz, aliases);
+		arenaPlugin.registerArenaType(mainType, clazz, aliases);
 	}
 
-	protected static CrazyArena getArenaPlugin()
+	public Map<String, Set<Arena<?>>> getArenas()
 	{
-		return CrazyArena.getPlugin();
-	}
-
-	public HashMap<String, Set<Arena<?>>> getArenas()
-	{
-		final CrazyArena plugin = getArenaPlugin();
-		final HashMap<String, Set<Arena<?>>> arenas = new HashMap<String, Set<Arena<?>>>();
-		if (plugin == null)
+		final Map<String, Set<Arena<?>>> arenas = new HashMap<String, Set<Arena<?>>>();
+		if (arenaPlugin == null)
 			return arenas;
 		for (final String type : getArenaTypes())
-			arenas.put(type, plugin.getArenaByType(type));
+			arenas.put(type, arenaPlugin.getArenasByType(type));
 		return arenas;
 	}
 }

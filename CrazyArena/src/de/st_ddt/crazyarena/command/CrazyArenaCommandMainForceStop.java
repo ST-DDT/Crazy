@@ -28,7 +28,7 @@ public class CrazyArenaCommandMainForceStop extends CrazyArenaCommandExecutor
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Arena>");
-		final Arena<?> arena = plugin.getArena(args[0]);
+		final Arena<?> arena = plugin.getArenaByName(args[0]);
 		if (arena == null)
 			throw new CrazyCommandNoSuchException("Arena", args[0]);
 		arena.stop();

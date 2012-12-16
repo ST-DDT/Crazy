@@ -30,7 +30,7 @@ public class CrazyArenaCommandMainImport extends CrazyArenaCommandExecutor
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Name>");
 		final String name = args[0];
-		Arena<?> arena = plugin.getArena(name);
+		Arena<?> arena = plugin.getArenaByName(name);
 		if (arena != null)
 			throw new CrazyCommandAlreadyExistsException("Arena", name);
 		final File file = new File(Arena.arenaDataRootPath + name + File.separator + "config.yml");
@@ -46,7 +46,7 @@ public class CrazyArenaCommandMainImport extends CrazyArenaCommandExecutor
 		}
 		plugin.getArenas().add(arena);
 		plugin.getArenasByName().put(name, arena);
-		CrazyArena.getArenasByType().get(arena.getType()).add(arena);
+		plugin.getArenasByType().get(arena.getType()).add(arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.LOADED", sender, arena.getName(), arena.getType());
 		if (sender != Bukkit.getConsoleSender())
 			plugin.sendLocaleMessage("COMMAND.ARENA.LOADED", Bukkit.getConsoleSender(), arena.getName(), arena.getType());

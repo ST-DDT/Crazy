@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -51,12 +52,12 @@ public class CrazyArena extends CrazyPlugin
 {
 
 	private final static Set<Arena<?>> arenas = new HashSet<Arena<?>>();
-	private final static Map<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
-	private final static Map<String, Set<Arena<?>>> arenasByType = new TreeMap<String, Set<Arena<?>>>();
 	private static CrazyArena plugin;
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
+	private final Map<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
 	private final Map<String, Arena<?>> arenasByName = new TreeMap<String, Arena<?>>();
 	private final Map<String, Arena<?>> arenasByPlayer = new HashMap<String, Arena<?>>();
+	private final Map<String, Set<Arena<?>>> arenasByType = new TreeMap<String, Set<Arena<?>>>();
 	private final Map<String, Arena<?>> invitations = new HashMap<String, Arena<?>>();
 	private final Map<String, Arena<?>> selections = new HashMap<String, Arena<?>>();
 	private boolean crazyChatsEnabled;
@@ -345,14 +346,22 @@ public class CrazyArena extends CrazyPlugin
 		super.saveConfiguration();
 	}
 
+	public Map<String, Class<? extends Arena<?>>> getArenaTypes()
+	{
+		return arenaTypes;
+	}
+
+	public void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
+	{
+		arenaTypes.put(mainType.toLowerCase(), clazz);
+		for (final String alias : aliases)
+			arenaTypes.put(alias.toLowerCase(), clazz);
+		arenasByType.put(mainType.toLowerCase(), new HashSet<Arena<?>>());
+	}
+
 	public Set<Arena<?>> getArenas()
 	{
 		return arenas;
-	}
-
-	public static Map<String, Set<Arena<?>>> getArenasByType()
-	{
-		return arenasByType;
 	}
 
 	public Map<String, Arena<?>> getArenasByName()
@@ -360,12 +369,35 @@ public class CrazyArena extends CrazyPlugin
 		return arenasByName;
 	}
 
-	public Map<String, Arena<?>> getSelections()
+	public Arena<?> getArenaByName(final String name)
 	{
-		return selections;
+		return arenasByName.get(name.toLowerCase());
 	}
 
-	public Set<Arena<?>> getArenaByType(final String name)
+	public Set<Arena<?>> searchArenas(String name)
+	{
+		name = name.toLowerCase();
+		final HashSet<Arena<?>> arenas = new HashSet<Arena<?>>();
+		for (final Entry<String, Arena<?>> entry : arenasByName.entrySet())
+			if (entry.getKey().toLowerCase().startsWith(name))
+				arenas.add(entry.getValue());
+		return arenas;
+	}
+
+	public SortedSet<String> searchArenaNames(final String name)
+	{
+		final SortedSet<String> arenas = new TreeSet<String>();
+		for (final Arena<?> arena : searchArenas(name))
+			arenas.add(arena.getName());
+		return arenas;
+	}
+
+	public Map<String, Set<Arena<?>>> getArenasByType()
+	{
+		return arenasByType;
+	}
+
+	public Set<Arena<?>> getArenasByType(final String name)
 	{
 		return arenasByType.get(name.toLowerCase());
 	}
@@ -390,40 +422,9 @@ public class CrazyArena extends CrazyPlugin
 		arenasByPlayer.put(name.toLowerCase(), arena);
 	}
 
-	public Arena<?> getArena(final String name)
+	public Map<String, Arena<?>> getSelections()
 	{
-		return arenasByName.get(name.toLowerCase());
-	}
-
-	public Set<Arena<?>> searchArenas(String name)
-	{
-		name = name.toLowerCase();
-		final HashSet<Arena<?>> arenas = new HashSet<Arena<?>>();
-		for (final Entry<String, Arena<?>> entry : arenasByName.entrySet())
-			if (entry.getKey().toLowerCase().startsWith(name))
-				arenas.add(entry.getValue());
-		return arenas;
-	}
-
-	public TreeSet<String> searchArenaNames(final String name)
-	{
-		final TreeSet<String> arenas = new TreeSet<String>();
-		for (final Arena<?> arena : searchArenas(name))
-			arenas.add(arena.getName());
-		return arenas;
-	}
-
-	public static Map<String, Class<? extends Arena<?>>> getArenaTypes()
-	{
-		return arenaTypes;
-	}
-
-	public static void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
-	{
-		arenaTypes.put(mainType.toLowerCase(), clazz);
-		for (final String alias : aliases)
-			arenaTypes.put(alias.toLowerCase(), clazz);
-		arenasByType.put(mainType.toLowerCase(), new HashSet<Arena<?>>());
+		return selections;
 	}
 
 	public Map<String, Arena<?>> getInvitations()

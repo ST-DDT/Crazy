@@ -40,7 +40,7 @@ public class CrazyArenaPlayerCommandJoin extends CrazyArenaPlayerCommandExecutor
 				break;
 			case 1:
 				final String name = args[0];
-				arena = plugin.getArena(name);
+				arena = plugin.getArenaByName(name);
 				if (arena == null)
 				{
 					Player to = Bukkit.getPlayerExact(name);

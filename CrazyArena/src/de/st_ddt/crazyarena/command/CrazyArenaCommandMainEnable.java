@@ -28,7 +28,7 @@ public class CrazyArenaCommandMainEnable extends CrazyArenaCommandExecutor
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Arena>");
 		final String name = args[0];
-		final Arena<?> arena = plugin.getArena(name);
+		final Arena<?> arena = plugin.getArenaByName(name);
 		final boolean enabled = arena.setEnabled(sender, true);
 		plugin.sendLocaleMessage("COMMAND.ARENA.ENABLED", sender, name, enabled ? "TRUE" : "FALSE", arena.getStatus().toString());
 		if (sender != Bukkit.getConsoleSender())

@@ -31,14 +31,14 @@ public class CrazyArenaCommandMainDelete extends CrazyArenaCommandExecutor
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Arena>");
 		final String name = args[0];
-		final Arena<?> arena = plugin.getArena(name);
+		final Arena<?> arena = plugin.getArenaByName(name);
 		if (arena == null)
 			throw new CrazyCommandNoSuchException("Arena", name, plugin.getArenasByName().keySet());
 		arena.shutdown();
 		arena.saveToFile();
 		plugin.getArenas().remove(arena);
 		plugin.getArenasByName().remove(name);
-		CrazyArena.getArenasByType().get(arena.getType()).remove(arena);
+		plugin.getArenasByType().get(arena.getType()).remove(arena);
 		Iterator<Entry<String, Arena<?>>> it = plugin.getInvitations().entrySet().iterator();
 		while (it.hasNext())
 			if (it.next().getValue() == arena)
