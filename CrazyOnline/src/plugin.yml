@@ -43,7 +43,7 @@ permissions:
       crazyonline.player.info.other: true
       crazyonline.player.delete: true
   crazyonline.admin:
-    description: Access to admit commands
+    description: Access to admin commands
     default: op
     children:
       crazyonline.online: true
