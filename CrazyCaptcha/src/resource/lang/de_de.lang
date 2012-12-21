@@ -3,10 +3,11 @@ CRAZYCAPTCHA.COMMAND.COMMANDS.ADDED=Befehl hinzugefügt\n($0$)
 CRAZYCAPTCHA.COMMAND.COMMANDS.LISTHEAD=Befehls Whitelist (Seite $0$ / $1$)
 CRAZYCAPTCHA.COMMAND.COMMANDS.REMOVED=Befehl entfernt\n($0$)
 CRAZYCAPTCHA.COMMAND.REVERIFY=$0$ wird erneut geprüft.
+CRAZYCAPTCHA.GENERATORMODE.CHANGE=Captcha-Generator Option "$0$" = "$1$" gesetzt.
 CRAZYCAPTCHA.KICKED.BANNED.UNTIL=&CDu bist bis zum $0$ gebannt.
 CRAZYCAPTCHA.KICKED.COMMANDUSAGE=Es ist dir nicht gestattet diesen Befehl auszuführen!
 CRAZYCAPTCHA.KICKED.NOTVERIFIED=Du must das Captcha eingeben!
 #CRAZYCAPTCHA.MODE.CHANGE=
 CRAZYCAPTCHA.VERIFICATION.FAILED=&CFalsches Captcha!
-CRAZYCAPTCHA.VERIFICATION.REQUEST=&CBitte tippe dieses Captcha:\n&E/captcha $0$
+CRAZYCAPTCHA.VERIFICATION.REQUEST.BASIC=&CBitte tippe dieses Captcha:\n&E/captcha $0$
 CRAZYCAPTCHA.VERIFICATION.SUCCESS=&ACaptchaeingabe erfolgreich!

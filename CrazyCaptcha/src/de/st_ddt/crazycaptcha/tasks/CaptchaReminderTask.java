@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycaptcha.CrazyCaptcha;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazycaptcha.captcha.Captcha;
 
 public class CaptchaReminderTask implements Runnable
 {
@@ -21,7 +21,6 @@ public class CaptchaReminderTask implements Runnable
 	}
 
 	@Override
-	@Localized("CRAZYCAPTCHA.VERIFICATION.REQUEST $Captcha$")
 	public void run()
 	{
 		if (!player.isOnline())
@@ -34,13 +33,13 @@ public class CaptchaReminderTask implements Runnable
 			cancelTask();
 			return;
 		}
-		final String captcha = plugin.getCaptchas().get(player.getName().toLowerCase());
+		final Captcha captcha = plugin.getCaptchas().get(player.getName().toLowerCase());
 		if (captcha == null)
 		{
 			cancelTask();
 			return;
 		}
-		plugin.sendLocaleMessage("VERIFICATION.REQUEST", player, captcha);
+		captcha.sendRequest(player);
 	}
 
 	public void startTask(long delay)

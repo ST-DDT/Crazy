@@ -24,13 +24,17 @@ autoKickVerificationFailer: 3
 autoTempBanVerificationFailer: -1
 # when enabled you are kicked when using a none whitelisted command (true/false)
 autoKickCommandUsers: false
-# length of the generated captchas
-captchaLength: 6
-# chars used in the captchas
-captchaChars: '0123456789'
-# if enabled you don't have to enter a captcha if you have a password created
+# captcha generator
+# generator:
+#  name: Basic
+## length of the generated captchas
+#  length: 6
+## chars used in the captchas
+#  chars: '0123456789'
+# if enabled you don't have to enter a captcha if you have a password created (in CrazyLogin or similar plugins)
 skipLoginRegistered: true
-#logs:
+# additional information about logging can be found here http://dev.bukkit.org/server-mods/crazycore/pages/logging/
+# logs:
 #  ChatBlocked:
 #    path: false
 #    console: false

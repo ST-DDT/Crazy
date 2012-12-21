@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -15,6 +14,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazycaptcha.captcha.BasicCaptchaGenerator;
+import de.st_ddt.crazycaptcha.captcha.Captcha;
+import de.st_ddt.crazycaptcha.captcha.CaptchaGenerator;
+import de.st_ddt.crazycaptcha.captcha.CaptchaHelper;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandExecutor;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainCommands;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandReverify;
@@ -40,10 +43,10 @@ public final class CrazyCaptcha extends CrazyPlugin
 	private final Set<String> verified = new HashSet<String>();
 	private final HashMap<String, Integer> verificationFailures = new HashMap<String, Integer>();
 	private final Map<String, Date> tempBans = new HashMap<String, Date>();
-	private final Map<String, String> captchas = new HashMap<String, String>();
+	private final Map<String, Captcha> captchas = new HashMap<String, Captcha>();
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
-	private final Random random = new Random();
 	private CrazyCaptchaPlayerListener playerListener;
+	private CaptchaGenerator generator;
 	private List<String> commandWhiteList;
 	private long reminderInterval;
 	private int autoKick;
@@ -52,8 +55,10 @@ public final class CrazyCaptcha extends CrazyPlugin
 	private long autoTempBanVerificationFailer;
 	private boolean autoKickCommandUsers;
 	private boolean skipLoginRegistered;
-	private int captchaLength;
-	private char[] captchaChars;
+	static
+	{
+		CaptchaHelper.registerGenerator("Basic", BasicCaptchaGenerator.class);
+	}
 
 	public static CrazyCaptcha getPlugin()
 	{
@@ -195,9 +200,9 @@ public final class CrazyCaptcha extends CrazyPlugin
 		getCommand("captcha").setExecutor(new CrazyCaptchaCommandVerify(this));
 		final CrazyCaptchaCommandExecutor reverify = new CrazyCaptchaCommandReverify(this);
 		getCommand("recaptcha").setExecutor(reverify);
+		mainCommand.addSubCommand(reverify, "reverify", "recaptcha");
 		mainCommand.addSubCommand(new CrazyCommandVerifiedCheck(this, modeCommand), "mode");
 		mainCommand.addSubCommand(new CrazyCaptchaCommandMainCommands(this), "commands");
-		mainCommand.addSubCommand(reverify, "reverify", "recaptcha");
 	}
 
 	private void registerHooks()
@@ -251,8 +256,9 @@ public final class CrazyCaptcha extends CrazyPlugin
 		autoTempBanVerificationFailer = Math.max(config.getInt("autoTempBanVerificationFailer", -1), -1);
 		verificationFailures.clear();
 		autoKickCommandUsers = config.getBoolean("autoKickCommandUsers", false);
-		captchaLength = config.getInt("captchaLength", 6);
-		captchaChars = config.getString("captchaChars", "0123456789").toCharArray();
+		generator = CaptchaHelper.getCaptchaGenerator(this, config.getConfigurationSection("generator"));
+		if (generator == null)
+			generator = new BasicCaptchaGenerator(this, null);
 		skipLoginRegistered = config.getBoolean("skipLoginRegistered", true);
 		// Logger
 		logger.createLogChannels(config.getConfigurationSection("logs"), "Join", "Quit", "Captcha", "CaptchaFail", "ChatBlocked", "CommandBlocked", "AccessDenied");
@@ -269,8 +275,8 @@ public final class CrazyCaptcha extends CrazyPlugin
 		config.set("autoKickVerificationFailer", autoKickVerificationFailer);
 		config.set("autoTempBanVerificationFailer", autoTempBanVerificationFailer);
 		config.set("autoKickCommandUsers", autoKickCommandUsers);
-		config.set("captchaLength", captchaLength);
-		config.set("captchaChars", new String(captchaChars));
+		if (generator != null)
+			generator.save(config, "generator.");
 		config.set("skipLoginRegistered", skipLoginRegistered);
 		super.saveConfiguration();
 	}
@@ -295,7 +301,8 @@ public final class CrazyCaptcha extends CrazyPlugin
 		final Date date = tempBans.get(IP);
 		if (date == null)
 			return false;
-		return new Date().before(date);
+		else
+			return new Date().before(date);
 	}
 
 	public Date getTempBanned(final String IP)
@@ -353,23 +360,22 @@ public final class CrazyCaptcha extends CrazyPlugin
 		captchas.remove(name.toLowerCase());
 	}
 
-	@Localized("CRAZYCAPTCHA.VERIFICATION.REQUEST $Captcha$")
 	public void requestVerification(final Player player)
 	{
 		if (isVerified(player))
 			return;
-		final String captcha = genCaptcha();
+		final Captcha captcha = generator.generateCaptcha();
 		captchas.put(player.getName().toLowerCase(), captcha);
-		sendLocaleMessage("VERIFICATION.REQUEST", player, captcha);
+		captcha.sendRequest(player);
 	}
 
 	@Localized({ "CRAZYCAPTCHA.VERIFICATION.SUCCESS", "CRAZYCAPTCHA.VERIFICATION.FAILED" })
 	public void playerVerify(final Player player, final String captcha)
 	{
-		final String realCaptcha = captchas.remove(player.getName().toLowerCase());
+		final Captcha realCaptcha = captchas.remove(player.getName().toLowerCase());
 		if (realCaptcha == null)
 			return;
-		if (realCaptcha.equals(captcha))
+		if (realCaptcha.check(captcha))
 		{
 			logger.log("Captcha", player.getName() + " successfully passed captcha check.");
 			verified.add(player.getName().toLowerCase());
@@ -400,15 +406,6 @@ public final class CrazyCaptcha extends CrazyPlugin
 		new CaptchaReminderTask(player, plugin).startTask(reminderInterval);
 	}
 
-	private String genCaptcha()
-	{
-		final StringBuilder res = new StringBuilder(captchaLength);
-		final int length = captchaChars.length;
-		for (int i = 0; i < captchaLength; i++)
-			res.append(captchaChars[random.nextInt(length)]);
-		return res.toString();
-	}
-
 	public int getAutoKick()
 	{
 		return autoKick;
@@ -434,7 +431,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 		return autoKickCommandUsers;
 	}
 
-	public Map<String, String> getCaptchas()
+	public Map<String, Captcha> getCaptchas()
 	{
 		return captchas;
 	}
