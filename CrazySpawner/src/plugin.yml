@@ -1,7 +1,7 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-version: 3.4
+version: 3.4.1
 # requires CrazyCore v9.5 or later
 depend: [CrazyCore]
 description: >
@@ -10,15 +10,15 @@ commands:
   crazyspawn:
     description: Spawn living Creatures...
     usage: /<command> <Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [monstermaxcount:Integer [monsterradius:Double]] [playermincount:Integer [playerradius:Double]] [location:Location]
-    aliases: [spawn,crazymobs, cms]
+    aliases: [crazymobs, cms]
   crazykill:
     description: Kill living Creatures...
     usage: /<command> <Range> [monster:Boolean] [animals:Boolean] [golems:Boolean] [villagers:Boolean] [bosses:Boolean] [location:Location]
-    aliases: [butcher,killall,cmk]
+    aliases: [butcher, killall, cmk]
   crazycreaturespawner:
     description: Change spawner types.
     usage: /<command> <Creature>
-    aliases: [spawner,crazyspawner,ccs]
+    aliases: [spawner, crazyspawner, ccs]
   crazyspawner:
     description: Plugin Mainmenu
     usage: /<command> [Subcommands...]
