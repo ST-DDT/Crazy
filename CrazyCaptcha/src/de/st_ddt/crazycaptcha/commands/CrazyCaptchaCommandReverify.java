@@ -43,6 +43,9 @@ public class CrazyCaptchaCommandReverify extends CrazyCaptchaCommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
+		if (sender instanceof Player)
+			if (!plugin.isVerified((Player) sender))
+				return false;
 		return PermissionModule.hasPermission(sender, "crazycaptcha.recaptcha");
 	}
 }
