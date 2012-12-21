@@ -18,7 +18,7 @@ public class CrazyCaptchaPlayerListener_125 extends CrazyCaptchaPlayerListener
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void PlayerChat(final PlayerChatEvent event)
 	{
-		if (PlayerChat(event.getPlayer(), event.getMessage()))
+		if (!PlayerChat(event.getPlayer(), event.getMessage()))
 			event.setCancelled(true);
 	}
 }
