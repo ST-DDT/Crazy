@@ -12,7 +12,7 @@ public class LoginPluginProvider
 		return plugin;
 	}
 
-	protected void setPlugin(LoginPlugin<? extends LoginData> plugin)
+	protected void setPlugin(final LoginPlugin<? extends LoginData> plugin)
 	{
 		this.plugin = plugin;
 	}

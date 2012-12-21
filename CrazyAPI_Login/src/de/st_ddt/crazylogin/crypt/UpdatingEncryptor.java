@@ -2,7 +2,7 @@ package de.st_ddt.crazylogin.crypt;
 
 public interface UpdatingEncryptor extends Encryptor
 {
-	
+
 	/**
 	 * Encrypts the password. (Also used when using a new encryption algorithm)
 	 * 
@@ -14,5 +14,6 @@ public interface UpdatingEncryptor extends Encryptor
 	 *            The password that should be encrypted.
 	 * @return The encrypted password
 	 */
+	@Override
 	public String encrypt(String name, String salt, String password);
 }

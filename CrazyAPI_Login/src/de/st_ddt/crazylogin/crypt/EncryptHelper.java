@@ -1,6 +1,7 @@
 package de.st_ddt.crazylogin.crypt;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -14,7 +15,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public final class EncryptHelper
 {
 
-	private static final TreeMap<String, Class<? extends Encryptor>> encryptors = new TreeMap<String, Class<? extends Encryptor>>();
+	private static final Map<String, Class<? extends Encryptor>> encryptors = new TreeMap<String, Class<? extends Encryptor>>();
+
+	protected EncryptHelper()
+	{
+		super();
+	}
 
 	public static Encryptor getEncryptor(final LoginPlugin<? extends LoginData> plugin, final ConfigurationSection config)
 	{
@@ -101,11 +107,6 @@ public final class EncryptHelper
 	public static Set<String> getAlgorithms()
 	{
 		return encryptors.keySet();
-	}
-
-	private EncryptHelper()
-	{
-		super();
 	}
 
 	public static String byteArrayToHexString(final byte... args)
