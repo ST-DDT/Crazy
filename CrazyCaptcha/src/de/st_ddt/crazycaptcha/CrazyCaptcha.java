@@ -395,7 +395,10 @@ public final class CrazyCaptcha extends CrazyPlugin
 				fails = 0;
 			}
 			else
+			{
+				requestVerification(player);
 				sendLocaleMessage("VERIFICATION.FAILED", player);
+			}
 		}
 	}
 
