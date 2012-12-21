@@ -48,7 +48,7 @@ public class CrazyCaptchaPlayerListener implements Listener
 	@Localized("CRAZYCAPTCHA.KICKED.NOTVERIFIED")
 	public void PlayerJoin(final Player player)
 	{
-		plugin.getCrazyLogger().log("Join", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " joined the server");
+		plugin.getCrazyLogger().log("Join", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " joined the server.");
 		if (plugin.playerJoin(player))
 			return;
 		final int autoKick = plugin.getAutoKick();
@@ -65,7 +65,7 @@ public class CrazyCaptchaPlayerListener implements Listener
 
 	public void PlayerQuit(final Player player)
 	{
-		plugin.getCrazyLogger().log("Quit", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " left the server");
+		plugin.getCrazyLogger().log("Quit", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " left the server.");
 		plugin.playerQuit(player);
 	}
 
@@ -95,5 +95,15 @@ public class CrazyCaptchaPlayerListener implements Listener
 				plugin.getCrazyLogger().log("CommandBlocked", player.getName() + " @ " + IP + " tried to execute", event.getMessage());
 			}
 		}
+	}
+
+	protected boolean PlayerChat(final Player player, final String message)
+	{
+		if (plugin.isVerified(player))
+			return true;
+		if (message != null)
+			plugin.getCrazyLogger().log("ChatBlocked", player.getName() + " @ " + player.getAddress().getAddress().getHostAddress() + " tried to chat", message);
+		plugin.requestVerification(player);
+		return false;
 	}
 }
