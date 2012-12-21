@@ -28,7 +28,7 @@ public class CrazyCaptchaCommandReverify extends CrazyCaptchaCommandExecutor
 			throw new CrazyCommandUsageException("<Player...>");
 		final String name = ChatHelper.listingString(" ", args);
 		if (name.equals("*"))
-			for (Player player : Bukkit.getOnlinePlayers())
+			for (final Player player : Bukkit.getOnlinePlayers())
 				plugin.playerReverify(player);
 		else
 		{

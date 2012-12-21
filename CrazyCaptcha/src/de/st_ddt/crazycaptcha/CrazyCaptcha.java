@@ -15,7 +15,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandExecutor;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainCommands;
+import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandReverify;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandVerify;
 import de.st_ddt.crazycaptcha.commands.CrazyCommandVerifiedCheck;
 import de.st_ddt.crazycaptcha.listener.CrazyCaptchaPlayerListener;
@@ -71,7 +73,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 		{
 
 			@Override
-			public void setValue(Long newValue) throws CrazyException
+			public void setValue(final Long newValue) throws CrazyException
 			{
 				reminderInterval = newValue / 1000;
 			}
@@ -190,9 +192,12 @@ public final class CrazyCaptcha extends CrazyPlugin
 
 	private void registerCommands()
 	{
+		getCommand("captcha").setExecutor(new CrazyCaptchaCommandVerify(this));
+		final CrazyCaptchaCommandExecutor reverify = new CrazyCaptchaCommandReverify(this);
+		getCommand("recaptcha").setExecutor(reverify);
 		mainCommand.addSubCommand(new CrazyCommandVerifiedCheck(this, modeCommand), "mode");
 		mainCommand.addSubCommand(new CrazyCaptchaCommandMainCommands(this), "commands");
-		getCommand("captcha").setExecutor(new CrazyCaptchaCommandVerify(this));
+		mainCommand.addSubCommand(reverify, "reverify", "recaptcha");
 	}
 
 	private void registerHooks()

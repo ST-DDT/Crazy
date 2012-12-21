@@ -13,7 +13,7 @@ public class CaptchaReminderTask implements Runnable
 	private final CrazyCaptcha plugin;
 	private int taskID = -1;
 
-	public CaptchaReminderTask(Player player, CrazyCaptcha plugin)
+	public CaptchaReminderTask(final Player player, final CrazyCaptcha plugin)
 	{
 		super();
 		this.player = player;
@@ -34,7 +34,7 @@ public class CaptchaReminderTask implements Runnable
 			cancelTask();
 			return;
 		}
-		String captcha = plugin.getCaptchas().get(player.getName().toLowerCase());
+		final String captcha = plugin.getCaptchas().get(player.getName().toLowerCase());
 		if (captcha == null)
 		{
 			cancelTask();

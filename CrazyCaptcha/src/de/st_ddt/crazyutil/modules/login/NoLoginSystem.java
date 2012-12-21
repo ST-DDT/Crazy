@@ -16,13 +16,13 @@ public class NoLoginSystem implements LoginSystem
 	}
 
 	@Override
-	public boolean hasAccount(OfflinePlayer player)
+	public boolean hasAccount(final OfflinePlayer player)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isLoggedIn(Player player)
+	public boolean isLoggedIn(final Player player)
 	{
 		return false;
 	}
