@@ -21,7 +21,7 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 		for (final EntityType type : EntityType.values())
 			if (type.isAlive() && type.isSpawnable())
 				res.add(type);
-		return res.toArray(new EntityType[0]);
+		return res.toArray(new EntityType[res.size()]);
 	}
 
 	private static String[] getCreatureNames()
@@ -30,7 +30,7 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 		for (final EntityType type : EntityType.values())
 			if (type.isAlive() && type.isSpawnable())
 				res.add(type.toString());
-		return res.toArray(new String[0]);
+		return res.toArray(new String[res.size()]);
 	}
 
 	public CreatureParamitrisable(final EntityType defaultValue)
@@ -61,8 +61,8 @@ public class CreatureParamitrisable extends TypedParamitrisable<EntityType>
 	public List<String> tab(String parameter)
 	{
 		parameter = parameter.toUpperCase();
-		List<String> res = new LinkedList<String>();
-		for (String name : CREATURE_NAMES)
+		final List<String> res = new LinkedList<String>();
+		for (final String name : CREATURE_NAMES)
 			if (name.startsWith(parameter))
 				res.add(name);
 		return res;
