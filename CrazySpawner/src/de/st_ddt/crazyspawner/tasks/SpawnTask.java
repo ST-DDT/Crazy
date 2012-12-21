@@ -75,7 +75,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 					return;
 				}
 		}
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, this, interval);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, interval);
 	}
 
 	public boolean checkPlayers()

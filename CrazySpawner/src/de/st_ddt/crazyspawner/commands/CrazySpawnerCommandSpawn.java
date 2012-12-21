@@ -151,7 +151,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			throw new CrazyCommandUsageException("<Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [monstermaxcount:Integer [monsterradius:Double]] [playermincount:Integer [playerradius:Double]] [location:Location]");
 		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue());
 		plugin.addSpawnTask(task);
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, task, delay.getValue() / 50);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, task, delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);
 	}
 
