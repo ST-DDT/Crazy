@@ -403,7 +403,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		catch (final Exception e)
 		{
 			consoleLog(ChatColor.RED + "NO SUCH XPRULE " + xpType);
-			defaultXPRules = XP_Rules.XP_SHARE;
+			defaultXPRules = XP_Rules.XP_SHARESILENT;
 		}
 		squadAutoRejoinTime = Math.max(config.getLong("squadAutoRejoinTime", 60), 0);
 		if (crazyChatsEnabled)
