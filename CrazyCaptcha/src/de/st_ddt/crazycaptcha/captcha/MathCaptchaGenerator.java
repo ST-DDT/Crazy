@@ -37,7 +37,7 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 	{
 		this(plugin);
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
-		final IntegerParamitrisable max = new IntegerParamitrisable(6);
+		final IntegerParamitrisable max = new IntegerParamitrisable(50);
 		params.put("m", max);
 		params.put("max", max);
 		ChatHelperExtended.readParameters(args, params, max);
