@@ -24,8 +24,16 @@ public class CrazySquadsTagAPIListener implements Listener
 	{
 		super();
 		this.plugin = plugin;
-		for (final Player player : Bukkit.getOnlinePlayers())
-			TagAPI.refreshPlayer(player);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+		{
+
+			@Override
+			public void run()
+			{
+				for (final Player player : Bukkit.getOnlinePlayers())
+					TagAPI.refreshPlayer(player);
+			}
+		}, 5);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
