@@ -64,7 +64,8 @@ public final class ObjectSaveLoadHelper
 			config.set(path + "pitch", location.getPitch());
 		}
 		if (saveWorld)
-			config.set(path + "world", location.getWorld().getName());
+			if (location.getWorld() != null)
+				config.set(path + "world", location.getWorld().getName());
 	}
 
 	// Date
