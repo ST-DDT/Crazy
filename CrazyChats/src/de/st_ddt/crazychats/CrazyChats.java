@@ -558,7 +558,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		registerCommands();
 		// Online Players
 		for (final Player player : Bukkit.getOnlinePlayers())
-			playerListener.PlayerJoinComplete(player);
+			playerListener.PlayerJoinEnabled(player);
 	}
 
 	@SuppressWarnings("deprecation")

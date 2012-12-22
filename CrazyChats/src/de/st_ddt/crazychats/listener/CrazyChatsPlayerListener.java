@@ -41,10 +41,20 @@ public class CrazyChatsPlayerListener implements Listener
 		this.plugin = plugin;
 	}
 
+	public void PlayerJoinEnabled(final Player player)
+	{
+		PlayerLogin(player);
+		PlayerJoinComplete(player);
+	}
+
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void PlayerLogin(final PlayerLoginEvent event)
 	{
-		final Player player = event.getPlayer();
+		PlayerLogin(event.getPlayer());
+	}
+
+	public void PlayerLogin(final Player player)
+	{
 		ChatPlayerData data = plugin.getCrazyDatabase().updateEntry(player);
 		if (data == null)
 		{
