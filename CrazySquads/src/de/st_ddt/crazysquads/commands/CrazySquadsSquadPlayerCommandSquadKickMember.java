@@ -35,7 +35,7 @@ public class CrazySquadsSquadPlayerCommandSquadKickMember extends CrazySquadsSqu
 		if (kicked == null)
 			throw new CrazyCommandNoSuchException("SquadMember", name, squad.getMemberNames());
 		final Set<Player> members = squad.getMembers();
-		if (!members.remove(player))
+		if (!members.remove(kicked))
 			throw new CrazyCommandNoSuchException("SquadMember", name);
 		plugin.getSquads().remove(kicked);
 		if (kicked == player)
@@ -59,16 +59,16 @@ public class CrazySquadsSquadPlayerCommandSquadKickMember extends CrazySquadsSqu
 	}
 
 	@Override
-	public List<String> tab(Player player, Squad squad, String[] args)
+	public List<String> tab(final Player player, final Squad squad, final String[] args)
 	{
 		if (args.length != 1)
 			return null;
-		Set<Player> members = squad.getMembers();
-		List<String> res = new LinkedList<String>();
-		String arg = args[0].toLowerCase();
+		final String arg = args[0].toLowerCase();
+		final List<String> res = new LinkedList<String>();
+		final Set<Player> members = squad.getMembers();
 		synchronized (members)
 		{
-			for (Player member : members)
+			for (final Player member : members)
 				if (member.getName().toLowerCase().startsWith(arg))
 					res.add(member.getName());
 		}
