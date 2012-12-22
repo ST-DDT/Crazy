@@ -29,6 +29,7 @@ import de.st_ddt.crazychats.commands.CrazyChatsCommandColorHelp;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupListnamePrefix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupPrefix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupSuffix;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandMainReload;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerHeadName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerListName;
@@ -511,6 +512,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		getCommand("unmutechannel").setExecutor(new CrazyChatsPlayerCommandUnmuteChannel(this));
 		getCommand("muteall").setExecutor(new CrazyChatsPlayerCommandMuteAll(this));
 		mainCommand.addSubCommand(modeCommand, "mode");
+		mainCommand.addSubCommand(new CrazyChatsCommandMainReload(this), "reload");
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerDisplayName(this), "displayname", "dispname", "dname");
 		if (tagAPIenabled)
 			playerCommand.addSubCommand(new CrazyChatsCommandPlayerHeadName(this), "headname", "hname");
@@ -690,6 +692,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("cleanRepetitions", cleanRepetitions);
 		config.set("cleanCaps", cleanCaps);
 		super.saveConfiguration();
+	}
+
+	public CrazyChatsPlayerListener getPlayerListener()
+	{
+		return playerListener;
 	}
 
 	public Map<String, String> getGroupPrefixes()
