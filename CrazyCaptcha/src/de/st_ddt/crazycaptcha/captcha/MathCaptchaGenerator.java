@@ -22,26 +22,36 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 
 	private final Random random = new Random();
 	private final CrazyCommandTreeExecutor<CrazyCaptcha> commands;
+	private int min;
 	private int max;
 
 	public MathCaptchaGenerator(final CrazyCaptcha plugin, final ConfigurationSection config)
 	{
 		this(plugin);
 		if (config == null)
+		{
+			min = 20;
 			max = 50;
+		}
 		else
-			max = config.getInt("max", 50);
+		{
+			min = Math.max(config.getInt("min", 20), 0);
+			max = Math.max(config.getInt("max", 50), min + 1);
+		}
 	}
 
 	public MathCaptchaGenerator(final CrazyCaptcha plugin, final String[] args) throws CrazyException
 	{
 		this(plugin);
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+		final IntegerParamitrisable min = new IntegerParamitrisable(50);
+		params.put("min", min);
 		final IntegerParamitrisable max = new IntegerParamitrisable(50);
 		params.put("m", max);
 		params.put("max", max);
-		ChatHelperExtended.readParameters(args, params, max);
-		this.max = max.getValue();
+		ChatHelperExtended.readParameters(args, params, min, max);
+		this.min = Math.max(Math.min(min.getValue(), max.getValue()), 0);
+		this.max = Math.max(Math.max(min.getValue(), max.getValue()), this.min + 1);
 	}
 
 	protected MathCaptchaGenerator(final CrazyCaptcha plugin)
@@ -56,6 +66,28 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 	@Localized("CRAZYCAPTCHA.GENERATORMODE.CHANGE")
 	private void registerModes(final CrazyPluginCommandMainMode modeCommand)
 	{
+		modeCommand.addMode(modeCommand.new IntegerMode("min")
+		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("GENERATORMODE.CHANGE", sender, name, getValue());
+			}
+
+			@Override
+			public Integer getValue()
+			{
+				return min;
+			}
+
+			@Override
+			public void setValue(final Integer newValue) throws CrazyException
+			{
+				min = Math.max(Math.min(newValue, max - 1), 0);
+				plugin.saveConfiguration();
+			}
+		});
 		modeCommand.addMode(modeCommand.new IntegerMode("max")
 		{
 
@@ -74,7 +106,7 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 			@Override
 			public void setValue(final Integer newValue) throws CrazyException
 			{
-				max = Math.max(newValue, 0);
+				max = Math.max(newValue, min + 1);
 				plugin.saveConfiguration();
 			}
 		});
@@ -102,13 +134,14 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
+		config.set(path + "min", min);
 		config.set(path + "max", max);
 	}
 
 	@Override
 	public String toString()
 	{
-		return getName() + " (Max: " + max + ")";
+		return getName() + " (Min: " + min + ", Max: " + max + ")";
 	}
 
 	private class MathCaptcha implements Captcha
@@ -120,10 +153,23 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 		public MathCaptcha()
 		{
 			super();
-			final int v1 = random.nextInt(max);
-			final int v2 = random.nextInt(max);
-			captcha = new Integer(v1 + v2).toString();
-			show = v1 + " + " + v2;
+			final int v1 = random.nextInt(max - min) + min;
+			final int v2 = random.nextInt(max - min) + min;
+			if (random.nextBoolean())
+			{
+				captcha = new Integer(v1 + v2).toString();
+				show = v1 + " + " + v2;
+			}
+			else if (v1 > v2)
+			{
+				captcha = new Integer(v1 - v2).toString();
+				show = v1 + " - " + v2;
+			}
+			else
+			{
+				captcha = new Integer(v2 - v1).toString();
+				show = v2 + " - " + v1;
+			}
 		}
 
 		@Override
