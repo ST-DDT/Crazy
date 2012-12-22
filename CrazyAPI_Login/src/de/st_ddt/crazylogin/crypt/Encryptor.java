@@ -22,7 +22,7 @@ public interface Encryptor extends ConfigurationSaveable
 	 * @param plugin
 	 *            This is CrazyLogin
 	 * @param args
-	 *            The parameters to create this encryptor.
+	 *            The parameters used to create this encryptor.
 	 */
 	// public Encryptor( LoginPlugin<? extends LoginData> plugin, String[] args) throws CrazyException
 	// {
