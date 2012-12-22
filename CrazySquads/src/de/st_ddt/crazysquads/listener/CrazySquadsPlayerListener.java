@@ -230,7 +230,7 @@ public class CrazySquadsPlayerListener implements Listener
 						plugin.sendLocaleMessage("SQUAD.XPSHARE", members, target.getName(), shared);
 				}
 		}
-		else
+		else if (!squad.getXPRule().isSilent())
 			plugin.sendLocaleMessage("SQUAD.XPSHARE", squad.getMembers(), player.getName(), event.getAmount());
 	}
 }
