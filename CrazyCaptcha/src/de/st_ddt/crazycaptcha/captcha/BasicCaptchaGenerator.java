@@ -172,7 +172,7 @@ public final class BasicCaptchaGenerator extends AbstractCaptchaGenerator
 		}
 
 		@Override
-		@Localized("CRAZYCAPTCHA.VERIFICATION.REQUEST.BASIC")
+		@Localized("CRAZYCAPTCHA.VERIFICATION.REQUEST.BASIC $Captcha$")
 		public void sendRequest(final Player player)
 		{
 			plugin.sendLocaleMessage("VERIFICATION.REQUEST.BASIC", player, captcha);

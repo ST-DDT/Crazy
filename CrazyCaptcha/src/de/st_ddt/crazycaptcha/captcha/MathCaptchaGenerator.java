@@ -127,7 +127,7 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 		}
 
 		@Override
-		@Localized("CRAZYCAPTCHA.VERIFICATION.REQUEST.MATH")
+		@Localized("CRAZYCAPTCHA.VERIFICATION.REQUEST.MATH $Equation$")
 		public void sendRequest(final Player player)
 		{
 			plugin.sendLocaleMessage("VERIFICATION.REQUEST.MATH", player, show);
