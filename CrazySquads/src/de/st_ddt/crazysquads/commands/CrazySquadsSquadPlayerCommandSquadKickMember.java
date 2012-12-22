@@ -1,5 +1,7 @@
 package de.st_ddt.crazysquads.commands;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -31,10 +33,11 @@ public class CrazySquadsSquadPlayerCommandSquadKickMember extends CrazySquadsSqu
 		final String name = args[0];
 		final Player kicked = Bukkit.getPlayerExact(name);
 		if (kicked == null)
-			throw new CrazyCommandNoSuchException("Player", name, squad.getMemberNames());
-		plugin.getSquads().remove(kicked);
+			throw new CrazyCommandNoSuchException("SquadMember", name, squad.getMemberNames());
 		final Set<Player> members = squad.getMembers();
-		members.remove(player);
+		if (!members.remove(player))
+			throw new CrazyCommandNoSuchException("SquadMember", name);
+		plugin.getSquads().remove(kicked);
 		if (kicked == player)
 		{
 			if (members.size() > 0)
@@ -53,6 +56,23 @@ public class CrazySquadsSquadPlayerCommandSquadKickMember extends CrazySquadsSqu
 		new CrazySquadsSquadLeaveEvent(plugin, squad, kicked).callEvent();
 		if (members.size() == 0)
 			new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+	}
+
+	@Override
+	public List<String> tab(Player player, Squad squad, String[] args)
+	{
+		if (args.length != 1)
+			return null;
+		Set<Player> members = squad.getMembers();
+		List<String> res = new LinkedList<String>();
+		String arg = args[0].toLowerCase();
+		synchronized (members)
+		{
+			for (Player member : members)
+				if (member.getName().toLowerCase().startsWith(arg))
+					res.add(member.getName());
+		}
+		return res;
 	}
 
 	@Override

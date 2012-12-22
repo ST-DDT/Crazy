@@ -75,9 +75,10 @@ public class CrazySquadsTagAPIListener implements Listener
 		final Player[] list = members.toArray(new Player[members.size()]);
 		if (player.isOnline())
 			for (final Player member : list)
-			{
-				TagAPI.refreshPlayer(member, player);
-				TagAPI.refreshPlayer(player, member);
-			}
+				if (!player.equals(member))
+				{
+					TagAPI.refreshPlayer(member, player);
+					TagAPI.refreshPlayer(player, member);
+				}
 	}
 }
