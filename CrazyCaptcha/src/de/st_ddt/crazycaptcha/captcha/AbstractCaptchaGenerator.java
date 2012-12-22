@@ -12,8 +12,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public abstract class AbstractCaptchaGenerator implements CaptchaGenerator
 {
 
-	public AbstractCaptchaGenerator(final ConfigurationSection config)
+	protected final CrazyCaptcha plugin;
+
+	public AbstractCaptchaGenerator(final CrazyCaptcha plugin)
 	{
+		super();
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -34,5 +38,11 @@ public abstract class AbstractCaptchaGenerator implements CaptchaGenerator
 				throw new CrazyCommandCircumstanceException("if captcha generator supports commands!");
 			}
 		};
+	}
+
+	@Override
+	public String toString()
+	{
+		return getName();
 	}
 }

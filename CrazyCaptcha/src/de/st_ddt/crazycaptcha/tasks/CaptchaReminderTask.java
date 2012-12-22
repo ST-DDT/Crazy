@@ -33,7 +33,7 @@ public class CaptchaReminderTask implements Runnable
 			cancelTask();
 			return;
 		}
-		final Captcha captcha = plugin.getCaptchas().get(player.getName().toLowerCase());
+		final Captcha captcha = plugin.getCaptcha(player);
 		if (captcha == null)
 		{
 			cancelTask();

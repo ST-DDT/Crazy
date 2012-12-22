@@ -19,6 +19,17 @@ public interface CaptchaGenerator extends ConfigurationSaveable, Named
 	// {
 	// }
 	/**
+	 * Used when creating an CaptchaGenerator with Commands
+	 * 
+	 * @param plugin
+	 *            This is CrazyCaptcha
+	 * @param args
+	 *            The parameters used to create this generator.
+	 */
+	// public CaptchaGenerator( CrazyCaptcha plugin, String[] args) throws CrazyException
+	// {
+	// }
+	/**
 	 * Generate a new captcha.
 	 * 
 	 * @return The generated captcha.

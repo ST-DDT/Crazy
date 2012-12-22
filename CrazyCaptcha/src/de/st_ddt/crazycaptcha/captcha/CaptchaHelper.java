@@ -1,5 +1,6 @@
 package de.st_ddt.crazycaptcha.captcha;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -7,6 +8,8 @@ import java.util.TreeMap;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazycaptcha.CrazyCaptcha;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
 public class CaptchaHelper
 {
@@ -42,6 +45,32 @@ public class CaptchaHelper
 		try
 		{
 			return clazz.getConstructor(CrazyCaptcha.class, ConfigurationSection.class).newInstance(plugin, config);
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static CaptchaGenerator getCaptchaGenerator(final CrazyCaptcha plugin, final String name, final String[] args) throws CrazyException
+	{
+		final Class<? extends CaptchaGenerator> clazz = generators.get(name.toLowerCase());
+		if (clazz == null)
+			return null;
+		try
+		{
+			return clazz.getConstructor(CrazyCaptcha.class, String[].class).newInstance(plugin, args);
+		}
+		catch (final InvocationTargetException e)
+		{
+			final Throwable t = e.getCause();
+			if (t instanceof CrazyCommandException)
+				((CrazyCommandException) t).addCommandPrefix(name);
+			if (t instanceof CrazyException)
+				throw (CrazyException) t;
+			e.printStackTrace();
+			return null;
 		}
 		catch (final Exception e)
 		{

@@ -3,6 +3,7 @@ package de.st_ddt.crazycaptcha;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,7 @@ import de.st_ddt.crazycaptcha.captcha.CaptchaGenerator;
 import de.st_ddt.crazycaptcha.captcha.CaptchaHelper;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandExecutor;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainCommands;
+import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainGenerator;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandReverify;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandVerify;
 import de.st_ddt.crazycaptcha.commands.CrazyCommandVerifiedCheck;
@@ -29,8 +31,10 @@ import de.st_ddt.crazycaptcha.listener.CrazyCaptchaPlayerListener_132;
 import de.st_ddt.crazycaptcha.tasks.CaptchaReminderTask;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.login.LoginModule;
@@ -74,6 +78,45 @@ public final class CrazyCaptcha extends CrazyPlugin
 	@Localized("CRAZYCAPTCHA.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
+		modeCommand.addMode(modeCommand.new Mode<CaptchaGenerator>("generator", CaptchaGenerator.class)
+		{
+
+			@Override
+			public CaptchaGenerator getValue()
+			{
+				return generator;
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				final CaptchaGenerator generator = CaptchaHelper.getCaptchaGenerator(plugin, args[0], ChatHelperExtended.shiftArray(args, 1));
+				if (generator == null)
+					throw new CrazyCommandNoSuchException("CaptchaGenerator", args[0], CaptchaHelper.getAvailableGenerators());
+				setValue(generator);
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final CaptchaGenerator newValue) throws CrazyException
+			{
+				generator = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1)
+					return null;
+				final List<String> res = new LinkedList<String>();
+				final String arg = args[0].toLowerCase();
+				for (final String name : CaptchaHelper.getAvailableGenerators())
+					if (name.toLowerCase().startsWith(arg))
+						res.add(name);
+				return res;
+			}
+		});
 		modeCommand.addMode(modeCommand.new DurationMode("reminderInterval")
 		{
 
@@ -203,6 +246,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 		mainCommand.addSubCommand(reverify, "reverify", "recaptcha");
 		mainCommand.addSubCommand(new CrazyCommandVerifiedCheck(this, modeCommand), "mode");
 		mainCommand.addSubCommand(new CrazyCaptchaCommandMainCommands(this), "commands");
+		mainCommand.addSubCommand(new CrazyCaptchaCommandMainGenerator(this), "generator");
 	}
 
 	private void registerHooks()
@@ -258,7 +302,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 		autoKickCommandUsers = config.getBoolean("autoKickCommandUsers", false);
 		generator = CaptchaHelper.getCaptchaGenerator(this, config.getConfigurationSection("generator"));
 		if (generator == null)
-			generator = new BasicCaptchaGenerator(this, null);
+			generator = new BasicCaptchaGenerator(this, (ConfigurationSection) null);
 		skipLoginRegistered = config.getBoolean("skipLoginRegistered", true);
 		// Logger
 		logger.createLogChannels(config.getConfigurationSection("logs"), "Join", "Quit", "Captcha", "CaptchaFail", "ChatBlocked", "CommandBlocked", "AccessDenied");
@@ -409,6 +453,21 @@ public final class CrazyCaptcha extends CrazyPlugin
 		new CaptchaReminderTask(player, plugin).startTask(reminderInterval);
 	}
 
+	public Captcha getCaptcha(final Player player)
+	{
+		return getCaptcha(player.getName());
+	}
+
+	public Captcha getCaptcha(final String name)
+	{
+		return captchas.get(name.toLowerCase());
+	}
+
+	public CaptchaGenerator getGenerator()
+	{
+		return generator;
+	}
+
 	public int getAutoKick()
 	{
 		return autoKick;
@@ -432,10 +491,5 @@ public final class CrazyCaptcha extends CrazyPlugin
 	public boolean isAutoKickCommandUsers()
 	{
 		return autoKickCommandUsers;
-	}
-
-	public Map<String, Captcha> getCaptchas()
-	{
-		return captchas;
 	}
 }
