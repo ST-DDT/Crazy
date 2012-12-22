@@ -89,7 +89,7 @@ public final class BasicCaptchaGenerator extends AbstractCaptchaGenerator
 			@Override
 			public void setValue(final Integer newValue) throws CrazyException
 			{
-				length = Math.max(newValue, -1);
+				length = Math.max(newValue, 0);
 				plugin.saveConfiguration();
 			}
 		});
