@@ -25,13 +25,14 @@ public class CrazySquadsSquadPlayerCommandSquadDelete extends CrazySquadsSquadPl
 	{
 		final Set<Player> members = squad.getMembers();
 		final Player[] membersArray = members.toArray(new Player[members.size()]);
-		members.clear();
 		for (final Player member : membersArray)
 		{
+			members.remove(member);
 			plugin.getSquads().remove(member);
 			plugin.sendLocaleMessage("COMMAND.SQUAD.DELETED", member, player.getName());
 			new CrazySquadsSquadLeaveEvent(plugin, squad, member).callEvent();
 		}
+		members.clear();
 		new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
 	}
 
