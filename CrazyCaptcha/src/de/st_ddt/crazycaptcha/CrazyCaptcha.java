@@ -62,6 +62,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 	static
 	{
 		CaptchaHelper.registerGenerator("Basic", BasicCaptchaGenerator.class);
+		CaptchaHelper.registerGenerator("Math", BasicCaptchaGenerator.class);
 	}
 
 	public static CrazyCaptcha getPlugin()
