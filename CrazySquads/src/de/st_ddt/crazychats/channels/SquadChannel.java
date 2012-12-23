@@ -67,4 +67,10 @@ public class SquadChannel implements ChannelInterface
 	{
 		return player.equals(squad.getOwner()) ? plugin.getSquadLeaderChatFormat() : plugin.getSquadChatFormat();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "SquadChatChannel (Owner: " + squad.getOwner() + ")";
+	}
 }
