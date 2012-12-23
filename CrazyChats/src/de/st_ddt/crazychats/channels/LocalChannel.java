@@ -61,4 +61,10 @@ public final class LocalChannel extends AbstractMuteableChannel
 	{
 		this.enabled = enabled;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "LocalChatChannel (Range:" + plugin.getLocalChatRange() + ")";
+	}
 }

@@ -50,4 +50,10 @@ public class WorldChannel extends AbstractMuteableChannel
 	{
 		return plugin.getWorldChatFormat();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "WorldChatChannel (World: " + world.getName() + ")";
+	}
 }

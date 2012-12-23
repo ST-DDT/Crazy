@@ -40,4 +40,10 @@ public class AdminChannel extends AbstractMuteableChannel
 	{
 		return plugin.getAdminChatFormat();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "AdminChatChannel";
+	}
 }

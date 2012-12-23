@@ -50,4 +50,10 @@ public class PrivateChannel extends AbstractChannel implements ControlledChannel
 	{
 		return owner;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "PrivateChatChannel" + (owner == null ? "" : " (Owner: " + owner.getName() + ")");
+	}
 }

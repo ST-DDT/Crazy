@@ -39,4 +39,10 @@ public class GlobalChannel extends AbstractMuteableChannel
 	{
 		return plugin.getGlobalChatFormat();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "GlobalChatChannel";
+	}
 }

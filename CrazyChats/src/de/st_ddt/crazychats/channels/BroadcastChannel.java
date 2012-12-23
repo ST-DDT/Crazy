@@ -39,4 +39,10 @@ public class BroadcastChannel extends AbstractChannel
 	{
 		return plugin.getBroadcastChatFormat();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "BroadcastChatChannel";
+	}
 }
