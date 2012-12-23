@@ -90,7 +90,11 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 		{
 			final Mode<?> mode = modes.get(args[0].toLowerCase());
 			if (mode != null)
-				res.addAll(mode.tab(ChatHelperExtended.shiftArray(args, 1)));
+			{
+				List<String> temp = mode.tab(ChatHelperExtended.shiftArray(args, 1));
+				if (temp != null)
+					res.addAll(temp);
+			}
 		}
 		return res;
 	}
