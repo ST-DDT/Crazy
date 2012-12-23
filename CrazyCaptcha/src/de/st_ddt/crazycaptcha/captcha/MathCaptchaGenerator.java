@@ -44,7 +44,7 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 	{
 		this(plugin);
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
-		final IntegerParamitrisable min = new IntegerParamitrisable(50);
+		final IntegerParamitrisable min = new IntegerParamitrisable(20);
 		params.put("min", min);
 		final IntegerParamitrisable max = new IntegerParamitrisable(50);
 		params.put("m", max);
