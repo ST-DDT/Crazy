@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
@@ -22,7 +22,7 @@ public abstract class CrazySquadsSquadPlayerCommandExecutor extends CrazySquadsP
 	{
 		final Squad squad = plugin.getSquads().get(player);
 		if (squad == null)
-			throw new CrazyCommandUsageException("when being a member of a squad!");
+			throw new CrazyCommandCircumstanceException("when being a member of a squad!");
 		command(player, squad, args);
 	}
 
