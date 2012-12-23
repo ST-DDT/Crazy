@@ -39,7 +39,11 @@ public final class ObjectSaveLoadHelper
 		if (config == null)
 			return null;
 		if (world == null)
-			world = Bukkit.getWorld(config.getString("world"));
+		{
+			world = Bukkit.getWorld(config.getString("world", ""));
+			if (world == null)
+				return null;
+		}
 		return new Location(world, config.getDouble("x"), config.getDouble("y"), config.getDouble("z"), (float) config.getDouble("yaw", 0d), (float) config.getDouble("pitch", 0d));
 	}
 
