@@ -1,5 +1,7 @@
 package de.st_ddt.crazycaptcha.commands;
 
+import java.util.List;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,6 +24,12 @@ public class CrazyCaptchaCommandMainGenerator extends CrazyCaptchaCommandExecuto
 			if (!plugin.isVerified((Player) sender))
 				throw new CrazyCommandPermissionException();
 		plugin.getGenerator().getCommands().command(sender, args);
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		return plugin.getGenerator().getCommands().tab(sender, args);
 	}
 
 	@Override
