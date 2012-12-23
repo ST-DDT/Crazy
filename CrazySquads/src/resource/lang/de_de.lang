@@ -1,7 +1,7 @@
 ﻿CRAZYSQUADS=CrazySquads
 CRAZYSQUADS.COMMAND.SQUAD.CREATE.CANCELLED=Du kannst jetzt kein Suad erstellen, $1$.
 CRAZYSQUADS.COMMAND.SQUAD.CREATED=Squad erstellt.\nDu kannst andere Spieler mit &3/squad invite <Name> &F einladen!
-CRAZYSQUADS.COMMAND.SQUAD.DELETED=$0$ hat die Squad aufgelöst.
+CRAZYSQUADS.COMMAND.SQUAD.DELETED=$0$ hat das Squad aufgelöst.
 CRAZYSQUADS.COMMAND.SQUAD.INVITE.CANCELLED=Du kannst $0$ nicht einladen, $1$.
 CRAZYSQUADS.COMMAND.SQUAD.INVITED=Du hast $0$ eingeladen.
 CRAZYSQUADS.COMMAND.SQUAD.INVITED.ALREADY=Du hast $0$ schon in dein Squad eingeladen!
