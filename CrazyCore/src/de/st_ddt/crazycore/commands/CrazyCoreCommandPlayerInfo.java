@@ -5,12 +5,14 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazycore.data.PseudoPlayerData;
 import de.st_ddt.crazyplugin.PlayerDataProvider;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -30,9 +32,22 @@ public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final String name = ChatHelper.listingString(" ", args);
-		OfflinePlayer player = Bukkit.getPlayer(name);
-		if (player == null)
-			player = Bukkit.getOfflinePlayer(name);
+		OfflinePlayer player;
+		if (args.length == 0)
+			if (sender instanceof Player)
+				player = (Player) sender;
+			else
+				throw new CrazyCommandUsageException("<Player>");
+		else
+		{
+			player = Bukkit.getPlayerExact(name);
+			if (player == null)
+			{
+				player = Bukkit.getPlayer(name);
+				if (player == null)
+					player = Bukkit.getOfflinePlayer(name);
+			}
+		}
 		if (player == null)
 			throw new CrazyCommandNoSuchException("Player", name);
 		new PseudoPlayerData(player.getName()).show(sender);
