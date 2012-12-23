@@ -34,6 +34,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	private final Map<String, String> entries = new TreeMap<String, String>();
 	private final String filePath;
 	private final File file;
+	private final File backupFile;
 	private final Lock lock = new ReentrantLock();
 	private final Runnable delayedSave = new Runnable()
 	{
@@ -53,6 +54,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		this.plugin = plugin;
 		this.filePath = config == null ? defaultPath : config.getString("FLAT.filePath", defaultPath);
 		this.file = new File(plugin.getDataFolder().getPath(), filePath);
+		this.backupFile = new File(plugin.getDataFolder().getPath(), filePath + "_old");
 	}
 
 	public FlatDatabase(final Class<S> clazz, final String[] defaultColumnNames, final JavaPlugin plugin, final String path)
@@ -61,6 +63,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		this.plugin = plugin;
 		this.filePath = path;
 		this.file = new File(plugin.getDataFolder(), filePath);
+		this.backupFile = new File(plugin.getDataFolder().getPath(), filePath + "_old");
 	}
 
 	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
@@ -217,7 +220,20 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 
 	private void loadFile()
 	{
-		lock.lock();
+		try
+		{
+			lock.lock();
+			loadFile(backupFile);
+			loadFile(file);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	private void loadFile(final File file)
+	{
 		BufferedReader reader = null;
 		try
 		{
@@ -228,7 +244,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 			String zeile = reader.readLine();
 			while ((zeile = reader.readLine()) != null)
 			{
-				if (zeile.equals(""))
+				if (zeile.length() == 0)
 					continue;
 				try
 				{
@@ -252,15 +268,20 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 				{}
 			e.printStackTrace();
 		}
-		finally
-		{
-			lock.unlock();
-		}
 	}
 
 	private void saveFile()
 	{
 		lock.lock();
+		try
+		{
+			backupFile.delete();
+			file.renameTo(backupFile);
+		}
+		catch (final SecurityException e)
+		{
+			e.printStackTrace();
+		}
 		Writer writer = null;
 		try
 		{
@@ -270,6 +291,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 			for (final String string : entries.values())
 				writer.write(string);
 			writer.close();
+			backupFile.delete();
 			requireSave = false;
 		}
 		catch (final IOException e)
