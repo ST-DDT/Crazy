@@ -46,6 +46,11 @@ public class CaptchaHelper
 		{
 			return clazz.getConstructor(CrazyCaptcha.class, ConfigurationSection.class).newInstance(plugin, config);
 		}
+		catch (final InvocationTargetException e)
+		{
+			e.getCause().printStackTrace();
+			return null;
+		}
 		catch (final Exception e)
 		{
 			e.printStackTrace();
@@ -69,7 +74,7 @@ public class CaptchaHelper
 				((CrazyCommandException) t).addCommandPrefix(name);
 			if (t instanceof CrazyException)
 				throw (CrazyException) t;
-			e.printStackTrace();
+			t.printStackTrace();
 			return null;
 		}
 		catch (final Exception e)
