@@ -109,10 +109,13 @@ public class CrazyChatsPlayerListener implements Listener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void PlayerTeleport(final PlayerTeleportEvent event)
 	{
+		if (event.getTo().getWorld() == null)
+			return;
 		final Player player = event.getPlayer();
 		final ChatPlayerData data = plugin.getPlayerData(player);
-		if (data.getCurrentChannel() != null)
-			if (data.getCurrentChannel() instanceof WorldChannel)
+		final ChannelInterface channel = data.getCurrentChannel();
+		if (channel != null)
+			if (channel instanceof WorldChannel)
 				data.setCurrentChannelForced(plugin.getWorldChannels().get(event.getTo().getWorld().getName()));
 	}
 
