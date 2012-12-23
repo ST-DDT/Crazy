@@ -20,6 +20,7 @@ import de.st_ddt.crazycaptcha.captcha.Captcha;
 import de.st_ddt.crazycaptcha.captcha.CaptchaGenerator;
 import de.st_ddt.crazycaptcha.captcha.CaptchaHelper;
 import de.st_ddt.crazycaptcha.captcha.MathCaptchaGenerator;
+import de.st_ddt.crazycaptcha.captcha.MultiCaptchaGenerator;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandExecutor;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainCommands;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainGenerator;
@@ -64,6 +65,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 	{
 		CaptchaHelper.registerGenerator("Basic", BasicCaptchaGenerator.class);
 		CaptchaHelper.registerGenerator("Math", MathCaptchaGenerator.class);
+		CaptchaHelper.registerGenerator("Multi", MultiCaptchaGenerator.class);
 	}
 
 	public static CrazyCaptcha getPlugin()
@@ -321,6 +323,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 		config.set("autoKickVerificationFailer", autoKickVerificationFailer);
 		config.set("autoTempBanVerificationFailer", autoTempBanVerificationFailer);
 		config.set("autoKickCommandUsers", autoKickCommandUsers);
+		config.set("generator", null);
 		if (generator != null)
 			generator.save(config, "generator.");
 		config.set("skipLoginRegistered", skipLoginRegistered);
