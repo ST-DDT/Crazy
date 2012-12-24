@@ -48,7 +48,7 @@ public class MySQLConnection implements ConfigurationSaveable, MainConnection
 		}
 		catch (final ClassNotFoundException e)
 		{
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "JBDC-Driver not found");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "JDBC-Driver not found");
 		}
 	}
 
