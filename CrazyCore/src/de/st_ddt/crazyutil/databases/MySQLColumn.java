@@ -4,17 +4,17 @@ package de.st_ddt.crazyutil.databases;
 public class MySQLColumn extends SQLColumn
 {
 
-	public MySQLColumn(String name, String type, boolean primary, boolean autoincrement)
+	public MySQLColumn(final String name, final String type, final boolean primary, final boolean autoincrement)
 	{
 		super(name, type, primary, autoincrement);
 	}
 
-	public MySQLColumn(String name, String type, String defaults, boolean nulled, boolean autoincrement)
+	public MySQLColumn(final String name, final String type, final String defaults, final boolean nulled, final boolean autoincrement)
 	{
 		super(name, type, defaults, nulled, autoincrement);
 	}
 
-	public MySQLColumn(String name, String type)
+	public MySQLColumn(final String name, final String type)
 	{
 		super(name, type);
 	}

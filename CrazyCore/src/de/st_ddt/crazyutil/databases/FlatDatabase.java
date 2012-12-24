@@ -11,11 +11,13 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +34,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	protected final static Pattern PATTERN_DATASEPARATOR = Pattern.compile("\\|");
 	private final JavaPlugin plugin;
 	private final Map<String, String> entries = new TreeMap<String, String>();
+	private final Map<String, String> backupEntries = new TreeMap<String, String>();
 	private final String filePath;
 	private final File file;
 	private final File backupFile;
@@ -112,42 +115,68 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public S loadEntry(final String key)
+	public S loadEntry(String key)
 	{
-		final String rawData = entries.get(key.toLowerCase());
+		key = key.toLowerCase();
+		final String rawData = entries.get(key);
 		if (rawData == null)
 			return null;
 		try
 		{
-			final S data = constructor.newInstance(new Object[] { PATTERN_DATASEPARATOR.split(rawData.trim()) });
-			datas.put(key.toLowerCase(), data);
-			return data;
+			return loadEntryWithData(key, rawData.trim());
 		}
 		catch (final InvocationTargetException e)
 		{
-			System.err.println("Error occured while trying to load entry: " + key);
-			if (e.getCause() instanceof ArrayIndexOutOfBoundsException)
+			plugin.getLogger().log(Level.SEVERE, "Error occured while trying to load entry: " + key);
+			try
 			{
-				final int count = defaultColumnNames.length - StringUtils.countMatches(rawData, "|") - 1;
-				if (count > 0)
-				{
-					System.out.println("Trying to fix entry");
-					final StringBuilder builder = new StringBuilder(rawData.trim());
-					for (int i = 0; i < count; i++)
-						builder.append("|");
-					builder.append(".|");
-					builder.append(lineSeparator);
-					entries.put(key, builder.toString());
-					final S data = loadEntry(key);
-					if (data != null)
+				plugin.getLogger().log(Level.SEVERE, "Trying to fix entry...");
+				final String backupData = backupEntries.remove(key);
+				if (backupData == null)
+					try
 					{
-						save(data);
-						System.out.println("Entry FIXED!");
+						if (e.getCause() instanceof ArrayIndexOutOfBoundsException)
+							return loadEntryWithRepairedData(key, rawData.trim());
 					}
-					else
-						System.err.println("Repair FAILED!");
-					return data;
+					catch (final Exception e1)
+					{}
+				else
+					try
+					{
+						return loadEntryWithData(key, backupData);
+					}
+					catch (final InvocationTargetException e1)
+					{
+						try
+						{
+							if (e.getCause() instanceof ArrayIndexOutOfBoundsException)
+								return loadEntryWithRepairedData(key, rawData.trim());
+						}
+						catch (final InvocationTargetException e2)
+						{
+							try
+							{
+								if (e.getCause() instanceof ArrayIndexOutOfBoundsException)
+									return loadEntryWithRepairedData(key, backupData);
+							}
+							catch (final Exception e3)
+							{}
+						}
+						catch (final Exception e2)
+						{}
+					}
+					catch (final Exception e1)
+					{}
+			}
+			finally
+			{
+				if (datas.containsKey(key))
+				{
+					plugin.getLogger().log(Level.SEVERE, "Repair success.");
+					save(key);
 				}
+				else
+					plugin.getLogger().log(Level.SEVERE, "Repair failed.");
 			}
 			shortPrintStackTrace(e, e.getCause());
 			return null;
@@ -160,11 +189,47 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		}
 	}
 
+	private S loadEntryWithData(final String key, final String rawData) throws Exception
+	{
+		final S data = constructor.newInstance(new Object[] { PATTERN_DATASEPARATOR.split(rawData) });
+		datas.put(key, data);
+		return data;
+	}
+
+	private S loadEntryWithRepairedData(final String key, final String rawData) throws Exception
+	{
+		final int count = defaultColumnNames.length - StringUtils.countMatches(rawData, "|") - 1;
+		if (count > 0)
+		{
+			final StringBuilder builder = new StringBuilder(rawData);
+			for (int i = 0; i < count; i++)
+				builder.append("|");
+			builder.append(".|");
+			builder.append(lineSeparator);
+			return loadEntryWithData(key, builder.toString());
+		}
+		else
+			return null;
+	}
+
 	@Override
 	public void loadAllEntries()
 	{
 		for (final String key : entries.keySet())
 			loadEntry(key);
+		if (backupEntries.size() > 0)
+		{
+			entries.putAll(backupEntries);
+			final Collection<String> keys = new ArrayList<String>(backupEntries.keySet());
+			backupEntries.clear();
+			for (final String key : keys)
+			{
+				loadEntry(key);
+				save(key);
+			}
+			keys.clear();
+			saveDatabase();
+		}
 	}
 
 	@Override
@@ -220,20 +285,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 
 	private void loadFile()
 	{
-		try
-		{
-			lock.lock();
-			loadFile(backupFile);
-			loadFile(file);
-		}
-		finally
-		{
-			lock.unlock();
-		}
-	}
-
-	private void loadFile(final File file)
-	{
+		lock.lock();
 		BufferedReader reader = null;
 		try
 		{
@@ -254,6 +306,48 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 				{
 					System.err.println("Invalid line " + zeile);
 				}
+			}
+			reader.close();
+		}
+		catch (final IOException e)
+		{
+			if (reader != null)
+				try
+				{
+					reader.close();
+				}
+				catch (final IOException e1)
+				{}
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (backupFile.exists())
+				loadBackupFile();
+			lock.unlock();
+		}
+	}
+
+	private void loadBackupFile()
+	{
+		BufferedReader reader = null;
+		try
+		{
+			if (!backupFile.exists())
+				return;
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(backupFile)));
+			// ErsteZeile Skippen
+			String zeile = reader.readLine();
+			while ((zeile = reader.readLine()) != null)
+			{
+				if (zeile.length() == 0)
+					continue;
+				try
+				{
+					backupEntries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0].toLowerCase(), zeile);
+				}
+				catch (final ArrayIndexOutOfBoundsException e)
+				{}
 			}
 			reader.close();
 		}
