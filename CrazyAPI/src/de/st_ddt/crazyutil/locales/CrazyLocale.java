@@ -409,7 +409,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 			catch (final IndexOutOfBoundsException e)
 			{}
 			String[] split = null;
-			if (zeile.length() != 0 && !zeile.startsWith("#"))
+			if (zeile.length() > 1 && !zeile.startsWith("#"))
 			{
 				split = PATTERN_EQUALSIGN.split(zeile, 2);
 				try
@@ -418,12 +418,12 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
-					System.err.println("Invalid line " + zeile);
+					System.err.println("Invalid language entry/line \"" + zeile + "\" for language: " + language);
 				}
 			}
 			while ((zeile = bufreader.readLine()) != null)
 			{
-				if (zeile.startsWith("#"))
+				if (zeile.length() <= 1 || zeile.startsWith("#"))
 					continue;
 				split = PATTERN_EQUALSIGN.split(zeile, 2);
 				try
@@ -432,7 +432,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
-					System.err.println("Invalid line " + zeile);
+					System.err.println("Invalid language entry/line \"" + zeile + "\" for language: " + language);
 				}
 			}
 		}
