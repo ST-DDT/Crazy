@@ -220,8 +220,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			public void showValue(final CommandSender sender)
 			{
 				final String raw = getValue();
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -261,8 +261,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			public void showValue(final CommandSender sender)
 			{
 				final String raw = getValue();
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				plugin.sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
+				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
+				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
 			}
 
 			@Override
@@ -305,7 +305,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				plugin.sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), squadHeadNamePrefix + "Playername");
+				sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), squadHeadNamePrefix + "Playername");
 			}
 
 			@Override
