@@ -131,7 +131,8 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("CHANNEL"), "NONE");
 		else
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("CHANNEL"), currentChannel.getName());
-		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("PRIVATECHANNEL.TARGETS"), ChatHelper.listingString(privateChannel.getTargets(null)));
+		if (privateChannel != null)
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("PRIVATECHANNEL.TARGETS"), ChatHelper.listingString(privateChannel.getTargets(null)));
 		if (displayName != null)
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DISPLAYNAME"), displayName);
 		if (listName != null)
