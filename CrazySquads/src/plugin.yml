@@ -1,7 +1,7 @@
 name: CrazySquads
 main: de.st_ddt.crazysquads.CrazySquads
 author: ST-DDT
-version: 0.9.4
+version: 0.9.5
 # requires CrazyCore v9.5 or later
 depend: [CrazyCore]
 # requires CrazyChats v1.5 or later

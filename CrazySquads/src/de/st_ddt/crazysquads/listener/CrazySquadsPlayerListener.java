@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -141,10 +142,12 @@ public class CrazySquadsPlayerListener implements Listener
 			synchronized (members)
 			{
 				final Location location = player.getLocation();
+				final World world = location.getWorld();
 				final double range = plugin.getMaxShareRange();
 				for (final Player member : members)
-					if (location.distance(member.getLocation()) < range)
-						activeMembers.add(member);
+					if (world.equals(member.getWorld()))
+						if (location.distance(member.getLocation()) < range)
+							activeMembers.add(member);
 			}
 			Collections.shuffle(activeMembers);
 			for (final ItemStack item : shareItems(activeMembers, members, event.getItem().getItemStack(), squad.getLootRule().isSilent()))
@@ -207,10 +210,12 @@ public class CrazySquadsPlayerListener implements Listener
 			synchronized (members)
 			{
 				final Location location = player.getLocation();
+				final World world = location.getWorld();
 				final double range = plugin.getMaxShareRange();
 				for (final Player member : members)
-					if (location.distance(member.getLocation()) < range)
-						activeMembers.add(member);
+					if (world.equals(member.getWorld()))
+						if (location.distance(member.getLocation()) < range)
+							activeMembers.add(member);
 			}
 			Collections.shuffle(activeMembers);
 			final int amount = event.getAmount();
