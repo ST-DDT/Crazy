@@ -39,7 +39,7 @@ CRAZYCHATS.COMMAND.UNMUTEDCHANNEL=Канал $0$ открыт для разго�
 CRAZYCHATS.COMMAND.UNMUTEDPLAYER=Игрок $0$ открыт для разговоров.
 CRAZYCHATS.DATABASE.ACCESSWARN=&CВНИМАНИЕ: База данных не доступна!
 CRAZYCHATS.DATABASE.LOADED=Загружено $0$ записей из базы данных.
-CRAZYCHATS.FORMAT.CHANGE=$0$ = \n$1$\n$2$
+CRAZYCHATS.FORMAT.CHANGE=$0$ = \n$1$
 CRAZYCHATS.FORMAT.EXAMPLE=$0$
 #CRAZYCHATS.MODE.CHANGE=
 CRAZYCHATS.PLAYERINFO.CHANNEL=Канал: $0$
