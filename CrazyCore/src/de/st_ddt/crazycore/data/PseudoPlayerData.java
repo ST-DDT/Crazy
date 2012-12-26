@@ -1,6 +1,9 @@
 package de.st_ddt.crazycore.data;
 
+import java.util.Set;
+
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.data.PlayerData;
@@ -8,6 +11,7 @@ import de.st_ddt.crazyplugin.events.CrazyPlayerAssociatesEvent;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 {
@@ -53,7 +57,7 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 	}
 
 	@Override
-	@Localized({ "CRAZYCORE.PLAYERINFO.LANGUAGE", "CRAZYCORE.PLAYERINFO.ASSOCIATES" })
+	@Localized({ "CRAZYCORE.PLAYERINFO.LANGUAGE $Language$", "CRAZYCORE.PLAYERINFO.ASSOCIATES $Associates$", "CRAZYCORE.PLAYERINFO.GROUPS $Groups$" })
 	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYCORE.PLAYERINFO");
@@ -61,5 +65,18 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 		final CrazyPlayerAssociatesEvent associatesEvent = new CrazyPlayerAssociatesEvent(getPlugin(), chatHeader);
 		associatesEvent.callEvent();
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("ASSOCIATES"), ChatHelper.listingString(associatesEvent.getAssociates()));
+		final Player player = getPlayer();
+		if (player != null)
+		{
+			final Set<String> groups = PermissionModule.getGroups(player);
+			if (groups == null)
+			{
+				final String group = PermissionModule.getGroup(player);
+				if (group != null)
+					ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("GROUPS"), group);
+			}
+			else
+				ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("GROUPS"), ChatHelper.listingString(groups));
+		}
 	}
 }
