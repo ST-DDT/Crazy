@@ -140,6 +140,15 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 			return null;
 	}
 
+	@Override
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
+			if (subCommand.getValue().hasAccessPermission(sender))
+				return true;
+		return false;
+	}
+
 	private class CrazyCommandTreeDefaultExecutor<T extends CrazyPluginInterface> extends CrazyCommandExecutor<T>
 	{
 
