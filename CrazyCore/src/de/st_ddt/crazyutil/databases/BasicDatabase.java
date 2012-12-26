@@ -210,6 +210,6 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + " (Contains " + size() + " entries of Type " + clazz.getSimpleName() + ")";
+		return getClass().getSimpleName() + " (Contains " + size() + " entries of type " + clazz.getSimpleName() + ")";
 	}
 }
