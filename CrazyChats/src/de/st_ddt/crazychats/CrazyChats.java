@@ -662,7 +662,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		cleanRepetitions = config.getBoolean("cleanRepetitions", true);
 		cleanCaps = config.getBoolean("cleanCaps", true);
 		// Logger
-		logger.createLogChannels(config, "Chat");
+		logger.createLogChannels(config.getConfigurationSection("logs"), "Chat");
 	}
 
 	@Override
