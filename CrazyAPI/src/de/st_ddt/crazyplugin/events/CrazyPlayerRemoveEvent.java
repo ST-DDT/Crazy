@@ -78,13 +78,4 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 			return;
 		callEvent();
 	}
-
-	public void checkAndCallAsyncEvent()
-	{
-		final CrazyPlayerPreRemoveEvent event = new CrazyPlayerPreRemoveEvent(plugin, player);
-		event.callAsyncEvent();
-		if (event.isCancelled())
-			return;
-		callAsyncEvent();
-	}
 }
