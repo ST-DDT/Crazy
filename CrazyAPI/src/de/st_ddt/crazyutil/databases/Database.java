@@ -78,6 +78,13 @@ public interface Database<S extends DatabaseEntry> extends ConfigurationSaveable
 	public Collection<S> getAllEntries();
 
 	/**
+	 * Get the amount of stored entries. (It contains only loaded datas)
+	 * 
+	 * @return The amount of stored entries.
+	 */
+	public int size();
+
+	/**
 	 * Loads the data belonging to key from data source, if this a none static database. This will overwrite existing data objects already stored in the cache. You have to update all references to data belonging to this key. (Otherwise you risk data inconsistency)
 	 * 
 	 * @param key

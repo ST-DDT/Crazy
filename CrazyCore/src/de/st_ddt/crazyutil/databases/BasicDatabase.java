@@ -89,6 +89,12 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	}
 
 	@Override
+	public final int size()
+	{
+		return datas.size();
+	}
+
+	@Override
 	public abstract S updateEntry(final String key);
 
 	@Override
@@ -199,5 +205,11 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		final Throwable ourCause = throwable.getCause();
 		if (ourCause != null)
 			shortPrintStackTrace2(ourCause, trace);
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + " (Contains " + size() + " entries of Type " + clazz.getSimpleName() + ")";
 	}
 }
