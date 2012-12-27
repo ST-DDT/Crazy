@@ -43,7 +43,6 @@ public class PlayerParamitrisable extends TypedParamitrisable<Player>
 		return new ArrayList<String>(getPlayerNames(getMatchingPlayers(parameter, 20)));
 	}
 
-	@Deprecated
 	public static List<String> tabHelp(final String parameter)
 	{
 		return new ArrayList<String>(getPlayerNames(getMatchingPlayers(parameter, 20)));
