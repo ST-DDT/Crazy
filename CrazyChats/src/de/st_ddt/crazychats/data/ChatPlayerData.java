@@ -61,17 +61,20 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 	@Override
 	public void saveToConfigDatabase(final ConfigurationSection config, final String path, final String[] columnNames)
 	{
-		config.set(path + columnNames[0], name);
-		final List<String> list;
-		synchronized (columnNames)
+		if (config.contains(path + columnNames[0]) || isSilenced() || mutedPlayers.size() > 0 || displayName != null || listName != null || headName != null)
 		{
-			list = new ArrayList<String>(mutedPlayers);
+			config.set(path + columnNames[0], name);
+			final List<String> list;
+			synchronized (columnNames)
+			{
+				list = new ArrayList<String>(mutedPlayers);
+			}
+			config.set(path + columnNames[1], list);
+			config.set(path + columnNames[2], CrazyChatsChatHelper.unmakeFormat(displayName));
+			config.set(path + columnNames[3], CrazyChatsChatHelper.unmakeFormat(listName));
+			config.set(path + columnNames[4], CrazyChatsChatHelper.unmakeFormat(headName));
+			config.set(path + columnNames[5], CrazyLightPluginInterface.DATETIMEFORMAT.format(silenced));
 		}
-		config.set(path + columnNames[1], list);
-		config.set(path + columnNames[2], CrazyChatsChatHelper.unmakeFormat(displayName));
-		config.set(path + columnNames[3], CrazyChatsChatHelper.unmakeFormat(listName));
-		config.set(path + columnNames[4], CrazyChatsChatHelper.unmakeFormat(headName));
-		config.set(path + columnNames[5], CrazyLightPluginInterface.DATETIMEFORMAT.format(silenced));
 	}
 
 	public ChannelInterface getCurrentChannel()
