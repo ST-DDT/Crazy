@@ -1,5 +1,7 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -27,14 +29,6 @@ public class PlayerParamitrisable extends TypedParamitrisable<Player>
 			throw new CrazyCommandNoSuchException("Player", parameter, getPlayerNames());
 	}
 
-	public static String[] getPlayerNames()
-	{
-		final Set<String> res = new TreeSet<String>();
-		for (final Player player : Bukkit.getOnlinePlayers())
-			res.add(player.getName());
-		return res.toArray(new String[res.size()]);
-	}
-
 	@Override
 	public List<String> tab(final String parameter)
 	{
@@ -48,6 +42,52 @@ public class PlayerParamitrisable extends TypedParamitrisable<Player>
 		for (final Player player : Bukkit.getOnlinePlayers())
 			if (player.getName().toLowerCase().startsWith(parameter))
 				res.add(player.getName());
+		return res;
+	}
+
+	public static Set<String> getPlayerNames()
+	{
+		return getPlayerNames(Bukkit.getOnlinePlayers());
+	}
+
+	public static Set<String> getPlayerNames(Collection<Player> players)
+	{
+		final Set<String> res = new TreeSet<String>();
+		for (final Player player : players)
+			res.add(player.getName());
+		return res;
+	}
+
+	public static Set<String> getPlayerNames(Player... players)
+	{
+		final Set<String> res = new TreeSet<String>();
+		for (final Player player : players)
+			res.add(player.getName());
+		return res;
+	}
+
+	public static List<Player> getMatchingPlayers(String parameter)
+	{
+		return getMatchingPlayers(parameter, Bukkit.getOnlinePlayers());
+	}
+
+	public static List<Player> getMatchingPlayers(String parameter, Collection<Player> players)
+	{
+		parameter = parameter.toLowerCase();
+		final List<Player> res = new ArrayList<Player>();
+		for (final Player player : players)
+			if (player.getName().toLowerCase().startsWith(parameter))
+				res.add(player);
+		return res;
+	}
+
+	public static List<Player> getMatchingPlayers(String parameter, Player... players)
+	{
+		parameter = parameter.toLowerCase();
+		final List<Player> res = new ArrayList<Player>();
+		for (final Player player : players)
+			if (player.getName().toLowerCase().startsWith(parameter))
+				res.add(player);
 		return res;
 	}
 }
