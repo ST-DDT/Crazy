@@ -2,7 +2,7 @@ name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
 version: 1.5.2
-# requires CrazyCore v9.6 or later
+# requires CrazyCore v9.7.1 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
 description: >
@@ -14,7 +14,7 @@ commands:
   tell:
     description: Chat to the given player.
     usage: /<command> <Players> <Message>
-    aliases: [pm]
+    aliases: [pm,msg,message]
   say:
     description: Send a broadcast to the entire server.
     usage: /<command> <Message>
@@ -45,6 +45,9 @@ commands:
   muteall:
     description: Mute all channels.
     usage: /<command>
+  clearchat:
+    description: Clear the players chat history.
+    usage: /<command> [Player/*]
   crazychats:
     description: Plugin Main Menu
     usage: /<command> <Subcommands...>
@@ -77,6 +80,7 @@ permissions:
       crazychats.chatspy: true
       crazychats.unmutable: true
       crazychats.nocleaning: true
+      crazychats.clearchat: true
   crazychats.mode:
     description: Allow changing plugin options.
     default: op
@@ -157,5 +161,8 @@ permissions:
     description: This player cannot be muted.
     default: op
   crazychats.nocleaning:
-    description: This player's chat will not be cleaned.
+    description: This player's chat messages will not be cleaned.
+    default: op
+  crazychats.clearchat:
+    description: Allow clearing the players chat history.
     default: op

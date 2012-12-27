@@ -65,8 +65,10 @@ maxSilenceTime: 31556952000
 cleanRepetitions: true
 # remove captial letters (true/false).
 cleanCaps: true
+# the number of clearChat messages send to each player on clearchat command
+clearChatLength: 100
 # additional information about logging can be found here http://dev.bukkit.org/server-mods/crazycore/pages/logging/
-#logs:
+# logs:
 #  Chat:
 #    path: false
 #    console: false

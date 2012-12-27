@@ -25,6 +25,7 @@ import de.st_ddt.crazychats.channels.ControlledChannelInterface;
 import de.st_ddt.crazychats.channels.GlobalChannel;
 import de.st_ddt.crazychats.channels.LocalChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandClearChat;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandColorHelp;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupListnamePrefix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupPrefix;
@@ -94,6 +95,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private long maxSilenceTime;
 	private boolean cleanRepetitions;
 	private boolean cleanCaps;
+	private int clearChatLength;
 	private boolean tagAPIenabled;
 
 	public static CrazyChats getPlugin()
@@ -511,6 +513,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		getCommand("mutechannel").setExecutor(new CrazyChatsPlayerCommandMuteChannel(this));
 		getCommand("unmutechannel").setExecutor(new CrazyChatsPlayerCommandUnmuteChannel(this));
 		getCommand("muteall").setExecutor(new CrazyChatsPlayerCommandMuteAll(this));
+		getCommand("clearchat").setExecutor(new CrazyChatsCommandClearChat(this));
 		mainCommand.addSubCommand(modeCommand, "mode");
 		mainCommand.addSubCommand(new CrazyChatsCommandMainReload(this), "reload");
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerDisplayName(this), "displayname", "dispname", "dname");
@@ -661,6 +664,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		maxSilenceTime = config.getLong("maxSilenceTime", 31556952000L);
 		cleanRepetitions = config.getBoolean("cleanRepetitions", true);
 		cleanCaps = config.getBoolean("cleanCaps", true);
+		clearChatLength = config.getInt("clearChatLength", 100);
 		// Logger
 		logger.createLogChannels(config.getConfigurationSection("logs"), "Chat");
 	}
@@ -691,6 +695,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("maxSilenceTime", maxSilenceTime);
 		config.set("cleanRepetitions", cleanRepetitions);
 		config.set("cleanCaps", cleanCaps);
+		config.set("clearChatLength", clearChatLength);
 		super.saveConfiguration();
 	}
 
@@ -873,5 +878,10 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public boolean isCleaningCapsEnabled()
 	{
 		return cleanCaps;
+	}
+
+	public int getClearChatLength()
+	{
+		return clearChatLength;
 	}
 }
