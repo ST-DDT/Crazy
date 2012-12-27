@@ -28,19 +28,13 @@ public class PlayerParamitrisable extends TypedParamitrisable<Player>
 			throw new CrazyCommandNoSuchException("Player", parameter, getPlayers(parameter));
 	}
 
-	private Collection<String> getPlayers(final String parameter)
+	private Set<String> getPlayers(final String parameter)
 	{
-		final List<String> players = new ArrayList<String>(getPlayers2(parameter));
-		return players.subList(0, Math.min(20, players.size()));
-	}
-
-	private Collection<String> getPlayers2(final String parameter)
-	{
-		final List<Player> players = getMatchingPlayers(parameter);
-		if (players == null)
+		final List<Player> players = getMatchingPlayers(parameter, 20);
+		if (players.size() == 0)
 			return getPlayerNames();
 		else
-			return getPlayerNames(players);
+			return getPlayerNames(20, players);
 	}
 
 	@Override
