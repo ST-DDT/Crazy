@@ -235,7 +235,15 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public boolean deleteEntry(final String key)
 	{
-		entries.remove(key.toLowerCase());
+		try
+		{
+			lock.lock();
+			entries.remove(key.toLowerCase());
+		}
+		finally
+		{
+			lock.unlock();
+		}
 		final boolean res = super.deleteEntry(key);
 		asyncSaveDatabase();
 		return res;
@@ -245,7 +253,15 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	public void save(final S entry)
 	{
 		super.save(entry);
-		entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+		try
+		{
+			lock.lock();
+			entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+		}
+		finally
+		{
+			lock.unlock();
+		}
 		asyncSaveDatabase();
 	}
 
@@ -255,7 +271,15 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		for (final S entry : entries)
 		{
 			super.save(entry);
-			this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+			try
+			{
+				lock.lock();
+				this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+			}
+			finally
+			{
+				lock.unlock();
+			}
 		}
 		asyncSaveDatabase();
 	}
@@ -263,7 +287,14 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public void purgeDatabase()
 	{
-		entries.clear();
+		try
+		{
+			entries.clear();
+		}
+		finally
+		{
+			lock.unlock();
+		}
 		super.purgeDatabase();
 	}
 
