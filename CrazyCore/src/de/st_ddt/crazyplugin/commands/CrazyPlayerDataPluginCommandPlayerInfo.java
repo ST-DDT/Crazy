@@ -54,7 +54,7 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 	}
 
 	@Override
-	public boolean hasAccessPermission(CommandSender sender)
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info.self") || PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info.other");
 	}

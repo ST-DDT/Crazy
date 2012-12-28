@@ -96,19 +96,30 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	public S loadEntry(final String key)
 	{
 		ConfigurationSection section = config.getConfigurationSection(path + "." + key.toLowerCase());
-		boolean nameCase = false;
+		final boolean nameCase;
 		if (section == null)
 		{
 			section = config.getConfigurationSection(path + "." + key);
 			nameCase = true;
 		}
+		else
+			nameCase = false;
 		if (section == null)
 			return null;
 		try
 		{
 			final S data = constructor.newInstance(section, columnNames);
-			datas.put(key.toLowerCase(), data);
-			if (nameCase)
+			if (data.getName() == null)
+			{
+				System.err.println("Entry " + key + " was corrupted and could be fixed.");
+				if (nameCase)
+					config.set(path + "." + key + "." + columnNames[0], key);
+				else
+					config.set(path + "." + key.toLowerCase() + "." + columnNames[0], key);
+				return loadEntry(key);
+			}
+			datas.put(data.getName().toLowerCase(), data);
+			if (nameCase || !key.equals(data.getName()))
 			{
 				config.set(path + "." + key, null);
 				save(data);
