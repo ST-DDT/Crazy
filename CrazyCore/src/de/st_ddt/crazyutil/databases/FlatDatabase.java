@@ -13,6 +13,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
@@ -33,8 +35,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	private final static String lineSeparator = System.getProperty("line.separator");
 	protected final static Pattern PATTERN_DATASEPARATOR = Pattern.compile("\\|");
 	private final JavaPlugin plugin;
-	private final Map<String, String> entries = new TreeMap<String, String>();
-	private final Map<String, String> backupEntries = new TreeMap<String, String>();
+	private final Map<String, String> entries = Collections.synchronizedMap(new TreeMap<String, String>());
+	private final Map<String, String> backupEntries = new HashMap<String, String>();
 	private final String filePath;
 	private final File file;
 	private final File backupFile;
@@ -235,15 +237,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public boolean deleteEntry(final String key)
 	{
-		try
-		{
-			lock.lock();
-			entries.remove(key.toLowerCase());
-		}
-		finally
-		{
-			lock.unlock();
-		}
+		entries.remove(key.toLowerCase());
 		final boolean res = super.deleteEntry(key);
 		asyncSaveDatabase();
 		return res;
@@ -253,15 +247,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	public void save(final S entry)
 	{
 		super.save(entry);
-		try
-		{
-			lock.lock();
-			entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
-		}
-		finally
-		{
-			lock.unlock();
-		}
+		entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
 		asyncSaveDatabase();
 	}
 
@@ -271,15 +257,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		for (final S entry : entries)
 		{
 			super.save(entry);
-			try
-			{
-				lock.lock();
-				this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
-			}
-			finally
-			{
-				lock.unlock();
-			}
+			this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
 		}
 		asyncSaveDatabase();
 	}
@@ -287,14 +265,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public void purgeDatabase()
 	{
-		try
-		{
-			entries.clear();
-		}
-		finally
-		{
-			lock.unlock();
-		}
+		entries.clear();
 		super.purgeDatabase();
 	}
 
@@ -413,8 +384,11 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
 			writer.write(ChatHelper.listingString("|", defaultColumnNames));
 			writer.write(lineSeparator);
-			for (final String string : entries.values())
-				writer.write(string);
+			synchronized (entries)
+			{
+				for (final String string : entries.values())
+					writer.write(string);
+			}
 			writer.close();
 			backupFile.delete();
 			requireSave = false;
