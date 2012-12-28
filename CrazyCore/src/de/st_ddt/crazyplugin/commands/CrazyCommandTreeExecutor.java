@@ -112,16 +112,16 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 		final CrazyCommandExecutorInterface executor = subExecutor.get(args[0].toLowerCase());
 		if (executor == null)
 		{
-			List<String> res = defaultExecutor.tab(sender, args);
-			if (res != null)
-				if (!defaultExecutor.hasAccessPermission(sender))
-					res = null;
+			List<String> res = null;
+			if (defaultExecutor.hasAccessPermission(sender))
+				res = defaultExecutor.tab(sender, args);
 			if (defaultExecutor instanceof CrazyCommandTreeDefaultExecutor || args.length > 1)
 				return res;
 			if (res == null)
 				res = new ArrayList<String>();
+			final String arg = args[0].toLowerCase();
 			for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
-				if (subCommand.getKey().toLowerCase().startsWith(args[0]))
+				if (subCommand.getKey().toLowerCase().startsWith(arg))
 					if (subCommand.getValue().hasAccessPermission(sender))
 						res.add(subCommand.getKey());
 			return res;
@@ -129,9 +129,11 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 		else if (args.length == 1)
 		{
 			final List<String> res = new ArrayList<String>();
-			for (final String subCommand : subExecutor.keySet())
-				if (subCommand.toLowerCase().startsWith(args[0]))
-					res.add(subCommand);
+			final String arg = args[0].toLowerCase();
+			for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
+				if (subCommand.getKey().toLowerCase().startsWith(arg))
+					if (subCommand.getValue().hasAccessPermission(sender))
+						res.add(subCommand.getKey());
 			return res;
 		}
 		else if (executor.hasAccessPermission(sender))
@@ -170,13 +172,21 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 		public List<String> tab(final CommandSender sender, final String[] args)
 		{
 			if (args.length == 0)
-				return new ArrayList<String>(subExecutor.keySet());
+			{
+				final List<String> res = new ArrayList<String>();
+				for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
+					if (subCommand.getValue().hasAccessPermission(sender))
+						res.add(subCommand.getKey());
+				return res;
+			}
 			else if (args.length == 1)
 			{
 				final List<String> res = new ArrayList<String>();
-				for (final String subCommand : subExecutor.keySet())
-					if (subCommand.toLowerCase().startsWith(args[0]))
-						res.add(subCommand);
+				final String arg = args[0].toLowerCase();
+				for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
+					if (subCommand.getKey().toLowerCase().startsWith(arg))
+						if (subCommand.getValue().hasAccessPermission(sender))
+							res.add(subCommand.getKey());
 				return res;
 			}
 			else
