@@ -52,4 +52,10 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 			return null;
 		return OfflinePlayerParamitrisable.tabHelp(args[0]);
 	}
+
+	@Override
+	public boolean hasAccessPermission(CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info.self") || PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info.other");
+	}
 }
