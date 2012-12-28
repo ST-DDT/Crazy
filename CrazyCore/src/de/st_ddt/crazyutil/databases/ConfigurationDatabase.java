@@ -179,7 +179,8 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 		synchronized (getDatabaseLock())
 		{
 			for (final S entry : datas.values())
-				entry.saveToConfigDatabase(config, path + "." + entry.getName().toLowerCase() + ".", columnNames);
+				if (entry != null)
+					entry.saveToConfigDatabase(config, path + "." + entry.getName().toLowerCase() + ".", columnNames);
 		}
 		plugin.saveConfig();
 	}
