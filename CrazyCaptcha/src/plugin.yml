@@ -1,13 +1,13 @@
 name: CrazyCaptcha
 main: de.st_ddt.crazycaptcha.CrazyCaptcha
 author: ST-DDT
-version: 2
+version: 2.1
 # requires CrazyCore v9.3 or later
 depend: [CrazyCore]
 # requires CrazyLogin v7.3.1 or later
 softdepend: [CrazyLogin]
 description: >
-            CrazyCaptcha protect your server with captcha.
+            CrazyCaptcha protect your server with captcha against bots.
 commands:
   captcha:
     description: Are you human?

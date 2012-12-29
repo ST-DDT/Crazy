@@ -21,6 +21,7 @@ import de.st_ddt.crazycaptcha.captcha.CaptchaGenerator;
 import de.st_ddt.crazycaptcha.captcha.CaptchaHelper;
 import de.st_ddt.crazycaptcha.captcha.MathCaptchaGenerator;
 import de.st_ddt.crazycaptcha.captcha.MultiCaptchaGenerator;
+import de.st_ddt.crazycaptcha.captcha.TypeCaptchaGenerator;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandExecutor;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainCommands;
 import de.st_ddt.crazycaptcha.commands.CrazyCaptchaCommandMainGenerator;
@@ -65,6 +66,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 	{
 		CaptchaHelper.registerGenerator("Basic", BasicCaptchaGenerator.class);
 		CaptchaHelper.registerGenerator("Math", MathCaptchaGenerator.class);
+		CaptchaHelper.registerGenerator("Type", TypeCaptchaGenerator.class);
 		CaptchaHelper.registerGenerator("Multi", MultiCaptchaGenerator.class);
 	}
 
