@@ -39,7 +39,7 @@ public class CrazyChatsPlayerListener_125 extends CrazyChatsPlayerListener
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void PlayerChatLog(final PlayerChatEvent event)
 	{
 		final Player player = event.getPlayer();
