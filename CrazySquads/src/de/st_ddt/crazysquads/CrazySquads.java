@@ -14,10 +14,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.PlayerDataProvider;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode.Mode;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -213,7 +215,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 
 	private void registerModesCrazyChats()
 	{
-		modeCommand.addMode(modeCommand.new Mode<String>("squadChatFormat", String.class)
+		final Mode<String> squadChatFormatMode = modeCommand.new Mode<String>("squadChatFormat", String.class)
 		{
 
 			@Override
@@ -253,8 +255,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				res.add(getValue());
 				return res;
 			}
-		});
-		modeCommand.addMode(modeCommand.new Mode<String>("squadLeaderChatFormat", String.class)
+		};
+		final Mode<String> squadLeaderChatFormatMode = modeCommand.new Mode<String>("squadLeaderChatFormat", String.class)
 		{
 
 			@Override
@@ -294,7 +296,12 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				res.add(getValue());
 				return res;
 			}
-		});
+		};
+		modeCommand.addMode(squadChatFormatMode);
+		modeCommand.addMode(squadLeaderChatFormatMode);
+		CrazyPluginCommandMainMode chatsModeCommand = CrazyChats.getPlugin().getModeCommand();
+		chatsModeCommand.addMode(squadChatFormatMode);
+		chatsModeCommand.addMode(squadLeaderChatFormatMode);
 	}
 
 	private void registerModesTagAPI()
