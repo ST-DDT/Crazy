@@ -704,6 +704,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return playerListener;
 	}
 
+	public CrazyPluginCommandMainMode getModeCommand()
+	{
+		return modeCommand;
+	}
+
 	public Map<String, String> getGroupPrefixes()
 	{
 		return groupPrefixes;
