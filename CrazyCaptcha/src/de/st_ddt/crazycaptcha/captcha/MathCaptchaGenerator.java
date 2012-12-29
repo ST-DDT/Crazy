@@ -20,6 +20,8 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 {
 
+	private final static int DEFAULTMIN = 20;
+	private final static int DEFAULTMAX = 50;
 	private final Random random = new Random();
 	private final CrazyCommandTreeExecutor<CrazyCaptcha> commands;
 	private int min;
@@ -30,13 +32,13 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 		this(plugin);
 		if (config == null)
 		{
-			min = 20;
-			max = 50;
+			min = DEFAULTMIN;
+			max = DEFAULTMAX;
 		}
 		else
 		{
-			min = Math.max(config.getInt("min", 20), 0);
-			max = Math.max(config.getInt("max", 50), min + 1);
+			min = Math.max(config.getInt("min", DEFAULTMIN), 0);
+			max = Math.max(config.getInt("max", DEFAULTMAX), min + 1);
 		}
 	}
 
@@ -44,9 +46,9 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 	{
 		this(plugin);
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
-		final IntegerParamitrisable min = new IntegerParamitrisable(20);
+		final IntegerParamitrisable min = new IntegerParamitrisable(DEFAULTMIN);
 		params.put("min", min);
-		final IntegerParamitrisable max = new IntegerParamitrisable(50);
+		final IntegerParamitrisable max = new IntegerParamitrisable(DEFAULTMAX);
 		params.put("m", max);
 		params.put("max", max);
 		ChatHelperExtended.readParameters(args, params, min, max);

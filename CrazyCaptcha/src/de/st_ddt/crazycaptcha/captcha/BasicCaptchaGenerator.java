@@ -22,6 +22,8 @@ import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 public final class BasicCaptchaGenerator extends AbstractCaptchaGenerator
 {
 
+	private final static String DEFAULTCHARS = "0123456789";
+	private final static int DEFAULTLENGTH = 6;
 	private final Random random = new Random();
 	private final CrazyCommandTreeExecutor<CrazyCaptcha> commands;
 	private int length;
@@ -32,13 +34,13 @@ public final class BasicCaptchaGenerator extends AbstractCaptchaGenerator
 		this(plugin);
 		if (config == null)
 		{
-			length = 6;
-			chars = "0123456789".toCharArray();
+			length = DEFAULTLENGTH;
+			chars = DEFAULTCHARS.toCharArray();
 		}
 		else
 		{
-			length = config.getInt("length", 6);
-			chars = config.getString("captchaChars", "0123456789").toCharArray();
+			length = config.getInt("length", DEFAULTLENGTH);
+			chars = config.getString("captchaChars", DEFAULTCHARS).toCharArray();
 		}
 	}
 
@@ -46,11 +48,11 @@ public final class BasicCaptchaGenerator extends AbstractCaptchaGenerator
 	{
 		this(plugin);
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
-		final IntegerParamitrisable length = new IntegerParamitrisable(6);
+		final IntegerParamitrisable length = new IntegerParamitrisable(DEFAULTLENGTH);
 		params.put("l", length);
 		params.put("len", length);
 		params.put("length", length);
-		final StringParamitrisable chars = new StringParamitrisable("0123456789");
+		final StringParamitrisable chars = new StringParamitrisable(DEFAULTCHARS);
 		params.put("c", chars);
 		params.put("chars", chars);
 		params.put("characters", chars);
