@@ -35,9 +35,10 @@ public class MapParamitrisable<S> extends TypedParamitrisable<S>
 	{
 		if (lowercase)
 			parameter = parameter.toLowerCase();
-		if (!values.containsKey(parameter))
+		if (values.containsKey(parameter))
+			value = values.get(parameter);
+		else
 			throw new CrazyCommandNoSuchException(type, parameter, values.keySet());
-		value = values.get(parameter);
 	}
 
 	@Override
