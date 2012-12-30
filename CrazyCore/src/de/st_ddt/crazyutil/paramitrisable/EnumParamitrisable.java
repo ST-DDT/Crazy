@@ -20,7 +20,7 @@ public class EnumParamitrisable<S extends Enum<S>> extends TypedParamitrisable<S
 		this.type = type;
 		this.values = new TreeMap<String, S>();
 		for (final S value : values)
-			this.values.put(value.toString().toUpperCase(), value);
+			this.values.put(value.name().toUpperCase(), value);
 	}
 
 	public EnumParamitrisable(final String type, final S defaultValue, final S... values)
@@ -29,7 +29,7 @@ public class EnumParamitrisable<S extends Enum<S>> extends TypedParamitrisable<S
 		this.type = type;
 		this.values = new TreeMap<String, S>();
 		for (final S value : values)
-			this.values.put(value.toString().toUpperCase(), value);
+			this.values.put(value.name().toUpperCase(), value);
 	}
 
 	@Override

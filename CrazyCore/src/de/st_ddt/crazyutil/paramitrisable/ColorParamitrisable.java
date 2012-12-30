@@ -30,13 +30,13 @@ public class ColorParamitrisable extends EnumParamitrisable<ChatColor>
 		if (colors)
 			for (final ChatColor color : COLORS)
 			{
-				values.put(color.toString().toUpperCase(), value);
+				values.put(color.name().toUpperCase(), value);
 				values.put(Character.toString(color.getChar()).toUpperCase(), value);
 			}
 		if (formats)
 			for (final ChatColor color : FORMATS)
 			{
-				values.put(color.toString().toUpperCase(), value);
+				values.put(color.name().toUpperCase(), value);
 				values.put(Character.toString(color.getChar()).toUpperCase(), value);
 			}
 	}
