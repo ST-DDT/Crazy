@@ -23,6 +23,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.FilterInterface.FilterInstanceInterface;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ColoredStringParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.InfiniteParamitrisableInterface;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.SortParamitrisable;
@@ -339,12 +340,20 @@ public class ChatHelperExtended extends ChatHelper
 			}
 			// search param or use via index
 			Paramitrisable param = params.get(header.toLowerCase());
-			if (header.length() == 0 && p < indexedParams.length)
-			{
-				final Paramitrisable tempParam = indexedParams[p++];
-				if (tempParam != null)
-					param = tempParam;
-			}
+			if (header.length() == 0)
+				if (p < indexedParams.length)
+				{
+					final Paramitrisable tempParam = indexedParams[p++];
+					if (tempParam != null)
+						param = tempParam;
+				}
+				else if (p == indexedParams.length)
+				{
+					final Paramitrisable tempParam = indexedParams[p - 1];
+					if (tempParam != null)
+						if (tempParam instanceof InfiniteParamitrisableInterface)
+							param = tempParam;
+				}
 			// found something?
 			if (param == null)
 				if (header.length() == 0)
@@ -510,12 +519,20 @@ public class ChatHelperExtended extends ChatHelper
 			}
 			// search param or use via index
 			Tabbed param = params.get(header.toLowerCase());
-			if (header.length() == 0 && p < indexedParams.length)
-			{
-				final Tabbed tempParam = indexedParams[p++];
-				if (tempParam != null)
-					param = tempParam;
-			}
+			if (header.length() == 0)
+				if (p < indexedParams.length)
+				{
+					final Tabbed tempParam = indexedParams[p++];
+					if (tempParam != null)
+						param = tempParam;
+				}
+				else if (p == indexedParams.length)
+				{
+					final Tabbed tempParam = indexedParams[p - 1];
+					if (tempParam != null)
+						if (tempParam instanceof InfiniteParamitrisableInterface)
+							param = tempParam;
+				}
 			// remove used params from map (without last one)
 			if (param != null && i < length - 1)
 			{

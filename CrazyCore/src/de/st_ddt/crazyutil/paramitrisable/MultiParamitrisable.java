@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class MultiParamitrisable<S> extends TypedParamitrisable<List<S>>
+public class MultiParamitrisable<S> extends TypedParamitrisable<List<S>> implements InfiniteParamitrisableInterface
 {
 
 	private final TypedParamitrisable<S> param;
