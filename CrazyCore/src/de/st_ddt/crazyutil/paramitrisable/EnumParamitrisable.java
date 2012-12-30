@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -45,5 +46,13 @@ public class EnumParamitrisable<S extends Enum<S>> extends TypedParamitrisable<S
 	public List<String> tab(final String parameter)
 	{
 		return MapParamitrisable.tabHelp(values, parameter.toUpperCase());
+	}
+
+	public static <S extends Enum<S>> List<String> tabHelp(final S... values)
+	{
+		final List<String> res = new ArrayList<String>(values.length);
+		for (final S value : values)
+			res.add(value.name());
+		return res;
 	}
 }
