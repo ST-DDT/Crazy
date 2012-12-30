@@ -1,6 +1,6 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
 
-public interface InfiniteParamitrisableInterface
+public interface InfiniteParamitrisableInterface extends Paramitrisable
 {
 }
