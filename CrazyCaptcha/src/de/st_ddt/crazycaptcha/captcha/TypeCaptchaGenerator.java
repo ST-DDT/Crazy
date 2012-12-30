@@ -190,7 +190,7 @@ public final class TypeCaptchaGenerator extends AbstractCaptchaGenerator
 		}
 
 		@Override
-		@Localized({ "CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.NUMERIC $Captcha$", "CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.LOWERCASE $Captcha$", "CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.UPPERCASE $Captcha$" })
+		@Localized({ "CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.NUMERIC $Message$", "CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.LOWERCASE $Message$", "CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.UPPERCASE $Message$" })
 		public void sendRequest(final Player player)
 		{
 			plugin.sendLocaleMessage("VERIFICATION.REQUEST.TYPE." + type.toString(), player, message);
