@@ -10,6 +10,7 @@ CRAZYCAPTCHA.KICKED.NOTVERIFIED=Du must das Captcha eingeben!
 #CRAZYCAPTCHA.MODE.CHANGE=
 CRAZYCAPTCHA.VERIFICATION.FAILED=&CFalsches Captcha!
 CRAZYCAPTCHA.VERIFICATION.REQUEST.BASIC=&CBitte tippe dieses Captcha:\n&E/captcha $0$
+CRAZYCAPTCHA.VERIFICATION.REQUEST.COLOR=&CBitte tippe alle $2$$1$ &CZeichen:\n&F     $0$\n&E/captcha $2$<Ergebniss>
 CRAZYCAPTCHA.VERIFICATION.REQUEST.MATH=&CBitte löse diese Gleichung:\n&F     $0$ = &C&L?\n&E/captcha <Ergebniss>
 CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.LOWERCASE=&CBitte tippe alle &LKleinbuchstaben:\n&F&L     $0$\n&E/captcha <Kleinbuchstaben>
 CRAZYCAPTCHA.VERIFICATION.REQUEST.TYPE.NUMERIC=&CBitte tippe alle &LZahlen:\n&F&L     $0$\n&E/captcha <Zahlen>
