@@ -48,6 +48,14 @@ public class EnumParamitrisable<S extends Enum<S>> extends TypedParamitrisable<S
 		return MapParamitrisable.tabHelp(values, parameter.toUpperCase());
 	}
 
+	public static <S extends Enum<S>> List<String> getEnumNames(final Collection<S> values)
+	{
+		final List<String> res = new ArrayList<String>(values.size());
+		for (final S value : values)
+			res.add(value.name());
+		return res;
+	}
+
 	public static <S extends Enum<S>> List<String> getEnumNames(final S... values)
 	{
 		final List<String> res = new ArrayList<String>(values.length);
