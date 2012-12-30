@@ -12,7 +12,7 @@ public class EnumParamitrisable<S extends Enum<S>> extends TypedParamitrisable<S
 {
 
 	private final String type;
-	private final Map<String, S> values;
+	protected final Map<String, S> values;
 
 	public EnumParamitrisable(final String type, final S defaultValue, final Collection<S> values)
 	{
