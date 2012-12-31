@@ -362,7 +362,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 
 	public String getMainDownloadLocation()
 	{
-		return "https://raw.github.com/ST-DDT/Crazy/master/" + getDescription().getName() + "/src/resource";
+		return "https://raw.github.com/ST-DDT/Crazy/master/" + getName() + "/src/resource";
 	}
 
 	public final void downloadLanguage(final String language)
