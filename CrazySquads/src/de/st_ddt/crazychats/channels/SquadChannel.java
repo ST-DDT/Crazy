@@ -20,12 +20,12 @@ public class SquadChannel implements ChannelInterface
 	public SquadChannel(final CrazySquads plugin, final Squad squad)
 	{
 		super();
-		aliases.add("p");
-		aliases.add("party");
-		aliases.add("squad");
+		this.aliases.add("p");
+		this.aliases.add("party");
+		this.aliases.add("squad");
 		this.plugin = plugin;
 		this.squad = squad;
-		members = squad.getMembers();
+		this.members = squad.getMembers();
 	}
 
 	@Override
@@ -72,5 +72,11 @@ public class SquadChannel implements ChannelInterface
 	public String toString()
 	{
 		return "SquadChatChannel (Owner: " + squad.getOwner() + ")";
+	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return false;
 	}
 }
