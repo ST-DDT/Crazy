@@ -39,6 +39,7 @@ import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerSilence;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerUnmute;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandSay;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandTell;
+import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandAnswer;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatAdd;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatChannel;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatRemove;
@@ -71,6 +72,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 {
 
 	private static CrazyChats plugin;
+	private final Map<Player, String> lastPrivateChatSenders = new HashMap<Player, String>();
 	private final Map<String, String> groupPrefixes = new LinkedHashMap<String, String>();
 	private final Map<String, String> groupSuffixes = new LinkedHashMap<String, String>();
 	private final Map<String, String> groupListnamePrefixes = new LinkedHashMap<String, String>();
@@ -502,6 +504,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private void registerCommands()
 	{
 		getCommand("tell").setExecutor(new CrazyChatsCommandTell(this));
+		getCommand("answer").setExecutor(new CrazyChatsPlayerCommandAnswer(this));
 		getCommand("say").setExecutor(new CrazyChatsCommandSay(this));
 		getCommand("colorhelp").setExecutor(new CrazyChatsCommandColorHelp(this));
 		getCommand("chatto").setExecutor(new CrazyChatsPlayerCommandChatTo(this));
@@ -697,6 +700,20 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("cleanCaps", cleanCaps);
 		config.set("clearChatLength", clearChatLength);
 		super.saveConfiguration();
+	}
+
+	public Map<Player, String> getLastPrivateChatSenders()
+	{
+		return lastPrivateChatSenders;
+	}
+
+	public Player getLastPrivateChatSender(final Player player)
+	{
+		final String name = lastPrivateChatSenders.get(player);
+		if (name == null)
+			return null;
+		else
+			return Bukkit.getPlayerExact(name);
 	}
 
 	public CrazyChatsPlayerListener getPlayerListener()

@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.5.2
+version: 1.6
 # requires CrazyCore v9.7.1 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
@@ -15,6 +15,10 @@ commands:
     description: Chat to the given player.
     usage: /<command> <Players> <Message>
     aliases: [pm,msg,message]
+  answer:
+    description: Answer to the last private message recieved.
+    usage: /<command> <Message>
+    aliases: [re,reply]
   say:
     description: Send a broadcast to the entire server.
     usage: /<command> <Message>

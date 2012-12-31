@@ -2,6 +2,7 @@ package de.st_ddt.crazychats.listener;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -31,14 +32,16 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 public class CrazyChatsPlayerListener implements Listener
 {
 
+	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
+	protected final static Pattern PATTERN_COMMA = Pattern.compile(",");
 	protected final CrazyChats plugin;
-	protected final Pattern PATTERN_SPACE = Pattern.compile(" ");
-	protected final Pattern PATTERN_COMMA = Pattern.compile(",");
+	protected final Map<Player, String> lastPrivateChatSenders;
 
 	public CrazyChatsPlayerListener(final CrazyChats plugin)
 	{
 		super();
 		this.plugin = plugin;
+		this.lastPrivateChatSenders = plugin.getLastPrivateChatSenders();
 	}
 
 	public void PlayerJoinEnabled(final Player player)
@@ -128,6 +131,7 @@ public class CrazyChatsPlayerListener implements Listener
 	protected void PlayerQuit(final Player player)
 	{
 		final ChatPlayerData data = plugin.getPlayerData(player);
+		lastPrivateChatSenders.remove(player);
 		final Set<ControlledChannelInterface> controlledChannels = plugin.getControlledChannels();
 		if (data != null)
 		{
@@ -220,6 +224,13 @@ public class CrazyChatsPlayerListener implements Listener
 				if (!plugin.getAvailablePlayerData(target).isMuted(player) || PermissionModule.hasPermission(player, "crazychats.unmutable"))
 					targets.add(target);
 		}
+		if (channel instanceof PrivateChannel)
+		{
+			targets.remove(player);
+			final String senderName = player.getName();
+			for (final Player target : targets)
+				lastPrivateChatSenders.put(target, senderName);
+		}
 		targets.add(player);
 		for (final Player online : Bukkit.getOnlinePlayers())
 			if (PermissionModule.hasPermission(online, "crazychats.chatspy"))
@@ -259,9 +270,9 @@ public class CrazyChatsPlayerListener implements Listener
 		{
 			super();
 			this.cancelled = true;
-			format = null;
-			targets = null;
-			message = null;
+			this.format = null;
+			this.targets = null;
+			this.message = null;
 		}
 
 		/**
