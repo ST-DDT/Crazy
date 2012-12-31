@@ -69,4 +69,10 @@ public class ArenaChannel implements ChannelInterface
 	{
 		return StringUtils.replace(plugin.getArenaChatFormat(), "$A0$", arena.getParticipant(player).getParticipantType().toString());
 	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return false;
+	}
 }
