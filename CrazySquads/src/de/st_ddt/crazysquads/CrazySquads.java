@@ -299,7 +299,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		};
 		modeCommand.addMode(squadChatFormatMode);
 		modeCommand.addMode(squadLeaderChatFormatMode);
-		CrazyPluginCommandMainMode chatsModeCommand = CrazyChats.getPlugin().getModeCommand();
+		final CrazyPluginCommandMainMode chatsModeCommand = CrazyChats.getPlugin().getModeCommand();
 		chatsModeCommand.addMode(squadChatFormatMode);
 		chatsModeCommand.addMode(squadLeaderChatFormatMode);
 	}
