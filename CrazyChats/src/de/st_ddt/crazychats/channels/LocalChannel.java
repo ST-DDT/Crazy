@@ -67,4 +67,10 @@ public final class LocalChannel extends AbstractMuteableChannel
 	{
 		return "LocalChatChannel (Range:" + plugin.getLocalChatRange() + ")";
 	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return true;
+	}
 }

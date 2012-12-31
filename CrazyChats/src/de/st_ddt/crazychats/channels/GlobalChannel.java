@@ -45,4 +45,10 @@ public class GlobalChannel extends AbstractMuteableChannel
 	{
 		return "GlobalChatChannel";
 	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return true;
+	}
 }

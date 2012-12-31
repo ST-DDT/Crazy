@@ -56,4 +56,10 @@ public class PrivateChannel extends AbstractChannel implements ControlledChannel
 	{
 		return "PrivateChatChannel" + (owner == null ? "" : " (Owner: " + owner.getName() + ")");
 	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return false;
+	}
 }

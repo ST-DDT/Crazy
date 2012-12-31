@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -59,6 +60,8 @@ public class CrazyChatsCommandClearChat extends CrazyChatsCommandExecutor
 				});
 			else
 				throw new CrazyCommandUsageException("<Player/*>");
+		else if (!PermissionModule.hasPermission(sender, "crazychats.clearchat"))
+			throw new CrazyCommandPermissionException();
 		else if (args.length == 1 && args[0].equals("*"))
 		{
 			final Player[] players = Bukkit.getOnlinePlayers();

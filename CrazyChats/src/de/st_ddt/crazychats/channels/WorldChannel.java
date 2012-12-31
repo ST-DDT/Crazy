@@ -56,4 +56,10 @@ public class WorldChannel extends AbstractMuteableChannel
 	{
 		return "WorldChatChannel (World: " + world.getName() + ")";
 	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return true;
+	}
 }

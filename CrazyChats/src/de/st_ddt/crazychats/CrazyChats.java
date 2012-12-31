@@ -2,6 +2,7 @@ package de.st_ddt.crazychats;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -38,6 +39,7 @@ import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerMute;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerSilence;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerUnmute;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandSay;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandServerSilence;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandTell;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandAnswer;
 import de.st_ddt.crazychats.commands.CrazyChatsPlayerCommandChatAdd;
@@ -94,6 +96,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private String adminChatFormat = "[Admin]%1$s: %2$s";
 	private String ownChatNamePrefix = ChatColor.ITALIC.toString();
 	private String defaultChannelKey;
+	private long serverSilence = getNow();
 	private long maxSilenceTime;
 	private boolean cleanRepetitions;
 	private boolean cleanCaps;
@@ -517,6 +520,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		getCommand("unmutechannel").setExecutor(new CrazyChatsPlayerCommandUnmuteChannel(this));
 		getCommand("muteall").setExecutor(new CrazyChatsPlayerCommandMuteAll(this));
 		getCommand("clearchat").setExecutor(new CrazyChatsCommandClearChat(this));
+		getCommand("serversilence").setExecutor(new CrazyChatsCommandServerSilence(this));
 		mainCommand.addSubCommand(modeCommand, "mode");
 		mainCommand.addSubCommand(new CrazyChatsCommandMainReload(this), "reload");
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerDisplayName(this), "displayname", "dispname", "dname");
@@ -885,6 +889,26 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public String getDefaultChannelKey()
 	{
 		return defaultChannelKey;
+	}
+
+	public boolean isServerSilenced()
+	{
+		return serverSilence > getNow();
+	}
+
+	public void setServerSilenced(final Date until)
+	{
+		setServerSilenced(until.getTime());
+	}
+
+	public void setServerSilenced(final long until)
+	{
+		serverSilence = until;
+	}
+
+	private long getNow()
+	{
+		return System.currentTimeMillis();
 	}
 
 	public long getMaxSilenceTime()

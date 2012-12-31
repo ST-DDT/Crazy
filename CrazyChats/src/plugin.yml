@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.6
+version: 1.7
 # requires CrazyCore v9.7.1 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
@@ -52,6 +52,10 @@ commands:
   clearchat:
     description: Clear the players chat history.
     usage: /<command> [Player/*]
+  serversilence:
+    description: Silence all public chat for a certain amount of time.
+    usage: /<command> [Date/Duration]
+    usage: [silence,globalmute]
   crazychats:
     description: Plugin Main Menu
     usage: /<command> <Subcommands...>
@@ -85,6 +89,7 @@ permissions:
       crazychats.unmutable: true
       crazychats.nocleaning: true
       crazychats.clearchat: true
+      crazychats.serversilence: true
   crazychats.mode:
     description: Allow changing plugin options.
     default: op
@@ -169,4 +174,7 @@ permissions:
     default: op
   crazychats.clearchat:
     description: Allow clearing the players chat history.
+    default: op
+  crazychats.serversilence:
+    description: Allow silencing all public chat for a certain amount of time.
     default: op

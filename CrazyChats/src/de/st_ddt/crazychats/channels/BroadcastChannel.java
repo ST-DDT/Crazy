@@ -45,4 +45,10 @@ public class BroadcastChannel extends AbstractChannel
 	{
 		return "BroadcastChatChannel";
 	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return false;
+	}
 }

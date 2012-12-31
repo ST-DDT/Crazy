@@ -34,6 +34,7 @@ public class CrazyChatsPlayerListener implements Listener
 
 	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
 	protected final static Pattern PATTERN_COMMA = Pattern.compile(",");
+	protected final ChatResult CANCELLED = new ChatResult();
 	protected final CrazyChats plugin;
 	protected final Map<Player, String> lastPrivateChatSenders;
 
@@ -154,19 +155,19 @@ public class CrazyChatsPlayerListener implements Listener
 		plugin.getCrazyDatabase().save(data);
 	}
 
-	@Localized({ "CRAZYCHATS.CHAT.BLOCKED.NOPERMISSION", "CRAZYCHATS.CHAT.BLOCKED.SILENCED $UntilDateTime$", "CRAZYCHATS.CHAT.BLOCKED.NOSUCHPLAYER $Player$", "CRAZYCHATS.CHANNEL.CHANGED $Channel$", "CRAZYCHATS.CHAT.BLOCKED.NOCHANNEL" })
+	@Localized({ "CRAZYCHATS.CHAT.BLOCKED.NOPERMISSION", "CRAZYCHATS.CHAT.BLOCKED.SILENCED $UntilDateTime$", "CRAZYCHATS.CHAT.BLOCKED.NOSUCHPLAYER $Player$", "CRAZYCHATS.CHANNEL.CHANGED $Channel$", "CRAZYCHATS.CHAT.BLOCKED.NOCHANNEL", "CRAZYCHATS.CHAT.BLOCKED.SERVERSILENCED" })
 	protected ChatResult PlayerChat(final Player player, String message)
 	{
 		if (!PermissionModule.hasPermission(player, "crazychats.talk"))
 		{
 			plugin.sendLocaleMessage("CHAT.BLOCKED.NOPERMISSION", player);
-			return new ChatResult();
+			return CANCELLED;
 		}
 		final ChatPlayerData data = plugin.getPlayerData(player);
 		if (data.isSilenced())
 		{
 			plugin.sendLocaleMessage("CHAT.BLOCKED.SILENCED", player, CrazyLightPluginInterface.DATETIMEFORMAT.format(data.getSilenced()));
-			return new ChatResult();
+			return CANCELLED;
 		}
 		ChannelInterface channel = data.getCurrentChannel();
 		if (message.startsWith("@"))
@@ -192,7 +193,7 @@ public class CrazyChatsPlayerListener implements Listener
 							plugin.sendLocaleMessage("CHAT.BLOCKED.NOCHANNEL", player, ChatHelper.listingString(data.getChannelMap().keySet()) + ", <Player,...>");
 						else
 							plugin.sendLocaleMessage("CHAT.BLOCKED.NOSUCHPLAYER", player, targetName);
-						return new ChatResult();
+						return CANCELLED;
 					}
 					targets.add(target);
 				}
@@ -205,7 +206,7 @@ public class CrazyChatsPlayerListener implements Listener
 			{
 				data.setCurrentChannel(channel);
 				plugin.sendLocaleMessage("CHANNEL.CHANGED", player, channel.getName());
-				return new ChatResult();
+				return CANCELLED;
 			}
 			else
 				message = split[1];
@@ -213,8 +214,14 @@ public class CrazyChatsPlayerListener implements Listener
 		if (channel == null)
 		{
 			plugin.sendLocaleMessage("CHAT.BLOCKED.NOCHANNEL", player, ChatHelper.listingString(data.getChannelMap().keySet()) + ", <Player,...>");
-			return new ChatResult();
+			return CANCELLED;
 		}
+		if (plugin.isServerSilenced())
+			if (channel.isAffectedByServerSilence())
+			{
+				plugin.sendLocaleMessage("CHAT.BLOCKED.SERVERSILENCED", player);
+				return CANCELLED;
+			}
 		data.setCurrentChannel(channel);
 		final Set<Player> targets = new HashSet<Player>();
 		final Set<Player> channelTargets = channel.getTargets(player);
@@ -266,7 +273,7 @@ public class CrazyChatsPlayerListener implements Listener
 		/**
 		 * Canceled Chat
 		 */
-		public ChatResult()
+		protected ChatResult()
 		{
 			super();
 			this.cancelled = true;

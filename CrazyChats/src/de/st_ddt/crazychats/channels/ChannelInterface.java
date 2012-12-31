@@ -17,4 +17,6 @@ public interface ChannelInterface extends Named
 	public Set<Player> getTargets(Player player);
 
 	public String getFormat(Player player);
+
+	public boolean isAffectedByServerSilence();
 }

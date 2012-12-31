@@ -46,4 +46,10 @@ public class AdminChannel extends AbstractMuteableChannel
 	{
 		return "AdminChatChannel";
 	}
+
+	@Override
+	public boolean isAffectedByServerSilence()
+	{
+		return false;
+	}
 }
