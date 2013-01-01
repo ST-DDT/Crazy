@@ -536,7 +536,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 				while ((zeile = bufreader.readLine()) != null)
 				{
 					zeile = zeile.trim();
-					if (active)
+					if (active && zeile.startsWith("<title>"))
 					{
 						updateVersion = zeile.substring(7 + getName().length() + 2).split("<")[0];
 						break;
