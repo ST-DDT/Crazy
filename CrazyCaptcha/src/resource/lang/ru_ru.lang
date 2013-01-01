@@ -9,7 +9,6 @@ CRAZYCAPTCHA.KICKED.COMMANDUSAGE=Вам не разрешается выполн
 CRAZYCAPTCHA.KICKED.NOTVERIFIED=Вы должны ввести капчу!
 CRAZYCAPTCHA.MODE.CHANGE=Установлен режим генератора "$0$" = "$1$".
 CRAZYCAPTCHA.VERIFICATION.FAILED=&CНе правильная капча!
-CRAZYCAPTCHA.VERIFICATION.REQUEST.BASIC=&CПожалуйста введитее эту капчу:\n&E/captcha $0$
 CRAZYCAPTCHA.VERIFICATION.REQUEST.BASIC=&CВведите эту капчу:\n&E/captcha $0$
 CRAZYCAPTCHA.VERIFICATION.REQUEST.COLOR=&CПожалуйста введите все $2$$1$ &Cсимволы:\n&F     $0$\n&E/captcha $2$<Result>
 CRAZYCAPTCHA.VERIFICATION.REQUEST.MATH=&CПожалуйста решитt это уравнение:\n&F     $0$ = &C&L?\n&E/captcha <Result>
