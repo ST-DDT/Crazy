@@ -71,6 +71,12 @@ public class ArenaChannel implements ChannelInterface
 	}
 
 	@Override
+	public String toString()
+	{
+		return arena.getType() + "ArenaChatChannel (Arena: " + arena.getName() + ")";
+	}
+
+	@Override
 	public boolean isAffectedByServerSilence()
 	{
 		return false;

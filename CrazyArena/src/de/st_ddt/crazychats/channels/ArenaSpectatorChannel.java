@@ -32,4 +32,10 @@ public class ArenaSpectatorChannel extends ArenaChannel
 	{
 		return StringUtils.replace(plugin.getArenaSpectatorChatFormat(), "$A0$", arena.getParticipant(player).getParticipantType().toString());
 	}
+	
+	@Override
+	public String toString()
+	{
+		return arena.getType() + "ArenaSpectatorChatChannel (Arena: " + arena.getName() + ")";
+	}
 }
