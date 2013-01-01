@@ -477,7 +477,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 		final int position = winners++;
 		raceParticipant.setParticipantType(ParticipantType.SPECTATOR);
-		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime()));
+		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
 		// EDIT queue kick task for to slow players
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 			stop();
