@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
@@ -38,14 +40,15 @@ public final class CrazyCore extends CrazyPlugin
 {
 
 	private static CrazyCore plugin;
-	private final HashSet<String> preloadedLanguages = new HashSet<String>();
-	private final HashSet<String> loadedLanguages = new HashSet<String>();
+	private final Set<String> preloadedLanguages = new HashSet<String>();
+	private final Set<String> loadedLanguages = new HashSet<String>();
+	private final List<String> playerWipeCommands = new ArrayList<String>();
+	private final SortedSet<String> protectedPlayers = new TreeSet<String>();
 	private CrazyCoreMessageListener messageListener;
 	private CrazyCoreCrazyListener crazylistener;
 	private boolean wipePlayerFiles;
 	private boolean wipePlayerBans;
-	private final ArrayList<String> playerWipeCommands = new ArrayList<String>();
-	private final TreeSet<String> protectedPlayers = new TreeSet<String>();
+	private boolean loadUserLanguages;
 
 	public static CrazyCore getPlugin()
 	{
@@ -174,18 +177,25 @@ public final class CrazyCore extends CrazyPlugin
 		// ChatHeader
 		ChatHelper.setShowChatHeaders(config.getBoolean("showChatHeaders", true));
 		// Language
+		loadUserLanguages = config.getBoolean("loadUserLanguages", true);
 		final String systemLanguage = System.getProperty("user.language").toLowerCase();
 		final String defaultLanguage = config.getString("defaultLanguage", systemLanguage + "_" + systemLanguage);
 		CrazyLocale.setDefaultLanguage(defaultLanguage);
 		preloadedLanguages.add(defaultLanguage);
 		if (isInstalled)
-			if (!defaultLanguage.equals("en_en"))
-				preloadedLanguages.add("en_en");
-		for (final String language : config.getStringList("preloadedLanguages"))
-			preloadedLanguages.add(language);
-		preloadedLanguages.addAll(CrazyLocale.load(config.getConfigurationSection("players")));
+			preloadedLanguages.add("en_en");
+		final List<String> preloadedLanguagesList = config.getStringList("preloadedLanguages");
+		for (final String language : preloadedLanguagesList)
+			if (CrazyLocale.PATTERN_LANGUAGE.matcher(language).matches())
+				preloadedLanguages.add(language);
+		if (preloadedLanguages.size() == 0)
+			preloadedLanguages.add("en_en");
 		for (final String language : preloadedLanguages)
 			loadLanguageFiles(language, false);
+		final Set<String> userLanguages = CrazyLocale.load(config.getConfigurationSection("players"));
+		if (loadUserLanguages)
+			for (final String language : userLanguages)
+				loadLanguageFiles(language, false);
 	}
 
 	public void loadLanguageFiles(final String language, final boolean forceUpdate)
@@ -215,6 +225,7 @@ public final class CrazyCore extends CrazyPlugin
 		// ChatHeader
 		config.set("showChatHeaders", ChatHelper.isShowingChatHeadersEnabled());
 		// Language
+		config.set("loadUserLanguages", loadUserLanguages);
 		config.set("defaultLanguage", CrazyLocale.getDefaultLanguage());
 		config.set("preloadedLanguages", new ArrayList<String>(preloadedLanguages));
 		config.set("players", null);
@@ -238,18 +249,23 @@ public final class CrazyCore extends CrazyPlugin
 		return wipePlayerBans;
 	}
 
-	public ArrayList<String> getPlayerWipeCommands()
+	public List<String> getPlayerWipeCommands()
 	{
 		return playerWipeCommands;
 	}
 
-	public TreeSet<String> getProtectedPlayers()
+	public SortedSet<String> getProtectedPlayers()
 	{
 		return protectedPlayers;
 	}
 
-	public HashSet<String> getPreloadedLanguages()
+	public Set<String> getPreloadedLanguages()
 	{
 		return preloadedLanguages;
+	}
+
+	public boolean isLoadingUserLanguagesEnabled()
+	{
+		return loadUserLanguages;
 	}
 }

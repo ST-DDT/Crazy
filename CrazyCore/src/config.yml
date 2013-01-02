@@ -24,6 +24,8 @@ protectedPlayers: []
 disablePipes: false
 # show [CrazyPlugin] chatheaders in front of every plugin message (true/false)
 showChatHeaders: true
+# when enabled every language selected by users will be loaded
+loadUserLanguages: true
 # the servers default language
 defaultLanguage: en_en
 # the languages which are loaded on startup 

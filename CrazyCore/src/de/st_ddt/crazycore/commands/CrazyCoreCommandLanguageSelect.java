@@ -30,10 +30,11 @@ public class CrazyCoreCommandLanguageSelect extends CrazyCoreCommandExecutor
 		final String language = args[0].toLowerCase();
 		if (!CrazyLocale.PATTERN_LANGUAGE.matcher(language).matches())
 			throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
-		plugin.loadLanguageFiles(language, false);
+		if (plugin.isLoadingUserLanguagesEnabled())
+			plugin.loadLanguageFiles(language, false);
 		CrazyLocale.setUserLanguage(sender, language);
 		plugin.save();
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getLanguageName(), language);
+		plugin.sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getSaveLanguageName(language), language);
 	}
 
 	@Override
