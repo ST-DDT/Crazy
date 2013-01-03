@@ -162,11 +162,22 @@ public class PlayerTimeData extends PlayerData<PlayerTimeData> implements Config
 
 	public boolean isActive()
 	{
-		final double timeofday = new Date().getTime() / 1000 / 60 / 60D % 24;
-		if (getPlugin().getEnabledAfter() > timeofday || timeofday > getPlugin().getEnabledUntil())
+		Date now = new Date();
+		CrazyTimeCard plugin = getPlugin();
+		final double timeofday = (now.getTime() / 1000 / 60 / 60D + plugin.getEnabledOffset()) % 24;
+		System.out.println(timeofday);
+		// EDIT Please test this!
+		double enabledAfter = plugin.getEnabledAfter();
+		double enabledUntil = plugin.getEnabledUntil();
+		if (enabledAfter < enabledUntil)
+			if (enabledAfter > timeofday || timeofday > enabledUntil)
+				return true;
+			else
+				return limit.after(now);
+		else if (enabledAfter < timeofday || timeofday < enabledUntil)
 			return true;
 		else
-			return limit.after(new Date());
+			return limit.after(now);
 	}
 
 	public Date getLimit()

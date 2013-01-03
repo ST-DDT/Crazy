@@ -1,6 +1,8 @@
 package de.st_ddt.crazytimecard;
 
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,6 +47,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 	private int defaultKeyLength;
 	private double enabledAfter;
 	private double enabledUntil;
+	private final double enabledOffset = (TimeZone.getDefault().getOffset(new Date().getTime()) + 24) % 24;
 	private int autoKick;
 	private String filterNames;
 	private boolean blockDifferentNameCases;
@@ -520,6 +523,11 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 	public double getEnabledUntil()
 	{
 		return enabledUntil;
+	}
+
+	public double getEnabledOffset()
+	{
+		return enabledOffset;
 	}
 
 	public String getNameFilter()
