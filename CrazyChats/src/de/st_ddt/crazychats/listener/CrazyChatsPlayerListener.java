@@ -275,7 +275,6 @@ public class CrazyChatsPlayerListener implements Listener
 				channel.getTargets(null).addAll(targets);
 				targets.clear();
 			}
-			System.out.println("B" + channel);
 			if (split.length == 1)
 			{
 				data.setCurrentChannel(channel);
