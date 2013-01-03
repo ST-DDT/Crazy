@@ -23,6 +23,7 @@ import de.st_ddt.crazychats.channels.AbstractChannel;
 import de.st_ddt.crazychats.channels.AdminChannel;
 import de.st_ddt.crazychats.channels.BroadcastChannel;
 import de.st_ddt.crazychats.channels.ControlledChannelInterface;
+import de.st_ddt.crazychats.channels.CustomChannel;
 import de.st_ddt.crazychats.channels.GlobalChannel;
 import de.st_ddt.crazychats.channels.LocalChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
@@ -84,8 +85,10 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final LocalChannel localChannel = new LocalChannel(this);
 	private final AdminChannel adminChannel = new AdminChannel();
 	private final Set<ControlledChannelInterface> controlledChannels = Collections.synchronizedSet(new HashSet<ControlledChannelInterface>());
+	private final Map<Integer, CustomChannel> customChannels = Collections.synchronizedMap(new HashMap<Integer, CustomChannel>());
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
+	private int id;
 	private String broadcastChatFormat = "[All]%1$s: %2$s";
 	private String globalChatFormat = "[Global]%1$s: %2$s";
 	private String worldChatFormat = "[World]%1$s: %2$s";
@@ -658,6 +661,15 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		else
 			for (final String key : groupListnamePrefixConfig.getKeys(false))
 				groupListnamePrefixes.put(key, ChatHelper.colorise(groupListnamePrefixConfig.getString(key, "")));
+		id = config.getInt("newID", 0);
+		final ConfigurationSection customChannelConfig = config.getConfigurationSection("customChannels");
+		customChannels.clear();
+		if (customChannelConfig != null)
+			for (final String key : customChannelConfig.getKeys(false))
+			{
+				final CustomChannel channel = new CustomChannel(this, customChannelConfig.getConfigurationSection(key));
+				customChannels.put(channel.getId(), channel);
+			}
 		broadcastChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("broadcastChatFormat", "&C&L[All] &F%1$s&F: &E%2$s"));
 		globalChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("globalChatFormat", "&6[Global] &F%1$s&F: &F%2$s"));
 		worldChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("worldChatFormat", "&A[World] &F%1$s&F: &F%2$s"));
@@ -689,6 +701,13 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("groupListnamePrefix", null);
 		for (final Entry<String, String> entry : groupListnamePrefixes.entrySet())
 			config.set("groupListnamePrefix." + entry.getKey(), ChatHelper.decolorise(entry.getValue()));
+		config.set("newID", id);
+		config.set("customChannels", null);
+		synchronized (customChannels)
+		{
+			for (final CustomChannel channel : customChannels.values())
+				channel.simpleSave(config, "customChannels.");
+		}
 		config.set("broadcastChatFormat", CrazyChatsChatHelper.unmakeFormat(broadcastChatFormat));
 		config.set("globalChatFormat", CrazyChatsChatHelper.unmakeFormat(globalChatFormat));
 		config.set("worldChatFormat", CrazyChatsChatHelper.unmakeFormat(worldChatFormat));
@@ -809,6 +828,16 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 					return infix;
 			}
 		return groupListnamePrefixes.get("nogroup");
+	}
+
+	public int getNewID()
+	{
+		return id++;
+	}
+
+	public Map<Integer, CustomChannel> getCustomChannels()
+	{
+		return customChannels;
 	}
 
 	public BroadcastChannel getBroadcastChannel()

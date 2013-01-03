@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.7
+version: 1.99
 # requires CrazyCore v9.7.1 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
@@ -90,6 +90,7 @@ permissions:
       crazychats.nocleaning: true
       crazychats.clearchat: true
       crazychats.serversilence: true
+      crazychats.customchannel.admin: true
   crazychats.mode:
     description: Allow changing plugin options.
     default: op
@@ -177,4 +178,7 @@ permissions:
     default: op
   crazychats.serversilence:
     description: Allow silencing all public chat for a certain amount of time.
+    default: op
+  crazychats.customchannel.admin:
+    description: Allow modifing all custom channels.
     default: op

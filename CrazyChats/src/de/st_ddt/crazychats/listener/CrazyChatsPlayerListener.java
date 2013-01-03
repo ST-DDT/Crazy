@@ -7,10 +7,15 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -20,6 +25,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.channels.ChannelInterface;
 import de.st_ddt.crazychats.channels.ControlledChannelInterface;
+import de.st_ddt.crazychats.channels.CustomChannel;
 import de.st_ddt.crazychats.channels.PrivateChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.data.ChatPlayerData;
@@ -34,6 +40,7 @@ public class CrazyChatsPlayerListener implements Listener
 
 	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
 	protected final static Pattern PATTERN_COMMA = Pattern.compile(",");
+	protected final static String CHANNELSIGNHEADER = ChatColor.RED + "[" + ChatColor.GREEN + "Channel" + ChatColor.RED + "]";
 	protected final ChatResult CANCELLED = new ChatResult();
 	protected final CrazyChats plugin;
 	protected final Map<Player, String> lastPrivateChatSenders;
@@ -57,7 +64,7 @@ public class CrazyChatsPlayerListener implements Listener
 		PlayerLogin(event.getPlayer());
 	}
 
-	public void PlayerLogin(final Player player)
+	private void PlayerLogin(final Player player)
 	{
 		ChatPlayerData data = plugin.getCrazyDatabase().updateEntry(player);
 		if (data == null)
@@ -73,7 +80,7 @@ public class CrazyChatsPlayerListener implements Listener
 		PlayerJoinComplete(event.getPlayer());
 	}
 
-	public void PlayerJoinComplete(final Player player)
+	private void PlayerJoinComplete(final Player player)
 	{
 		final ChatPlayerData data = plugin.getPlayerData(player);
 		final Set<ChannelInterface> channels = data.getAccessibleChannels();
@@ -96,6 +103,13 @@ public class CrazyChatsPlayerListener implements Listener
 				player.setPlayerListName(name.substring(0, 16));
 			else
 				player.setPlayerListName(name);
+		}
+		final Map<Integer, CustomChannel> customChannels = plugin.getCustomChannels();
+		synchronized (customChannels)
+		{
+			for (final CustomChannel channel : customChannels.values())
+				if (channel.join(player))
+					channels.add(channel);
 		}
 		final ChannelInterface channel = data.getChannelMap().get(plugin.getDefaultChannelKey());
 		if (channel != null)
@@ -129,7 +143,7 @@ public class CrazyChatsPlayerListener implements Listener
 		PlayerQuit(event.getPlayer());
 	}
 
-	protected void PlayerQuit(final Player player)
+	private void PlayerQuit(final Player player)
 	{
 		final ChatPlayerData data = plugin.getPlayerData(player);
 		lastPrivateChatSenders.remove(player);
@@ -153,6 +167,65 @@ public class CrazyChatsPlayerListener implements Listener
 		}
 		plugin.getLocalChannel().unmuteChannel(player);
 		plugin.getCrazyDatabase().save(data);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	@Localized("CRAZYCHATS.SIGN.CREATED $ChannelID$ $ChannelName$")
+	public void SignChangeEvent(final SignChangeEvent event)
+	{
+		final String[] lines = event.getLines();
+		if (lines[0] == null || lines[1] == null)
+			return;
+		if (!lines[0].equals("[Channel]"))
+			return;
+		lines[0] = CHANNELSIGNHEADER;
+		try
+		{
+			final int id = Integer.parseInt(lines[1]);
+			final CustomChannel channel = plugin.getCustomChannels().get(id);
+			if (channel == null)
+			{
+				lines[1] = ChatColor.RED + "INVALID";
+				return;
+			}
+			final Player player = event.getPlayer();
+			if (player.getName().equals(channel.getOwner()) || PermissionModule.hasPermission(player, "crazychats.customchannel.admin"))
+				plugin.sendLocaleMessage("SIGN.CREATED", player, id, channel.getName());
+			else
+				lines[1] = ChatColor.RED + "INVALID";
+		}
+		catch (final NumberFormatException e)
+		{
+			lines[1] = ChatColor.RED + "INVALID";
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	@Localized({ "CRAZYCHATS.SIGN.INVALID", "CRAZYCHATS.SIGN.JOINED $ChannelID$ $ChannelName$", "CRAZYCHATS.SIGN.JOINFAILED" })
+	public void PlayerInteractEvent(final PlayerInteractEvent event)
+	{
+		final BlockState block = event.getClickedBlock().getState();
+		if (!(block instanceof Sign))
+			return;
+		final Sign sign = (Sign) block;
+		if (!sign.getLine(0).equals(CHANNELSIGNHEADER))
+			return;
+		event.setCancelled(true);
+		final Player player = event.getPlayer();
+		try
+		{
+			final CustomChannel channel = plugin.getCustomChannels().get(Integer.parseInt(sign.getLine(1)));
+			if (channel == null)
+				plugin.sendLocaleMessage("SIGN.INVALID", player);
+			else if (channel.participate(player, true))
+				plugin.sendLocaleMessage("SIGN.JOINED", player, channel.getId(), channel.getName());
+			else
+				plugin.sendLocaleMessage("SIGN.JOINFAILED", player);
+		}
+		catch (final NumberFormatException e)
+		{
+			plugin.sendLocaleMessage("SIGN.INVALID", player);
+		}
 	}
 
 	@Localized({ "CRAZYCHATS.CHAT.BLOCKED.NOPERMISSION", "CRAZYCHATS.CHAT.BLOCKED.SILENCED $UntilDateTime$", "CRAZYCHATS.CHAT.BLOCKED.NOSUCHPLAYER $Player$", "CRAZYCHATS.CHANNEL.CHANGED $Channel$", "CRAZYCHATS.CHAT.BLOCKED.NOCHANNEL", "CRAZYCHATS.CHAT.BLOCKED.SERVERSILENCED" })
@@ -202,6 +275,7 @@ public class CrazyChatsPlayerListener implements Listener
 				channel.getTargets(null).addAll(targets);
 				targets.clear();
 			}
+			System.out.println("B" + channel);
 			if (split.length == 1)
 			{
 				data.setCurrentChannel(channel);
