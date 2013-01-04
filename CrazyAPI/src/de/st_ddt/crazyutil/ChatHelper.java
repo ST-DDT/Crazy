@@ -119,7 +119,7 @@ public class ChatHelper
 		return putArgs(message, 0, args);
 	}
 
-	public static String putArgs(final String message, final int start, final Object... args)
+	public static String putArgs(final int start, final String message, final Object... args)
 	{
 		String res = message;
 		final int length = args.length;
@@ -142,7 +142,7 @@ public class ChatHelper
 		return putArgsExtended(target, message, 0, args);
 	}
 
-	public static String putArgsExtended(final CommandSender target, final Object message, final int start, final Object... args)
+	public static String putArgsExtended(final int start, final CommandSender target, final Object message, final Object... args)
 	{
 		String res = message.toString();
 		if (message instanceof CrazyLocale)
