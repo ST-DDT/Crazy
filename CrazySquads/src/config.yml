@@ -12,9 +12,9 @@ maxSquadSize: 5
 # (to prevent inventory shifting and afk players being trained)
 maxShareRange: 50.0
 # default loot share rules for every new squad. (LOOT_SHARE, LOOT_SHARESILENT, LOOT_PRIVATE, LOOT_PRIVATESILENT)
-defaultLootRules: LOOT_SHARE
+defaultLootRules: SHARE
 # default xp share rules for every new squad. (XP_SHARE, XP_SHARESILENT, XP_PRIVATE, XP_PRIVATESILENT)
-defaultXPRules: XP_SHARE
+defaultXPRules: SHARESILENT
 # when rejoining the server within this amount of time you will automatically rejoin your last squad. (time in seconds,0=disabled)
 squadAutoRejoinTime: 60
 # -------------------------------------------------
