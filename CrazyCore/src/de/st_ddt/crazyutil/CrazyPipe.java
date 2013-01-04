@@ -92,11 +92,11 @@ public abstract class CrazyPipe
 	public static List<String> tabHelp(final CommandSender sender, final String[] pipeArgs)
 	{
 		final int length = pipeArgs.length;
+		if (length == 0)
+			return null;
 		for (int i = 0; i < length; i++)
 			if (pipeArgs[i].equals("|"))
 				return tabHelp(sender, ChatHelperExtended.shiftArray(pipeArgs, i + 1));
-		if (length == 0)
-			return null;
 		final CrazyPipe pipe = pipes.get(pipeArgs[0].toLowerCase());
 		if (pipe == null)
 		{
