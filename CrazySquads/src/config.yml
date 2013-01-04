@@ -11,12 +11,16 @@ maxSquadSize: 5
 # max Range for XP and Loot being shared
 # (to prevent inventory shifting and afk players being trained)
 maxShareRange: 50.0
-# default loot share rules for every new squad. (LOOT_SHARE, LOOT_SHARESILENT, LOOT_PRIVATE, LOOT_PRIVATESILENT)
+# default loot share rules for every new squad. (SHARE, SHARESILENT, PRIVATE, PRIVATESILENT)
 defaultLootRules: SHARE
-# default xp share rules for every new squad. (XP_SHARE, XP_SHARESILENT, XP_PRIVATE, XP_PRIVATESILENT)
+# default xp share rules for every new squad. (SHARE, SHARESILENT, PRIVATE, PRIVATESILENT)
 defaultXPRules: SHARESILENT
 # when rejoining the server within this amount of time you will automatically rejoin your last squad. (time in seconds,0=disabled)
 squadAutoRejoinTime: 60
+# these commands can be executed as squadcommands (/squad command <Command>)
+# no backslash required
+commandWhitelist:
+- chatchannel squad
 # -------------------------------------------------
 # requires CrazyChats
 # formats params can be found here 

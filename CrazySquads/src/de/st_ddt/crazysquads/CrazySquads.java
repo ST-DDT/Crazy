@@ -23,8 +23,10 @@ import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode.Mode;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazysquads.commands.CrazySquadsCommandMainCommands;
 import de.st_ddt.crazysquads.commands.CrazySquadsPlayerCommandSquadCreate;
 import de.st_ddt.crazysquads.commands.CrazySquadsPlayerCommandSquadJoin;
+import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadCommand;
 import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadDelete;
 import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadInvite;
 import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadKickMember;
@@ -48,6 +50,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	private final Map<Player, Squad> squads = new HashMap<Player, Squad>();
 	private final Map<Player, Squad> invites = new HashMap<Player, Squad>();
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
+	private final List<String> commandWhiteList = new ArrayList<String>();
 	private CrazySquadsPlayerListener playerListener;
 	private int maxSquadSize = 1;
 	private double maxShareRange;
@@ -338,7 +341,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 
 	private void registerCommands()
 	{
-		mainCommand.addSubCommand(modeCommand, "mode");
 		final CrazyCommandTreeExecutor<CrazySquads> squadCommand = new CrazyCommandTreeExecutor<CrazySquads>(this);
 		getCommand("squad").setExecutor(squadCommand);
 		squadCommand.addSubCommand(new CrazySquadsPlayerCommandSquadCreate(this), "c", "create");
@@ -349,6 +351,9 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		squadCommand.addSubCommand(new CrazySquadsSquadPlayerCommandSquadLeave(this), "q", "quit", "leave");
 		squadCommand.addSubCommand(new CrazySquadsSquadPlayerCommandSquadDelete(this), "del", "delete");
 		squadCommand.addSubCommand(new CrazySquadsSquadPlayerCommandSquadMode(this), "o", "option", "cfg", "config");
+		squadCommand.addSubCommand(new CrazySquadsSquadPlayerCommandSquadCommand(this), "cmd", "command");
+		mainCommand.addSubCommand(modeCommand, "mode");
+		mainCommand.addSubCommand(new CrazySquadsCommandMainCommands(this), "commands");
 	}
 
 	private void registerHooks()
@@ -412,6 +417,10 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			defaultXPRules = ShareRules.SHARESILENT;
 		}
 		squadAutoRejoinTime = Math.max(config.getLong("squadAutoRejoinTime", 60), 0);
+		commandWhiteList.clear();
+		final List<String> commandList = config.getStringList("commandWhitelist");
+		if (commandList != null)
+			commandWhiteList.addAll(commandList);
 		if (crazyChatsEnabled)
 		{
 			squadChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("squadChatFormat", "&3[Squad] &F%1$s&F: &B%2$s"));
@@ -430,6 +439,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		config.set("defaultLootRules", defaultLootRules.toString());
 		config.set("defaultXPRules", defaultXPRules.toString());
 		config.set("squadAutoRejoinTime", squadAutoRejoinTime);
+		config.set("commandWhitelist", commandWhiteList);
 		if (crazyChatsEnabled)
 		{
 			config.set("squadChatFormat", CrazyChatsChatHelper.unmakeFormat(squadChatFormat));
@@ -496,6 +506,11 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	public long getSquadAutoRejoinTime()
 	{
 		return squadAutoRejoinTime;
+	}
+
+	public List<String> getCommandWhiteList()
+	{
+		return commandWhiteList;
 	}
 
 	public String getSquadChatFormat()

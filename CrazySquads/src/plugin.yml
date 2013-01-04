@@ -25,6 +25,7 @@ permissions:
       crazysquads.mode: true
       crazysquads.party.create: true
       crazysquads.party.join: true
+      crazysquads.commands: true
   crazysquads.mode:
     description: Allow changing plugin options.
     default: op
@@ -34,3 +35,6 @@ permissions:
   crazysquads.squad.join:
     description: Allow joining parties.
     default: true
+  crazysquads.commands: 
+    description: Allow changing whitelisted squad commands.
+    op: op
