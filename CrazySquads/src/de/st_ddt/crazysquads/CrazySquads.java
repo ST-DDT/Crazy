@@ -31,10 +31,9 @@ import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadKickMemb
 import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadLeave;
 import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadList;
 import de.st_ddt.crazysquads.commands.CrazySquadsSquadPlayerCommandSquadMode;
-import de.st_ddt.crazysquads.data.Loot_Rules;
 import de.st_ddt.crazysquads.data.PseudoPlayerData;
+import de.st_ddt.crazysquads.data.ShareRules;
 import de.st_ddt.crazysquads.data.Squad;
-import de.st_ddt.crazysquads.data.XP_Rules;
 import de.st_ddt.crazysquads.listener.CrazySquadsCrazyChatsListener;
 import de.st_ddt.crazysquads.listener.CrazySquadsPlayerListener;
 import de.st_ddt.crazysquads.listener.CrazySquadsTagAPIListener;
@@ -52,8 +51,8 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	private CrazySquadsPlayerListener playerListener;
 	private int maxSquadSize = 1;
 	private double maxShareRange;
-	private Loot_Rules defaultLootRules;
-	private XP_Rules defaultXPRules;
+	private ShareRules defaultLootRules;
+	private ShareRules defaultXPRules;
 	private long squadAutoRejoinTime;
 	private boolean crazyChatsEnabled;
 	private String squadChatFormat = "[Squad]%1$s: %2$s";
@@ -107,11 +106,11 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				return maxShareRange;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<Loot_Rules>("defaultLootRules", Loot_Rules.class)
+		modeCommand.addMode(modeCommand.new Mode<ShareRules>("defaultLootRules", ShareRules.class)
 		{
 
 			@Override
-			public Loot_Rules getValue()
+			public ShareRules getValue()
 			{
 				return defaultLootRules;
 			}
@@ -122,7 +121,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				final String lootType = args[0].toUpperCase();
 				try
 				{
-					setValue(Loot_Rules.valueOf(lootType));
+					setValue(ShareRules.valueOf(lootType));
 					showValue(sender);
 				}
 				catch (final Exception e)
@@ -132,7 +131,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			}
 
 			@Override
-			public void setValue(final Loot_Rules newValue) throws CrazyException
+			public void setValue(final ShareRules newValue) throws CrazyException
 			{
 				defaultLootRules = newValue;
 				saveConfiguration();
@@ -145,17 +144,17 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 					return null;
 				final List<String> res = new LinkedList<String>();
 				final String name = args[0].toUpperCase();
-				for (final Loot_Rules rule : Loot_Rules.values())
+				for (final ShareRules rule : ShareRules.values())
 					if (rule.toString().startsWith(name))
 						res.add(rule.toString());
 				return res;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<XP_Rules>("defaultXPRules", XP_Rules.class)
+		modeCommand.addMode(modeCommand.new Mode<ShareRules>("defaultXPRules", ShareRules.class)
 		{
 
 			@Override
-			public XP_Rules getValue()
+			public ShareRules getValue()
 			{
 				return defaultXPRules;
 			}
@@ -166,7 +165,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				final String xpType = args[0].toUpperCase();
 				try
 				{
-					setValue(XP_Rules.valueOf(xpType));
+					setValue(ShareRules.valueOf(xpType));
 					showValue(sender);
 				}
 				catch (final Exception e)
@@ -176,7 +175,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			}
 
 			@Override
-			public void setValue(final XP_Rules newValue) throws CrazyException
+			public void setValue(final ShareRules newValue) throws CrazyException
 			{
 				defaultXPRules = newValue;
 				saveConfiguration();
@@ -189,7 +188,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 					return null;
 				final List<String> res = new LinkedList<String>();
 				final String name = args[0].toUpperCase();
-				for (final XP_Rules rule : XP_Rules.values())
+				for (final ShareRules rule : ShareRules.values())
 					if (rule.toString().startsWith(name))
 						res.add(rule.toString());
 				return res;
@@ -392,25 +391,25 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		final ConfigurationSection config = getConfig();
 		maxSquadSize = Math.max(1, config.getInt("maxSquadSize", 5));
 		maxShareRange = config.getDouble("maxShareRange", 50);
-		final String lootType = config.getString("defaultLootRules", Loot_Rules.LOOT_SHARE.toString()).toUpperCase();
+		final String lootType = config.getString("defaultLootRules", ShareRules.SHARE.name()).toUpperCase();
 		try
 		{
-			defaultLootRules = Loot_Rules.valueOf(lootType);
+			defaultLootRules = ShareRules.valueOf(lootType);
 		}
 		catch (final Exception e)
 		{
 			consoleLog(ChatColor.RED + "NO SUCH LOOTRULE " + lootType);
-			defaultLootRules = Loot_Rules.LOOT_SHARE;
+			defaultLootRules = ShareRules.SHARE;
 		}
-		final String xpType = config.getString("defaultXPRules", XP_Rules.XP_SHARE.toString()).toUpperCase();
+		final String xpType = config.getString("defaultXPRules", ShareRules.SHARESILENT.name()).toUpperCase();
 		try
 		{
-			defaultXPRules = XP_Rules.valueOf(xpType);
+			defaultXPRules = ShareRules.valueOf(xpType);
 		}
 		catch (final Exception e)
 		{
 			consoleLog(ChatColor.RED + "NO SUCH XPRULE " + xpType);
-			defaultXPRules = XP_Rules.XP_SHARESILENT;
+			defaultXPRules = ShareRules.SHARESILENT;
 		}
 		squadAutoRejoinTime = Math.max(config.getLong("squadAutoRejoinTime", 60), 0);
 		if (crazyChatsEnabled)
@@ -484,12 +483,12 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		return maxShareRange;
 	}
 
-	public Loot_Rules getDefaultLootRules()
+	public ShareRules getDefaultLootRules()
 	{
 		return defaultLootRules;
 	}
 
-	public XP_Rules getDefaultXPRules()
+	public ShareRules getDefaultXPRules()
 	{
 		return defaultXPRules;
 	}

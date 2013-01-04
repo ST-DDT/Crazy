@@ -14,8 +14,8 @@ public class Squad implements Named
 {
 
 	private Player owner;
-	private Loot_Rules loot = CrazySquads.getPlugin().getDefaultLootRules();
-	private XP_Rules xp = CrazySquads.getPlugin().getDefaultXPRules();
+	private ShareRules loot = CrazySquads.getPlugin().getDefaultLootRules();
+	private ShareRules xp = CrazySquads.getPlugin().getDefaultXPRules();
 	private final Set<Player> members = Collections.synchronizedSet(new LinkedHashSet<Player>());
 
 	public Squad(final Player owner)
@@ -40,22 +40,22 @@ public class Squad implements Named
 		this.owner = owner;
 	}
 
-	public Loot_Rules getLootRule()
+	public ShareRules getLootRule()
 	{
 		return loot;
 	}
 
-	public void setLootRule(final Loot_Rules loot)
+	public void setLootRule(final ShareRules loot)
 	{
 		this.loot = loot;
 	}
 
-	public XP_Rules getXPRule()
+	public ShareRules getXPRule()
 	{
 		return xp;
 	}
 
-	public void setXPRule(final XP_Rules xp)
+	public void setXPRule(final ShareRules xp)
 	{
 		this.xp = xp;
 	}

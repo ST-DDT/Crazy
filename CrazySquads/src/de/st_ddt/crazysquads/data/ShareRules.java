@@ -1,13 +1,13 @@
 package de.st_ddt.crazysquads.data;
 
-public enum Loot_Rules
+public enum ShareRules
 {
-	LOOT_SHARE(true, false), LOOT_SHARESILENT(true, true), LOOT_PRIVATE(false, false), LOOT_PRIVATESILENT(false, true);
+	SHARE(true, false), SHARESILENT(true, true), PRIVATE(false, false), PRIVATESILENT(false, true);
 
 	private final boolean share;
 	private final boolean silent;
 
-	private Loot_Rules(final boolean share, final boolean silent)
+	private ShareRules(final boolean share, final boolean silent)
 	{
 		this.share = share;
 		this.silent = silent;

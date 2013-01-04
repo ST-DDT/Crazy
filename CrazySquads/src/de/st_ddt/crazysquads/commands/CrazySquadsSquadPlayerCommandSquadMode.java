@@ -17,9 +17,8 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazysquads.CrazySquads;
-import de.st_ddt.crazysquads.data.Loot_Rules;
+import de.st_ddt.crazysquads.data.ShareRules;
 import de.st_ddt.crazysquads.data.Squad;
-import de.st_ddt.crazysquads.data.XP_Rules;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -32,11 +31,11 @@ public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlay
 	public CrazySquadsSquadPlayerCommandSquadMode(final CrazySquads plugin)
 	{
 		super(plugin);
-		addMode(new Mode<Loot_Rules>("Loot", Loot_Rules.class)
+		addMode(new Mode<ShareRules>("Loot", ShareRules.class)
 		{
 
 			@Override
-			public Loot_Rules getValue(final Squad squad)
+			public ShareRules getValue(final Squad squad)
 			{
 				return squad.getLootRule();
 			}
@@ -45,7 +44,7 @@ public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlay
 			public void setValue(final Player player, final Squad squad, final String... args) throws CrazyException
 			{
 				final String name = args[0].toUpperCase();
-				final Loot_Rules rule = Loot_Rules.valueOf(name);
+				final ShareRules rule = ShareRules.valueOf(name);
 				if (rule == null)
 					throw new CrazyCommandNoSuchException("Loot_Rule", name);
 				setValue(squad, rule);
@@ -53,7 +52,7 @@ public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlay
 			}
 
 			@Override
-			public void setValue(final Squad squad, final Loot_Rules newValue) throws CrazyException
+			public void setValue(final Squad squad, final ShareRules newValue) throws CrazyException
 			{
 				squad.setLootRule(newValue);
 			}
@@ -64,17 +63,17 @@ public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlay
 				if (args.length != 1)
 					return null;
 				final List<String> res = new LinkedList<String>();
-				for (final Loot_Rules rule : Loot_Rules.values())
+				for (final ShareRules rule : ShareRules.values())
 					if (rule.toString().startsWith(args[0].toUpperCase()))
 						res.add(rule.toString());
 				return res;
 			}
 		});
-		addMode(new Mode<XP_Rules>("XP", XP_Rules.class)
+		addMode(new Mode<ShareRules>("XP", ShareRules.class)
 		{
 
 			@Override
-			public XP_Rules getValue(final Squad squad)
+			public ShareRules getValue(final Squad squad)
 			{
 				return squad.getXPRule();
 			}
@@ -83,7 +82,7 @@ public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlay
 			public void setValue(final Player player, final Squad squad, final String... args) throws CrazyException
 			{
 				final String name = args[0].toUpperCase();
-				final XP_Rules rule = XP_Rules.valueOf(name);
+				final ShareRules rule = ShareRules.valueOf(name);
 				if (rule == null)
 					throw new CrazyCommandNoSuchException("XP_Rule", name);
 				setValue(squad, rule);
@@ -91,7 +90,7 @@ public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlay
 			}
 
 			@Override
-			public void setValue(final Squad squad, final XP_Rules newValue) throws CrazyException
+			public void setValue(final Squad squad, final ShareRules newValue) throws CrazyException
 			{
 				squad.setXPRule(newValue);
 			}
@@ -102,7 +101,7 @@ public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlay
 				if (args.length != 1)
 					return null;
 				final List<String> res = new LinkedList<String>();
-				for (final XP_Rules rule : XP_Rules.values())
+				for (final ShareRules rule : ShareRules.values())
 					if (rule.toString().startsWith(args[0].toUpperCase()))
 						res.add(rule.toString());
 				return res;
