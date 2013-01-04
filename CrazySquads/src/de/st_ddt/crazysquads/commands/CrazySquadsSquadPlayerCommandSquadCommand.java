@@ -45,8 +45,8 @@ public class CrazySquadsSquadPlayerCommandSquadCommand extends CrazySquadsSquadP
 		}
 		for (final Player member : members)
 		{
-			Bukkit.dispatchCommand(member, ChatHelper.putArgs(command, member.getName()));
 			plugin.sendLocaleMessage("SQUAD.SQUADCOMMAND", member, player.getName(), command);
+			Bukkit.dispatchCommand(member, ChatHelper.putArgs(command, member.getName()));
 		}
 		plugin.sendLocaleMessage("COMMAND.SQUADCOMMAND", player, command);
 	}
