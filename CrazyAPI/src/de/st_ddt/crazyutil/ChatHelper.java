@@ -116,7 +116,7 @@ public class ChatHelper
 
 	public static String putArgs(final String message, final Object... args)
 	{
-		return putArgs(message, 0, args);
+		return putArgs(0, message, args);
 	}
 
 	public static String putArgs(final int start, final String message, final Object... args)
@@ -139,7 +139,7 @@ public class ChatHelper
 
 	public static String putArgsExtended(final CommandSender target, final Object message, final Object... args)
 	{
-		return putArgsExtended(target, message, 0, args);
+		return putArgsExtended(0, target, message, args);
 	}
 
 	public static String putArgsExtended(final int start, final CommandSender target, final Object message, final Object... args)
