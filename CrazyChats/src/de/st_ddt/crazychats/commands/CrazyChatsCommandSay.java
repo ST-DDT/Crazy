@@ -13,6 +13,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
@@ -33,7 +34,7 @@ public class CrazyChatsCommandSay extends CrazyChatsCommandExecutor
 			command((Player) sender, args);
 		else
 		{
-			final String message = ChatHelper.colorise(String.format(plugin.getBroadcastChatFormat(), sender.getName(), ChatHelper.listingString(" ", args)));
+			final String message = ChatHelper.colorise(String.format(CrazyChatsChatHelper.applyFormat(plugin, sender, plugin.getBroadcastChatFormat()), sender.getName(), ChatHelper.listingString(" ", args)));
 			for (final Player target : Bukkit.getOnlinePlayers())
 				target.sendMessage(message);
 			sender.sendMessage(message);

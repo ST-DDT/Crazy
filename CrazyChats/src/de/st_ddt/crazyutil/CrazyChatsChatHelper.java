@@ -1,12 +1,35 @@
 package de.st_ddt.crazyutil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import de.st_ddt.crazychats.CrazyChats;
 
 public class CrazyChatsChatHelper extends ChatHelperExtended
 {
 
+	protected final static DateFormat CHATTIMEFORMAT = new SimpleDateFormat("mm:ss");
+
 	protected CrazyChatsChatHelper()
 	{
+	}
+
+	public static String applyFormat(final CrazyChats plugin, final CommandSender sender, final String format)
+	{
+		if (sender instanceof Player)
+			return applyFormat(plugin, (Player) sender, format);
+		else
+			return putArgs(2, format, "", "", "", CHATTIMEFORMAT.format(new Date()));
+	}
+
+	public static String applyFormat(final CrazyChats plugin, final Player player, final String format)
+	{
+		return putArgs(2, format, plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName(), CHATTIMEFORMAT.format(new Date()));
 	}
 
 	public static String makeFormat(final String rawFormat)

@@ -14,6 +14,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
@@ -34,10 +35,12 @@ public class CrazyChatsCommandTell extends CrazyChatsCommandExecutor
 			command((Player) sender, args);
 		else
 		{
-			final Player target = Bukkit.getPlayer(args[0]);
+			Player target = Bukkit.getPlayerExact(args[0]);
+			if (target == null)
+				target = Bukkit.getPlayer(args[0]);
 			if (target == null)
 				throw new CrazyCommandNoSuchException("Player", args[0]);
-			final String message = ChatHelper.colorise(String.format(plugin.getPrivateChatFormat(), sender.getName(), ChatHelper.listingString(" ", ChatHelperExtended.shiftArray(args, 1))));
+			final String message = ChatHelper.colorise(String.format(CrazyChatsChatHelper.applyFormat(plugin, sender, plugin.getPrivateChatFormat()), sender.getName(), ChatHelper.listingString(" ", ChatHelperExtended.shiftArray(args, 1))));
 			target.sendMessage(message);
 			sender.sendMessage(message);
 			plugin.getCrazyLogger().log("Chat", "[Private] CONSOLE >>> " + message);
