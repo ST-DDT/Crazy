@@ -39,7 +39,7 @@ database:
 # groupname: prefix
 #  nogroup: ''
 #  op: '&C'
-# formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World
+# formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World $5$=CurrentTime
 # format used for broadcast Channel 
 broadcastChatFormat: '&C&L[All] &F$0$&F: &E$1$'
 # format used for gloabl Channel

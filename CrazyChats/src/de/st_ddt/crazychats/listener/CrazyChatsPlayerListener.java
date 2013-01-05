@@ -1,6 +1,9 @@
 package de.st_ddt.crazychats.listener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +44,7 @@ public class CrazyChatsPlayerListener implements Listener
 	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
 	protected final static Pattern PATTERN_COMMA = Pattern.compile(",");
 	protected final static String CHANNELSIGNHEADER = ChatColor.RED + "[" + ChatColor.GREEN + "Channel" + ChatColor.RED + "]";
+	protected final static DateFormat CHATTIMEFORMAT = new SimpleDateFormat("mm:ss");
 	protected final ChatResult CANCELLED = new ChatResult();
 	protected final CrazyChats plugin;
 	protected final Map<Player, String> lastPrivateChatSenders;
@@ -379,7 +383,7 @@ public class CrazyChatsPlayerListener implements Listener
 
 		public String getAdvancedFormat(final Player player)
 		{
-			return ChatHelper.putArgs(format, "", "", plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName());
+			return ChatHelper.putArgs(2, format, plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName(), CHATTIMEFORMAT.format(new Date()));
 		}
 
 		public Set<Player> getTargets()
