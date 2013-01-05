@@ -3,7 +3,7 @@
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/config.yml
 version: X.Y
 # required plugins +version can be found there
-# https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/plugin.yml
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/plugin.yml#L5
 # the chat header used ingame (this can only be changed, when server is shut down)
 chatHeader: '&C[&ACrazyChats&C] &F'
 database:
@@ -23,22 +23,23 @@ database:
       headName: headName
       silenced: silenced
 # group prefixes (only used when PermissionModule.getGroupPrefix() returns null)
-#groupPrefix:
-# groupname: prefix
-# this entry will be used if no matching group is found or an error occured.
-#  nogroup: ''
-#  op: '&C[Admin]&F'
+# example: "groupname: prefix"
+# The nogroup entry will be used if no matching group is found or an error occured.
+##groupPrefix:
+##  nogroup: ''
+##  op: '&C[Admin]&F'
 # group suffixes (only used when PermissionModule.getGroupSuffix() returns null)
-#groupSuffix:
-# groupname: suffix
-# this entry will be used if no matching group is found or an error occured.
-#  nogroup: ''
-#  op: ''
+# example: "groupname: suffix"
+# The nogroup entry will be used if no matching group is found or an error occured.
+##groupSuffix:
+##  nogroup: ''
+##  op: ''
 # group listname prefixes (only used when no custom listname is set)
-#groupListnamePrefix:
-# groupname: prefix
-#  nogroup: ''
-#  op: '&C'
+# example: "groupname: prefix"
+# The nogroup entry will be used if no matching group is found or an error occured.
+##groupListnamePrefix:
+##  nogroup: ''
+##  op: '&C'
 # formats params $0$=Sender $1$=Message $2$=GroupPrefix $3$=GroupSuffix $4$=World $5$=CurrentTime
 # format used for broadcast Channel 
 broadcastChatFormat: '&C&L[All] &F$0$&F: &E$1$'
@@ -55,7 +56,7 @@ localChatRange: 30.0
 # format used for private Channel
 privateChatFormat: '&7[Private] &F$0$&F: &F$1$'
 # format used for admin Channel (admins only)
-privateChatFormat: '&C[Admin] &F$0$&F: &F$1$'
+adminChatFormat: '&C[Admin] &F$0$&F: &F$1$'
 # default channel when joining the server (w=worldchannel)
 defaultChannelKey: w
 # the max duration for /crazychats player silence <Player> [Duration]
@@ -67,8 +68,9 @@ cleanRepetitions: true
 cleanCaps: true
 # the number of clearChat messages send to each player on clearchat command
 clearChatLength: 100
-# additional information about logging can be found here http://dev.bukkit.org/server-mods/crazycore/pages/logging/
-# logs:
-#  Chat:
-#    path: false
-#    console: false
+# additional information about logging can be found here 
+# http://dev.bukkit.org/server-mods/crazycore/pages/logging/
+##logs:
+##  Chat:
+##    path: false
+##    console: false
