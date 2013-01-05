@@ -14,7 +14,7 @@ import de.st_ddt.crazyutil.ChatConverter;
 public class TargetDateParamitrisable extends DateParamitrisable
 {
 
-	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
+	public final static Date ENDOFTIME = new Date(4102441199999L);
 	protected final static Pattern PATTERN_NUMERIC = Pattern.compile("[+-]?[0-9]+");
 
 	public TargetDateParamitrisable(final Date defaultValue)
@@ -31,7 +31,7 @@ public class TargetDateParamitrisable extends DateParamitrisable
 	public void setParameter(final String parameter) throws CrazyException
 	{
 		if (parameter.equals("*"))
-			value = new Date(4102441199999L);
+			value = ENDOFTIME;
 		else
 			try
 			{

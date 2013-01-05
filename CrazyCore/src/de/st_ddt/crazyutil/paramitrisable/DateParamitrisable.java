@@ -13,10 +13,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class DateParamitrisable extends TypedParamitrisable<Date>
 {
 
-	protected final Pattern PATTERN_SPACE = Pattern.compile(" ");
-	protected final Pattern PATTERN_DOT = Pattern.compile("\\.");
-	protected final Pattern PATTERN_DATEPART1 = Pattern.compile("[0-9-]*");
-	protected final Pattern PATTERN_DATEPART2 = Pattern.compile("[0-9:]*");
+	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
+	protected final static Pattern PATTERN_DOT = Pattern.compile("\\.");
+	protected final static Pattern PATTERN_DATEPART1 = Pattern.compile("[0-9-]*");
+	protected final static Pattern PATTERN_DATEPART2 = Pattern.compile("[0-9:]*");
 
 	public DateParamitrisable(final Date defaultValue)
 	{
