@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -208,6 +209,8 @@ public class CrazyChatsPlayerListener implements Listener
 	@Localized({ "CRAZYCHATS.SIGN.INVALID", "CRAZYCHATS.SIGN.JOINED $ChannelID$ $ChannelName$", "CRAZYCHATS.SIGN.JOINFAILED" })
 	public void PlayerInteractEvent(final PlayerInteractEvent event)
 	{
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+			return;
 		final BlockState block = event.getClickedBlock().getState();
 		if (!(block instanceof Sign))
 			return;
