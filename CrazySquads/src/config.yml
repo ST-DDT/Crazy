@@ -19,12 +19,17 @@ defaultXPRules: SHARESILENT
 squadAutoRejoinTime: 60
 # these commands can be executed as squadcommands (/squad command <Command>)
 # no backslash required
+# regular-expressions are supported
+# http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html#sum
+# WARNING: Do not whitelist ".*" (all commands) if you don't trust every single player on you server.
 commandWhitelist:
 - chatchannel squad
+##- examplecommand[ ]?.*
+##- join Hungergames[0-9]*
 # -------------------------------------------------
 # requires CrazyChats
 # formats params can be found here 
-# https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/config.yml#L42
+# https://github.com/ST-DDT/Crazy/blob/master/CrazyChats/src/config.yml#L43
 # format used for squad Channel
 squadChatFormat: '&3[Squad] &F$0$&F: &B$1$'
 # format used for squad Channel (leaders)
