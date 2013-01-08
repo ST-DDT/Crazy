@@ -1,4 +1,4 @@
-package de.st_ddt.crazychats.channels;
+package de.st_ddt.crazychats.channels.squads;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazychats.channels.ChannelInterface;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
