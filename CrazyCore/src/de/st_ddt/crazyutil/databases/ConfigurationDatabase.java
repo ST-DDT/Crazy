@@ -29,7 +29,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 
 	public ConfigurationDatabase(final Class<S> clazz, final String[] defaultColumnNames, final String defaultPath, final JavaPlugin plugin, final ConfigurationSection config)
 	{
-		super(DatabaseType.CONFIG, clazz, getConstructor(clazz), defaultColumnNames);
+		super(DatabaseType.CONFIG, clazz, defaultColumnNames);
 		this.plugin = plugin;
 		this.config = plugin.getConfig();
 		if (config == null)
@@ -48,14 +48,15 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 
 	public ConfigurationDatabase(final Class<S> clazz, final String[] defaultColumnNames, final JavaPlugin plugin, final String path, final String[] columnNames)
 	{
-		super(DatabaseType.CONFIG, clazz, getConstructor(clazz), defaultColumnNames);
+		super(DatabaseType.CONFIG, clazz, defaultColumnNames);
 		this.plugin = plugin;
 		this.config = plugin.getConfig();
 		this.path = path;
 		this.columnNames = columnNames;
 	}
 
-	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
+	@Override
+	protected Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{

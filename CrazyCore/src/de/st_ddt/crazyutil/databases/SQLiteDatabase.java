@@ -23,7 +23,7 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 
 	public SQLiteDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultPath, final String defaultTableName, final ConfigurationSection config)
 	{
-		super(DatabaseType.SQLITE, clazz, getConstructor(clazz), convertColumnNames(columns));
+		super(DatabaseType.SQLITE, clazz, convertColumnNames(columns));
 		if (config == null)
 		{
 			this.tableName = defaultTableName;
@@ -53,7 +53,7 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 
 	public SQLiteDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String path, final boolean cached, final boolean doNoUpdate)
 	{
-		super(DatabaseType.SQLITE, clazz, getConstructor(clazz), convertColumnNames(columns));
+		super(DatabaseType.SQLITE, clazz, convertColumnNames(columns));
 		this.tableName = tableName;
 		this.connection = new SQLiteConnection(path);
 		this.connectionPool = new SQLiteConnectionPool(connection);
@@ -65,7 +65,8 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 		this.doNotUpdate = doNoUpdate;
 	}
 
-	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
+	@Override
+	protected Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{

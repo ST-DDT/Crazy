@@ -55,7 +55,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 
 	public FlatDatabase(final Class<S> clazz, final String[] defaultColumnNames, final String defaultPath, final JavaPlugin plugin, final ConfigurationSection config)
 	{
-		super(DatabaseType.FLAT, clazz, getConstructor(clazz), defaultColumnNames);
+		super(DatabaseType.FLAT, clazz, defaultColumnNames);
 		this.plugin = plugin;
 		this.filePath = config == null ? defaultPath : config.getString("FLAT.filePath", defaultPath);
 		this.file = new File(plugin.getDataFolder().getPath(), filePath);
@@ -64,14 +64,15 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 
 	public FlatDatabase(final Class<S> clazz, final String[] defaultColumnNames, final JavaPlugin plugin, final String path)
 	{
-		super(DatabaseType.FLAT, clazz, getConstructor(clazz), defaultColumnNames);
+		super(DatabaseType.FLAT, clazz, defaultColumnNames);
 		this.plugin = plugin;
 		this.filePath = path;
 		this.file = new File(plugin.getDataFolder(), filePath);
 		this.backupFile = new File(plugin.getDataFolder().getPath(), filePath + "_old");
 	}
 
-	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
+	@Override
+	protected Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{

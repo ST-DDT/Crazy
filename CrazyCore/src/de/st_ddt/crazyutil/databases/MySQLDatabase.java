@@ -23,7 +23,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 
 	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{
-		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
+		super(DatabaseType.MYSQL, clazz, convertColumnNames(columns));
 		if (config == null)
 		{
 			this.tableName = defaultTableName;
@@ -53,7 +53,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 
 	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
 	{
-		super(DatabaseType.MYSQL, clazz, getConstructor(clazz), convertColumnNames(columns));
+		super(DatabaseType.MYSQL, clazz, convertColumnNames(columns));
 		this.tableName = tableName;
 		this.connection = new MySQLConnection(host, port, database, user, password);
 		this.mysqlConnectionPool = new ConnectionPool(connection);
@@ -65,7 +65,8 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		this.doNotUpdate = doNoUpdate;
 	}
 
-	private static <S> Constructor<S> getConstructor(final Class<S> clazz)
+	@Override
+	protected Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{

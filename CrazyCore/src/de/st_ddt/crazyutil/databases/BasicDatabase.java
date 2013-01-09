@@ -17,12 +17,12 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	protected final Constructor<S> constructor;
 	protected final String[] defaultColumnNames;
 
-	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final Constructor<S> constructor, final String[] defaultColumnNames)
+	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final String[] defaultColumnNames)
 	{
 		super();
 		this.type = type;
 		this.clazz = clazz;
-		this.constructor = constructor;
+		this.constructor = getConstructor(clazz);
 		this.defaultColumnNames = defaultColumnNames;
 	}
 
@@ -37,6 +37,8 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 	{
 		return clazz;
 	}
+
+	protected abstract Constructor<S> getConstructor(final Class<S> clazz);
 
 	@Override
 	public abstract void initialize() throws Exception;
