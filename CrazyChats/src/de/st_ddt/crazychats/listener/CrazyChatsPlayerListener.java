@@ -132,6 +132,8 @@ public class CrazyChatsPlayerListener implements Listener
 			return;
 		final Player player = event.getPlayer();
 		final ChatPlayerData data = plugin.getPlayerData(player);
+		if (data == null)
+			return;
 		final ChannelInterface channel = data.getCurrentChannel();
 		if (channel != null)
 			if (channel instanceof WorldChannel)
