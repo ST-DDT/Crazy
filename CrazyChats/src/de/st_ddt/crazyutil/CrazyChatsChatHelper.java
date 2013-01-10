@@ -50,7 +50,7 @@ public class CrazyChatsChatHelper extends ChatHelperExtended
 
 	public static String putPrefixedArgs(final String prefix, final String message, final Object... args)
 	{
-		return putArgs(prefix, 0, message, args);
+		return putPrefixedArgs(prefix, 0, message, args);
 	}
 
 	public static String putPrefixedArgs(final String prefix, final int start, final String message, final Object... args)
