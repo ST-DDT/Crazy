@@ -183,7 +183,7 @@ public class ChatHelperExtended extends ChatHelper
 			Collections.reverse(datas);
 		// Output
 		if (pipe == null)
-			sendList(sender, chatHeader.getValue(), ChatHelper.putArgsExtended(sender, headFormat.getValue(), 4, headArgs), listFormat.getValue(), entryFormat.getValue(), amount.getValue(), page.getValue(), datas);
+			sendList(sender, chatHeader.getValue(), ChatHelper.putArgsExtended(4, sender, headFormat.getValue(), headArgs), listFormat.getValue(), entryFormat.getValue(), amount.getValue(), page.getValue(), datas);
 		else if (pipe[0].equals("page"))
 			pipe = insertArray(pipe, 1, new String[] { "page:" + page.getValue(), "amount:" + amount.getValue(), "headFormat:\"" + headFormat.getValue() + "\"", "listFormat:\"" + listFormat.getValue() + "\"", "entryFormat:\"" + entryFormat.getValue() + "\"", "chatHeader:\"" + chatHeader.getValue() + "\"" });
 		return pipe;
