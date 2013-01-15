@@ -24,7 +24,7 @@ public interface CrazyPlayerDataPluginInterface<T extends PlayerDataInterface, S
 
 	public PlayerDataDatabase<S> getCrazyDatabase();
 
-	public CrazyCommandTreeExecutorInterface<CrazyPlayerDataPluginInterface<T, ? extends T>> getPlayerCommand();
+	public CrazyCommandTreeExecutorInterface getPlayerCommand();
 
 	public boolean hasPlayerData(String name);
 

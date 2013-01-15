@@ -30,7 +30,7 @@ public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface
 
 	public void saveConfiguration();
 
-	public CrazyCommandTreeExecutorInterface<CrazyPluginInterface> getMainCommand();
+	public CrazyCommandTreeExecutorInterface getMainCommand();
 
 	public void sendLocaleMessage(String localepath, CommandSender target, Object... args);
 
