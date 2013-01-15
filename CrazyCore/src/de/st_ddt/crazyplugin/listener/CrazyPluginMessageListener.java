@@ -41,12 +41,12 @@ public abstract class CrazyPluginMessageListener<S extends CrazyPlugin> implemen
 		if (header.startsWith("Q_"))
 		{
 			if (channel.equals(plugin.getName()))
-				if (header.equalsIgnoreCase("Ping"))
+				if (header.equalsIgnoreCase("Q_Ping"))
 				{
-					sendPluginMessage(player, "A_PING " + plugin.getName());
+					sendPluginMessage(player, "A_Ping " + plugin.getName());
 					return;
 				}
-				else if (header.equalsIgnoreCase("Version"))
+				else if (header.equalsIgnoreCase("Q_Version"))
 				{
 					sendPluginMessage(player, "A_Version " + plugin.getVersion());
 					return;
