@@ -71,12 +71,12 @@ public abstract class CrazyPluginMessageListener<S extends CrazyPlugin> implemen
 	{
 	}
 
-	protected final void sendPluginMessage(final Player player, final String message)
+	public final void sendPluginMessage(final Player player, final String message)
 	{
 		player.sendPluginMessage(plugin, plugin.getName(), message.getBytes(charset));
 	}
 
-	protected final void sendPluginMessage(final String channel, final Player player, final String message)
+	public final void sendPluginMessage(final String channel, final Player player, final String message)
 	{
 		player.sendPluginMessage(plugin, channel, message.getBytes(charset));
 	}
