@@ -19,7 +19,7 @@ public class CrazyChatsTagAPIListener implements Listener
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void PlayerNameTag(final PlayerReceiveNameTagEvent event)
 	{
 		final ChatPlayerData data = plugin.getPlayerData(event.getNamedPlayer());
