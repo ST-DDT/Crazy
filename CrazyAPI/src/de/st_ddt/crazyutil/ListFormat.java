@@ -9,6 +9,7 @@ import de.st_ddt.crazyutil.locales.Localized;
 public interface ListFormat
 {
 
+	// @ // @Localized("PATH $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $CustomArgs...$")
 	/**
 	 * Used in {@link CrazyPages#show(CommandSender) CrazyPages} as message head. </br> $0$ = current Page </br> $1$ = max Page </br> $2$ = chatHeader </br> $3$ = current date
 	 * 
@@ -18,6 +19,7 @@ public interface ListFormat
 	 */
 	public String headFormat(CommandSender target);
 
+	// @ // @Localized("PATH $Index$ $Entry$ $ChatHeader$")
 	/**
 	 * Used to show and seperate entries. </br> $0$ = index </br> $1$ = entry </br> $2$ = chatHeader
 	 * 
@@ -27,6 +29,7 @@ public interface ListFormat
 	 */
 	public String listFormat(CommandSender target);
 
+	// @ // Localized("PATH $Name$ ...")
 	/**
 	 * Used to format entries (Works only with {@link ParameterData}. Used in {@link #putArgsPara(String, ParameterData) putArgsPara}. Should not be null when using ParameterData.
 	 * 
