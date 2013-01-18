@@ -5,12 +5,12 @@ import org.bukkit.event.Cancellable;
 
 import de.st_ddt.crazylogin.data.LoginData;
 
-public class CrazyLoginPreRegisterEvent<S extends LoginData> extends CrazyLoginPlayerDataEvent implements Cancellable
+public class CrazyLoginPreRegisterEvent extends CrazyLoginPlayerDataEvent implements Cancellable
 {
 
 	protected boolean cancelled = false;
 
-	public CrazyLoginPreRegisterEvent(final Player player, final S data)
+	public CrazyLoginPreRegisterEvent(final Player player, final LoginData data)
 	{
 		super(player, data);
 	}

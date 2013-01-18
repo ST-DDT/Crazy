@@ -2,9 +2,7 @@ package de.st_ddt.crazylogin.events;
 
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazylogin.data.LoginData;
-
-public class CrazyLoginPasswordEvent<S extends LoginData> extends CrazyLoginEvent
+public class CrazyLoginPasswordEvent extends CrazyLoginEvent
 {
 
 	protected final Player player;
