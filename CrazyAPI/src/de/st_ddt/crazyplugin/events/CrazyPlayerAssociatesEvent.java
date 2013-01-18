@@ -1,5 +1,6 @@
 package de.st_ddt.crazyplugin.events;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -14,28 +15,31 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent
 	private static final HandlerList handlers = new HandlerList();
 	protected final String name;
 	protected final int recursionDepth;
-	protected final SortedSet<String> associates = new TreeSet<String>();
+	protected final SortedSet<String> associates;
 
 	public CrazyPlayerAssociatesEvent(final String name)
 	{
-		super();
-		this.name = name;
-		this.recursionDepth = 0;
+		this(name, 0);
 	}
 
 	public CrazyPlayerAssociatesEvent(final String name, final int recursionDepth)
 	{
+		this(name, recursionDepth, new TreeSet<String>());
+	}
+
+	private CrazyPlayerAssociatesEvent(final String name, final int recursionDepth, final SortedSet<String> associates)
+	{
 		super();
 		this.name = name;
 		this.recursionDepth = recursionDepth;
+		this.associates = associates;
+		this.associates.add(name);
 	}
 
 	@Deprecated
 	public CrazyPlayerAssociatesEvent(final CrazyLightPluginInterface plugin, final String name)
 	{
-		super(plugin);
-		this.name = name;
-		this.recursionDepth = 0;
+		this(plugin, name, 0);
 	}
 
 	@Deprecated
@@ -44,6 +48,8 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent
 		super(plugin);
 		this.name = name;
 		this.recursionDepth = recursionDepth;
+		this.associates = new TreeSet<String>();
+		this.associates.add(name);
 	}
 
 	public String getSearchedName()
@@ -55,17 +61,13 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent
 	{
 		if (associates.add(name))
 			if (recursionDepth > 0)
-			{
-				final CrazyPlayerAssociatesEvent event = new CrazyPlayerAssociatesEvent(name, recursionDepth - 1);
-				event.callEvent();
-				addAll(event.getAssociates());
-			}
+				new CrazyPlayerAssociatesEvent(name, recursionDepth - 1, associates).callEvent();
 	}
 
 	public void addAll(final Collection<String> names)
 	{
 		if (recursionDepth > 0)
-			for (final String name : names)
+			for (final String name : new ArrayList<String>(names))
 				add(name);
 		else
 			associates.addAll(names);
