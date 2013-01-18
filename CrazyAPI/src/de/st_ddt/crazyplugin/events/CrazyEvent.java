@@ -26,13 +26,19 @@ public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Ev
 		Bukkit.getPluginManager().callEvent(this);
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	public void callAsyncEvent()
+	{
+		callEventAsynchronously();
+	}
+
+	@SuppressWarnings("deprecation")
+	protected void callEventAsynchronously()
 	{
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new AsyncEventRunnable(this));
 	}
 
-	private class AsyncEventRunnable implements Runnable
+	protected class AsyncEventRunnable implements Runnable
 	{
 
 		private final CrazyEvent<T> event;
