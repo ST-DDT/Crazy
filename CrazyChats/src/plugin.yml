@@ -2,7 +2,8 @@ name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
 version: 1.99
-# requires CrazyCore v9.7.3 or later
+website: http://dev.bukkit.org/server-mods/crazychats/
+# requires CrazyCore v10 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
 description: >
