@@ -21,9 +21,11 @@ import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPluginInterface>
 {
 
+	@SuppressWarnings("deprecation")
 	public CrazyPluginCommandMainLogger(final CrazyPluginInterface plugin)
 	{
-		super(plugin);
+		// temp method to avoid version dismatching
+		super(plugin, true);
 	}
 
 	@Override

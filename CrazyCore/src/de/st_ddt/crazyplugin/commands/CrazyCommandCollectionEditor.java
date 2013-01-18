@@ -11,23 +11,40 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHeaderProvider;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.Tabbed;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
-public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterface, T> extends CrazyCommandTreeExecutor<S>
+public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider, T> extends CrazyCommandTreeExecutor<S>
 {
 
-	public CrazyCommandCollectionEditor(final S plugin)
+	public CrazyCommandCollectionEditor(final S chatHeaderProvider)
 	{
-		this(plugin, true, true);
+		this(chatHeaderProvider, true, true);
 	}
 
-	public CrazyCommandCollectionEditor(final S plugin, final boolean add, final boolean remove)
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	public CrazyCommandCollectionEditor(final CrazyPluginInterface chatHeaderProvider)
 	{
-		super(plugin, null);
+		// EDIT remove compatibility code
+		this((S) chatHeaderProvider, true, true);
+	}
+
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	public CrazyCommandCollectionEditor(final CrazyPluginInterface chatHeaderProvider, final boolean add, final boolean remove)
+	{
+		this((S) chatHeaderProvider, add, remove);
+	}
+
+	public CrazyCommandCollectionEditor(final S chatHeaderProvider, final boolean add, final boolean remove)
+	{
+		super(chatHeaderProvider, null);
 		defaultExecutor = new CrazyCommandCollectionList(plugin);
 		addSubCommand(defaultExecutor, "list");
 		if (add)
@@ -44,7 +61,7 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 
 	public void showList(final CommandSender sender, final int amount, final int page)
 	{
-		plugin.sendLocaleList(sender, listFormat(), amount, page, new ArrayList<T>(getCollection()));
+		ChatHelperExtended.sendList(sender, plugin.getChatHeader(), listFormat(), amount, page, new ArrayList<T>(getCollection()));
 	}
 
 	// @ // Localized("PATH $Element$")
@@ -56,7 +73,9 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 	/**
 	 * Save changes. Executed after add and remove
 	 */
-	public abstract void saveChanges();
+	protected void saveChanges()
+	{
+	}
 
 	private class CrazyCommandCollectionList extends CrazyCommandExecutor<S>
 	{
@@ -112,7 +131,8 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 		{
 			final T elem = getEntry(args);
 			getCollection().add(elem);
-			plugin.sendLocaleMessage(addLocale(), sender, elem);
+			saveChanges();
+			CrazyLocale.getLocaleHead().getLanguageEntry(addLocale()).sendMessage(sender, elem);
 		}
 	}
 
@@ -129,7 +149,8 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 		{
 			final T elem = getEntry(args);
 			getCollection().remove(elem);
-			plugin.sendLocaleMessage(removeLocale(), sender, elem);
+			saveChanges();
+			CrazyLocale.getLocaleHead().getLanguageEntry(removeLocale()).sendMessage(sender, elem);
 		}
 	}
 }

@@ -89,7 +89,7 @@ public class CrazyCoreCommandPlayerWipeCommands extends CrazyCommandListEditor<C
 	}
 
 	@Override
-	public void saveChanges()
+	protected void saveChanges()
 	{
 		plugin.saveConfiguration();
 	}

@@ -13,23 +13,39 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHeaderProvider;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 
-public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends CrazyCommandExecutor<S> implements CrazyCommandTreeExecutorInterface<S>
+public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends CrazyCommandExecutor<S> implements CrazyCommandTreeExecutorInterface
 {
 
 	protected final TreeMap<String, CrazyCommandExecutorInterface> subExecutor = new TreeMap<String, CrazyCommandExecutorInterface>();
 	protected CrazyCommandExecutorInterface defaultExecutor;
 
-	public CrazyCommandTreeExecutor(final S plugin)
+	public CrazyCommandTreeExecutor(final S chatHeaderProvider)
 	{
-		super(plugin);
-		defaultExecutor = new CrazyCommandTreeDefaultExecutor<S>(plugin);
+		super(chatHeaderProvider);
+		defaultExecutor = new CrazyCommandTreeDefaultExecutor(plugin);
 	}
 
-	public CrazyCommandTreeExecutor(final S plugin, final CrazyCommandExecutor<?> defaultExecutor)
+	@Deprecated
+	protected CrazyCommandTreeExecutor(final S chatHeaderProvider, final boolean dummy)
 	{
-		super(plugin);
+		super(chatHeaderProvider);
+		defaultExecutor = new CrazyCommandTreeDefaultExecutor(plugin);
+	}
+
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	public CrazyCommandTreeExecutor(final CrazyPluginInterface chatHeaderProvider)
+	{
+		super((S) chatHeaderProvider);
+		defaultExecutor = new CrazyCommandTreeDefaultExecutor(plugin);
+	}
+
+	public CrazyCommandTreeExecutor(final S chatHeaderProvider, final CrazyCommandExecutor<?> defaultExecutor)
+	{
+		super(chatHeaderProvider);
 		this.defaultExecutor = defaultExecutor;
 	}
 
@@ -115,7 +131,7 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 			List<String> res = null;
 			if (defaultExecutor.hasAccessPermission(sender))
 				res = defaultExecutor.tab(sender, args);
-			if (defaultExecutor instanceof CrazyCommandTreeDefaultExecutor || args.length > 1)
+			if (defaultExecutor instanceof CrazyCommandTreeDefaultExecutorInterface || args.length > 1)
 				return res;
 			if (res == null)
 				res = new ArrayList<String>();
@@ -151,10 +167,14 @@ public class CrazyCommandTreeExecutor<S extends CrazyPluginInterface> extends Cr
 		return false;
 	}
 
-	private class CrazyCommandTreeDefaultExecutor<T extends CrazyPluginInterface> extends CrazyCommandExecutor<T>
+	private interface CrazyCommandTreeDefaultExecutorInterface extends CrazyCommandExecutorInterface
+	{
+	}
+
+	private class CrazyCommandTreeDefaultExecutor extends CrazyCommandExecutor<S> implements CrazyCommandTreeDefaultExecutorInterface
 	{
 
-		public CrazyCommandTreeDefaultExecutor(final T plugin)
+		public CrazyCommandTreeDefaultExecutor(final S plugin)
 		{
 			super(plugin);
 		}

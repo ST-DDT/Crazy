@@ -9,19 +9,38 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHeaderProvider;
 
-public abstract class CrazyCommandExecutor<S extends CrazyPluginInterface> implements CrazyCommandExecutorInterface
+public abstract class CrazyCommandExecutor<S extends ChatHeaderProvider> implements CrazyCommandExecutorInterface
 {
 
+	// should be named chatHeaderProvider but isn't because its mostly used as plugin and would massive changes
 	protected final S plugin;
 
-	public CrazyCommandExecutor(final S plugin)
+	public CrazyCommandExecutor(final S chatHeaderProvider)
 	{
 		super();
-		this.plugin = plugin;
+		this.plugin = chatHeaderProvider;
 	}
 
-	public final S getPlugin()
+	@Deprecated
+	protected CrazyCommandExecutor(final S chatHeaderProvider, final boolean dummy)
+	{
+		// EDIT remove compatibility code
+		super();
+		this.plugin = chatHeaderProvider;
+	}
+
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	public CrazyCommandExecutor(final CrazyPluginInterface chatHeaderProvider)
+	{
+		// EDIT remove compatibility code
+		super();
+		this.plugin = (S) chatHeaderProvider;
+	}
+
+	public final S getChatHeaderProvider()
 	{
 		return plugin;
 	}

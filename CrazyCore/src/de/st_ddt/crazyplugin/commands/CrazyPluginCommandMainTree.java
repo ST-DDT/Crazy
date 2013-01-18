@@ -5,9 +5,11 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 public class CrazyPluginCommandMainTree extends CrazyCommandTreeExecutor<CrazyPluginInterface>
 {
 
+	@SuppressWarnings("deprecation")
 	public CrazyPluginCommandMainTree(final CrazyPluginInterface plugin)
 	{
-		super(plugin);
+		// temp method to avoid version dismatching
+		super(plugin, true);
 		addSubCommand(new CrazyPluginCommandMainInfo(plugin), "info");
 		addSubCommand(new CrazyPluginCommandMainLogger(plugin), "logger", "log");
 		addSubCommand(new CrazyPluginCommandMainHelp(plugin), "help");

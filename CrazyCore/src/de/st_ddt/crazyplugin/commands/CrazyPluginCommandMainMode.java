@@ -30,9 +30,11 @@ public class CrazyPluginCommandMainMode extends CrazyCommandExecutor<CrazyPlugin
 
 	protected final Map<String, Mode<?>> modes = new TreeMap<String, Mode<?>>();
 
+	@SuppressWarnings("deprecation")
 	public CrazyPluginCommandMainMode(final CrazyPluginInterface plugin)
 	{
-		super(plugin);
+		// temp method to avoid version dismatching
+		super(plugin, true);
 	}
 
 	@Override
