@@ -50,7 +50,10 @@ public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
 		}
 		if (player == null)
 			throw new CrazyCommandNoSuchException("Player", name);
-		new PseudoPlayerData(player.getName()).show(sender);
+		final PseudoPlayerData main = new PseudoPlayerData(player.getName());
+		main.show(sender);
+		plugin.sendLocaleMessage("PLAYERINFO.SEPARATOR", sender);
+		main.showDetailed(sender, plugin.getChatHeader());
 		for (final PlayerDataProvider provider : PlayerDataProvider.PROVIDERS)
 		{
 			final PlayerDataInterface data = provider.getAvailablePlayerData(name);
