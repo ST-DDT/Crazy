@@ -62,7 +62,7 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYCORE.PLAYERINFO");
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LANGUAGE"), CrazyLocale.getUserLanguageName(name, true));
-		final CrazyPlayerAssociatesEvent associatesEvent = new CrazyPlayerAssociatesEvent(getPlugin(), chatHeader);
+		final CrazyPlayerAssociatesEvent associatesEvent = new CrazyPlayerAssociatesEvent(name);
 		associatesEvent.callEvent();
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("ASSOCIATES"), ChatHelper.listingString(associatesEvent.getAssociates()));
 		final Player player = getPlayer();
