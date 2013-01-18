@@ -87,4 +87,10 @@ public class CrazyCoreCommandPlayerWipeCommands extends CrazyCommandListEditor<C
 	{
 		return "COMMAND.PLAYERWIPECOMMANDS.REMOVE";
 	}
+
+	@Override
+	public void saveChanges()
+	{
+		plugin.saveConfiguration();
+	}
 }

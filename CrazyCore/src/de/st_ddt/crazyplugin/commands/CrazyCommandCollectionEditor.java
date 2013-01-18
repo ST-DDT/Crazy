@@ -53,6 +53,11 @@ public abstract class CrazyCommandCollectionEditor<S extends CrazyPluginInterfac
 	// @ // Localized("PATH $Element$")
 	public abstract String removeLocale();
 
+	/**
+	 * Save changes. Executed after add and remove
+	 */
+	public abstract void saveChanges();
+
 	private class CrazyCommandCollectionList extends CrazyCommandExecutor<S>
 	{
 
