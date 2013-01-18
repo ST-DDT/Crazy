@@ -11,6 +11,9 @@ import org.bukkit.event.Listener;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazycore.tasks.PlayerWipeTask;
+import de.st_ddt.crazyplugin.events.CrazyPlayerAssociatesEvent;
+import de.st_ddt.crazyplugin.events.CrazyPlayerIPsConnectedToNameEvent;
+import de.st_ddt.crazyplugin.events.CrazyPlayerNamesConnectedToIPEvent;
 import de.st_ddt.crazyplugin.events.CrazyPlayerPreRemoveEvent;
 import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -27,6 +30,35 @@ public class CrazyCoreCrazyListener implements Listener
 	{
 		super();
 		this.plugin = plugin;
+	}
+
+	@EventHandler
+	public void PlayerIPs(final CrazyPlayerIPsConnectedToNameEvent event)
+	{
+		final Player player = Bukkit.getPlayerExact(event.getSearchedName());
+		if (player != null)
+			event.getIPs().add(player.getAddress().getAddress().getHostAddress());
+	}
+
+	@EventHandler
+	public void PlayerNames(final CrazyPlayerNamesConnectedToIPEvent event)
+	{
+		for (final Player player : Bukkit.getOnlinePlayers())
+			if (event.getSearchedIP().equals(player.getAddress().getAddress().getHostAddress()))
+				event.getNames().add(player.getName());
+	}
+
+	@EventHandler
+	public void PlayerAssociates(final CrazyPlayerAssociatesEvent event)
+	{
+		final CrazyPlayerIPsConnectedToNameEvent nameevent = new CrazyPlayerIPsConnectedToNameEvent(event.getSearchedName());
+		nameevent.callEvent();
+		for (final String ip : nameevent.getIPs())
+		{
+			final CrazyPlayerNamesConnectedToIPEvent ipevent = new CrazyPlayerNamesConnectedToIPEvent(ip);
+			ipevent.callEvent();
+			event.addAll(ipevent.getNames());
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
