@@ -9,7 +9,7 @@ import de.st_ddt.crazyutil.locales.Localized;
 public interface ListFormat
 {
 
-	// @ // @Localized("PATH $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $CustomArgs...$")
+	// @ // Localized("PATH $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $CustomArgs...$")
 	/**
 	 * Used in {@link CrazyPages#show(CommandSender) CrazyPages} as message head. </br> $0$ = current Page </br> $1$ = max Page </br> $2$ = chatHeader </br> $3$ = current date
 	 * 
@@ -19,7 +19,7 @@ public interface ListFormat
 	 */
 	public String headFormat(CommandSender target);
 
-	// @ // @Localized("PATH $Index$ $Entry$ $ChatHeader$")
+	// @ // Localized("PATH $Index$ $Entry$ $ChatHeader$")
 	/**
 	 * Used to show and seperate entries. </br> $0$ = index </br> $1$ = entry </br> $2$ = chatHeader
 	 * 
@@ -43,21 +43,21 @@ public interface ListFormat
 	{
 
 		@Override
-		@Localized("CRAZYPLUGIN.LIST.HEADER")
+		@Localized("CRAZYPLUGIN.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $CustomArgs...$")
 		public String headFormat(final CommandSender sender)
 		{
 			return CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.HEADER").getLanguageText(sender);
 		}
 
 		@Override
-		@Localized("CRAZYPLUGIN.LIST.LISTFORMAT")
+		@Localized("CRAZYPLUGIN.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$")
 		public String listFormat(final CommandSender sender)
 		{
 			return CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.LISTFORMAT").getLanguageText(sender);
 		}
 
 		@Override
-		@Localized("CRAZYPLUGIN.LIST.ENTRYFORMAT")
+		@Localized("CRAZYPLUGIN.LIST.ENTRYFORMAT $Name$ ...")
 		public String entryFormat(final CommandSender sender)
 		{
 			return CrazyLocale.getLocaleHead().getLanguageEntry("CRAZYPLUGIN.LIST.ENTRYFORMAT").getLanguageText(sender);
