@@ -13,12 +13,26 @@ public class CrazyPlayerPreRemoveEvent extends CrazyEvent<CrazyPluginInterface> 
 	protected final String player;
 	protected boolean cancelled = false;
 
+	public CrazyPlayerPreRemoveEvent(final OfflinePlayer player)
+	{
+		super();
+		this.player = player.getName();
+	}
+
+	public CrazyPlayerPreRemoveEvent(final String player)
+	{
+		super();
+		this.player = player;
+	}
+
+	@Deprecated
 	public CrazyPlayerPreRemoveEvent(final CrazyPluginInterface plugin, final OfflinePlayer player)
 	{
 		super(plugin);
 		this.player = player.getName();
 	}
 
+	@Deprecated
 	public CrazyPlayerPreRemoveEvent(final CrazyPluginInterface plugin, final String player)
 	{
 		super(plugin);

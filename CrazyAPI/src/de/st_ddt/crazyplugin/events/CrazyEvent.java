@@ -2,20 +2,30 @@ package de.st_ddt.crazyplugin.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
+import org.bukkit.plugin.Plugin;
 
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
 public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Event
 {
 
+	@Deprecated
 	protected final T plugin;
 
+	public CrazyEvent()
+	{
+		super();
+		this.plugin = null;
+	}
+
+	@Deprecated
 	public CrazyEvent(final T plugin)
 	{
 		super();
 		this.plugin = plugin;
 	}
 
+	@Deprecated
 	public T getPlugin()
 	{
 		return plugin;
@@ -29,11 +39,11 @@ public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Ev
 	@Deprecated
 	public void callAsyncEvent()
 	{
-		callEventAsynchronously();
+		callEventAsynchronously(plugin);
 	}
 
 	@SuppressWarnings("deprecation")
-	protected void callEventAsynchronously()
+	protected void callEventAsynchronously(final Plugin plugin)
 	{
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new AsyncEventRunnable(this));
 	}

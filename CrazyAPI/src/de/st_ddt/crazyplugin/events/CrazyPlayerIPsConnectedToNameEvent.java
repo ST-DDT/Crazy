@@ -1,6 +1,7 @@
 package de.st_ddt.crazyplugin.events;
 
 import java.util.Collection;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.bukkit.event.HandlerList;
@@ -12,8 +13,15 @@ public class CrazyPlayerIPsConnectedToNameEvent extends CrazyEvent<CrazyLightPlu
 
 	private static final HandlerList handlers = new HandlerList();
 	protected final String name;
-	protected final TreeSet<String> ips = new TreeSet<String>();
+	protected final SortedSet<String> ips = new TreeSet<String>();
 
+	public CrazyPlayerIPsConnectedToNameEvent(final String name)
+	{
+		super();
+		this.name = name;
+	}
+
+	@Deprecated
 	public CrazyPlayerIPsConnectedToNameEvent(final CrazyLightPluginInterface plugin, final String name)
 	{
 		super(plugin);
@@ -35,7 +43,7 @@ public class CrazyPlayerIPsConnectedToNameEvent extends CrazyEvent<CrazyLightPlu
 		ips.addAll(ips);
 	}
 
-	public TreeSet<String> getIPs()
+	public SortedSet<String> getIPs()
 	{
 		return ips;
 	}

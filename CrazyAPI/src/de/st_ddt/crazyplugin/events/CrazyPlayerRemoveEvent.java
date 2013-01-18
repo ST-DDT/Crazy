@@ -17,12 +17,26 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 	private final Set<String> deletions = new TreeSet<String>();
 	protected final String player;
 
+	public CrazyPlayerRemoveEvent(final OfflinePlayer player)
+	{
+		super();
+		this.player = player.getName();
+	}
+
+	public CrazyPlayerRemoveEvent(final String player)
+	{
+		super();
+		this.player = player;
+	}
+
+	@Deprecated
 	public CrazyPlayerRemoveEvent(final CrazyPluginInterface plugin, final OfflinePlayer player)
 	{
 		super(plugin);
 		this.player = player.getName();
 	}
 
+	@Deprecated
 	public CrazyPlayerRemoveEvent(final CrazyPluginInterface plugin, final String player)
 	{
 		super(plugin);
@@ -72,7 +86,7 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
 
 	public void checkAndCallEvent()
 	{
-		final CrazyPlayerPreRemoveEvent event = new CrazyPlayerPreRemoveEvent(plugin, player);
+		final CrazyPlayerPreRemoveEvent event = new CrazyPlayerPreRemoveEvent(player);
 		event.callEvent();
 		if (event.isCancelled())
 			return;

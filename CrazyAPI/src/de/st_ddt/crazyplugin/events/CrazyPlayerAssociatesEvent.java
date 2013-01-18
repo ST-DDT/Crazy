@@ -1,6 +1,7 @@
 package de.st_ddt.crazyplugin.events;
 
 import java.util.Collection;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.bukkit.event.HandlerList;
@@ -13,8 +14,23 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent<CrazyLightPluginInter
 	private static final HandlerList handlers = new HandlerList();
 	protected final String name;
 	protected final int recursionDepth;
-	protected final TreeSet<String> associates = new TreeSet<String>();
+	protected final SortedSet<String> associates = new TreeSet<String>();
 
+	public CrazyPlayerAssociatesEvent(final String name)
+	{
+		super();
+		this.name = name;
+		this.recursionDepth = 0;
+	}
+
+	public CrazyPlayerAssociatesEvent(final String name, final int recursionDepth)
+	{
+		super();
+		this.name = name;
+		this.recursionDepth = recursionDepth;
+	}
+
+	@Deprecated
 	public CrazyPlayerAssociatesEvent(final CrazyLightPluginInterface plugin, final String name)
 	{
 		super(plugin);
@@ -22,6 +38,7 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent<CrazyLightPluginInter
 		this.recursionDepth = 0;
 	}
 
+	@Deprecated
 	public CrazyPlayerAssociatesEvent(final CrazyLightPluginInterface plugin, final String name, final int recursionDepth)
 	{
 		super(plugin);
@@ -39,7 +56,7 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent<CrazyLightPluginInter
 		if (associates.add(name))
 			if (recursionDepth > 0)
 			{
-				final CrazyPlayerAssociatesEvent event = new CrazyPlayerAssociatesEvent(plugin, name, recursionDepth - 1);
+				final CrazyPlayerAssociatesEvent event = new CrazyPlayerAssociatesEvent(name, recursionDepth - 1);
 				event.callEvent();
 				addAll(event.getAssociates());
 			}
@@ -54,7 +71,7 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent<CrazyLightPluginInter
 			associates.addAll(names);
 	}
 
-	public TreeSet<String> getAssociates()
+	public SortedSet<String> getAssociates()
 	{
 		return associates;
 	}
