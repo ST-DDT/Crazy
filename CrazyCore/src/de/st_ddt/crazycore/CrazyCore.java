@@ -17,6 +17,7 @@ import de.st_ddt.crazycore.commands.CrazyCoreCommandLanguageTree;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandList;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPager;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPipe;
+import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerAssociates;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerDelete;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeCommands;
@@ -62,6 +63,7 @@ public final class CrazyCore extends CrazyPlugin
 		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
 		mainCommand.addSubCommand(new CrazyCoreCommandUpdateCheck(this), "updatecheck");
 		players.addSubCommand(new CrazyCoreCommandPlayerInfo(this), "info");
+		players.addSubCommand(new CrazyCoreCommandPlayerAssociates(this), "a", "associates");
 		players.addSubCommand(new CrazyCoreCommandPlayerDelete(this), "delete", "remove");
 		final CrazyCommandTreeExecutor<CrazyCore> languages = new CrazyCoreCommandLanguageTree(this);
 		getCommand("language").setExecutor(languages);

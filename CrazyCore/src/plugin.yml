@@ -51,7 +51,10 @@ permissions:
     description: Allow checking for updates and get informed if updates are available.
     default: op
   crazycore.player.info:
-    description: Allow displaying of all available information about a player (stored by CrazyPLugins).
+    description: Allow displaying of all available information about a player (stored by CrazyPlugins).
+    default: op
+  crazycore.player.associates:
+    description: Allow listing all known associates of a player (recursive) (stored by CrazyPlugins).
     default: op
   crazycore.player.delete:
     description: Allow deleting a player and all his stored information (CrazyPlugins+Commands).
