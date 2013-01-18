@@ -67,11 +67,16 @@ public class ChatHelperExtended extends ChatHelper
 			CrazyPipe.pipe(sender, datas, pipe);
 	}
 
-	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String chatHeader, ListFormat format, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
+	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String chatHeader, final ListFormat format, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
+	{
+		return processListCommand(sender, args, chatHeader, format, filters, sorters, defaultSort, modder, datas, new Object[0]);
+	}
+
+	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String chatHeader, ListFormat format, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas, final Object... headArgs) throws CrazyException
 	{
 		if (format == null)
 			format = ListFormat.DEFAULTFORMAT;
-		return processListCommand(sender, args, chatHeader, format.headFormat(sender), format.listFormat(sender), format.entryFormat(sender), filters, sorters, defaultSort, modder, datas);
+		return processListCommand(sender, args, chatHeader, format.headFormat(sender), format.listFormat(sender), format.entryFormat(sender), filters, sorters, defaultSort, modder, datas, headArgs);
 	}
 
 	public static <S, T extends S> String[] processListCommand(final CommandSender sender, final String[] args, final String defaultChatHeader, final String defaultHeadFormat, final String defaultListFormat, final String defaultEntryFormat, final Collection<FilterInstanceInterface<S>> filters, final Map<String, ? extends Comparator<S>> sorters, final Comparator<S> defaultSort, final ListOptionsModder<T> modder, final List<T> datas) throws CrazyException
