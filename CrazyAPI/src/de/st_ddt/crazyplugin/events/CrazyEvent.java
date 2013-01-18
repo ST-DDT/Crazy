@@ -9,26 +9,15 @@ import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 public abstract class CrazyEvent extends Event
 {
 
-	@Deprecated
-	protected final CrazyLightPluginInterface plugin;
-
 	public CrazyEvent()
 	{
 		super();
-		this.plugin = null;
 	}
 
 	@Deprecated
 	public CrazyEvent(final CrazyLightPluginInterface plugin)
 	{
 		super();
-		this.plugin = plugin;
-	}
-
-	@Deprecated
-	public CrazyLightPluginInterface getPlugin()
-	{
-		return plugin;
 	}
 
 	public void callEvent()
@@ -39,7 +28,7 @@ public abstract class CrazyEvent extends Event
 	@Deprecated
 	public void callAsyncEvent()
 	{
-		callEventAsynchronously(plugin);
+		callEvent();
 	}
 
 	@SuppressWarnings("deprecation")
