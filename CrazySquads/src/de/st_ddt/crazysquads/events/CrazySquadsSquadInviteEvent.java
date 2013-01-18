@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
 public class CrazySquadsSquadInviteEvent extends CrazySquadsEvent implements Cancellable
@@ -16,9 +15,9 @@ public class CrazySquadsSquadInviteEvent extends CrazySquadsEvent implements Can
 	private boolean cancelled = false;
 	private String reason;
 
-	public CrazySquadsSquadInviteEvent(final CrazySquads plugin, final Squad squad, final Player invited)
+	public CrazySquadsSquadInviteEvent(final Squad squad, final Player invited)
 	{
-		super(plugin);
+		super();
 		this.squad = squad;
 		this.invited = invited;
 	}

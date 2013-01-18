@@ -3,16 +3,15 @@ package de.st_ddt.crazysquads.events;
 import org.bukkit.event.HandlerList;
 
 import de.st_ddt.crazyplugin.events.CrazyEvent;
-import de.st_ddt.crazysquads.CrazySquads;
 
-public class CrazySquadsEvent extends CrazyEvent<CrazySquads>
+public class CrazySquadsEvent extends CrazyEvent
 {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	public CrazySquadsEvent(final CrazySquads plugin)
+	public CrazySquadsEvent()
 	{
-		super(plugin);
+		super();
 	}
 
 	@Override

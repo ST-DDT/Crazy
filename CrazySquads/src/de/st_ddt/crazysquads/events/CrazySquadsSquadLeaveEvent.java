@@ -3,7 +3,6 @@ package de.st_ddt.crazysquads.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
 public class CrazySquadsSquadLeaveEvent extends CrazySquadsEvent
@@ -13,9 +12,9 @@ public class CrazySquadsSquadLeaveEvent extends CrazySquadsEvent
 	private final Squad squad;
 	private final Player player;
 
-	public CrazySquadsSquadLeaveEvent(final CrazySquads plugin, final Squad squad, final Player left)
+	public CrazySquadsSquadLeaveEvent(final Squad squad, final Player left)
 	{
-		super(plugin);
+		super();
 		this.squad = squad;
 		this.player = left;
 	}

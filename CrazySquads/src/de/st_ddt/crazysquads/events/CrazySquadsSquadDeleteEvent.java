@@ -2,7 +2,6 @@ package de.st_ddt.crazysquads.events;
 
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
 public class CrazySquadsSquadDeleteEvent extends CrazySquadsEvent
@@ -11,9 +10,9 @@ public class CrazySquadsSquadDeleteEvent extends CrazySquadsEvent
 	private static final HandlerList handlers = new HandlerList();
 	private final Squad squad;
 
-	public CrazySquadsSquadDeleteEvent(final CrazySquads plugin, final Squad squad)
+	public CrazySquadsSquadDeleteEvent(final Squad squad)
 	{
-		super(plugin);
+		super();
 		this.squad = squad;
 	}
 

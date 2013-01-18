@@ -3,7 +3,6 @@ package de.st_ddt.crazysquads.events;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 
 public class CrazySquadsSquadCreateEvent extends CrazySquadsEvent implements Cancellable
@@ -14,9 +13,9 @@ public class CrazySquadsSquadCreateEvent extends CrazySquadsEvent implements Can
 	private boolean cancelled = false;
 	private String reason;
 
-	public CrazySquadsSquadCreateEvent(final CrazySquads plugin, final Squad squad)
+	public CrazySquadsSquadCreateEvent(final Squad squad)
 	{
-		super(plugin);
+		super();
 		this.squad = squad;
 	}
 

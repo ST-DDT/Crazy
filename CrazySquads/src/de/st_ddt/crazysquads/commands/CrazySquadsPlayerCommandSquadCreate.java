@@ -34,21 +34,21 @@ public class CrazySquadsPlayerCommandSquadCreate extends CrazySquadsPlayerComman
 		if (plugin.getSquads().get(player) != null)
 			throw new CrazyCommandUsageException("when not in a squad!");
 		final Squad squad = new Squad(player);
-		final CrazySquadsSquadCreateEvent createEvent = new CrazySquadsSquadCreateEvent(plugin, squad);
+		final CrazySquadsSquadCreateEvent createEvent = new CrazySquadsSquadCreateEvent(squad);
 		createEvent.callEvent();
 		if (createEvent.isCancelled())
 		{
 			plugin.sendLocaleMessage("COMMAND.SQUAD.CREATE.CANCELLED", player, createEvent.getReason());
-			new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+			new CrazySquadsSquadDeleteEvent(squad).callEvent();
 		}
 		else
 		{
-			final CrazySquadsSquadJoinEvent joinEvent = new CrazySquadsSquadJoinEvent(plugin, squad, player);
+			final CrazySquadsSquadJoinEvent joinEvent = new CrazySquadsSquadJoinEvent(squad, player);
 			joinEvent.callEvent();
 			if (joinEvent.isCancelled())
 			{
 				plugin.sendLocaleMessage("COMMAND.SQUAD.JOIN.CANCELLED", player, squad.getName(), joinEvent.getReason());
-				new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+				new CrazySquadsSquadDeleteEvent(squad).callEvent();
 			}
 			else
 			{
@@ -63,7 +63,7 @@ public class CrazySquadsPlayerCommandSquadCreate extends CrazySquadsPlayerComman
 						throw new CrazyCommandNoSuchException("Player", name);
 					if (squad.getMembers().contains(invited))
 						throw new CrazyCommandCircumstanceException("when invited is not already member of the squad!");
-					final CrazySquadsSquadInviteEvent event = new CrazySquadsSquadInviteEvent(plugin, squad, invited);
+					final CrazySquadsSquadInviteEvent event = new CrazySquadsSquadInviteEvent(squad, invited);
 					event.callEvent();
 					if (event.isCancelled())
 						plugin.sendLocaleMessage("COMMAND.SQUAD.INVITE.CANCELLED", player, squad.getName(), event.getReason());

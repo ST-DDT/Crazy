@@ -57,7 +57,7 @@ public class CrazySquadsPlayerListener implements Listener
 			return;
 		if (squad.getMembers().size() == 0)
 			return;
-		final CrazySquadsSquadJoinEvent event = new CrazySquadsSquadJoinEvent(plugin, squad, player);
+		final CrazySquadsSquadJoinEvent event = new CrazySquadsSquadJoinEvent(squad, player);
 		event.callEvent();
 		if (event.isCancelled())
 			plugin.sendLocaleMessage("COMMAND.SQUAD.JOIN.CANCELLED", player, squad.getName(), event.getReason());
@@ -103,9 +103,9 @@ public class CrazySquadsPlayerListener implements Listener
 			}
 			else
 				plugin.sendLocaleMessage("SQUAD.LEFT", members, player.getName());
-			new CrazySquadsSquadLeaveEvent(plugin, squad, player).callEvent();
+			new CrazySquadsSquadLeaveEvent(squad, player).callEvent();
 			if (members.size() == 0)
-				new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+				new CrazySquadsSquadDeleteEvent(squad).callEvent();
 			else if (plugin.getSquadAutoRejoinTime() > 0)
 			{
 				rejoins.put(player.getName(), squad);

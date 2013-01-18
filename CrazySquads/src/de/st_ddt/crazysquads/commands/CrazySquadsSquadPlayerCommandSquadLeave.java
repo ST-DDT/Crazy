@@ -38,8 +38,8 @@ public class CrazySquadsSquadPlayerCommandSquadLeave extends CrazySquadsSquadPla
 		else
 			plugin.sendLocaleMessage("SQUAD.LEFT", members, player.getName());
 		plugin.sendLocaleMessage("COMMAND.SQUAD.LEFT", player, squad.getName());
-		new CrazySquadsSquadLeaveEvent(plugin, squad, player).callEvent();
+		new CrazySquadsSquadLeaveEvent(squad, player).callEvent();
 		if (members.size() == 0)
-			new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+			new CrazySquadsSquadDeleteEvent(squad).callEvent();
 	}
 }

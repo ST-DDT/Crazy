@@ -53,9 +53,9 @@ public class CrazySquadsSquadPlayerCommandSquadKickMember extends CrazySquadsSqu
 			plugin.sendLocaleMessage("SQUAD.KICKED.MEMBER", members, player.getName(), kicked.getName());
 			plugin.sendLocaleMessage("COMMAND.SQUAD.KICKED", player, kicked.getName());
 		}
-		new CrazySquadsSquadLeaveEvent(plugin, squad, kicked).callEvent();
+		new CrazySquadsSquadLeaveEvent(squad, kicked).callEvent();
 		if (members.size() == 0)
-			new CrazySquadsSquadDeleteEvent(plugin, squad).callEvent();
+			new CrazySquadsSquadDeleteEvent(squad).callEvent();
 	}
 
 	@Override

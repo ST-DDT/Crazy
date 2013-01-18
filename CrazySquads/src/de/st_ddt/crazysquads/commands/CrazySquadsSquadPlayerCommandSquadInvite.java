@@ -36,7 +36,7 @@ public class CrazySquadsSquadPlayerCommandSquadInvite extends CrazySquadsSquadPl
 				throw new CrazyCommandNoSuchException("Player", name);
 			if (squad.getMembers().contains(invited))
 				throw new CrazyCommandCircumstanceException("when invited is not already member of the squad!");
-			final CrazySquadsSquadInviteEvent event = new CrazySquadsSquadInviteEvent(plugin, squad, invited);
+			final CrazySquadsSquadInviteEvent event = new CrazySquadsSquadInviteEvent(squad, invited);
 			event.callEvent();
 			if (event.isCancelled())
 				plugin.sendLocaleMessage("COMMAND.SQUAD.INVITE.CANCELLED", player, squad.getName(), event.getReason());

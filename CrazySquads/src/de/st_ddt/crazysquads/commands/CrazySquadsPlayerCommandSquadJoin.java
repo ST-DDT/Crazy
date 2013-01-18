@@ -32,7 +32,7 @@ public class CrazySquadsPlayerCommandSquadJoin extends CrazySquadsPlayerCommandE
 		final Set<Player> members = squad.getMembers();
 		if (members.size() >= plugin.getMaxSquadSize())
 			throw new CrazyCommandUsageException("when squad is not full!");
-		final CrazySquadsSquadJoinEvent event = new CrazySquadsSquadJoinEvent(plugin, squad, player);
+		final CrazySquadsSquadJoinEvent event = new CrazySquadsSquadJoinEvent(squad, player);
 		event.callEvent();
 		if (event.isCancelled())
 			plugin.sendLocaleMessage("COMMAND.SQUAD.JOIN.CANCELLED", player, squad.getName(), event.getReason());
