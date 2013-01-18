@@ -35,7 +35,7 @@ public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 		final boolean self = sender.getName().equalsIgnoreCase(name);
 		if (!PermissionModule.hasPermission(sender, "crazycore.player.delete." + (self ? "self" : "other")))
 			throw new CrazyCommandPermissionException();
-		final CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(plugin, name);
+		final CrazyPlayerRemoveEvent event = new CrazyPlayerRemoveEvent(name);
 		if (self)
 			event.callEvent();
 		else
