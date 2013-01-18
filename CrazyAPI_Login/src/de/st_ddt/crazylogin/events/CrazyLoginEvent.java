@@ -2,18 +2,16 @@ package de.st_ddt.crazylogin.events;
 
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazylogin.LoginPlugin;
-import de.st_ddt.crazylogin.data.LoginData;
 import de.st_ddt.crazyplugin.events.CrazyEvent;
 
-public class CrazyLoginEvent<S extends LoginData> extends CrazyEvent<LoginPlugin<S>>
+public class CrazyLoginEvent extends CrazyEvent
 {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	public CrazyLoginEvent(final LoginPlugin<S> plugin)
+	public CrazyLoginEvent()
 	{
-		super(plugin);
+		super();
 	}
 
 	@Override
