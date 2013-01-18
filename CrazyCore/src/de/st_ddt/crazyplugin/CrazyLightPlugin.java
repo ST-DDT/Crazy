@@ -145,4 +145,10 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	{
 		return getName() + " (v" + getDescription().getVersion() + ")";
 	}
+
+	@Override
+	public int compareTo(CrazyLightPluginInterface o)
+	{
+		return getName().compareTo(o.getName());
+	}
 }
