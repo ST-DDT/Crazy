@@ -6,11 +6,11 @@ import org.bukkit.plugin.Plugin;
 
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
-public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Event
+public abstract class CrazyEvent extends Event
 {
 
 	@Deprecated
-	protected final T plugin;
+	protected final CrazyLightPluginInterface plugin;
 
 	public CrazyEvent()
 	{
@@ -19,14 +19,14 @@ public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Ev
 	}
 
 	@Deprecated
-	public CrazyEvent(final T plugin)
+	public CrazyEvent(final CrazyLightPluginInterface plugin)
 	{
 		super();
 		this.plugin = plugin;
 	}
 
 	@Deprecated
-	public T getPlugin()
+	public CrazyLightPluginInterface getPlugin()
 	{
 		return plugin;
 	}
@@ -51,9 +51,9 @@ public abstract class CrazyEvent<T extends CrazyLightPluginInterface> extends Ev
 	protected class AsyncEventRunnable implements Runnable
 	{
 
-		private final CrazyEvent<T> event;
+		private final CrazyEvent event;
 
-		public AsyncEventRunnable(final CrazyEvent<T> event)
+		public AsyncEventRunnable(final CrazyEvent event)
 		{
 			super();
 			this.event = event;

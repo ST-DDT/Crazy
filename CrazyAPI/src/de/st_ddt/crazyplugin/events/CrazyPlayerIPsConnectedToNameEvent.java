@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
-public class CrazyPlayerIPsConnectedToNameEvent extends CrazyEvent<CrazyLightPluginInterface>
+public class CrazyPlayerIPsConnectedToNameEvent extends CrazyEvent
 {
 
 	private static final HandlerList handlers = new HandlerList();

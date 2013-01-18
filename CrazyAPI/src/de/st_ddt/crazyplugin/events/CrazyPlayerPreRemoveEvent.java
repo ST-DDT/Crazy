@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 
-public class CrazyPlayerPreRemoveEvent extends CrazyEvent<CrazyPluginInterface> implements Cancellable
+public class CrazyPlayerPreRemoveEvent extends CrazyEvent implements Cancellable
 {
 
 	private static final HandlerList handlers = new HandlerList();

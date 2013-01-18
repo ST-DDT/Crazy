@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyutil.Named;
 
-public class CrazyPlayerRemoveEvent extends CrazyEvent<CrazyPluginInterface>
+public class CrazyPlayerRemoveEvent extends CrazyEvent
 {
 
 	private static final HandlerList handlers = new HandlerList();
