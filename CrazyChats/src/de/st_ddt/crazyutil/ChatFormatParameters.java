@@ -8,6 +8,6 @@ public interface ChatFormatParameters
 	public String getParameterPrefix();
 
 	public Object[] getParameters(Player player);
-	
+
 	public int getParameterCount();
 }
