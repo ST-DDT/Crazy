@@ -39,6 +39,8 @@ permissions:
       crazycore.list: true
       crazycore.updatecheck: true
       crazycore.player.info: true
+      crazycore.player.associates: true
+      crazycore.player.ipsearch: true
       crazycore.player.delete: true
       crazycore.reload: true
       crazycore.save: true
@@ -55,6 +57,9 @@ permissions:
     default: op
   crazycore.player.associates:
     description: Allow listing all known associates of a player (recursive) (stored by CrazyPlugins).
+    default: op
+  crazycore.player.ipsearch:
+    description: Allow searching for players connected to this ip (stored by CrazyPlugins).
     default: op
   crazycore.player.delete:
     description: Allow deleting a player and all his stored information (CrazyPlugins+Commands).
