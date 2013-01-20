@@ -2,6 +2,7 @@ name: CrazyAnnouncer
 main: de.st_ddt.crazyannouncer.CrazyAnnouncer
 author: ST-DDT
 version: 1.8.1
+website: http://dev.bukkit.org/server-mods/crazycore/
 # requires CrazyCore v10 or later
 depend: [CrazyCore]
 description: >
