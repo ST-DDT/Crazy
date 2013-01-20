@@ -11,13 +11,13 @@ public class CrazyDetectorSignBlockListener implements Listener
 
 	protected final CrazyDetectorSign plugin;
 
-	public CrazyDetectorSignBlockListener(CrazyDetectorSign plugin)
+	public CrazyDetectorSignBlockListener(final CrazyDetectorSign plugin)
 	{
 		this.plugin = plugin;
 	}
 
 	@EventHandler
-	public void SignChangeEvent(SignChangeEvent event)
+	public void SignChangeEvent(final SignChangeEvent event)
 	{
 		if (!event.getLine(0).equals("[CD]"))
 			return;
@@ -27,7 +27,7 @@ public class CrazyDetectorSignBlockListener implements Listener
 	}
 
 	@EventHandler
-	public void BlockBreakEvent(BlockBreakEvent event)
+	public void BlockBreakEvent(final BlockBreakEvent event)
 	{
 		if (event.getBlock().getType() != Material.WALL_SIGN)
 			return;

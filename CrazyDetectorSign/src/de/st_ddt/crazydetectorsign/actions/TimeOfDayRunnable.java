@@ -9,7 +9,7 @@ public class TimeOfDayRunnable extends ActionRunnable
 	protected final boolean[] active = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	protected final World world;
 
-	public TimeOfDayRunnable(Location location, World world, String time)
+	public TimeOfDayRunnable(final Location location, final World world, final String time)
 	{
 		super(location);
 		this.world = world;
@@ -28,7 +28,7 @@ public class TimeOfDayRunnable extends ActionRunnable
 	@Override
 	public void run()
 	{
-		int time = (int) (world.getTime() / 1000 + 6) % 24;
+		final int time = (int) (world.getTime() / 1000 + 6) % 24;
 		if (0 < time && time < 24)
 			activate(active[time]);
 	}

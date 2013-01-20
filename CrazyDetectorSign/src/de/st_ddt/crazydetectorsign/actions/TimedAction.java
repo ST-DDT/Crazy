@@ -1,6 +1,7 @@
 package de.st_ddt.crazydetectorsign.actions;
 
 import org.bukkit.Bukkit;
+
 import de.st_ddt.crazydetectorsign.CrazyDetectorSign;
 
 public class TimedAction implements Action
@@ -10,7 +11,8 @@ public class TimedAction implements Action
 	protected final int taskID;
 	protected final Runnable runnable;
 
-	public TimedAction(long interval, Runnable runnable)
+	@SuppressWarnings("deprecation")
+	public TimedAction(final long interval, final Runnable runnable)
 	{
 		super();
 		this.interval = interval;

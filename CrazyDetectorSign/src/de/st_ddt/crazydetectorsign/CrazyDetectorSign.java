@@ -50,7 +50,7 @@ public class CrazyDetectorSign extends CrazyPlugin
 		ConfigurationSection config = getConfig();
 		config.set("signs", null);
 		config = config.createSection("signs");
-		for (Location location : signs.keySet())
+		for (final Location location : signs.keySet())
 		{
 			anz++;
 			ObjectSaveLoadHelper.saveLocation(config, "loc" + anz + ".", location, true, false);
@@ -64,24 +64,24 @@ public class CrazyDetectorSign extends CrazyPlugin
 		ConfigurationSection config = getConfig();
 		config = config.getConfigurationSection("signs");
 		if (config != null)
-			for (String key : config.getKeys(false))
+			for (final String key : config.getKeys(false))
 				registerSign(ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection(key), null).getBlock());
 	}
 
-	private void registerSign(Block block)
+	private void registerSign(final Block block)
 	{
 		if (block.getType() != Material.WALL_SIGN)
 			return;
 		registerSign(block, ((Sign) block.getState()).getLines());
 	}
 
-	public void registerSign(Block block, String[] lines)
+	public void registerSign(final Block block, final String[] lines)
 	{
 		if (block.getType() != Material.WALL_SIGN)
 			return;
-		Sign sign = (Sign) block.getState();
-		Location attached = block.getLocation();
-		World world = block.getWorld();
+		final Sign sign = (Sign) block.getState();
+		final Location attached = block.getLocation();
+		final World world = block.getWorld();
 		switch (sign.getData().getData())
 		{
 			case 2:
@@ -103,9 +103,9 @@ public class CrazyDetectorSign extends CrazyPlugin
 			signs.put(block.getLocation(), new TimedAction(Integer.parseInt(lines[3]), new TimeOfDayRunnable(attached, world, lines[2])));
 	}
 
-	public void unregisterSign(Location location)
+	public void unregisterSign(final Location location)
 	{
-		Action action = signs.remove(location);
+		final Action action = signs.remove(location);
 		save();
 		if (action == null)
 			return;
