@@ -15,19 +15,19 @@ public class CrazyCompassPlayerListener implements Listener
 	String chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + "CrazyCompass" + ChatColor.RED + "] " + ChatColor.WHITE;
 
 	@EventHandler
-	public void PlayerInteract(PlayerInteractEvent event)
+	public void PlayerInteract(final PlayerInteractEvent event)
 	{
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		if (event.getMaterial() != Material.COMPASS)
 			return;
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR))
 		{
 			Player nearest = null;
 			double distance = Double.MAX_VALUE;
-			for (Player player2 : Bukkit.getServer().getOnlinePlayers())
+			for (final Player player2 : Bukkit.getServer().getOnlinePlayers())
 				if (player2 != player)
 				{
-					double dist = player.getLocation().distance(player2.getLocation());
+					final double dist = player.getLocation().distance(player2.getLocation());
 					if (dist < distance)
 					{
 						distance = dist;

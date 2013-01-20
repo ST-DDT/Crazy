@@ -1,8 +1,9 @@
 name: CrazyCompass
 main: de.st_ddt.crazycompass.CrazyCompass
 author: ST-DDT
-#C*=needed core version
-version: C8_1.3
+version: 1.3.1
+website: http://dev.bukkit.org/server-mods/crazycore/pages/crazy-compass/
+# requires CrazyCore v10 or later
 depend: [CrazyCore]
 description: >
             CrazyCompass point to the center of your attention.
