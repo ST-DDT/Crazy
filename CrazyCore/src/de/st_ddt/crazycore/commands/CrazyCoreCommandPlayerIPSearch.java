@@ -69,8 +69,8 @@ public class CrazyCoreCommandPlayerIPSearch extends CrazyCoreCommandExecutor
 	{
 		final Map<String, Tabbed> params = new TreeMap<String, Tabbed>();
 		new IPListModer().tabHelp(params);
-		ChatHelperExtended.listTabHelp(params, sender, null, null);
-		return ChatHelperExtended.tabHelp(args, params);
+		final Tabbed page = ChatHelperExtended.listTabHelp(params, sender, null, null);
+		return ChatHelperExtended.tabHelp(args, params, page);
 	}
 
 	@Override

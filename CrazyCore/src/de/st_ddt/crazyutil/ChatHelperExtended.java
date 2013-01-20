@@ -352,7 +352,7 @@ public class ChatHelperExtended extends ChatHelper
 					if (tempParam != null)
 						param = tempParam;
 				}
-				else if (p == indexedParams.length)
+				else if (p == indexedParams.length && p > 0)
 				{
 					final Paramitrisable tempParam = indexedParams[p - 1];
 					if (tempParam != null)
@@ -531,7 +531,7 @@ public class ChatHelperExtended extends ChatHelper
 					if (tempParam != null)
 						param = tempParam;
 				}
-				else if (p == indexedParams.length)
+				else if (p == indexedParams.length && p > 0)
 				{
 					final Tabbed tempParam = indexedParams[p - 1];
 					if (tempParam != null)
