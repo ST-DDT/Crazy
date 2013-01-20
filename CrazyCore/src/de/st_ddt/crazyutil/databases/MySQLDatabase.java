@@ -193,12 +193,12 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		if (super.hasEntry(key))
 			return true;
-		return loadEntry(key) != null;
+		else
+			return loadEntry(key) != null;
 	}
 
 	protected boolean containsEntry(final String key)
 	{
-		boolean res = false;
 		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
 		try
@@ -206,12 +206,14 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			query = connection.createStatement();
 			final ResultSet result = query.executeQuery("SELECT `" + columnNames[0] + "` FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
 			if (result.next())
-				res = true;
-			result.close();
+				return true;
+			else
+				return false;
 		}
 		catch (final SQLException e)
 		{
 			e.printStackTrace();
+			return false;
 		}
 		finally
 		{
@@ -224,7 +226,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 				{}
 			mysqlConnectionPool.releaseConnection(connection);
 		}
-		return res;
 	}
 
 	@Override
