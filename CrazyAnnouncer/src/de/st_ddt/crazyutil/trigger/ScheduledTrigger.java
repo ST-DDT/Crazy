@@ -50,6 +50,7 @@ public class ScheduledTrigger extends Trigger
 		return new Date().before(date);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void register()
 	{

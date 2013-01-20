@@ -22,6 +22,7 @@ public class Action_DELAYEDACTION extends Action_ACTION
 		this.delay = delay;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run()
 	{
