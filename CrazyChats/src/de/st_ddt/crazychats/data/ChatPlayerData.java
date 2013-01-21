@@ -117,7 +117,7 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 	public Map<String, ChannelInterface> getChannelMap()
 	{
 		accessibleChannels.remove(null);
-		final Map<String, ChannelInterface> res = new TreeMap<String, ChannelInterface>();
+		final Map<String, ChannelInterface> res = new TreeMap<String, ChannelInterface>(String.CASE_INSENSITIVE_ORDER);
 		for (final ChannelInterface channel : accessibleChannels)
 			if (channel.hasTalkPermission(getPlayer()))
 				for (final String alias : channel.getAliases())
