@@ -1,8 +1,9 @@
 name: CrazyPromoter
 main: de.st_ddt.crazypromoter.CrazyPromoter
 author: ST-DDT
-version: 2.12
-# requires CrazyCore v9.6 or later
+version: 2.12.1
+website: http://dev.bukkit.org/server-mods/crazypromoter/
+# requires CrazyCore v10 or later
 depend: [CrazyCore]
 softdepend: [CrazyOnline,CrazyLogin]
 description: >
