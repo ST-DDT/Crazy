@@ -1,8 +1,9 @@
 name: CrazyLoginRank
 main: de.st_ddt.crazyloginrank.CrazyLoginRank
 author: ST-DDT
-#C*=needed core version
-version: C8.1_0.2
+version: 0.2.1
+website: http://dev.bukkit.org/server-mods/crazycore/pages/crazy-login-rank/
+# requires CrazyCore v10 or later
 depend: [CrazyCore]
 description: >
             CrazyLoginRank allow your favorite players to connect to your server.

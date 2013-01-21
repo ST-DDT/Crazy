@@ -31,10 +31,10 @@ public class CrazyLoginRankPlayerListener implements Listener
 	{
 		if (Bukkit.getOnlinePlayers().length < Bukkit.getMaxPlayers())
 			return;
-		Player lowest = plugin.getLowestRank();
+		final Player lowest = plugin.getLowestRank();
 		if (lowest == null)
 			return;
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		if (player.equals(lowest))
 			return;
 		if (plugin.getAvailablePlayerData(player).compareTo(plugin.getAvailablePlayerData(lowest)) == 1)

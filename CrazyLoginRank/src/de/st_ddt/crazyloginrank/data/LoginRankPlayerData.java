@@ -3,28 +3,27 @@ package de.st_ddt.crazyloginrank.data;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyloginrank.CrazyLoginRank;
-import de.st_ddt.crazyloginrank.data.LoginRankData;
 import de.st_ddt.crazyplugin.data.PlayerData;
 
-public class LoginRankPlayerData extends PlayerData<LoginRankPlayerData> implements LoginRankData
+public class LoginRankPlayerData extends PlayerData<LoginRankData> implements LoginRankData
 {
 
 	protected int rank;
 
-	public LoginRankPlayerData(String name)
+	public LoginRankPlayerData(final String name)
 	{
 		super(name);
 		rank = 0;
 	}
 
-	public LoginRankPlayerData(String name, int rank)
+	public LoginRankPlayerData(final String name, final int rank)
 	{
 		super(name);
 		this.rank = rank;
 	}
 
 	@Override
-	public String getParameter(int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -44,7 +43,7 @@ public class LoginRankPlayerData extends PlayerData<LoginRankPlayerData> impleme
 	}
 
 	@Override
-	public int compareTo(LoginRankData o)
+	public int compareTo(final LoginRankData o)
 	{
 		return getRank().compareTo(o.getRank());
 	}
@@ -73,7 +72,7 @@ public class LoginRankPlayerData extends PlayerData<LoginRankPlayerData> impleme
 	}
 
 	@Override
-	public void showDetailed(CommandSender target, String chatHeader)
+	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		// EDIT showDetailed
 	}

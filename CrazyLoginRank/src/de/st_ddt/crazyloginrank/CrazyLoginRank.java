@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -17,7 +16,6 @@ import de.st_ddt.crazyloginrank.data.LoginRankUnregisteredPlayerData;
 import de.st_ddt.crazyloginrank.listener.CrazyLoginRankCrazyListener;
 import de.st_ddt.crazyloginrank.listener.CrazyLoginRankPlayerListener;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
-import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
 public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankData, LoginRankPlayerData> implements LoginRankPlugin<LoginRankPlayerData>
 {
@@ -34,12 +32,6 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankData, LoginRa
 
 	private CrazyLoginRankPlayerListener playerListener;
 	private CrazyLoginRankCrazyListener crazylistener;
-
-	@Override
-	protected String getShortPluginName()
-	{
-		return "clr";
-	}
 
 	@Override
 	public void onEnable()
@@ -92,12 +84,6 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankData, LoginRa
 		for (final PermissionRanks entry : permissionRanks)
 			config.set("ranks." + entry.getName(), entry.getRank());
 		super.save();
-	}
-
-	@Override
-	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		return false;
 	}
 
 	@Override

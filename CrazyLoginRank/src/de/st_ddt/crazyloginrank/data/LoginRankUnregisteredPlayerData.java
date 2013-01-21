@@ -4,40 +4,39 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyloginrank.CrazyLoginRank;
-import de.st_ddt.crazyloginrank.data.LoginRankData;
 import de.st_ddt.crazyplugin.data.PlayerData;
 
-public class LoginRankUnregisteredPlayerData extends PlayerData<LoginRankUnregisteredPlayerData> implements LoginRankData
+public class LoginRankUnregisteredPlayerData extends PlayerData<LoginRankData> implements LoginRankData
 {
 
 	protected int rank;
 
-	public LoginRankUnregisteredPlayerData(String name)
+	public LoginRankUnregisteredPlayerData(final String name)
 	{
 		super(name);
 		rank = 0;
 	}
 
-	public LoginRankUnregisteredPlayerData(OfflinePlayer player)
+	public LoginRankUnregisteredPlayerData(final OfflinePlayer player)
 	{
 		super(player.getName());
 		rank = 0;
 	}
 
-	public LoginRankUnregisteredPlayerData(String name, int rank)
+	public LoginRankUnregisteredPlayerData(final String name, final int rank)
 	{
 		super(name);
 		this.rank = rank;
 	}
 
-	public LoginRankUnregisteredPlayerData(OfflinePlayer player, int rank)
+	public LoginRankUnregisteredPlayerData(final OfflinePlayer player, final int rank)
 	{
 		super(player.getName());
 		this.rank = rank;
 	}
 
 	@Override
-	public String getParameter(int index)
+	public String getParameter(final CommandSender sender, final int index)
 	{
 		switch (index)
 		{
@@ -57,7 +56,7 @@ public class LoginRankUnregisteredPlayerData extends PlayerData<LoginRankUnregis
 	}
 
 	@Override
-	public int compareTo(LoginRankData o)
+	public int compareTo(final LoginRankData o)
 	{
 		return getRank().compareTo(o.getRank());
 	}
@@ -86,7 +85,7 @@ public class LoginRankUnregisteredPlayerData extends PlayerData<LoginRankUnregis
 	}
 
 	@Override
-	public void showDetailed(CommandSender target, String chatHeader)
+	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		// EDIT showDetailed
 	}
