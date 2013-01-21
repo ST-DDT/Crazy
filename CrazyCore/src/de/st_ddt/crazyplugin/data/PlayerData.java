@@ -12,7 +12,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
 
-public abstract class PlayerData<S extends PlayerData<S>> implements PlayerDataInterface, Comparable<S>
+public abstract class PlayerData<S extends PlayerDataInterface> implements PlayerDataInterface, Comparable<S>
 {
 
 	protected final String name;
