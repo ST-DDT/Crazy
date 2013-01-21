@@ -89,6 +89,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
 	private int newChannelID;
+	private String consoleDisplayName = "[CONSOLE]";
 	private String broadcastChatFormat = "[All]%1$s: %2$s";
 	private String globalChatFormat = "[Global]%1$s: %2$s";
 	private String worldChatFormat = "[World]%1$s: %2$s";
@@ -120,6 +121,39 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	@Localized({ "CRAZYCHATS.MODE.CHANGE $Name$ $Value$", "CRAZYCHATS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYCHATS.FORMAT.EXAMPLE $Example$" })
 	private void registerModes()
 	{
+		modeCommand.addMode(modeCommand.new Mode<String>("consoleDisplayName", String.class)
+		{
+
+			@Override
+			public String getValue()
+			{
+				return consoleDisplayName;
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				consoleDisplayName = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(getValue());
+				return res;
+			}
+		});
 		modeCommand.addMode(modeCommand.new Mode<String>("broadcastChatFormat", String.class)
 		{
 
@@ -670,6 +704,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				final CustomChannel channel = new CustomChannel(this, customChannelConfig.getConfigurationSection(key));
 				customChannels.put(channel.getId(), channel);
 			}
+		consoleDisplayName = ChatHelper.colorise(config.getString("consoleDisplayName", "&DCONSOLE"));
 		broadcastChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("broadcastChatFormat", "&C&L[All] &F%1$s&F: &E%2$s"));
 		globalChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("globalChatFormat", "&6[Global] &F%1$s&F: &F%2$s"));
 		worldChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("worldChatFormat", "&A[World] &F%1$s&F: &F%2$s"));
@@ -708,6 +743,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			for (final CustomChannel channel : customChannels.values())
 				channel.simpleSave(config, "customChannels.");
 		}
+		config.set("consoleDisplayName", ChatHelper.decolorise(consoleDisplayName));
 		config.set("broadcastChatFormat", CrazyChatsChatHelper.unmakeFormat(broadcastChatFormat));
 		config.set("globalChatFormat", CrazyChatsChatHelper.unmakeFormat(globalChatFormat));
 		config.set("worldChatFormat", CrazyChatsChatHelper.unmakeFormat(worldChatFormat));
@@ -868,6 +904,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public Set<ControlledChannelInterface> getControlledChannels()
 	{
 		return controlledChannels;
+	}
+
+	public String getConsoleDisplayName()
+	{
+		return consoleDisplayName;
 	}
 
 	public String getBroadcastChatFormat()

@@ -34,7 +34,7 @@ public class CrazyChatsCommandSay extends CrazyChatsCommandExecutor
 			command((Player) sender, args);
 		else
 		{
-			final String message = ChatHelper.colorise(String.format(CrazyChatsChatHelper.applyFormat(plugin, sender, plugin.getBroadcastChatFormat()), sender.getName(), ChatHelper.listingString(" ", args)));
+			final String message = ChatHelper.colorise(String.format(CrazyChatsChatHelper.applyFormat(plugin, sender, plugin.getBroadcastChatFormat()), plugin.getConsoleDisplayName(), ChatHelper.listingString(" ", args)));
 			for (final Player target : Bukkit.getOnlinePlayers())
 				target.sendMessage(message);
 			sender.sendMessage(message);
