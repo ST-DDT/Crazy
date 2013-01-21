@@ -69,7 +69,7 @@ public class CrazyCaptchaPlayerListener implements Listener
 		plugin.playerQuit(player);
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	@Localized({ "CRAZYCAPTCHA.KICKED.COMMANDUSAGE" })
 	public void PlayerPreCommand(final PlayerCommandPreprocessEvent event)
 	{
