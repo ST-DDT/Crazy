@@ -115,7 +115,6 @@ public class CrazyOnlinePlayerListener implements Listener
 		PlayerQuitCheck(event.getPlayer());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void PlayerQuitCheck(final Player player)
 	{
 		if (!plugin.isDeletingShortVisitorsEnabled())
@@ -125,6 +124,6 @@ public class CrazyOnlinePlayerListener implements Listener
 			return;
 		if (data.getTimeTotal() > 5)
 			return;
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new PlayerDataShortTimeCheckTask(plugin, player.getName()), 20 * 60 * 10);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new PlayerDataShortTimeCheckTask(plugin, player.getName()), 20 * 60 * 10);
 	}
 }
