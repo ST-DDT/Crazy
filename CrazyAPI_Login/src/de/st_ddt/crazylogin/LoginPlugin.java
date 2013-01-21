@@ -52,6 +52,8 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 
 	public boolean isHidingPlayerEnabled();
 
+	public boolean isHidingChatEnabled();
+
 	public Encryptor getEncryptor();
 
 	public double getMoveRange();
