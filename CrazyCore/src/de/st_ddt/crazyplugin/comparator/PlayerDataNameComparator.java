@@ -8,6 +8,6 @@ public class PlayerDataNameComparator<S extends PlayerDataInterface> implements 
 	@Override
 	public int compare(final S o1, final S o2)
 	{
-		return o1.getName().compareTo(o2.getName());
+		return o1.getName().compareToIgnoreCase(o2.getName());
 	}
 }

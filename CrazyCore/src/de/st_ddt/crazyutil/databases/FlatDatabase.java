@@ -35,7 +35,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	private final static String lineSeparator = System.getProperty("line.separator");
 	protected final static Pattern PATTERN_DATASEPARATOR = Pattern.compile("\\|");
 	private final JavaPlugin plugin;
-	private final Map<String, String> entries = Collections.synchronizedMap(new TreeMap<String, String>());
+	private final Map<String, String> entries = Collections.synchronizedMap(new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER));
 	private final Map<String, String> backupEntries = new HashMap<String, String>();
 	private final String filePath;
 	private final File file;

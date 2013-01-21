@@ -11,7 +11,7 @@ import org.bukkit.OfflinePlayer;
 public abstract class PreSetList implements Named
 {
 
-	public final static Map<String, PreSetList> PRESETLISTS = new TreeMap<String, PreSetList>();
+	public final static Map<String, PreSetList> PRESETLISTS = new TreeMap<String, PreSetList>(String.CASE_INSENSITIVE_ORDER);
 	private final String name;
 
 	public PreSetList(final String name)

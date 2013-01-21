@@ -15,7 +15,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public final class EncryptHelper
 {
 
-	private static final Map<String, Class<? extends Encryptor>> encryptors = new TreeMap<String, Class<? extends Encryptor>>();
+	private static final Map<String, Class<? extends Encryptor>> encryptors = new TreeMap<String, Class<? extends Encryptor>>(String.CASE_INSENSITIVE_ORDER);
 
 	protected EncryptHelper()
 	{
