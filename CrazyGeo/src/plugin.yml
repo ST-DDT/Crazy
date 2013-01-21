@@ -1,8 +1,9 @@
 name: CrazyGeo
 main: de.st_ddt.crazygeo.CrazyGeo
 author: ST-DDT
-version: 0.2.3
-# requires CrazyCore v8 or later
+version: 0.2.4
+website: http://dev.bukkit.org/server-mods/crazygeo/
+# requires CrazyCore v10 or later
 depend: [CrazyCore]
 softdepend: [WorldEdit]
 description: >
