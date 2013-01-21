@@ -15,10 +15,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public class CrazyArenaCommandMainImport extends CrazyArenaCommandExecutor
+public class CommandMainImport extends CommandExecutor
 {
 
-	public CrazyArenaCommandMainImport(final CrazyArena plugin)
+	public CommandMainImport(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

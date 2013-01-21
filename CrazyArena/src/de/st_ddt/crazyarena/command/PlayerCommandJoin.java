@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
@@ -15,10 +16,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
-public class CrazyArenaPlayerCommandSpectate extends CrazyArenaPlayerCommandExecutor
+public class PlayerCommandJoin extends PlayerCommandExecutor
 {
 
-	public CrazyArenaPlayerCommandSpectate(final CrazyArena plugin)
+	public PlayerCommandJoin(final CrazyArena plugin)
 	{
 		super(plugin);
 	}
@@ -26,13 +27,14 @@ public class CrazyArenaPlayerCommandSpectate extends CrazyArenaPlayerCommandExec
 	@Override
 	public void command(final Player player, final String[] args) throws CrazyException
 	{
-		Arena<?> arena = plugin.getArena(player);
-		if (arena != null)
-			throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + arena.getName() + ")");
+		final Arena<?> oldArena = plugin.getArena(player);
+		Arena<?> arena = null;
 		switch (args.length)
 		{
 			case 0:
-				arena = plugin.getInvitations().get(player);
+				arena = oldArena;
+				if (arena == null)
+					arena = plugin.getInvitations().get(player.getName().toLowerCase());
 				if (arena == null)
 					throw new CrazyCommandUsageException("<Arena/Player>");
 				break;
@@ -41,20 +43,31 @@ public class CrazyArenaPlayerCommandSpectate extends CrazyArenaPlayerCommandExec
 				arena = plugin.getArenaByName(name);
 				if (arena == null)
 				{
-					Player to = Bukkit.getPlayerExact(args[0]);
+					Player to = Bukkit.getPlayerExact(name);
 					if (to == null)
-						to = Bukkit.getPlayer(args[0]);
+						to = Bukkit.getPlayer(name);
 					arena = plugin.getArena(to);
 				}
 				if (arena == null)
-					throw new CrazyCommandNoSuchException("Arena/Player", args[0], plugin.searchArenaNames(name));
+					throw new CrazyCommandNoSuchException("Arena/Player", name, plugin.searchArenaNames(name));
 				break;
 			default:
 				throw new CrazyCommandUsageException("<Arena/Player>");
 		}
-		if (!arena.getStatus().allowSpectators())
-			throw new CrazyCommandCircumstanceException("when arena is ready for spectators", arena.getStatus().toString());
-		arena.spectate(player);
+		if (oldArena != null)
+			if (!oldArena.isParticipant(player, ParticipantType.SPECTATOR))
+				throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + oldArena.getName() + ")");
+			else
+				oldArena.leave(player, false);
+		if (!arena.getStatus().allowJoins())
+			if (arena.getStatus().isActive())
+			{
+				if (!arena.allowJoin(player))
+					throw new CrazyCommandCircumstanceException("when arena is ready for joins", arena.getStatus().toString());
+			}
+			else
+				throw new CrazyCommandCircumstanceException("when arena is ready for joins", arena.getStatus().toString());
+		arena.join(player, false);
 	}
 
 	@Override
@@ -70,6 +83,6 @@ public class CrazyArenaPlayerCommandSpectate extends CrazyArenaPlayerCommandExec
 	@Override
 	public boolean hasAccessPermission(final Player player)
 	{
-		return PermissionModule.hasPermission(player, "crazyarena.arena.spectate");
+		return PermissionModule.hasPermission(player, "crazyarena.join");
 	}
 }

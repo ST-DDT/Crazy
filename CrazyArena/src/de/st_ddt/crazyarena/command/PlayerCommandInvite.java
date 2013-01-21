@@ -15,10 +15,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
-public class CrazyArenaPlayerCommandInvite extends CrazyArenaPlayerCommandExecutor
+public class PlayerCommandInvite extends PlayerCommandExecutor
 {
 
-	public CrazyArenaPlayerCommandInvite(final CrazyArena plugin)
+	public PlayerCommandInvite(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

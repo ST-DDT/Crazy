@@ -21,23 +21,23 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainCreate;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainDelete;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainDisable;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainEnable;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainForceReady;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainForceStop;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainImport;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainKick;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainSelect;
-import de.st_ddt.crazyarena.command.CrazyArenaCommandMainTreeDefault;
-import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandInvite;
-import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandJoin;
-import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandJudge;
-import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandLeave;
-import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandReady;
-import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandSpectate;
-import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandTeam;
+import de.st_ddt.crazyarena.command.CommandMainCreate;
+import de.st_ddt.crazyarena.command.CommandMainDelete;
+import de.st_ddt.crazyarena.command.CommandMainDisable;
+import de.st_ddt.crazyarena.command.CommandMainEnable;
+import de.st_ddt.crazyarena.command.CommandMainForceReady;
+import de.st_ddt.crazyarena.command.CommandMainForceStop;
+import de.st_ddt.crazyarena.command.CommandMainImport;
+import de.st_ddt.crazyarena.command.CommandMainKick;
+import de.st_ddt.crazyarena.command.CommandMainSelect;
+import de.st_ddt.crazyarena.command.CommandMainTreeDefault;
+import de.st_ddt.crazyarena.command.PlayerCommandInvite;
+import de.st_ddt.crazyarena.command.PlayerCommandJoin;
+import de.st_ddt.crazyarena.command.PlayerCommandJudge;
+import de.st_ddt.crazyarena.command.PlayerCommandLeave;
+import de.st_ddt.crazyarena.command.PlayerCommandReady;
+import de.st_ddt.crazyarena.command.PlayerCommandSpectate;
+import de.st_ddt.crazyarena.command.PlayerCommandTeam;
 import de.st_ddt.crazyarena.events.CrazyArenaArenaCreateEvent;
 import de.st_ddt.crazyarena.listener.CrazyArenaCrazyChatsListener;
 import de.st_ddt.crazyarena.listener.CrazyArenaPlayerListener;
@@ -253,24 +253,24 @@ public class CrazyArena extends CrazyPlugin
 
 	private void registerCommands()
 	{
-		getCommand("arenajoin").setExecutor(new CrazyArenaPlayerCommandJoin(this));
-		getCommand("arenaspectate").setExecutor(new CrazyArenaPlayerCommandSpectate(this));
-		getCommand("arenajudge").setExecutor(new CrazyArenaPlayerCommandJudge(this));
-		getCommand("arenainvite").setExecutor(new CrazyArenaPlayerCommandInvite(this));
-		getCommand("arenaready").setExecutor(new CrazyArenaPlayerCommandReady(this));
-		getCommand("arenateam").setExecutor(new CrazyArenaPlayerCommandTeam(this));
-		getCommand("arenaleave").setExecutor(new CrazyArenaPlayerCommandLeave(this));
-		mainCommand.addSubCommand(new CrazyArenaCommandMainCreate(this), "create", "new");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainImport(this), "import");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainSelect(this), "select");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainEnable(this), "enable");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainForceReady(this), "forceready");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainKick(this), "kick");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainForceStop(this), "forcestop");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainDisable(this), "disable");
-		mainCommand.addSubCommand(new CrazyArenaCommandMainDelete(this), "delete", "remove");
+		getCommand("arenajoin").setExecutor(new PlayerCommandJoin(this));
+		getCommand("arenaspectate").setExecutor(new PlayerCommandSpectate(this));
+		getCommand("arenajudge").setExecutor(new PlayerCommandJudge(this));
+		getCommand("arenainvite").setExecutor(new PlayerCommandInvite(this));
+		getCommand("arenaready").setExecutor(new PlayerCommandReady(this));
+		getCommand("arenateam").setExecutor(new PlayerCommandTeam(this));
+		getCommand("arenaleave").setExecutor(new PlayerCommandLeave(this));
+		mainCommand.addSubCommand(new CommandMainCreate(this), "create", "new");
+		mainCommand.addSubCommand(new CommandMainImport(this), "import");
+		mainCommand.addSubCommand(new CommandMainSelect(this), "select");
+		mainCommand.addSubCommand(new CommandMainEnable(this), "enable");
+		mainCommand.addSubCommand(new CommandMainForceReady(this), "forceready");
+		mainCommand.addSubCommand(new CommandMainKick(this), "kick");
+		mainCommand.addSubCommand(new CommandMainForceStop(this), "forcestop");
+		mainCommand.addSubCommand(new CommandMainDisable(this), "disable");
+		mainCommand.addSubCommand(new CommandMainDelete(this), "delete", "remove");
 		mainCommand.addSubCommand(modeCommand, "mode");
-		mainCommand.setDefaultExecutor(new CrazyArenaCommandMainTreeDefault(this));
+		mainCommand.setDefaultExecutor(new CommandMainTreeDefault(this));
 	}
 
 	private void registerHooks()

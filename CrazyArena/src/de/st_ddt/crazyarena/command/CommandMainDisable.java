@@ -13,10 +13,10 @@ import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 
-public class CrazyArenaCommandMainEnable extends CrazyArenaCommandExecutor
+public class CommandMainDisable extends CommandExecutor
 {
 
-	public CrazyArenaCommandMainEnable(final CrazyArena plugin)
+	public CommandMainDisable(final CrazyArena plugin)
 	{
 		super(plugin);
 	}
@@ -29,7 +29,7 @@ public class CrazyArenaCommandMainEnable extends CrazyArenaCommandExecutor
 			throw new CrazyCommandUsageException("<Arena>");
 		final String name = args[0];
 		final Arena<?> arena = plugin.getArenaByName(name);
-		final boolean enabled = arena.setEnabled(sender, true);
+		final boolean enabled = arena.setEnabled(sender, false);
 		plugin.sendLocaleMessage("COMMAND.ARENA.ENABLED", sender, name, enabled ? "TRUE" : "FALSE", arena.getStatus().toString());
 		if (sender != Bukkit.getConsoleSender())
 			plugin.sendLocaleMessage("COMMAND.ARENA.ENABLED", Bukkit.getConsoleSender(), name);

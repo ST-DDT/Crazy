@@ -16,10 +16,10 @@ import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 
-public class CrazyArenaCommandMainDelete extends CrazyArenaCommandExecutor
+public class CommandMainDelete extends CommandExecutor
 {
 
-	public CrazyArenaCommandMainDelete(final CrazyArena plugin)
+	public CommandMainDelete(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

@@ -7,10 +7,10 @@ import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class CrazyArenaPlayerCommandLeave extends CrazyArenaPlayerCommandExecutor
+public class PlayerCommandLeave extends PlayerCommandExecutor
 {
 
-	public CrazyArenaPlayerCommandLeave(final CrazyArena plugin)
+	public PlayerCommandLeave(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

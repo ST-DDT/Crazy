@@ -15,10 +15,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
-public class CrazyArenaPlayerCommandJudge extends CrazyArenaPlayerCommandExecutor
+public class PlayerCommandSpectate extends PlayerCommandExecutor
 {
 
-	public CrazyArenaPlayerCommandJudge(final CrazyArena plugin)
+	public PlayerCommandSpectate(final CrazyArena plugin)
 	{
 		super(plugin);
 	}
@@ -52,9 +52,9 @@ public class CrazyArenaPlayerCommandJudge extends CrazyArenaPlayerCommandExecuto
 			default:
 				throw new CrazyCommandUsageException("<Arena/Player>");
 		}
-		if (!arena.getStatus().isActive())
-			throw new CrazyCommandCircumstanceException("when arena is ready for judges", arena.getStatus().toString());
-		arena.judge(player);
+		if (!arena.getStatus().allowSpectators())
+			throw new CrazyCommandCircumstanceException("when arena is ready for spectators", arena.getStatus().toString());
+		arena.spectate(player);
 	}
 
 	@Override
@@ -70,6 +70,6 @@ public class CrazyArenaPlayerCommandJudge extends CrazyArenaPlayerCommandExecuto
 	@Override
 	public boolean hasAccessPermission(final Player player)
 	{
-		return PermissionModule.hasPermission(player, "crazyarena.judge");
+		return PermissionModule.hasPermission(player, "crazyarena.arena.spectate");
 	}
 }

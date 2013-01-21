@@ -13,10 +13,10 @@ import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 
-public class CrazyArenaCommandMainSelect extends CrazyArenaPlayerCommandExecutor
+public class CommandMainSelect extends PlayerCommandExecutor
 {
 
-	public CrazyArenaCommandMainSelect(final CrazyArena plugin)
+	public CommandMainSelect(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

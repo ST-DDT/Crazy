@@ -7,32 +7,34 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 
-public class CrazyArenaCommandMainDisable extends CrazyArenaCommandExecutor
+public class CommandMainForceStop extends CommandExecutor
 {
 
-	public CrazyArenaCommandMainDisable(final CrazyArena plugin)
+	public CommandMainForceStop(final CrazyArena plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized("CRAZYARENA.COMMAND.ARENA.ENABLED $Name$ $Enabled$ $Status$")
+	@Localized("CRAZYARENA.COMMAND.STOP.FORCE $Stopper$ $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Arena>");
-		final String name = args[0];
-		final Arena<?> arena = plugin.getArenaByName(name);
-		final boolean enabled = arena.setEnabled(sender, false);
-		plugin.sendLocaleMessage("COMMAND.ARENA.ENABLED", sender, name, enabled ? "TRUE" : "FALSE", arena.getStatus().toString());
-		if (sender != Bukkit.getConsoleSender())
-			plugin.sendLocaleMessage("COMMAND.ARENA.ENABLED", Bukkit.getConsoleSender(), name);
+		final Arena<?> arena = plugin.getArenaByName(args[0]);
+		if (arena == null)
+			throw new CrazyCommandNoSuchException("Arena", args[0]);
+		arena.stop();
+		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", sender, sender.getName(), arena.getName());
+		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", arena.getParticipatingPlayers(), sender.getName(), arena.getName());
+		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", Bukkit.getConsoleSender(), sender.getName(), arena.getName());
 	}
 
 	@Override
@@ -46,6 +48,6 @@ public class CrazyArenaCommandMainDisable extends CrazyArenaCommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazyarena.arena.switchmode");
+		return PermissionModule.hasPermission(sender, "crazyarena.forcestop");
 	}
 }

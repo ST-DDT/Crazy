@@ -7,10 +7,10 @@ import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class CrazyArenaPlayerCommandTeam extends CrazyArenaPlayerCommandExecutor
+public class PlayerCommandTeam extends PlayerCommandExecutor
 {
 
-	public CrazyArenaPlayerCommandTeam(final CrazyArena plugin)
+	public PlayerCommandTeam(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

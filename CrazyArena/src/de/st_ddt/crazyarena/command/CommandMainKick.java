@@ -16,10 +16,10 @@ import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 
-public class CrazyArenaCommandMainKick extends CrazyArenaCommandExecutor
+public class CommandMainKick extends CommandExecutor
 {
 
-	public CrazyArenaCommandMainKick(final CrazyArena plugin)
+	public CommandMainKick(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

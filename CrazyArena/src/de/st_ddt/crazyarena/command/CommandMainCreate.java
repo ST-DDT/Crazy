@@ -18,10 +18,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public class CrazyArenaCommandMainCreate extends CrazyArenaPlayerCommandExecutor
+public class CommandMainCreate extends PlayerCommandExecutor
 {
 
-	public CrazyArenaCommandMainCreate(final CrazyArena plugin)
+	public CommandMainCreate(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

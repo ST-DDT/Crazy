@@ -2,11 +2,12 @@ package de.st_ddt.crazyarena.command;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyarena.participants.Participant;
+import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -14,16 +15,16 @@ import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 
-public class CrazyArenaCommandMainForceStop extends CrazyArenaCommandExecutor
+public class CommandMainForceReady extends CommandExecutor
 {
 
-	public CrazyArenaCommandMainForceStop(final CrazyArena plugin)
+	public CommandMainForceReady(final CrazyArena plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized("CRAZYARENA.COMMAND.STOP.FORCE $Stopper$ $Name$")
+	@Localized("CRAZYARENA.COMMAND.FORCEREADY $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length != 1)
@@ -31,10 +32,10 @@ public class CrazyArenaCommandMainForceStop extends CrazyArenaCommandExecutor
 		final Arena<?> arena = plugin.getArenaByName(args[0]);
 		if (arena == null)
 			throw new CrazyCommandNoSuchException("Arena", args[0]);
-		arena.stop();
-		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", sender, sender.getName(), arena.getName());
-		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", arena.getParticipatingPlayers(), sender.getName(), arena.getName());
-		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", Bukkit.getConsoleSender(), sender.getName(), arena.getName());
+		for (final Participant<?, ?> player : arena.getParticipants(ParticipantType.SELECTING))
+			if (!arena.ready(player.getPlayer()))
+				arena.leave(player.getPlayer(), true);
+		plugin.sendLocaleMessage("COMMAND.FORCEREADY", sender, arena.getName());
 	}
 
 	@Override
@@ -48,6 +49,6 @@ public class CrazyArenaCommandMainForceStop extends CrazyArenaCommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazyarena.forcestop");
+		return PermissionModule.hasPermission(sender, "crazyarena.forceready");
 	}
 }

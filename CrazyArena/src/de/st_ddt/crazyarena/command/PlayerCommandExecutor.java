@@ -9,10 +9,10 @@ import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public abstract class CrazyArenaPlayerCommandExecutor extends CrazyArenaCommandExecutor
+public abstract class PlayerCommandExecutor extends CommandExecutor
 {
 
-	public CrazyArenaPlayerCommandExecutor(final CrazyArena plugin)
+	public PlayerCommandExecutor(final CrazyArena plugin)
 	{
 		super(plugin);
 	}

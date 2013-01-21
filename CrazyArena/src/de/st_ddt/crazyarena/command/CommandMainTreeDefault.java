@@ -14,12 +14,12 @@ import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class CrazyArenaCommandMainTreeDefault extends CrazyArenaCommandExecutor
+public class CommandMainTreeDefault extends CommandExecutor
 {
 
 	private final CrazyCommandTreeExecutor<CrazyPluginInterface> treeExecutor;
 
-	public CrazyArenaCommandMainTreeDefault(final CrazyArena plugin)
+	public CommandMainTreeDefault(final CrazyArena plugin)
 	{
 		super(plugin);
 		treeExecutor = plugin.getMainCommand();
