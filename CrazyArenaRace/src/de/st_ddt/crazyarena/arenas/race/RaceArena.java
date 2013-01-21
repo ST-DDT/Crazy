@@ -3,6 +3,7 @@ package de.st_ddt.crazyarena.arenas.race;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -15,7 +16,7 @@ import org.bukkit.event.HandlerList;
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.arenas.ArenaStatus;
-import de.st_ddt.crazyarena.command.CrazyArenaArenaPlayerCommandExecutor;
+import de.st_ddt.crazyarena.commands.race.CommandPlayerSpawns;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaExceedingParticipantsLimitException;
 import de.st_ddt.crazyarena.listener.race.CrazyRaceArenaPlayerListener;
 import de.st_ddt.crazyarena.participants.ParticipantType;
@@ -25,6 +26,8 @@ import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
 import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
+import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
+import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
@@ -39,10 +42,11 @@ import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 public class RaceArena extends Arena<RaceParticipant>
 {
 
-	protected ArrayList<Location> starts = new ArrayList<Location>();
-	protected SpawnList spectatorSpawns = new SpawnList();
+	protected final List<Location> starts = new ArrayList<Location>();
+	protected final SpawnList spectatorSpawns = new SpawnList();
 	protected final Map<String, Location> quitLocation = new HashMap<String, Location>();
-	protected ArrayList<RaceTarget> targets = new ArrayList<RaceTarget>();
+	protected List<RaceTarget> targets = new ArrayList<RaceTarget>();
+	protected final CrazyCommandTreeExecutor<RaceArena> mainCommand;
 	private int runnumber = 0;
 	// Match Variables
 	private CrazyRaceArenaPlayerListener playerMatchListener;
@@ -53,6 +57,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
 		super(name, config);
+		mainCommand = new CrazyCommandTreeExecutor<RaceArena>(this);
 		final ConfigurationSection startConfig = config.getConfigurationSection("starts");
 		if (startConfig != null)
 			for (final String key : startConfig.getKeys(false))
@@ -73,11 +78,19 @@ public class RaceArena extends Arena<RaceParticipant>
 		if (spectatorConfig != null)
 			for (final String key : spectatorConfig.getKeys(false))
 				spectatorSpawns.add(ObjectSaveLoadHelper.loadLocation(spectatorConfig.getConfigurationSection(key), null));
+		registerCommands();
 	}
 
 	public RaceArena(final String name)
 	{
 		super(name);
+		mainCommand = new CrazyCommandTreeExecutor<RaceArena>(this);
+		registerCommands();
+	}
+
+	private void registerCommands()
+	{
+		mainCommand.addSubCommand(new CommandPlayerSpawns(this), "playerspawns", "ps");
 	}
 
 	@Override
@@ -518,9 +531,13 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Override
-	public CrazyArenaArenaPlayerCommandExecutor<Arena<RaceParticipant>> getCommandExecutor()
+	public CrazyCommandExecutorInterface getCommandExecutor()
 	{
-		// EDIT Automatisch generierter Methodenstub
 		return null;
+	}
+
+	public List<Location> getStarts()
+	{
+		return starts;
 	}
 }
