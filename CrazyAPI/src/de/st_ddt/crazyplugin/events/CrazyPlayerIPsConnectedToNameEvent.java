@@ -40,7 +40,7 @@ public class CrazyPlayerIPsConnectedToNameEvent extends CrazyEvent
 
 	public void addAll(final Collection<String> ips)
 	{
-		ips.addAll(ips);
+		this.ips.addAll(ips);
 	}
 
 	public SortedSet<String> getIPs()
