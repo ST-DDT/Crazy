@@ -1,8 +1,9 @@
 name: CrazyTimeCard
 main: de.st_ddt.crazytimecard.CrazyTimeCard
 author: ST-DDT
-version: 0.3
-# requires CrazyCore v9.2.2 or later
+version: 0.3.1
+website: http://dev.bukkit.org/server-mods/crazytimecard/
+# requires CrazyCore v10 or later
 depend: [CrazyCore]
 description: >
             Activate a card to get access to the server (as user) for a certain time.
