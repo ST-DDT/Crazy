@@ -35,7 +35,7 @@ public class CrazyWeatherPlayerListener implements Listener
 			if (!player.hasPermission("crazyweather.thunder.tool") && !player.hasPermission("crazyweather." + player.getWorld().getName() + ".thunder.tool"))
 				return;
 			final Location location = player.getTargetBlock(null, 1024).getLocation();
-			final CrazyWeatherPreThunderToolCastEvent cast = new CrazyWeatherPreThunderToolCastEvent(plugin, player, location);
+			final CrazyWeatherPreThunderToolCastEvent cast = new CrazyWeatherPreThunderToolCastEvent(player, location);
 			cast.callEvent();
 			if (cast.isCancelled())
 				return;

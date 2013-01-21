@@ -3,16 +3,15 @@ package de.st_ddt.crazyweather.events;
 import org.bukkit.event.HandlerList;
 
 import de.st_ddt.crazyplugin.events.CrazyEvent;
-import de.st_ddt.crazyweather.WeatherPlugin;
 
-public class CrazyWeatherEvent extends CrazyEvent<WeatherPlugin>
+public class CrazyWeatherEvent extends CrazyEvent
 {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	public CrazyWeatherEvent(final WeatherPlugin plugin)
+	public CrazyWeatherEvent()
 	{
-		super(plugin);
+		super();
 	}
 
 	@Override

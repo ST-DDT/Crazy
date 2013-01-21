@@ -4,8 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
-import de.st_ddt.crazyweather.WeatherPlugin;
-
 public class CrazyWeatherPreThunderToolCastEvent extends CrazyWeatherEvent implements Cancellable
 {
 
@@ -13,9 +11,9 @@ public class CrazyWeatherPreThunderToolCastEvent extends CrazyWeatherEvent imple
 	final protected Location location;
 	protected boolean cancelled;
 
-	public CrazyWeatherPreThunderToolCastEvent(final WeatherPlugin plugin, final Player player, final Location location)
+	public CrazyWeatherPreThunderToolCastEvent(final Player player, final Location location)
 	{
-		super(plugin);
+		super();
 		this.player = player;
 		this.location = location;
 	}

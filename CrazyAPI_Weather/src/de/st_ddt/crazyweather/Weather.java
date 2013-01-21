@@ -41,9 +41,9 @@ public enum Weather
 
 	public static String[] getWeatherNames()
 	{
-		Weather[] weathers = values();
-		int length = weathers.length;
-		String[] res = new String[length];
+		final Weather[] weathers = values();
+		final int length = weathers.length;
+		final String[] res = new String[length];
 		for (int i = 0; i < length; i++)
 			res[i] = weathers[i].toString();
 		return res;
