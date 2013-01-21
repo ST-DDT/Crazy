@@ -51,7 +51,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 	public CustomChannel(final CrazyChats plugin, final String name, final CommandSender owner, final boolean persistent)
 	{
 		super(name);
-		this.id = plugin.getNewID();
+		this.id = plugin.getNewChannelID();
 		aliases.add(name.toLowerCase());
 		aliases.add(Integer.toString(id));
 		mainCommand = new CrazyCommandTreeExecutor<CrazyChats>(plugin);
@@ -81,7 +81,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 	public CustomChannel(final CrazyChats plugin, final String name, final String owner, final CustomChannelPermissionRule listenRule, final String listenPermission, final CustomChannelPermissionRule talkRule, final String talkPermission, final CustomChannelPermissionRule joinRule, final CustomChannelPermissionRule inviteRule, final String joinPermission, final String chatFormat, final boolean affectedByServerSilence, final boolean persistent)
 	{
 		super(name);
-		this.id = plugin.getNewID();
+		this.id = plugin.getNewChannelID();
 		aliases.add(name.toLowerCase());
 		aliases.add(Integer.toString(id));
 		this.mainCommand = new CrazyCommandTreeExecutor<CrazyChats>(plugin);

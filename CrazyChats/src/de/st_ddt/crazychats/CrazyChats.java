@@ -88,7 +88,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final Map<Integer, CustomChannel> customChannels = Collections.synchronizedMap(new HashMap<Integer, CustomChannel>());
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
-	private int id;
+	private int newChannelID;
 	private String broadcastChatFormat = "[All]%1$s: %2$s";
 	private String globalChatFormat = "[Global]%1$s: %2$s";
 	private String worldChatFormat = "[World]%1$s: %2$s";
@@ -661,7 +661,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		else
 			for (final String key : groupListnamePrefixConfig.getKeys(false))
 				groupListnamePrefixes.put(key, ChatHelper.colorise(groupListnamePrefixConfig.getString(key, "")));
-		id = config.getInt("newID", 0);
+		newChannelID = config.getInt("newChannelID", config.getInt("newID", 0));
 		final ConfigurationSection customChannelConfig = config.getConfigurationSection("customChannels");
 		customChannels.clear();
 		if (customChannelConfig != null)
@@ -701,7 +701,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("groupListnamePrefix", null);
 		for (final Entry<String, String> entry : groupListnamePrefixes.entrySet())
 			config.set("groupListnamePrefix." + entry.getKey(), ChatHelper.decolorise(entry.getValue()));
-		config.set("newID", id);
+		config.set("newChannelID", newChannelID);
 		config.set("customChannels", null);
 		synchronized (customChannels)
 		{
@@ -830,9 +830,9 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return groupListnamePrefixes.get("nogroup");
 	}
 
-	public int getNewID()
+	public int getNewChannelID()
 	{
-		return id++;
+		return newChannelID++;
 	}
 
 	public Map<Integer, CustomChannel> getCustomChannels()
