@@ -57,7 +57,7 @@ public class CrazyCoreCrazyListener implements Listener
 		{
 			final CrazyPlayerNamesConnectedToIPEvent ipevent = new CrazyPlayerNamesConnectedToIPEvent(ip);
 			ipevent.callEvent();
-			event.addAll(ipevent.getNames());
+			event.addNames(ipevent.getNames());
 		}
 	}
 
