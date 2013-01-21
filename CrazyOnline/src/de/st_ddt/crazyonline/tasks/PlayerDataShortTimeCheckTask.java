@@ -27,6 +27,6 @@ public class PlayerDataShortTimeCheckTask implements Runnable
 			return;
 		if (data.getTimeTotal() > 5)
 			return;
-		new CrazyPlayerRemoveEvent(plugin, name).checkAndCallEvent();
+		new CrazyPlayerRemoveEvent(name).checkAndCallEvent();
 	}
 }

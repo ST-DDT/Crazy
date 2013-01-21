@@ -586,7 +586,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 						deletions.add(data.getName());
 		}
 		for (final String name : deletions)
-			new CrazyPlayerRemoveEvent(this, name).checkAndCallEvent();
+			new CrazyPlayerRemoveEvent(name).checkAndCallEvent();
 		return deletions.size();
 	}
 
