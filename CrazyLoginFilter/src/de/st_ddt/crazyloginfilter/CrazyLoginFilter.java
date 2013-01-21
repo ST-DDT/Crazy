@@ -224,6 +224,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 		maxNameLength = Math.min(Math.max(config.getInt("maxNameLength", 16), minNameLength), 255);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Localized({ "CRAZYLOGINFILTER.DATABASE.ACCESSWARN $SaveType$", "CRAZYLOGINFILTER.DATABASE.LOADED $EntryCount$" })
 	public void loadDatabase()
@@ -267,9 +268,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 			}, 600, 600);
 		}
 		else
-		{
 			sendLocaleMessage("DATABASE.LOADED", Bukkit.getConsoleSender(), database.getAllEntries().size());
-		}
 	}
 
 	@Override
