@@ -2,17 +2,16 @@ package de.st_ddt.crazyarena.events;
 
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyplugin.events.CrazyEvent;
 
-public class CrazyArenaEvent extends CrazyEvent<CrazyArena>
+public class CrazyArenaEvent extends CrazyEvent
 {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	public CrazyArenaEvent(final CrazyArena plugin)
+	public CrazyArenaEvent()
 	{
-		super(plugin);
+		super();
 	}
 
 	@Override

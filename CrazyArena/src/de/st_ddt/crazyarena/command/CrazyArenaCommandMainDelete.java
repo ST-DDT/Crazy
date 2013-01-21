@@ -48,7 +48,7 @@ public class CrazyArenaCommandMainDelete extends CrazyArenaCommandExecutor
 			if (it.next().getValue() == arena)
 				it.remove();
 		plugin.sendLocaleMessage("COMMAND.ARENA.DELETED", sender, arena.getName(), arena.getType());
-		new CrazyArenaArenaDeleteEvent(plugin, arena).callEvent();
+		new CrazyArenaArenaDeleteEvent(arena).callEvent();
 	}
 
 	@Override

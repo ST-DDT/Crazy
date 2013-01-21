@@ -69,7 +69,7 @@ public class CrazyArenaCommandMainCreate extends CrazyArenaPlayerCommandExecutor
 		plugin.getArenasByName().put(name.toLowerCase(), arena);
 		plugin.getArenasByType().get(arena.getType()).add(arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.CREATED", player, arena.getName(), arena.getType());
-		new CrazyArenaArenaCreateEvent(plugin, arena).callEvent();
+		new CrazyArenaArenaCreateEvent(arena, false).callEvent();
 		plugin.getSelections().put(player.getName().toLowerCase(), arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
 	}

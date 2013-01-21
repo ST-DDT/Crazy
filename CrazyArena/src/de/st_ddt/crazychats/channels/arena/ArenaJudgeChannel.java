@@ -1,8 +1,7 @@
-package de.st_ddt.crazychats.channels;
+package de.st_ddt.crazychats.channels.arena;
 
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
@@ -28,7 +27,7 @@ public class ArenaJudgeChannel extends ArenaChannel
 	@Override
 	public String getFormat(final Player player)
 	{
-		return StringUtils.replace(plugin.getArenaJudgeChatFormat(), "$A0$", arena.getParticipant(player).getParticipantType().toString());
+		return plugin.getArenaJudgeChatFormat();
 	}
 
 	@Override

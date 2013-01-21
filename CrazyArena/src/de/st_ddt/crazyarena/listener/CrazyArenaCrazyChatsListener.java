@@ -13,10 +13,10 @@ import de.st_ddt.crazyarena.events.CrazyArenaArenaDeleteEvent;
 import de.st_ddt.crazyarena.events.CrazyArenaArenaPlayerJoinEvent;
 import de.st_ddt.crazyarena.events.CrazyArenaArenaPlayerLeaveEvent;
 import de.st_ddt.crazychats.CrazyChats;
-import de.st_ddt.crazychats.channels.ArenaChannel;
-import de.st_ddt.crazychats.channels.ArenaJudgeChannel;
-import de.st_ddt.crazychats.channels.ArenaPlayerChannel;
-import de.st_ddt.crazychats.channels.ArenaSpectatorChannel;
+import de.st_ddt.crazychats.channels.arena.ArenaChannel;
+import de.st_ddt.crazychats.channels.arena.ArenaJudgeChannel;
+import de.st_ddt.crazychats.channels.arena.ArenaPlayerChannel;
+import de.st_ddt.crazychats.channels.arena.ArenaSpectatorChannel;
 import de.st_ddt.crazychats.data.ChatPlayerData;
 
 public class CrazyArenaCrazyChatsListener implements Listener

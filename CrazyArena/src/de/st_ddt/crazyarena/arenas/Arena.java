@@ -16,19 +16,20 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
-import de.st_ddt.crazyarena.command.CrazyArenaArenaPlayerCommandExecutor;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaUnsupportedException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
+import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHeaderProvider;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public abstract class Arena<S extends Participant<S, ?>> implements Named, ParameterData
+public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatHeaderProvider, ParameterData
 {
 
 	public static final String arenaDataRootPath = "plugins" + File.separator + "CrazyArena" + File.separator + "arenas" + File.separator;
@@ -98,6 +99,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		return name;
 	}
 
+	@Override
 	public String getChatHeader()
 	{
 		return chatHeader;
@@ -384,7 +386,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, Param
 		// Participants sorted by TypeAndName
 	}
 
-	public abstract CrazyArenaArenaPlayerCommandExecutor<Arena<S>> getCommandExecutor();
+	public abstract CrazyCommandExecutorInterface getCommandExecutor();
 
 	public CrazyLocale getLocale()
 	{

@@ -1,4 +1,4 @@
-package de.st_ddt.crazychats.channels;
+package de.st_ddt.crazychats.channels.arena;
 
 import java.util.Set;
 
@@ -33,7 +33,7 @@ public class ArenaPlayerChannel extends ArenaChannel
 	{
 		return StringUtils.replace(plugin.getArenaPlayerChatFormat(), "$A0$", arena.getParticipant(player).getParticipantType().toString());
 	}
-	
+
 	@Override
 	public String toString()
 	{

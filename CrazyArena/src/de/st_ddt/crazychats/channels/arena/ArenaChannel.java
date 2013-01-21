@@ -1,4 +1,4 @@
-package de.st_ddt.crazychats.channels;
+package de.st_ddt.crazychats.channels.arena;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazychats.channels.ChannelInterface;
 
 public class ArenaChannel implements ChannelInterface
 {

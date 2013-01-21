@@ -2,7 +2,8 @@ name: CrazyArena
 main: de.st_ddt.crazyarena.CrazyArena
 author: ST-DDT
 version: 0.3
-# requires CrazyCore v9.7
+website: http://dev.bukkit.org/server-mods/crazyarena/
+# requires CrazyCore v10 or later
 # requires CrazyGeo v0.1
 depend: [CrazyCore,CrazyGeo]
 # requires CrazyChats v1.7 or later

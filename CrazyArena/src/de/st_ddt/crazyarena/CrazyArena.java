@@ -41,8 +41,11 @@ import de.st_ddt.crazyarena.command.CrazyArenaPlayerCommandTeam;
 import de.st_ddt.crazyarena.events.CrazyArenaArenaCreateEvent;
 import de.st_ddt.crazyarena.listener.CrazyArenaCrazyChatsListener;
 import de.st_ddt.crazyarena.listener.CrazyArenaPlayerListener;
+import de.st_ddt.crazychats.CrazyChats;
+import de.st_ddt.crazychats.channels.arena.ArenaChatFormatParameters;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode.Mode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
@@ -73,7 +76,8 @@ public class CrazyArena extends CrazyPlugin
 
 	private void registerModesCrazyChats()
 	{
-		modeCommand.addMode(modeCommand.new Mode<String>("squadChatFormat", String.class)
+		final CrazyPluginCommandMainMode chatsModeCommand = CrazyChats.getPlugin().getModeCommand();
+		final Mode<?> arenaChatFormatMode = modeCommand.new Mode<String>("arenaChatFormat", String.class)
 		{
 
 			@Override
@@ -113,8 +117,10 @@ public class CrazyArena extends CrazyPlugin
 				res.add(getValue());
 				return res;
 			}
-		});
-		modeCommand.addMode(modeCommand.new Mode<String>("arenaSpectatorChatFormat", String.class)
+		};
+		modeCommand.addMode(arenaChatFormatMode);
+		chatsModeCommand.addMode(arenaChatFormatMode);
+		final Mode<?> arenaSpectatorChatFormatMode = modeCommand.new Mode<String>("arenaSpectatorChatFormat", String.class)
 		{
 
 			@Override
@@ -154,8 +160,10 @@ public class CrazyArena extends CrazyPlugin
 				res.add(getValue());
 				return res;
 			}
-		});
-		modeCommand.addMode(modeCommand.new Mode<String>("arenaPlayerChatFormat", String.class)
+		};
+		modeCommand.addMode(arenaSpectatorChatFormatMode);
+		chatsModeCommand.addMode(arenaSpectatorChatFormatMode);
+		final Mode<?> arenaPlayerChatFormatMode = modeCommand.new Mode<String>("arenaPlayerChatFormat", String.class)
 		{
 
 			@Override
@@ -195,8 +203,10 @@ public class CrazyArena extends CrazyPlugin
 				res.add(getValue());
 				return res;
 			}
-		});
-		modeCommand.addMode(modeCommand.new Mode<String>("arenaJudgeChatFormat", String.class)
+		};
+		modeCommand.addMode(arenaPlayerChatFormatMode);
+		chatsModeCommand.addMode(arenaPlayerChatFormatMode);
+		final Mode<?> arenaJudgeChatFormatMode = modeCommand.new Mode<String>("arenaJudgeChatFormat", String.class)
 		{
 
 			@Override
@@ -236,7 +246,9 @@ public class CrazyArena extends CrazyPlugin
 				res.add(getValue());
 				return res;
 			}
-		});
+		};
+		modeCommand.addMode(arenaJudgeChatFormatMode);
+		chatsModeCommand.addMode(arenaJudgeChatFormatMode);
 	}
 
 	private void registerCommands()
@@ -282,7 +294,10 @@ public class CrazyArena extends CrazyPlugin
 	{
 		registerHooks();
 		if (crazyChatsEnabled)
+		{
 			registerModesCrazyChats();
+			CrazyChatsChatHelper.CHATFORMATPARAMETERS.add(new ArenaChatFormatParameters(this));
+		}
 		super.onEnable();
 		registerCommands();
 	}
@@ -311,7 +326,7 @@ public class CrazyArena extends CrazyPlugin
 					arenas.add(arena);
 					arenasByName.put(name.toLowerCase(), arena);
 					arenasByType.get(arena.getType().toLowerCase()).add(arena);
-					new CrazyArenaArenaCreateEvent(this, arena).callEvent();
+					new CrazyArenaArenaCreateEvent(arena, true).callEvent();
 				}
 				catch (final FileNotFoundException e)
 				{
