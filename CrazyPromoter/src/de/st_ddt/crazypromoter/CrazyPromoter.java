@@ -20,6 +20,7 @@ import de.st_ddt.crazyutil.conditions.Condition_AND;
 import de.st_ddt.crazyutil.conditions.Condition_FALSE;
 import de.st_ddt.crazyutil.conditions.player.ConditionPlayerPermissionGroup;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.IntegerMode;
 
 public class CrazyPromoter extends CrazyPlugin
 {
@@ -43,7 +44,7 @@ public class CrazyPromoter extends CrazyPlugin
 	@Localized("CRAZYPROMOTER.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new IntegerMode("checkInterval")
+		modeCommand.addMode(new IntegerMode(this, "checkInterval")
 		{
 
 			@Override
