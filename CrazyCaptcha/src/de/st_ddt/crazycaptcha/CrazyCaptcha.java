@@ -41,6 +41,11 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.DurationMode;
+import de.st_ddt.crazyutil.modes.IntegerMode;
+import de.st_ddt.crazyutil.modes.LongMode;
+import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.login.LoginModule;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
@@ -86,7 +91,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 	@Localized("CRAZYCAPTCHA.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new Mode<CaptchaGenerator>("generator", CaptchaGenerator.class)
+		modeCommand.addMode(new Mode<CaptchaGenerator>(this, "generator", CaptchaGenerator.class)
 		{
 
 			@Override
@@ -98,7 +103,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 			@Override
 			public void setValue(final CommandSender sender, final String... args) throws CrazyException
 			{
-				final CaptchaGenerator generator = CaptchaHelper.getCaptchaGenerator(plugin, args[0], ChatHelperExtended.shiftArray(args, 1));
+				final CaptchaGenerator generator = CaptchaHelper.getCaptchaGenerator(CrazyCaptcha.this, args[0], ChatHelperExtended.shiftArray(args, 1));
 				if (generator == null)
 					throw new CrazyCommandNoSuchException("CaptchaGenerator", args[0], CaptchaHelper.getAvailableGenerators());
 				setValue(generator);
@@ -125,7 +130,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 				return res;
 			}
 		});
-		modeCommand.addMode(modeCommand.new DurationMode("reminderInterval")
+		modeCommand.addMode(new DurationMode(this, "reminderInterval")
 		{
 
 			@Override
@@ -140,7 +145,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 				return reminderInterval * 1000;
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("autoKick")
+		modeCommand.addMode(new IntegerMode(this, "autoKick")
 		{
 
 			@Override
@@ -162,7 +167,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new LongMode("autoTempBan")
+		modeCommand.addMode(new LongMode(this, "autoTempBan")
 		{
 
 			@Override
@@ -184,7 +189,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("autoKickVerificationFailer")
+		modeCommand.addMode(new IntegerMode(this, "autoKickVerificationFailer")
 		{
 
 			@Override
@@ -206,7 +211,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new LongMode("autoTempBanVerificationFailer")
+		modeCommand.addMode(new LongMode(this, "autoTempBanVerificationFailer")
 		{
 
 			@Override
@@ -228,7 +233,7 @@ public final class CrazyCaptcha extends CrazyPlugin
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("autoKickCommandUsers")
+		modeCommand.addMode(new BooleanFalseMode(this, "autoKickCommandUsers")
 		{
 
 			@Override

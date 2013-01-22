@@ -14,6 +14,7 @@ import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.IntegerMode;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
@@ -68,7 +69,7 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 	@Localized("CRAZYCAPTCHA.GENERATORMODE.CHANGE")
 	private void registerModes(final CrazyPluginCommandMainMode modeCommand)
 	{
-		modeCommand.addMode(modeCommand.new IntegerMode("min")
+		modeCommand.addMode(new IntegerMode(plugin, "min")
 		{
 
 			@Override
@@ -90,7 +91,7 @@ public final class MathCaptchaGenerator extends AbstractCaptchaGenerator
 				plugin.saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("max")
+		modeCommand.addMode(new IntegerMode(plugin, "max")
 		{
 
 			@Override

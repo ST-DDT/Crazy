@@ -17,6 +17,7 @@ import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanTrueMode;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 
@@ -134,7 +135,7 @@ public final class MultiCaptchaGenerator extends AbstractCaptchaGenerator
 	private void registerModes(final CrazyPluginCommandMainMode modeCommand)
 	{
 		for (final CaptchaGenerator generator : availableGenerators.values())
-			modeCommand.addMode(modeCommand.new BooleanTrueMode(generator.getName() + "Enabled")
+			modeCommand.addMode(new BooleanTrueMode(plugin, generator.getName() + "Enabled")
 			{
 
 				@Override
