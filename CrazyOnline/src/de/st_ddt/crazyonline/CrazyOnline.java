@@ -55,6 +55,9 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.IntegerMode;
+import de.st_ddt.crazyutil.modes.Mode;
 
 public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerData> implements OnlinePlugin<OnlinePlayerData>
 {
@@ -89,7 +92,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 	@Localized("CRAZYONLINE.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new Mode<DatabaseType>("saveType", DatabaseType.class)
+		modeCommand.addMode(new Mode<DatabaseType>(this, "saveType", DatabaseType.class)
 		{
 
 			@Override
@@ -138,7 +141,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 				save();
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("saveDatabaseOnShutdown")
+		modeCommand.addMode(new BooleanFalseMode(this, "saveDatabaseOnShutdown")
 		{
 
 			@Override
@@ -154,7 +157,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("autoDelete")
+		modeCommand.addMode(new IntegerMode(this, "autoDelete")
 		{
 
 			@Override
@@ -176,10 +179,10 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 				autoDelete = Math.max(newValue, -1);
 				saveConfiguration();
 				if (autoDelete != -1)
-					getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new DropInactiveAccountsTask(plugin), 20 * 60 * 60, 20 * 60 * 60 * 6);
+					getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new DropInactiveAccountsTask(CrazyOnline.this), 20 * 60 * 60, 20 * 60 * 60 * 6);
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("showOnlineInfo")
+		modeCommand.addMode(new BooleanFalseMode(this, "showOnlineInfo")
 		{
 
 			@Override
@@ -194,7 +197,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 				return showOnlineInfo;
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("deleteShortVisitors")
+		modeCommand.addMode(new BooleanFalseMode(this, "deleteShortVisitors")
 		{
 
 			@Override
@@ -209,7 +212,7 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 				return deleteShortVisitors;
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("catchListCommand")
+		modeCommand.addMode(new BooleanFalseMode(this, "catchListCommand")
 		{
 
 			@Override
