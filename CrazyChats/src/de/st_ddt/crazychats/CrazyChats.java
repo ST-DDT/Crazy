@@ -32,7 +32,6 @@ import de.st_ddt.crazychats.commands.CrazyChatsCommandColorHelp;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupListnamePrefix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupPrefix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupSuffix;
-import de.st_ddt.crazychats.commands.CrazyChatsCommandMainMode;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandMainReload;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerHeadName;
@@ -63,12 +62,19 @@ import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener_132;
 import de.st_ddt.crazychats.listener.CrazyChatsTagAPIListener;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.BooleanTrueMode;
+import de.st_ddt.crazyutil.modes.ChatFormatMode;
+import de.st_ddt.crazyutil.modes.DoubleMode;
+import de.st_ddt.crazyutil.modes.DurationMode;
+import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, ChatPlayerData>
@@ -86,7 +92,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final AdminChannel adminChannel = new AdminChannel();
 	private final Set<ControlledChannelInterface> controlledChannels = Collections.synchronizedSet(new HashSet<ControlledChannelInterface>());
 	private final Map<Integer, CustomChannel> customChannels = Collections.synchronizedMap(new HashMap<Integer, CustomChannel>());
-	private final CrazyChatsCommandMainMode modeCommand = new CrazyChatsCommandMainMode(this);
+	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
 	private int newChannelID;
 	private String consoleDisplayName = "[CONSOLE]";
@@ -121,7 +127,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	@Localized("CRAZYCHATS.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new Mode<String>("consoleDisplayName", String.class)
+		modeCommand.addMode(new Mode<String>(this, "consoleDisplayName", String.class)
 		{
 
 			@Override
@@ -164,7 +170,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				return res;
 			}
 		});
-		modeCommand.addMode(modeCommand.new ChatFormatMode("broadcastChatFormat")
+		modeCommand.addMode(new ChatFormatMode(this, "broadcastChatFormat")
 		{
 
 			@Override
@@ -180,7 +186,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new ChatFormatMode("globalChatFormat")
+		modeCommand.addMode(new ChatFormatMode(this, "globalChatFormat")
 		{
 
 			@Override
@@ -196,7 +202,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new ChatFormatMode("worldChatFormat")
+		modeCommand.addMode(new ChatFormatMode(this, "worldChatFormat")
 		{
 
 			@Override
@@ -212,7 +218,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanTrueMode("localChatEnabled")
+		modeCommand.addMode(new BooleanTrueMode(this, "localChatEnabled")
 		{
 
 			@Override
@@ -229,7 +235,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new ChatFormatMode("localChatFormat")
+		modeCommand.addMode(new ChatFormatMode(this, "localChatFormat")
 		{
 
 			@Override
@@ -245,7 +251,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new DoubleMode("localChatRange")
+		modeCommand.addMode(new DoubleMode(this, "localChatRange")
 		{
 
 			@Override
@@ -267,7 +273,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new ChatFormatMode("privateChatFormat")
+		modeCommand.addMode(new ChatFormatMode(this, "privateChatFormat")
 		{
 
 			@Override
@@ -283,7 +289,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new ChatFormatMode("adminChatFormat")
+		modeCommand.addMode(new ChatFormatMode(this, "adminChatFormat")
 		{
 
 			@Override
@@ -299,7 +305,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("ownChatNamePrefix", String.class)
+		modeCommand.addMode(new Mode<String>(this, "ownChatNamePrefix", String.class)
 		{
 
 			@Override
@@ -328,7 +334,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("defaultChannelKey", String.class)
+		modeCommand.addMode(new Mode<String>(this, "defaultChannelKey", String.class)
 		{
 
 			@Override
@@ -351,7 +357,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new DurationMode("maxSilenceTime")
+		modeCommand.addMode(new DurationMode(this, "maxSilenceTime")
 		{
 
 			@Override
@@ -367,7 +373,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("cleanRepetitions")
+		modeCommand.addMode(new BooleanFalseMode(this, "cleanRepetitions")
 		{
 
 			@Override
@@ -383,7 +389,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("cleanCaps")
+		modeCommand.addMode(new BooleanFalseMode(this, "cleanCaps")
 		{
 
 			@Override
@@ -640,7 +646,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return playerListener;
 	}
 
-	public CrazyChatsCommandMainMode getModeCommand()
+	public CrazyPluginCommandMainMode getModeCommand()
 	{
 		return modeCommand;
 	}

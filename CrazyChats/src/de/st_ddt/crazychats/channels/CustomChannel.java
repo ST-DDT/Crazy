@@ -25,6 +25,9 @@ import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.ChatFormatMode;
+import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public class CustomChannel extends AbstractMuteableChannel implements ControlledChannelInterface, ConfigurationSaveable
@@ -371,7 +374,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 
 	private void registerModes(final CustomChannelCommandMode modeCommand)
 	{
-		modeCommand.addMode(modeCommand.new RuleMode("listenRule")
+		modeCommand.addMode(modeCommand.new RuleMode(plugin, "listenRule")
 		{
 
 			@Override
@@ -386,7 +389,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return listenRule;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("listenPermission", String.class)
+		modeCommand.addMode(new Mode<String>(plugin, "listenPermission", String.class)
 		{
 
 			@Override
@@ -409,7 +412,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return listenPermission;
 			}
 		});
-		modeCommand.addMode(modeCommand.new RuleMode("talkRule")
+		modeCommand.addMode(modeCommand.new RuleMode(plugin, "talkRule")
 		{
 
 			@Override
@@ -424,7 +427,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return talkRule;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("talkPermission", String.class)
+		modeCommand.addMode(new Mode<String>(plugin, "talkPermission", String.class)
 		{
 
 			@Override
@@ -447,7 +450,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return talkPermission;
 			}
 		});
-		modeCommand.addMode(modeCommand.new RuleMode("joinRule")
+		modeCommand.addMode(modeCommand.new RuleMode(plugin, "joinRule")
 		{
 
 			@Override
@@ -462,7 +465,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return joinRule;
 			}
 		});
-		modeCommand.addMode(modeCommand.new RuleMode("inviteRule")
+		modeCommand.addMode(modeCommand.new RuleMode(plugin, "inviteRule")
 		{
 
 			@Override
@@ -477,7 +480,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return inviteRule;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("joinPermission", String.class)
+		modeCommand.addMode(new Mode<String>(plugin, "joinPermission", String.class)
 		{
 
 			@Override
@@ -500,7 +503,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return joinPermission;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("chatFormat", String.class)
+		modeCommand.addMode(new ChatFormatMode(plugin, "chatFormat")
 		{
 
 			@Override
@@ -541,7 +544,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return res;
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("affectedByServerSilence")
+		modeCommand.addMode(new BooleanFalseMode(plugin, "affectedByServerSilence")
 		{
 
 			@Override
@@ -787,9 +790,9 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		protected abstract class RuleMode extends Mode<CustomChannelPermissionRule>
 		{
 
-			public RuleMode(final String name)
+			public RuleMode(final CrazyChats plugin, final String name)
 			{
-				super(name, CustomChannelPermissionRule.class);
+				super(plugin, name, CustomChannelPermissionRule.class);
 			}
 
 			@Override
