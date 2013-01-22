@@ -19,7 +19,6 @@ import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.PlayerDataProvider;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode.Mode;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -42,6 +41,11 @@ import de.st_ddt.crazysquads.listener.CrazySquadsTagAPIListener;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.ChatFormatMode;
+import de.st_ddt.crazyutil.modes.DoubleMode;
+import de.st_ddt.crazyutil.modes.IntegerMode;
+import de.st_ddt.crazyutil.modes.LongMode;
+import de.st_ddt.crazyutil.modes.Mode;
 
 public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 {
@@ -77,7 +81,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	@Localized({ "CRAZYSQUADS.MODE.CHANGE $Name$ $Value$", "CRAZYSQUADS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYSQUADS.FORMAT.EXAMPLE $Example$" })
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new IntegerMode("maxSquadSize")
+		modeCommand.addMode(new IntegerMode(this, "maxSquadSize")
 		{
 
 			@Override
@@ -93,7 +97,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				return maxSquadSize;
 			}
 		});
-		modeCommand.addMode(modeCommand.new DoubleMode("maxShareRange")
+		modeCommand.addMode(new DoubleMode(this, "maxShareRange")
 		{
 
 			@Override
@@ -109,7 +113,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				return maxShareRange;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<ShareRules>("defaultLootRules", ShareRules.class)
+		modeCommand.addMode(new Mode<ShareRules>(this, "defaultLootRules", ShareRules.class)
 		{
 
 			@Override
@@ -153,7 +157,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				return res;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<ShareRules>("defaultXPRules", ShareRules.class)
+		modeCommand.addMode(new Mode<ShareRules>(this, "defaultXPRules", ShareRules.class)
 		{
 
 			@Override
@@ -197,7 +201,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				return res;
 			}
 		});
-		modeCommand.addMode(modeCommand.new LongMode("squadAutoRejoinTime")
+		modeCommand.addMode(new LongMode(this, "squadAutoRejoinTime")
 		{
 
 			@Override
@@ -217,7 +221,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 
 	private void registerModesCrazyChats()
 	{
-		final Mode<String> squadChatFormatMode = modeCommand.new Mode<String>("squadChatFormat", String.class)
+		final Mode<String> squadChatFormatMode = new ChatFormatMode(this, "squadChatFormat")
 		{
 
 			@Override
@@ -258,7 +262,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				return res;
 			}
 		};
-		final Mode<String> squadLeaderChatFormatMode = modeCommand.new Mode<String>("squadLeaderChatFormat", String.class)
+		final Mode<String> squadLeaderChatFormatMode = new ChatFormatMode(this, "squadLeaderChatFormat")
 		{
 
 			@Override
@@ -308,7 +312,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 
 	private void registerModesTagAPI()
 	{
-		modeCommand.addMode(modeCommand.new Mode<String>("squadHeadNamePrefix", String.class)
+		modeCommand.addMode(new Mode<String>(this, "squadHeadNamePrefix", String.class)
 		{
 
 			@Override
