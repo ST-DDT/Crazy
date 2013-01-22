@@ -3,8 +3,8 @@ package de.st_ddt.crazytimecard.databases;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazytimecard.data.CardData;
-import de.st_ddt.crazyutil.databases.SQLColumn;
 import de.st_ddt.crazyutil.databases.MySQLDatabase;
+import de.st_ddt.crazyutil.databases.SQLColumn;
 
 public final class CrazyTimeCardCardMySQLDatabase extends MySQLDatabase<CardData>
 {

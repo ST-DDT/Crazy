@@ -35,6 +35,11 @@ import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.DoubleMode;
+import de.st_ddt.crazyutil.modes.DurationMode;
+import de.st_ddt.crazyutil.modes.IntegerMode;
+import de.st_ddt.crazyutil.modes.Mode;
 
 public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerTimeData>
 {
@@ -70,7 +75,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 	@Localized("CRAZYTIMECARD.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new DurationMode("startDuration")
+		modeCommand.addMode(new DurationMode(this, "startDuration")
 		{
 
 			@Override
@@ -86,7 +91,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new DurationMode("defaultDuration")
+		modeCommand.addMode(new DurationMode(this, "defaultDuration")
 		{
 
 			@Override
@@ -102,7 +107,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("defaultKeyLength")
+		modeCommand.addMode(new IntegerMode(this, "defaultKeyLength")
 		{
 
 			@Override
@@ -118,7 +123,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new DoubleMode("enabledAfter")
+		modeCommand.addMode(new DoubleMode(this, "enabledAfter")
 		{
 
 			@Override
@@ -134,7 +139,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new DoubleMode("enabledUntil")
+		modeCommand.addMode(new DoubleMode(this, "enabledUntil")
 		{
 
 			@Override
@@ -150,7 +155,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("autoKick")
+		modeCommand.addMode(new IntegerMode(this, "autoKick")
 		{
 
 			@Override
@@ -172,7 +177,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("filterNames", String.class)
+		modeCommand.addMode(new Mode<String>(this, "filterNames", String.class)
 		{
 
 			@Override
@@ -205,7 +210,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("blockDifferentNameCases")
+		modeCommand.addMode(new BooleanFalseMode(this, "blockDifferentNameCases")
 		{
 
 			@Override
@@ -221,7 +226,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("minNameLength")
+		modeCommand.addMode(new IntegerMode(this, "minNameLength")
 		{
 
 			@Override
@@ -243,7 +248,7 @@ public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerT
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("maxNameLength")
+		modeCommand.addMode(new IntegerMode(this, "maxNameLength")
 		{
 
 			@Override
