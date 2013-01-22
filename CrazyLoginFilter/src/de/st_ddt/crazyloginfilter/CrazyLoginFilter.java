@@ -22,6 +22,9 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.databases.DatabaseType;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.IntegerMode;
+import de.st_ddt.crazyutil.modes.Mode;
 
 ;
 public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, PlayerAccessFilter>
@@ -50,7 +53,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 	@Localized("CRAZYLOGINFILTER.MODE.CHANGE")
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new Mode<String>("filterNames", String.class)
+		modeCommand.addMode(new Mode<String>(this, "filterNames", String.class)
 		{
 
 			@Override
@@ -84,7 +87,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("blockDifferentNameCases")
+		modeCommand.addMode(new BooleanFalseMode(this, "blockDifferentNameCases")
 		{
 
 			@Override
@@ -100,7 +103,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				return blockDifferentNameCases;
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("minNameLength")
+		modeCommand.addMode(new IntegerMode(this, "minNameLength")
 		{
 
 			@Override
@@ -122,7 +125,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				return minNameLength;
 			}
 		});
-		modeCommand.addMode(modeCommand.new IntegerMode("maxNameLength")
+		modeCommand.addMode(new IntegerMode(this, "maxNameLength")
 		{
 
 			@Override
@@ -144,7 +147,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 				return maxNameLength;
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("saveDatabaseOnShutdown")
+		modeCommand.addMode(new BooleanFalseMode(this, "saveDatabaseOnShutdown")
 		{
 
 			@Override
