@@ -78,7 +78,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		registerModes();
 	}
 
-	@Localized({ "CRAZYSQUADS.MODE.CHANGE $Name$ $Value$", "CRAZYSQUADS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYSQUADS.FORMAT.EXAMPLE $Example$" })
+	@Localized("CRAZYSQUADS.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
 		modeCommand.addMode(new IntegerMode(this, "maxSquadSize")
@@ -219,30 +219,16 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		});
 	}
 
+	@Localized({ "CRAZYSQUADS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYSQUADS.FORMAT.EXAMPLE $Example$" })
 	private void registerModesCrazyChats()
 	{
 		final Mode<String> squadChatFormatMode = new ChatFormatMode(this, "squadChatFormat")
 		{
 
 			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
-
-			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(squadChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return squadChatFormat;
 			}
 
 			@Override
@@ -251,39 +237,14 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 				squadChatFormat = newValue;
 				saveConfiguration();
 			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
-			}
 		};
 		final Mode<String> squadLeaderChatFormatMode = new ChatFormatMode(this, "squadLeaderChatFormat")
 		{
 
 			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
-
-			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(squadLeaderChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return squadLeaderChatFormat;
 			}
 
 			@Override
@@ -291,16 +252,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 			{
 				squadLeaderChatFormat = newValue;
 				saveConfiguration();
-			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
 			}
 		};
 		modeCommand.addMode(squadChatFormatMode);
