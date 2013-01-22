@@ -9,5 +9,7 @@ public interface ChatFormatParameters
 
 	public Object[] getParameters(Player player);
 
+	public Object[] getExampleParameters();
+
 	public int getParameterCount();
 }

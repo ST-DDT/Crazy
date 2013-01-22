@@ -48,6 +48,14 @@ public class CrazyChatsChatHelper extends ChatHelperExtended
 		return res;
 	}
 
+	public static String exampleFormat(final String format)
+	{
+		String res = putArgs(format, "Sender", "Message", "GroupPrefix", "GroupSuffix", "World", "CurrentTime");
+		for (final ChatFormatParameters parameter : CHATFORMATPARAMETERS)
+			res = putPrefixedArgs(parameter.getParameterPrefix(), res, parameter.getExampleParameters());
+		return res;
+	}
+
 	public static String putPrefixedArgs(final String prefix, final String message, final Object... args)
 	{
 		return putPrefixedArgs(prefix, 0, message, args);
@@ -66,14 +74,16 @@ public class CrazyChatsChatHelper extends ChatHelperExtended
 	{
 		if (rawFormat == null)
 			return null;
-		return colorise(ChatHelper.putArgs(rawFormat, "%1$s", "%2$s"));
+		else
+			return colorise(ChatHelper.putArgs(rawFormat, "%1$s", "%2$s"));
 	}
 
 	public static String unmakeFormat(final String format)
 	{
 		if (format == null)
 			return null;
-		return decolorise(StringUtils.replace(StringUtils.replace(format, "%2$s", "$1$"), "%1$s", "$0$"));
+		else
+			return decolorise(StringUtils.replace(StringUtils.replace(format, "%2$s", "$1$"), "%1$s", "$0$"));
 	}
 
 	public static String cleanRepetitions(final String message)

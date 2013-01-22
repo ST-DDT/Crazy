@@ -32,6 +32,7 @@ import de.st_ddt.crazychats.commands.CrazyChatsCommandColorHelp;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupListnamePrefix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupPrefix;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandGroupSuffix;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandMainMode;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandMainReload;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerHeadName;
@@ -62,7 +63,6 @@ import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener_132;
 import de.st_ddt.crazychats.listener.CrazyChatsTagAPIListener;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
@@ -86,7 +86,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final AdminChannel adminChannel = new AdminChannel();
 	private final Set<ControlledChannelInterface> controlledChannels = Collections.synchronizedSet(new HashSet<ControlledChannelInterface>());
 	private final Map<Integer, CustomChannel> customChannels = Collections.synchronizedMap(new HashMap<Integer, CustomChannel>());
-	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
+	private final CrazyChatsCommandMainMode modeCommand = new CrazyChatsCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
 	private int newChannelID;
 	private String consoleDisplayName = "[CONSOLE]";
@@ -118,11 +118,17 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		registerModes();
 	}
 
-	@Localized({ "CRAZYCHATS.MODE.CHANGE $Name$ $Value$", "CRAZYCHATS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYCHATS.FORMAT.EXAMPLE $Example$" })
+	@Localized("CRAZYCHATS.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
 		modeCommand.addMode(modeCommand.new Mode<String>("consoleDisplayName", String.class)
 		{
+
+			@Override
+			public void showValue(final CommandSender sender)
+			{
+				plugin.sendLocaleMessage("MODE.CHANGE", sender, name, getValue() + ChatColor.RESET);
+			}
 
 			@Override
 			public String getValue()
@@ -151,31 +157,20 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 					return null;
 				final List<String> res = new ArrayList<String>(1);
 				res.add(getValue());
+				res.add("&DCONSOLE");
+				res.add("&DConsole");
+				res.add("&DSERVER");
+				res.add("&DServer");
 				return res;
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("broadcastChatFormat", String.class)
+		modeCommand.addMode(modeCommand.new ChatFormatMode("broadcastChatFormat")
 		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
 
 			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(broadcastChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return broadcastChatFormat;
 			}
 
 			@Override
@@ -184,39 +179,14 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				broadcastChatFormat = newValue;
 				saveConfiguration();
 			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
-			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("globalChatFormat", String.class)
+		modeCommand.addMode(modeCommand.new ChatFormatMode("globalChatFormat")
 		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
 
 			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(globalChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return globalChatFormat;
 			}
 
 			@Override
@@ -225,39 +195,14 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				globalChatFormat = newValue;
 				saveConfiguration();
 			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
-			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("worldChatFormat", String.class)
+		modeCommand.addMode(modeCommand.new ChatFormatMode("worldChatFormat")
 		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
 
 			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(worldChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return worldChatFormat;
 			}
 
 			@Override
@@ -265,16 +210,6 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			{
 				worldChatFormat = newValue;
 				saveConfiguration();
-			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
 			}
 		});
 		modeCommand.addMode(modeCommand.new BooleanTrueMode("localChatEnabled")
@@ -294,28 +229,13 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("localChatFormat", String.class)
+		modeCommand.addMode(modeCommand.new ChatFormatMode("localChatFormat")
 		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
 
 			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(localChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return localChatFormat;
 			}
 
 			@Override
@@ -323,16 +243,6 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			{
 				localChatFormat = newValue;
 				saveConfiguration();
-			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
 			}
 		});
 		modeCommand.addMode(modeCommand.new DoubleMode("localChatRange")
@@ -357,28 +267,13 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				saveConfiguration();
 			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("privateChatFormat", String.class)
+		modeCommand.addMode(modeCommand.new ChatFormatMode("privateChatFormat")
 		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
 
 			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(privateChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return privateChatFormat;
 			}
 
 			@Override
@@ -387,39 +282,14 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				privateChatFormat = newValue;
 				saveConfiguration();
 			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
-			}
 		});
-		modeCommand.addMode(modeCommand.new Mode<String>("adminChatFormat", String.class)
+		modeCommand.addMode(modeCommand.new ChatFormatMode("adminChatFormat")
 		{
-
-			@Override
-			public void showValue(final CommandSender sender)
-			{
-				final String raw = getValue();
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, raw);
-				sendLocaleMessage("FORMAT.EXAMPLE", sender, ChatHelper.putArgs(ChatHelper.colorise(raw), "Sender", "Message", "GroupPrefix", "GroupSuffix", "World"));
-			}
 
 			@Override
 			public String getValue()
 			{
-				return CrazyChatsChatHelper.unmakeFormat(adminChatFormat);
-			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
-			{
-				setValue(CrazyChatsChatHelper.makeFormat(ChatHelper.listingString(" ", args)));
-				showValue(sender);
+				return adminChatFormat;
 			}
 
 			@Override
@@ -428,16 +298,6 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 				adminChatFormat = newValue;
 				saveConfiguration();
 			}
-
-			@Override
-			public List<String> tab(final String... args)
-			{
-				if (args.length != 1 && args[0].length() != 0)
-					return null;
-				final List<String> res = new ArrayList<String>(1);
-				res.add(getValue());
-				return res;
-			}
 		});
 		modeCommand.addMode(modeCommand.new Mode<String>("ownChatNamePrefix", String.class)
 		{
@@ -445,7 +305,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			@Override
 			public void showValue(final CommandSender sender)
 			{
-				sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), ownChatNamePrefix + "Playername");
+				sendLocaleMessage("FORMAT.CHANGE", sender, name, getValue(), ownChatNamePrefix + "Playername" + ChatColor.RESET);
 			}
 
 			@Override
@@ -780,7 +640,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return playerListener;
 	}
 
-	public CrazyPluginCommandMainMode getModeCommand()
+	public CrazyChatsCommandMainMode getModeCommand()
 	{
 		return modeCommand;
 	}
