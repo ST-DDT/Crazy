@@ -15,6 +15,8 @@ import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.IntegerMode;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandRain;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandStrike;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandSun;
@@ -49,7 +51,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 	@Localized("CRAZYWEATHER.MODE.CHANGE $Name$ $Value$")
 	private void registerModes()
 	{
-		modeCommand.addMode(modeCommand.new IntegerMode("thundertool")
+		modeCommand.addMode(new IntegerMode(this, "thundertool")
 		{
 
 			@Override
@@ -72,7 +74,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 				return tool;
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("lightningdisabled")
+		modeCommand.addMode(new BooleanFalseMode(this, "lightningdisabled")
 		{
 
 			@Override
@@ -87,7 +89,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 				return lightningdisabled;
 			}
 		});
-		modeCommand.addMode(modeCommand.new BooleanFalseMode("lightningdamagedisabled")
+		modeCommand.addMode(new BooleanFalseMode(this, "lightningdamagedisabled")
 		{
 
 			@Override
