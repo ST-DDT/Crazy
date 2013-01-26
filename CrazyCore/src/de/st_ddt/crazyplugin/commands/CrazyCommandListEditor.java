@@ -44,24 +44,18 @@ public abstract class CrazyCommandListEditor<S extends ChatHeaderProvider, T> ex
 	}
 
 	@Override
-	public abstract List<T> getCollection();
-
-	@Override
-	public void showList(final CommandSender sender, final int amount, final int page)
-	{
-		ChatHelperExtended.sendList(sender, plugin.getChatHeader(), listFormat(), amount, page, getCollection());
-	}
+	protected abstract List<T> getCollection();
 
 	// @ // Localized("PATH $Element$ $Index$")
-	public abstract String addViaIndexLocale();
+	protected abstract String addViaIndexLocale();
 
 	// @ // Localized("PATH $Element$ $Index$")
-	public abstract String removeViaIndexLocale();
+	protected abstract String removeViaIndexLocale();
 
 	private class CrazyCommandListInsert extends CrazyCommandExecutor<S>
 	{
 
-		public CrazyCommandListInsert(final S plugin)
+		protected CrazyCommandListInsert(final S plugin)
 		{
 			super(plugin);
 		}

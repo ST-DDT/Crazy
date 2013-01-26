@@ -53,16 +53,11 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 			addSubCommand(new CrazyCommandCollectionRemove(plugin), "rem", "remove", "del", "delete", "-");
 	}
 
-	public abstract Collection<T> getCollection();
+	protected abstract Collection<T> getCollection();
 
-	public abstract ListFormat listFormat();
+	protected abstract ListFormat listFormat();
 
-	public abstract T getEntry(CommandSender sender, String... args) throws CrazyException;
-
-	public void showList(final CommandSender sender, final int amount, final int page)
-	{
-		ChatHelperExtended.sendList(sender, plugin.getChatHeader(), listFormat(), amount, page, new ArrayList<T>(getCollection()));
-	}
+	protected abstract T getEntry(CommandSender sender, String... args) throws CrazyException;
 
 	// @ // Localized("PATH $Element$")
 	public abstract String addLocale();
@@ -80,7 +75,7 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 	private class CrazyCommandCollectionList extends CrazyCommandExecutor<S>
 	{
 
-		public CrazyCommandCollectionList(final S plugin)
+		protected CrazyCommandCollectionList(final S plugin)
 		{
 			super(plugin);
 		}
@@ -117,7 +112,7 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 		};
 		final IntegerParamitrisable amount = new IntegerParamitrisable(10);
 		ChatHelperExtended.readParameters(args, params, page, amount);
-		showList(sender, amount.getValue(), page.getValue());
+		ChatHelperExtended.sendList(sender, plugin.getChatHeader(), listFormat(), amount.getValue(), page.getValue(), new ArrayList<T>(getCollection()));
 	}
 
 	protected List<String> tabList(final CommandSender sender, final String[] args)
@@ -131,7 +126,7 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 	private class CrazyCommandCollectionAdd extends CrazyCommandExecutor<S>
 	{
 
-		public CrazyCommandCollectionAdd(final S plugin)
+		protected CrazyCommandCollectionAdd(final S plugin)
 		{
 			super(plugin);
 		}
@@ -165,7 +160,7 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 	private class CrazyCommandCollectionRemove extends CrazyCommandExecutor<S>
 	{
 
-		public CrazyCommandCollectionRemove(final S plugin)
+		protected CrazyCommandCollectionRemove(final S plugin)
 		{
 			super(plugin);
 		}
