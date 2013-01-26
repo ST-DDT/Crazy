@@ -93,7 +93,7 @@ public class CrazyCaptchaCommandMainCommands extends CrazyCommandListEditor<Craz
 	}
 
 	@Override
-	public String getEntry(final String... args) throws CrazyException
+	public String getEntry(final CommandSender sender, final String... args) throws CrazyException
 	{
 		return ChatHelper.listingString(" ", args);
 	}
