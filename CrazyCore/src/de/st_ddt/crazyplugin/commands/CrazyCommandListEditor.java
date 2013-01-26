@@ -78,7 +78,7 @@ public abstract class CrazyCommandListEditor<S extends ChatHeaderProvider, T> ex
 					throw new CrazyCommandParameterException(0, "positive Number (Integer)");
 				try
 				{
-					final T elem = getEntry(ChatHelperExtended.shiftArray(args, 1));
+					final T elem = getEntry(sender, ChatHelperExtended.shiftArray(args, 1));
 					getCollection().add(index, elem);
 					saveChanges();
 					CrazyLocale.getLocaleHead().getLanguageEntry(addViaIndexLocale()).sendMessage(sender, elem, index);
@@ -118,7 +118,7 @@ public abstract class CrazyCommandListEditor<S extends ChatHeaderProvider, T> ex
 				}
 				catch (final Exception e)
 				{}
-			final T elem = getEntry(args);
+			final T elem = getEntry(sender, args);
 			getCollection().remove(elem);
 			saveChanges();
 			CrazyLocale.getLocaleHead().getLanguageEntry(removeLocale()).sendMessage(sender, elem);

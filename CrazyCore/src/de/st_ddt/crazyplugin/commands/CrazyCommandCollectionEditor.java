@@ -57,7 +57,7 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 
 	public abstract ListFormat listFormat();
 
-	public abstract T getEntry(String... args) throws CrazyException;
+	public abstract T getEntry(CommandSender sender, String... args) throws CrazyException;
 
 	public void showList(final CommandSender sender, final int amount, final int page)
 	{
@@ -129,7 +129,7 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
-			final T elem = getEntry(args);
+			final T elem = getEntry(sender, args);
 			getCollection().add(elem);
 			saveChanges();
 			CrazyLocale.getLocaleHead().getLanguageEntry(addLocale()).sendMessage(sender, elem);
@@ -147,7 +147,7 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
-			final T elem = getEntry(args);
+			final T elem = getEntry(sender, args);
 			getCollection().remove(elem);
 			saveChanges();
 			CrazyLocale.getLocaleHead().getLanguageEntry(removeLocale()).sendMessage(sender, elem);
