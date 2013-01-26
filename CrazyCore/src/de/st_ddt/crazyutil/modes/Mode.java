@@ -17,7 +17,7 @@ public abstract class Mode<S> implements Named
 	protected final String name;
 	protected final Class<S> clazz;
 
-	public Mode(CrazyPluginInterface plugin, final String name, final Class<S> clazz)
+	public Mode(final CrazyPluginInterface plugin, final String name, final Class<S> clazz)
 	{
 		super();
 		this.plugin = plugin;

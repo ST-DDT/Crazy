@@ -6,12 +6,11 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.modes.Mode;
 
 public abstract class DoubleMode extends Mode<Double>
 {
 
-	public DoubleMode(CrazyPluginInterface plugin, final String name)
+	public DoubleMode(final CrazyPluginInterface plugin, final String name)
 	{
 		super(plugin, name, Double.class);
 	}

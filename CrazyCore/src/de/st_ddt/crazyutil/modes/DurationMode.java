@@ -13,7 +13,7 @@ import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 public abstract class DurationMode extends LongMode
 {
 
-	public DurationMode(CrazyPluginInterface plugin, final String name)
+	public DurationMode(final CrazyPluginInterface plugin, final String name)
 	{
 		super(plugin, name);
 	}

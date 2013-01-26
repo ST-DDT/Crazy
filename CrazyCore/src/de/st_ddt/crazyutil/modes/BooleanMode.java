@@ -6,13 +6,12 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
-import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 
 public abstract class BooleanMode extends Mode<Boolean>
 {
 
-	public BooleanMode(CrazyPluginInterface plugin, final String name)
+	public BooleanMode(final CrazyPluginInterface plugin, final String name)
 	{
 		super(plugin, name, Boolean.class);
 	}

@@ -10,7 +10,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public abstract class BooleanFalseMode extends BooleanMode
 {
 
-	public BooleanFalseMode(CrazyPluginInterface plugin, final String name)
+	public BooleanFalseMode(final CrazyPluginInterface plugin, final String name)
 	{
 		super(plugin, name);
 	}
