@@ -117,7 +117,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		return new File(arenaDataRootPath + name);
 	}
 
-	public abstract void save();
+	protected abstract void save();
 
 	public final void saveToFile()
 	{
