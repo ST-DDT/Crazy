@@ -9,7 +9,7 @@ public class CrazyCommandException extends CrazyException
 {
 
 	private static final long serialVersionUID = 6006689682481259280L;
-	protected String command = null;
+	protected String command = "";
 
 	@Override
 	public String getLangPath()
