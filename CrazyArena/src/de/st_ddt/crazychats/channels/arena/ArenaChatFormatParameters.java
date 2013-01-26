@@ -12,6 +12,7 @@ public class ArenaChatFormatParameters implements ChatFormatParameters
 {
 
 	private final CrazyArena plugin;
+	private final String[] defaults = new String[] { "Arenaname", "Arenatype", "ParticipantType" };
 
 	public ArenaChatFormatParameters(final CrazyArena plugin)
 	{
@@ -42,8 +43,14 @@ public class ArenaChatFormatParameters implements ChatFormatParameters
 	}
 
 	@Override
+	public Object[] getExampleParameters()
+	{
+		return defaults;
+	}
+
+	@Override
 	public int getParameterCount()
 	{
-		return 2;
+		return 3;
 	}
 }
