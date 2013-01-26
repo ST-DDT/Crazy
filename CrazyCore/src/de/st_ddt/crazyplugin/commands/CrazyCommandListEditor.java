@@ -38,11 +38,9 @@ public abstract class CrazyCommandListEditor<S extends ChatHeaderProvider, T> ex
 
 	public CrazyCommandListEditor(final S chatHeaderProvider, final boolean add, final boolean insert, final boolean remove)
 	{
-		super(chatHeaderProvider, add, false);
+		super(chatHeaderProvider, add, remove);
 		if (insert)
 			addSubCommand(new CrazyCommandListInsert(plugin), "insert");
-		if (remove)
-			addSubCommand(new CrazyCommandCollectionRemove(plugin), "rem", "remove", "del", "delete", "-");
 	}
 
 	@Override
@@ -96,32 +94,23 @@ public abstract class CrazyCommandListEditor<S extends ChatHeaderProvider, T> ex
 		}
 	}
 
-	private class CrazyCommandCollectionRemove extends CrazyCommandExecutor<S>
+	@Override
+	protected void commandRemove(final CommandSender sender, final String[] args) throws CrazyException
 	{
-
-		public CrazyCommandCollectionRemove(final S plugin)
-		{
-			super(plugin);
-		}
-
-		@Override
-		public void command(final CommandSender sender, final String[] args) throws CrazyException
-		{
-			if (args.length == 1)
-				try
-				{
-					final int index = Integer.parseInt(args[0]);
-					final T elem = getCollection().remove(index);
-					saveChanges();
-					CrazyLocale.getLocaleHead().getLanguageEntry(removeViaIndexLocale()).sendMessage(sender, elem, index);
-					return;
-				}
-				catch (final Exception e)
-				{}
-			final T elem = getEntry(sender, args);
-			getCollection().remove(elem);
-			saveChanges();
-			CrazyLocale.getLocaleHead().getLanguageEntry(removeLocale()).sendMessage(sender, elem);
-		}
+		if (args.length == 1)
+			try
+			{
+				final int index = Integer.parseInt(args[0]);
+				final T elem = getCollection().remove(index);
+				saveChanges();
+				CrazyLocale.getLocaleHead().getLanguageEntry(removeViaIndexLocale()).sendMessage(sender, elem, index);
+				return;
+			}
+			catch (final Exception e)
+			{}
+		final T elem = getEntry(sender, args);
+		getCollection().remove(elem);
+		saveChanges();
+		CrazyLocale.getLocaleHead().getLanguageEntry(removeLocale()).sendMessage(sender, elem);
 	}
 }

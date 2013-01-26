@@ -88,34 +88,44 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
-			if (args.length > 2)
-				throw new CrazyCommandUsageException("[page:Integer] [amount:Integer]");
-			final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
-			final IntegerParamitrisable page = new IntegerParamitrisable(1)
-			{
-
-				@Override
-				public void setParameter(final String parameter) throws CrazyException
-				{
-					if (parameter.equals("*"))
-						value = Integer.MIN_VALUE;
-					else
-						super.setParameter(parameter);
-				}
-			};
-			final IntegerParamitrisable amount = new IntegerParamitrisable(10);
-			ChatHelperExtended.readParameters(args, params, page, amount);
-			showList(sender, amount.getValue(), page.getValue());
+			commandList(sender, args);
 		}
 
 		@Override
 		public List<String> tab(final CommandSender sender, final String[] args)
 		{
-			final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
-			final IntegerParamitrisable page = new IntegerParamitrisable(1);
-			final IntegerParamitrisable amount = new IntegerParamitrisable(10);
-			return ChatHelperExtended.tabHelp(args, params, page, amount);
+			return tabList(sender, args);
 		}
+	}
+
+	protected void commandList(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		if (args.length > 2)
+			throw new CrazyCommandUsageException("[page:Integer] [amount:Integer]");
+		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+		final IntegerParamitrisable page = new IntegerParamitrisable(1)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				if (parameter.equals("*"))
+					value = Integer.MIN_VALUE;
+				else
+					super.setParameter(parameter);
+			}
+		};
+		final IntegerParamitrisable amount = new IntegerParamitrisable(10);
+		ChatHelperExtended.readParameters(args, params, page, amount);
+		showList(sender, amount.getValue(), page.getValue());
+	}
+
+	protected List<String> tabList(final CommandSender sender, final String[] args)
+	{
+		final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
+		final IntegerParamitrisable page = new IntegerParamitrisable(1);
+		final IntegerParamitrisable amount = new IntegerParamitrisable(10);
+		return ChatHelperExtended.tabHelp(args, params, page, amount);
 	}
 
 	private class CrazyCommandCollectionAdd extends CrazyCommandExecutor<S>
@@ -129,11 +139,27 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
-			final T elem = getEntry(sender, args);
-			getCollection().add(elem);
-			saveChanges();
-			CrazyLocale.getLocaleHead().getLanguageEntry(addLocale()).sendMessage(sender, elem);
+			commandAdd(sender, args);
 		}
+
+		@Override
+		public List<String> tab(final CommandSender sender, final String[] args)
+		{
+			return tabAdd(sender, args);
+		}
+	}
+
+	protected void commandAdd(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		final T elem = getEntry(sender, args);
+		getCollection().add(elem);
+		saveChanges();
+		CrazyLocale.getLocaleHead().getLanguageEntry(addLocale()).sendMessage(sender, elem);
+	}
+
+	protected List<String> tabAdd(final CommandSender sender, final String[] args)
+	{
+		return null;
 	}
 
 	private class CrazyCommandCollectionRemove extends CrazyCommandExecutor<S>
@@ -147,10 +173,26 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 		@Override
 		public void command(final CommandSender sender, final String[] args) throws CrazyException
 		{
-			final T elem = getEntry(sender, args);
-			getCollection().remove(elem);
-			saveChanges();
-			CrazyLocale.getLocaleHead().getLanguageEntry(removeLocale()).sendMessage(sender, elem);
+			commandRemove(sender, args);
 		}
+
+		@Override
+		public List<String> tab(final CommandSender sender, final String[] args)
+		{
+			return tabRemove(sender, args);
+		}
+	}
+
+	protected void commandRemove(final CommandSender sender, final String[] args) throws CrazyException
+	{
+		final T elem = getEntry(sender, args);
+		getCollection().remove(elem);
+		saveChanges();
+		CrazyLocale.getLocaleHead().getLanguageEntry(removeLocale()).sendMessage(sender, elem);
+	}
+
+	protected List<String> tabRemove(final CommandSender sender, final String[] args)
+	{
+		return null;
 	}
 }
