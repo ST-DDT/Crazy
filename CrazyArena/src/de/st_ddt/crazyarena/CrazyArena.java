@@ -45,11 +45,11 @@ import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.channels.arena.ArenaChatFormatParameters;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode.Mode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.Mode;
 
 public class CrazyArena extends CrazyPlugin
 {
@@ -77,7 +77,7 @@ public class CrazyArena extends CrazyPlugin
 	private void registerModesCrazyChats()
 	{
 		final CrazyPluginCommandMainMode chatsModeCommand = CrazyChats.getPlugin().getModeCommand();
-		final Mode<?> arenaChatFormatMode = modeCommand.new Mode<String>("arenaChatFormat", String.class)
+		final Mode<?> arenaChatFormatMode = new Mode<String>(this, "arenaChatFormat", String.class)
 		{
 
 			@Override
@@ -120,7 +120,7 @@ public class CrazyArena extends CrazyPlugin
 		};
 		modeCommand.addMode(arenaChatFormatMode);
 		chatsModeCommand.addMode(arenaChatFormatMode);
-		final Mode<?> arenaSpectatorChatFormatMode = modeCommand.new Mode<String>("arenaSpectatorChatFormat", String.class)
+		final Mode<?> arenaSpectatorChatFormatMode = new Mode<String>(this, "arenaSpectatorChatFormat", String.class)
 		{
 
 			@Override
@@ -163,7 +163,7 @@ public class CrazyArena extends CrazyPlugin
 		};
 		modeCommand.addMode(arenaSpectatorChatFormatMode);
 		chatsModeCommand.addMode(arenaSpectatorChatFormatMode);
-		final Mode<?> arenaPlayerChatFormatMode = modeCommand.new Mode<String>("arenaPlayerChatFormat", String.class)
+		final Mode<?> arenaPlayerChatFormatMode = new Mode<String>(this, "arenaPlayerChatFormat", String.class)
 		{
 
 			@Override
@@ -206,7 +206,7 @@ public class CrazyArena extends CrazyPlugin
 		};
 		modeCommand.addMode(arenaPlayerChatFormatMode);
 		chatsModeCommand.addMode(arenaPlayerChatFormatMode);
-		final Mode<?> arenaJudgeChatFormatMode = modeCommand.new Mode<String>("arenaJudgeChatFormat", String.class)
+		final Mode<?> arenaJudgeChatFormatMode = new Mode<String>(this, "arenaJudgeChatFormat", String.class)
 		{
 
 			@Override
