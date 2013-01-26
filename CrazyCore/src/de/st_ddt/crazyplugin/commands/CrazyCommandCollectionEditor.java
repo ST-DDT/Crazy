@@ -60,10 +60,10 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 	protected abstract T getEntry(CommandSender sender, String... args) throws CrazyException;
 
 	// @ // Localized("PATH $Element$")
-	public abstract String addLocale();
+	protected abstract String addLocale();
 
 	// @ // Localized("PATH $Element$")
-	public abstract String removeLocale();
+	protected abstract String removeLocale();
 
 	/**
 	 * Save changes. Executed after add and remove
