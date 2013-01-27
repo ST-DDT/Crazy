@@ -24,10 +24,10 @@ public class CrazyCommandCrazyErrorException extends CrazyCommandErrorException
 	}
 
 	@Override
-	@Localized("CRAZYEXCEPTION.COMMAND.EXCEPTION $Command$ $ErrorMessage$")
+	@Localized("CRAZYEXCEPTION.COMMAND.EXCEPTION $Command$ $ErrorType$ $ErrorMessage$")
 	public void print(final CommandSender sender, final String header)
 	{
-		ChatHelper.sendMessage(sender, header, locale, command, cexception.getMessage());
+		ChatHelper.sendMessage(sender, header, locale, command, cexception.getClass().getSimpleName(), cexception.getMessage());
 		cexception.print(sender, header);
 		if (printStackTrace)
 			cexception.printStackTrace();
