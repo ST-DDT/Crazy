@@ -94,4 +94,10 @@ public class CircleRegion extends BasicRegion
 			return ((CircleRegion) region).getRadiusX() == getRadiusX() && ((CircleRegion) region).getRadiusZ() == getRadiusZ();
 		return false;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Circle {Radius: " + radiusX + "}";
+	}
 }

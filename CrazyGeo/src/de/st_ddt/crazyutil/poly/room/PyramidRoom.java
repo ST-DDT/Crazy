@@ -28,4 +28,13 @@ public class PyramidRoom extends FuncRoom
 	{
 		return new PyramidRoom(region, height, doubleSided);
 	}
+
+	@Override
+	public String toString()
+	{
+		if (doubleSided)
+			return "Pyramid {Region: " + region.toString() + "; Height: " + height + ";DOUBLESIDED}";
+		else
+			return "Pyramid {Region: " + region.toString() + "; Height: " + height + "}";
+	}
 }

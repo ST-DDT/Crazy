@@ -43,4 +43,13 @@ public class Elipsoid extends FuncRoom
 	{
 		return new Elipsoid(((CircleRegion) region).clone(), height);
 	}
+	
+	@Override
+	public String toString()
+	{
+		if (doubleSided)
+			return "Elipsoid {Region: " + region.toString() + "; Height: " + height + ";DOUBLESIDED}";
+		else
+			return "Elipsoid {Region: " + region.toString() + "; Height: " + height + "}";
+	}
 }

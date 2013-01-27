@@ -92,4 +92,10 @@ public class RoundRegion extends CircleRegion
 	{
 		return new RoundRegion(radiusZ, radiusZ);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "RoundRegion {RadiusX: " + radiusX + "; RadiusZ: " + radiusZ + "}";
+	}
 }

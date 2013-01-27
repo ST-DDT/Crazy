@@ -57,4 +57,10 @@ public abstract class BasicRegion implements ConfigurationSaveable, Region
 
 	@Override
 	public abstract boolean equals(Region region);
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
 }

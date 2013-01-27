@@ -67,4 +67,10 @@ public class Sphere extends FuncRoom
 	{
 		return new Sphere(height);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Sphere {Radius: " + height + "}";
+	}
 }

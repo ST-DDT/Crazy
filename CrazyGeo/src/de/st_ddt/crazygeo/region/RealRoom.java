@@ -104,4 +104,10 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 	{
 		// EDIT add show method
 	}
+
+	@Override
+	public String toString()
+	{
+		return "RealRoom {Location: " + basis.getWorld().getName() + ":" + basis.getX() + "," + basis.getY() + "," + basis.getZ() + "; Shape: " + room.toString() + "}";
+	}
 }

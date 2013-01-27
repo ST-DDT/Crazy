@@ -34,4 +34,15 @@ public class PrismRoom extends FuncRoom
 	{
 		return new PrismRoom(region, height, doubleSided);
 	}
+
+	@Override
+	public String toString()
+	{
+		if (doubleSided)
+			return "Prism {Region: " + region.toString() + "; Height: " + height + ";DOUBLESIDED}";
+		else
+			return "Prism {Region: " + region.toString() + "; Height: " + height + "}";
+	}
+	
+	
 }

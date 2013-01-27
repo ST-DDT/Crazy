@@ -41,4 +41,10 @@ public class NotRoom extends ExtendedRoom
 	{
 		return new NotRoom(room.clone());
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Not {Room: " + room.toString() + "}";
+	}
 }

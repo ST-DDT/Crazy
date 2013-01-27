@@ -7,18 +7,21 @@ import de.st_ddt.crazyutil.ConfigurationSaveable;
 public interface Room extends ConfigurationSaveable
 {
 
-	public boolean isInsideRel(final double x, final double y, final double z);
+	public boolean isInsideRel(double x, double y, double z);
 
-	public void scale(final double scale);
+	public void scale(double scale);
 
-	public void scale(final double scaleX, final double scaleY, final double scaleZ);
+	public void scale(double scaleX, double scaleY, double scaleZ);
 
-	public void save(final ConfigurationSection config, final String path, final boolean includeType);
+	public void save(ConfigurationSection config, String path, boolean includeType);
 
 	@Override
-	public void save(final ConfigurationSection config, final String path);
+	public void save(ConfigurationSection config, String path);
 
 	public Room clone();
 
 	public boolean equals(Room room);
+
+	@Override
+	public String toString();
 }

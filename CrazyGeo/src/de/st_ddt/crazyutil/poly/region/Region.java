@@ -2,26 +2,32 @@ package de.st_ddt.crazyutil.poly.region;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public interface Region
+import de.st_ddt.crazyutil.ConfigurationSaveable;
+
+public interface Region extends ConfigurationSaveable
 {
 
-	public abstract boolean isInsideRel(double x, double z);
+	public boolean isInsideRel(double x, double z);
 
-	public abstract void expand(double x, double z);
+	public void expand(double x, double z);
 
-	public abstract void contract(double x, double z);
+	public void contract(double x, double z);
 
-	public abstract void scale(double scale);
+	public void scale(double scale);
 
-	public abstract void scale(double scaleX, double scaleZ);
+	public void scale(double scaleX, double scaleZ);
 
-	public abstract double getArea();
+	public double getArea();
 
-	public abstract void save(final ConfigurationSection config, final String path, final boolean includeType);
+	public void save(ConfigurationSection config, String path, boolean includeType);
 
-	public abstract void save(ConfigurationSection config, String path);
+	@Override
+	public void save(ConfigurationSection config, String path);
 
-	public abstract Region clone();
+	public Region clone();
 
-	public abstract boolean equals(Region region);
+	public boolean equals(Region region);
+
+	@Override
+	public String toString();
 }

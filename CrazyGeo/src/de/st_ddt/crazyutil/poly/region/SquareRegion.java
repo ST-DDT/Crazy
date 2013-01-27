@@ -2,18 +2,18 @@ package de.st_ddt.crazyutil.poly.region;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class QuadradRegion extends BasicRegion
+public class SquareRegion extends BasicRegion
 {
 
 	protected double sizeX;
 
-	public QuadradRegion(final double size)
+	public SquareRegion(final double size)
 	{
 		super();
 		this.sizeX = size;
 	}
 
-	public QuadradRegion(final ConfigurationSection config)
+	public SquareRegion(final ConfigurationSection config)
 	{
 		super(config);
 		this.sizeX = config.getDouble("sizeX");
@@ -82,16 +82,22 @@ public class QuadradRegion extends BasicRegion
 	}
 
 	@Override
-	public QuadradRegion clone()
+	public SquareRegion clone()
 	{
-		return new QuadradRegion(sizeX);
+		return new SquareRegion(sizeX);
 	}
 
 	@Override
 	public boolean equals(final Region region)
 	{
-		if (region instanceof QuadradRegion)
-			return ((QuadradRegion) region).getSizeX() < getSizeX() && ((QuadradRegion) region).getSizeZ() < getSizeZ();
+		if (region instanceof SquareRegion)
+			return ((SquareRegion) region).getSizeX() < getSizeX() && ((SquareRegion) region).getSizeZ() < getSizeZ();
 		return false;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Square {Size: " + sizeX + "}";
 	}
 }

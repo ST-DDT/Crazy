@@ -28,4 +28,13 @@ public class RoundedRoom extends FuncRoom
 	{
 		return new RoundedRoom(region, height, doubleSided);
 	}
+
+	@Override
+	public String toString()
+	{
+		if (doubleSided)
+			return "RoundedRoom {Region: " + region.toString() + "; Height: " + height + ";DOUBLESIDED}";
+		else
+			return "RoundedRoom {Region: " + region.toString() + "; Height: " + height + "}";
+	}
 }

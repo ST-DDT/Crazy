@@ -60,4 +60,10 @@ public abstract class ExtendedRoom implements Room
 
 	@Override
 	public abstract ExtendedRoom clone();
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
 }

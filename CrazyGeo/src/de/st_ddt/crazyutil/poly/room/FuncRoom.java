@@ -172,4 +172,13 @@ public class FuncRoom extends BasicRoom
 			return region.equals(room.getRegion()) && getTotalHeight() == room.getTotalHeight();
 		return region.equals(room.getRegion()) && height == room.getHeight() && exponent == room.getExponent() && doubleSided == room.isDoubleSided();
 	}
+
+	@Override
+	public String toString()
+	{
+		if (doubleSided)
+			return "FuncRoom {Region: " + region.toString() + "; Height: " + height + "; Exponent: " + exponent + ";DOUBLESIDED}";
+		else
+			return "FuncRoom {Region: " + region.toString() + "; Height: " + height + "; Exponent: " + exponent + "}";
+	}
 }

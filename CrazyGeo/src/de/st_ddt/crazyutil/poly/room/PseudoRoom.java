@@ -32,4 +32,10 @@ public abstract class PseudoRoom implements Room
 
 	@Override
 	public abstract PseudoRoom clone();
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
 }

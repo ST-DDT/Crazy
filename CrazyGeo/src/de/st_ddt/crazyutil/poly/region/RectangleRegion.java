@@ -2,7 +2,7 @@ package de.st_ddt.crazyutil.poly.region;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class RectangleRegion extends QuadradRegion
+public class RectangleRegion extends SquareRegion
 {
 
 	protected double sizeZ;
@@ -76,5 +76,11 @@ public class RectangleRegion extends QuadradRegion
 	public RectangleRegion clone()
 	{
 		return new RectangleRegion(sizeX, sizeZ);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Rectangle {SizeX: " + sizeX + "; SizeZ: " + sizeZ + "}";
 	}
 }
