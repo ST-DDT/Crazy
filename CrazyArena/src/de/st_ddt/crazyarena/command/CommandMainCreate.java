@@ -3,7 +3,6 @@ package de.st_ddt.crazyarena.command;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
@@ -57,7 +56,7 @@ public class CommandMainCreate extends PlayerCommandExecutor
 		Arena<?> arena = null;
 		try
 		{
-			arena = clazz.getConstructor(String.class, World.class).newInstance(name, player.getWorld());
+			arena = clazz.getConstructor(String.class).newInstance(name);
 		}
 		catch (final Exception e)
 		{
@@ -67,7 +66,7 @@ public class CommandMainCreate extends PlayerCommandExecutor
 			throw new CrazyCommandException();
 		plugin.getArenas().add(arena);
 		plugin.getArenasByName().put(name.toLowerCase(), arena);
-		plugin.getArenasByType().get(arena.getType()).add(arena);
+		plugin.getArenasByType().get(arena.getType().toLowerCase()).add(arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.CREATED", player, arena.getName(), arena.getType());
 		new CrazyArenaArenaCreateEvent(arena, false).callEvent();
 		plugin.getSelections().put(player.getName().toLowerCase(), arena);

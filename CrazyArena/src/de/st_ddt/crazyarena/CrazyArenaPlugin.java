@@ -13,7 +13,6 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 {
 
 	private final static Map<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin> arenaPlugins = new LinkedHashMap<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin>();
-	protected final CrazyArena arenaPlugin = CrazyArena.getPlugin();
 
 	public static Collection<CrazyArenaPlugin> getCrazyArenaPlugins()
 	{
@@ -25,7 +24,7 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 	{
 		arenaPlugins.put(this.getClass(), this);
 		registerArenaTypes();
-		super.onEnable();
+		super.onLoad();
 	}
 
 	protected abstract void registerArenaTypes();
@@ -34,16 +33,20 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 
 	protected void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
 	{
-		arenaPlugin.registerArenaType(mainType, clazz, aliases);
+		getArenaMainPlugin().registerArenaType(mainType, clazz, aliases);
 	}
 
 	public Map<String, Set<Arena<?>>> getArenas()
 	{
 		final Map<String, Set<Arena<?>>> arenas = new HashMap<String, Set<Arena<?>>>();
-		if (arenaPlugin == null)
-			return arenas;
+		final CrazyArena arenaPlugin = getArenaMainPlugin();
 		for (final String type : getArenaTypes())
 			arenas.put(type, arenaPlugin.getArenasByType(type));
 		return arenas;
+	}
+
+	public final CrazyArena getArenaMainPlugin()
+	{
+		return CrazyArena.getPlugin();
 	}
 }
