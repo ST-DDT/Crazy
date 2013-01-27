@@ -18,6 +18,8 @@ import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.arenas.ArenaStatus;
 import de.st_ddt.crazyarena.commands.race.CommandPlayerSpawns;
+import de.st_ddt.crazyarena.commands.race.CommandRaceStages;
+import de.st_ddt.crazyarena.commands.race.CommandSpectatorSpawns;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaExceedingParticipantsLimitException;
 import de.st_ddt.crazyarena.listener.race.CrazyRaceArenaPlayerListener;
 import de.st_ddt.crazyarena.participants.ParticipantType;
@@ -88,7 +90,8 @@ public class RaceArena extends Arena<RaceParticipant>
 	private void registerCommands()
 	{
 		mainCommand.addSubCommand(new CommandPlayerSpawns(this), "ps", "players", "playerspawns");
-		mainCommand.addSubCommand(new CommandPlayerSpawns(this), "ss", "spectators", "spectatorspawns");
+		mainCommand.addSubCommand(new CommandSpectatorSpawns(this), "ss", "spectators", "spectatorspawns");
+		mainCommand.addSubCommand(new CommandRaceStages(this), "rs", "stages", "racestages");
 	}
 
 	@Override
