@@ -24,8 +24,7 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 
 	public LocationParamitrisable(final CommandSender sender)
 	{
-		super(sender instanceof Player ? ((Player) sender).getLocation() : new Location(null, 0, 0, 0));
-		this.sender = sender;
+		this(sender instanceof Player ? ((Player) sender).getLocation() : null, sender);
 	}
 
 	public LocationParamitrisable(final Location defaultValue, final CommandSender sender)
