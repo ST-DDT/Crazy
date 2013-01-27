@@ -31,7 +31,6 @@ import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
@@ -98,20 +97,6 @@ public class RaceArena extends Arena<RaceParticipant>
 	public final String getType()
 	{
 		return "Race";
-	}
-
-	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
-	{
-		// EDIT OUTSOURCEN!
-		if (commandLabel.startsWith("t"))
-			if (commandLabel.equals("t") || commandLabel.equals("target") || commandLabel.equals("targets"))
-			{
-				if (status != ArenaStatus.CONSTRUCTING)
-					throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
-				// Targets
-				return true;
-			}
-		return false;
 	}
 
 	@Override
