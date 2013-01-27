@@ -1,6 +1,7 @@
 package de.st_ddt.crazyarena.exceptions;
 
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazyArenaUnsupportedException extends CrazyArenaException
 {
@@ -15,6 +16,7 @@ public class CrazyArenaUnsupportedException extends CrazyArenaException
 	}
 
 	@Override
+	@Localized("CRAZYARENA.ARENA_DEFAULT.EXCEPTION.UNSUPPORTED $Name$ $Type$ $Status$")
 	public String getLangPath()
 	{
 		return super.getLangPath() + ".UNSUPPORTED";

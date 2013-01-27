@@ -4,6 +4,8 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazyArenaException extends CrazyException
 {
@@ -25,13 +27,13 @@ public class CrazyArenaException extends CrazyException
 	@Override
 	public String getLangPath()
 	{
-		return "CRAZYARENA.ARENA" + arena.getName() + ".EXCEPTION";
+		return "CRAZYARENA.ARENA." + arena.getName().toUpperCase() + ".EXCEPTION";
 	}
 
-	@Override
+	@Localized({ "CRAZYARENA.ARENA_DEFAULT.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA_#TYPE#.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA.#NAME#.EXCEPTION $Name$ $Type$ $Status$" })
 	public void print(final CommandSender sender, final String header)
 	{
-		sender.sendMessage(header + locale.getLocaleMessage(sender, "HEAD", arena.getName()));
+		ChatHelper.sendMessage(sender, header, locale, arena.getName(), arena.getType(), arena.getStatus().toString());
 		if (printStackTrace)
 			printStackTrace();
 	}
