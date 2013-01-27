@@ -60,7 +60,7 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 	@Localized({ "CRAZYCORE.PLAYERINFO.LANGUAGE $Language$", "CRAZYCORE.PLAYERINFO.ASSOCIATES $Associates$", "CRAZYCORE.PLAYERINFO.GROUPS $Groups$" })
 	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
-		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYCORE.PLAYERINFO");
+		final CrazyLocale locale = getPlugin().getLocale().getSecureLanguageEntry("PLAYERINFO");
 		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LANGUAGE"), CrazyLocale.getUserLanguageName(name, true));
 		final CrazyPlayerAssociatesEvent associatesEvent = new CrazyPlayerAssociatesEvent(name);
 		associatesEvent.callEvent();
