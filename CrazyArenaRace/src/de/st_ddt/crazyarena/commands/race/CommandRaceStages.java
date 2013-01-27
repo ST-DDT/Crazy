@@ -66,8 +66,6 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 		addSubCommand(new CommandStageTeleport(arena), "tp", "teleport");
 		addSubCommand(new CommandStageRoom(arena), "r", "room");
 		addSubCommand(new CommandStageGeo(arena), "g", "geo");
-		// EDIT allow editing stages
-		// see RaceStage.java for more infos
 	}
 
 	@Override
