@@ -3,10 +3,13 @@ package de.st_ddt.crazyarena.participants;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
 import de.st_ddt.crazyplugin.data.PlayerData;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public abstract class Participant<S extends Participant<S, T>, T extends Arena<S>> extends PlayerData<Participant<S, T>> implements Comparable<Participant<S, T>>
 {
@@ -58,7 +61,15 @@ public abstract class Participant<S extends Participant<S, T>, T extends Arena<S
 	}
 
 	@Override
-	public abstract void showDetailed(CommandSender target, String chatHeader);
+	@Localized({ "CRAZYARENA.PLAYERINFO.ARENA.NAME $Name$ $Type$", "CRAZYARENA.PLAYERINFO.ARENA.TYPE $Type$", "CRAZYARENA.PLAYERINFO.ARENA.STATUS $State$", "CRAZYARENA.PLAYERINFO.PARTICIPANT.TYPE $Type$" })
+	public void showDetailed(final CommandSender target, final String chatHeader)
+	{
+		final CrazyLocale mainLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("PLAYERINFO");
+		ChatHelper.sendMessage(target, chatHeader, mainLocale.getLanguageEntry("ARENA.NAME"), arena.getName(), arena.getType());
+		ChatHelper.sendMessage(target, chatHeader, mainLocale.getLanguageEntry("ARENA.TYPE"), arena.getType());
+		ChatHelper.sendMessage(target, chatHeader, mainLocale.getLanguageEntry("ARENA.STATUS"), arena.getStatus().toString());
+		ChatHelper.sendMessage(target, chatHeader, mainLocale.getLanguageEntry("PARTICIPANT.TYPE"), participantType.toString());
+	}
 
 	@Override
 	public String getParameter(final CommandSender sender, final int index)
