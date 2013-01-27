@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import de.st_ddt.crazyutil.ChatHelper;
+
 public abstract class BasicDatabase<S extends DatabaseEntry> implements Database<S>
 {
 
@@ -168,45 +170,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 
 	protected final void shortPrintStackTrace(final Throwable main, final Throwable throwable)
 	{
-		final StackTraceElement[] causedTrace = main.getStackTrace();
-		final StackTraceElement[] trace = throwable.getStackTrace();
-		int m = trace.length - 1, n = causedTrace.length - 1;
-		while (m >= 0 && n >= 0 && trace[m].equals(causedTrace[n]))
-		{
-			m--;
-			n--;
-		}
-		final int framesInCommon = trace.length - 1 - m;
-		System.err.println(throwable);
-		for (int i = 0; i <= m; i++)
-			System.err.println("\tat " + trace[i]);
-		if (framesInCommon != 0)
-			System.err.println("\t... " + framesInCommon + " more");
-		// Recurse if we have a cause
-		final Throwable ourCause = throwable.getCause();
-		if (ourCause != null)
-			shortPrintStackTrace2(ourCause, trace);
-	}
-
-	private final void shortPrintStackTrace2(final Throwable throwable, final StackTraceElement[] causedTrace)
-	{
-		final StackTraceElement[] trace = throwable.getStackTrace();
-		int m = trace.length - 1, n = causedTrace.length - 1;
-		while (m >= 0 && n >= 0 && trace[m].equals(causedTrace[n]))
-		{
-			m--;
-			n--;
-		}
-		final int framesInCommon = trace.length - 1 - m;
-		System.err.println("Caused by: " + this);
-		for (int i = 0; i <= m; i++)
-			System.err.println("\tat " + trace[i]);
-		if (framesInCommon != 0)
-			System.err.println("\t... " + framesInCommon + " more");
-		// Recurse if we have a cause
-		final Throwable ourCause = throwable.getCause();
-		if (ourCause != null)
-			shortPrintStackTrace2(ourCause, trace);
+		ChatHelper.shortPrintStackTrace(main, throwable, this);
 	}
 
 	@Override

@@ -65,7 +65,6 @@ public interface Database<S extends DatabaseEntry> extends ConfigurationSaveable
 	public S getOrLoadEntry(String key);
 
 	/**
-	 * 
 	 * @return The Lock making this database thread safe!
 	 */
 	public Object getDatabaseLock();

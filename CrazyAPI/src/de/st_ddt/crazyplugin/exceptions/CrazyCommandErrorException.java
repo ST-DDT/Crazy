@@ -32,7 +32,7 @@ public class CrazyCommandErrorException extends CrazyCommandException
 	@Localized("CRAZYEXCEPTION.COMMAND.EXCEPTION $Command$ $ErrorType$ $ErrorMessage$")
 	public void print(final CommandSender sender, final String header)
 	{
-		ChatHelper.sendMessage(sender, header, locale, command, exception.getClass().getSimpleName(), exception.getMessage());
+		ChatHelper.sendMessage(sender, header, locale, command, exception.getClass().getSimpleName(), exception.getMessage() == null ? "" : exception.getMessage());
 		if (printStackTrace)
 			exception.printStackTrace();
 	}

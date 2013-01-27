@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -257,15 +258,18 @@ public final class ObjectSaveLoadHelper
 
 	public static <T> T load(final Class<? extends T> clazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
 	{
-		T instance = null;
 		try
 		{
-			instance = clazz.getConstructor(paraClazzes).newInstance(paraObjects);
+			return clazz.getConstructor(paraClazzes).newInstance(paraObjects);
+		}
+		catch (final InvocationTargetException e)
+		{
+			ChatHelper.shortPrintStackTrace(e, e.getCause(), "ObjectSaveLoadHelper (" + clazz.getName() + ")");
 		}
 		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
-		return instance;
+		return null;
 	}
 }

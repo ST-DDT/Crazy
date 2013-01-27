@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 /**
  * This method uses multiligual messages defined by the listed paths.
- * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.METHOD, ElementType.CONSTRUCTOR })
