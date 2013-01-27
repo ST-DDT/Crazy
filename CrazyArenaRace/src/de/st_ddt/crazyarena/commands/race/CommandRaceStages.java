@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import de.st_ddt.crazyarena.CrazyArenaRace;
 import de.st_ddt.crazyarena.arenas.ArenaStatus;
 import de.st_ddt.crazyarena.arenas.race.RaceArena;
 import de.st_ddt.crazyarena.arenas.race.RaceStage;
+import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyplugin.commands.CrazyCommandListEditor;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
@@ -18,9 +23,13 @@ import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.PolyRoomParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.RealRoomParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
+import de.st_ddt.crazyutil.poly.room.Room;
 import de.st_ddt.crazyutil.poly.room.Sphere;
 
 public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceStage>
@@ -43,7 +52,7 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 			@Override
 			public String headFormat(final CommandSender target)
 			{
-				return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYARENARACE.COMMAND.TARGET.LISTHEAD");
+				return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYARENARACE.COMMAND.STAGE.LISTHEAD");
 			}
 
 			@Override
@@ -52,6 +61,13 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 				return "$0$";
 			}
 		};
+		addSubCommand(new CommandStageRename(arena), "n", "name", "rename");
+		addSubCommand(new CommandStageCenter(arena), "c", "center");
+		addSubCommand(new CommandStageTeleport(arena), "tp", "teleport");
+		addSubCommand(new CommandStageRoom(arena), "r", "room");
+		addSubCommand(new CommandStageGeo(arena), "g", "geo");
+		// EDIT allow editing stages
+		// see RaceStage.java for more infos
 	}
 
 	@Override
@@ -66,21 +82,21 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 	@Override
 	protected List<RaceStage> getCollection()
 	{
-		return plugin.getTargets();
+		return plugin.getStages();
 	}
 
 	@Override
-	@Localized("CRAZYARENARACE.COMMAND.TARGET.ADDINDEXED $Element$ $Index$")
+	@Localized("CRAZYARENARACE.COMMAND.STAGE.ADDINDEXED $Element$ $Index$")
 	protected String addViaIndexLocale()
 	{
-		return "CRAZYARENARACE.COMMAND.TARGET.ADDINDEXED";
+		return "CRAZYARENARACE.COMMAND.STAGE.ADDINDEXED";
 	}
 
 	@Override
-	@Localized("CRAZYARENARACE.COMMAND.TARGET.REMOVEINDEXED $Element$ $Index$")
+	@Localized("CRAZYARENARACE.COMMAND.STAGE.REMOVEINDEXED $Element$ $Index$")
 	protected String removeViaIndexLocale()
 	{
-		return "CRAZYARENARACE.COMMAND.TARGET.REMOVEINDEXED";
+		return "CRAZYARENARACE.COMMAND.STAGE.REMOVEINDEXED";
 	}
 
 	@Override
@@ -103,10 +119,10 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 	}
 
 	@Override
-	@Localized("CRAZYARENARACE.COMMAND.TARGET.ADDED $Element$")
+	@Localized("CRAZYARENARACE.COMMAND.STAGE.ADDED $Element$")
 	protected String addLocale()
 	{
-		return "CRAZYARENARACE.COMMAND.TARGET.ADDED";
+		return "CRAZYARENARACE.COMMAND.STAGE.ADDED";
 	}
 
 	@Override
@@ -118,11 +134,11 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 	@Override
 	protected void saveChanges()
 	{
-		final List<RaceStage> targets = getCollection();
-		final int length = targets.size();
+		final List<RaceStage> stages = getCollection();
+		final int length = stages.size();
 		for (int i = 0; i < length - 1; i++)
-			targets.get(i).setNext(targets.get(i + 1));
-		targets.get(length).setNext(null);
+			stages.get(i).setNext(stages.get(i + 1));
+		stages.get(length).setNext(null);
 		plugin.saveToFile();
 	}
 
@@ -142,6 +158,187 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 		catch (final NumberFormatException e)
 		{
 			throw new CrazyCommandParameterException(0, "Number (Integer)");
+		}
+	}
+
+	private class CommandStageRename extends RaceCommandExecutor
+	{
+
+		protected CommandStageRename(final RaceArena arena)
+		{
+			super(arena);
+		}
+
+		@Override
+		@Localized("CRAZYARENARACE.COMMAND.STAGE.RENAMED $Index$ $Name$")
+		public void command(final CommandSender sender, final String[] args) throws CrazyException
+		{
+			final List<RaceStage> stages = plugin.getStages();
+			if (stages.size() == 0)
+				throw new CrazyCommandCircumstanceException("if there is at least one stage!");
+			if (args.length == 0)
+				throw new CrazyCommandUsageException("<Index>");
+			try
+			{
+				final int index = Integer.parseInt(args[0]);
+				final RaceStage stage = stages.get(index);
+				if (args.length > 1)
+				{
+					final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+					final StringParamitrisable name = new StringParamitrisable(stage.getName());
+					ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params, name);
+					stage.setName(name.getValue());
+				}
+				CrazyArenaRace.getPlugin().sendLocaleMessage("COMMAND.STAGE.RENAMED", sender, index, stage.getName());
+			}
+			catch (final NumberFormatException e)
+			{
+				throw new CrazyCommandParameterException(0, "Number (Integer)");
+			}
+		}
+	}
+
+	private class CommandStageCenter extends RaceCommandExecutor
+	{
+
+		protected CommandStageCenter(final RaceArena arena)
+		{
+			super(arena);
+		}
+
+		@Override
+		@Localized("CRAZYARENARACE.COMMAND.STAGE.CENTER $Index$ $World$ $X$ $Y$ $Z$")
+		public void command(final CommandSender sender, final String[] args) throws CrazyException
+		{
+			final List<RaceStage> stages = plugin.getStages();
+			if (stages.size() == 0)
+				throw new CrazyCommandCircumstanceException("if there is at least one stage!");
+			if (args.length == 0)
+				throw new CrazyCommandUsageException("<Index>");
+			try
+			{
+				final int index = Integer.parseInt(args[0]);
+				final RaceStage stage = stages.get(index);
+				if (args.length > 1)
+				{
+					final Map<String, TabbedParamitrisable> params = new HashMap<String, TabbedParamitrisable>();
+					final LocationParamitrisable location = new LocationParamitrisable(stage.getZone().getBasis(), sender);
+					location.addAdvancedParams(params, "");
+					ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params, location);
+					stage.getZone().setBasis(location.getValue());
+				}
+				final Location location = stage.getZone().getBasis();
+				CrazyArenaRace.getPlugin().sendLocaleMessage("COMMAND.STAGE.CENTER", sender, index, location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+			}
+			catch (final NumberFormatException e)
+			{
+				throw new CrazyCommandParameterException(0, "Number (Integer)");
+			}
+		}
+	}
+
+	private class CommandStageTeleport extends RacePlayerCommandExecutor
+	{
+
+		protected CommandStageTeleport(final RaceArena arena)
+		{
+			super(arena);
+		}
+
+		@Override
+		@Localized("CRAZYARENARACE.COMMAND.STAGE.TELEPORTED $Index$")
+		public void command(final Player player, final String[] args) throws CrazyException
+		{
+			final List<RaceStage> stages = plugin.getStages();
+			if (stages.size() == 0)
+				throw new CrazyCommandCircumstanceException("if there is at least one stage!");
+			if (args.length != 1)
+				throw new CrazyCommandUsageException("<Index>");
+			try
+			{
+				final int index = Integer.parseInt(args[0]);
+				final Location location = stages.get(index).getZone().getBasis();
+				player.teleport(location, TeleportCause.COMMAND);
+				CrazyArenaRace.getPlugin().sendLocaleMessage("COMMAND.STAGE.TELEPORTED", player, index);
+			}
+			catch (final NumberFormatException e)
+			{
+				throw new CrazyCommandParameterException(0, "Number (Integer)");
+			}
+		}
+	}
+
+	private class CommandStageRoom extends RaceCommandExecutor
+	{
+
+		protected CommandStageRoom(final RaceArena arena)
+		{
+			super(arena);
+		}
+
+		@Override
+		@Localized("CRAZYARENARACE.COMMAND.STAGE.ROOM $Index$ $Room$")
+		public void command(final CommandSender sender, final String[] args) throws CrazyException
+		{
+			final List<RaceStage> stages = plugin.getStages();
+			if (stages.size() == 0)
+				throw new CrazyCommandCircumstanceException("if there is at least one stage!");
+			if (args.length == 0)
+				throw new CrazyCommandUsageException("<Index>");
+			try
+			{
+				final int index = Integer.parseInt(args[0]);
+				final RaceStage stage = stages.get(index);
+				if (args.length > 1)
+				{
+					final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+					final PolyRoomParamitrisable room = new PolyRoomParamitrisable(stage.getZone().getRoom());
+					ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params, room);
+					stage.setZone(new RealRoom<Room>(room.getValue(), stage.getZone().getBasis()));
+				}
+				getArenaPlugin().sendLocaleMessage("COMMAND.STAGE.ROOM", sender, index, stage.getZone().getRoom().toString());
+			}
+			catch (final NumberFormatException e)
+			{
+				throw new CrazyCommandParameterException(0, "Number (Integer)");
+			}
+		}
+	}
+
+	private class CommandStageGeo extends RaceCommandExecutor
+	{
+
+		protected CommandStageGeo(final RaceArena arena)
+		{
+			super(arena);
+		}
+
+		@Override
+		@Localized("CRAZYARENARACE.COMMAND.STAGE.GEO $Index$ $Geo$")
+		public void command(final CommandSender sender, final String[] args) throws CrazyException
+		{
+			final List<RaceStage> stages = plugin.getStages();
+			if (stages.size() == 0)
+				throw new CrazyCommandCircumstanceException("if there is at least one stage!");
+			if (args.length == 0)
+				throw new CrazyCommandUsageException("<Index>");
+			try
+			{
+				final int index = Integer.parseInt(args[0]);
+				final RaceStage stage = stages.get(index);
+				if (args.length > 1)
+				{
+					final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+					final RealRoomParamitrisable room = new RealRoomParamitrisable(sender, stage.getZone());
+					ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params, room);
+					stage.setZone(room.getValue());
+				}
+				getArenaPlugin().sendLocaleMessage("COMMAND.STAGE.ROOM", sender, index, stage.getZone().toString());
+			}
+			catch (final NumberFormatException e)
+			{
+				throw new CrazyCommandParameterException(0, "Number (Integer)");
+			}
 		}
 	}
 }

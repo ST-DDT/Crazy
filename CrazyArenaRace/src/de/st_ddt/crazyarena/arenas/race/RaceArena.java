@@ -40,7 +40,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	protected final List<Location> playerSpawns = new ArrayList<Location>();
 	protected final SpawnList spectatorSpawns = new SpawnList();
 	protected final Map<String, Location> quitLocation = new HashMap<String, Location>();
-	protected final List<RaceStage> targets = new ArrayList<RaceStage>();
+	protected final List<RaceStage> stages = new ArrayList<RaceStage>();
 	protected final CrazyCommandTreeExecutor<RaceArena> mainCommand;
 	private int runnumber = 0;
 	// Match Variables
@@ -63,8 +63,8 @@ public class RaceArena extends Arena<RaceParticipant>
 		if (spectatorConfig != null)
 			for (final String key : spectatorConfig.getKeys(false))
 				spectatorSpawns.add(ObjectSaveLoadHelper.loadLocation(spectatorConfig.getConfigurationSection(key), null));
-		// Race Targets
-		final ConfigurationSection targetConfig = config.getConfigurationSection("targets");
+		// Race Stages
+		final ConfigurationSection targetConfig = config.getConfigurationSection("stages");
 		if (targetConfig != null)
 		{
 			RaceStage previous = null;
@@ -106,7 +106,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		// minParticpants > 1
 		// Starts > minParticipants
 		// SpectatorsSpawns > 0
-		// TargetsCount > 0
+		// StagesCount > 0
 		return true;
 	}
 
@@ -121,10 +121,10 @@ public class RaceArena extends Arena<RaceParticipant>
 		i = 0;
 		for (final Location location : spectatorSpawns)
 			ObjectSaveLoadHelper.saveLocation(config, "spectators.spawn" + (i++) + ".", location, true, true);
-		config.set("targets", null);
+		config.set("stages", null);
 		i = 0;
-		for (final RaceStage target : targets)
-			target.save(config, "targets.target" + (i++) + ".");
+		for (final RaceStage target : stages)
+			target.save(config, "stages.stage" + (i++) + ".");
 	}
 
 	public Location getEmptyStartLocation()
@@ -147,8 +147,8 @@ public class RaceArena extends Arena<RaceParticipant>
 			if (location == null)
 				throw new CrazyArenaExceedingParticipantsLimitException(this, playerSpawns.size());
 			else
-				participant = new RaceParticipant(player, this, location, targets.get(0));
-		// participant.setStage(targets.get(0));
+				participant = new RaceParticipant(player, this, location, stages.get(0));
+		// participant.setStage(stages.get(0));
 		if (rejoin && status == ArenaStatus.PLAYING)
 			participant.setParticipantType(ParticipantType.PARTICIPANT);
 		else
@@ -295,8 +295,8 @@ public class RaceArena extends Arena<RaceParticipant>
 		return spectatorSpawns;
 	}
 
-	public List<RaceStage> getTargets()
+	public List<RaceStage> getStages()
 	{
-		return targets;
+		return stages;
 	}
 }

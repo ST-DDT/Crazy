@@ -2,8 +2,8 @@ name: CrazyArenaRace
 main: de.st_ddt.crazyarena.CrazyArenaRace
 author: ST-DDT
 version: 0.1
-# requires CrazyCore v9.7
-# requires CrazyGeo v0.1
+# requires CrazyCore v10
+# requires CrazyGeo v0.3
 # requires CrazyArena v0.3
 depend: [CrazyCore,CrazyGeo,CrazyArena]
 description: >
