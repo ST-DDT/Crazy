@@ -67,11 +67,12 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		this.name = name;
 		getDataFolder().mkdirs();
 		this.chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE;
-		// Locales
-		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
-		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
+		// Locale CRAZYARENA.ARENA.#NAME#... -> CRAZYARENA.ARENA_#TYPE#... -> CRAZYARENA.ARENA_DEFAULT...
+		final CrazyLocale pluginLocale = CrazyArena.getPlugin().getLocale();
+		this.locale = pluginLocale.getSecureLanguageEntry("ARENA." + name.toUpperCase());
+		final CrazyLocale typeLocale = pluginLocale.getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
 		this.locale.setAlternative(typeLocale);
-		final CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_DEFAULT");
+		final CrazyLocale defaultLocale = pluginLocale.getSecureLanguageEntry("ARENA_DEFAULT");
 		typeLocale.setAlternative(defaultLocale);
 	}
 
@@ -80,11 +81,12 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		super();
 		this.name = name;
 		this.chatHeader = ChatHelper.colorise(config.getString("chatHeader", ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE));
-		// Locale
-		this.locale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA." + name.toUpperCase());
-		final CrazyLocale typeLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
+		// Locale CRAZYARENA.ARENA.#NAME#... -> CRAZYARENA.ARENA_#TYPE#... -> CRAZYARENA.ARENA_DEFAULT...
+		final CrazyLocale pluginLocale = CrazyArena.getPlugin().getLocale();
+		this.locale = pluginLocale.getSecureLanguageEntry("ARENA." + name.toUpperCase());
+		final CrazyLocale typeLocale = pluginLocale.getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
 		this.locale.setAlternative(typeLocale);
-		final CrazyLocale defaultLocale = CrazyArena.getPlugin().getLocale().getSecureLanguageEntry("ARENA_DEFAULT");
+		final CrazyLocale defaultLocale = pluginLocale.getSecureLanguageEntry("ARENA_DEFAULT");
 		typeLocale.setAlternative(defaultLocale);
 	}
 
@@ -511,13 +513,13 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 			return true;
 		else if (PermissionModule.hasPermission(sender, "crazyarena.*"))
 			return true;
-		else if (PermissionModule.hasPermission(sender, "crazyarena." + getType() + "." + permissionSuffix))
+		else if (PermissionModule.hasPermission(sender, "crazyarena.t_" + getType() + "." + permissionSuffix))
 			return true;
-		else if (PermissionModule.hasPermission(sender, "crazyarena." + getType() + ".*"))
+		else if (PermissionModule.hasPermission(sender, "crazyarena.t_" + getType() + ".*"))
 			return true;
-		else if (PermissionModule.hasPermission(sender, "crazyarena." + getName() + "." + permissionSuffix))
+		else if (PermissionModule.hasPermission(sender, "crazyarena.n_" + getName() + "." + permissionSuffix))
 			return true;
-		else if (PermissionModule.hasPermission(sender, "crazyarena." + getName() + ".*"))
+		else if (PermissionModule.hasPermission(sender, "crazyarena.n_" + getName() + ".*"))
 			return true;
 		else
 			return false;
