@@ -30,6 +30,7 @@ public class CrazyArenaException extends CrazyException
 		return "CRAZYARENA.ARENA." + arena.getName().toUpperCase() + ".EXCEPTION";
 	}
 
+	@Override
 	@Localized({ "CRAZYARENA.ARENA_DEFAULT.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA_$TYPE$.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA.$NAME$.EXCEPTION $Name$ $Type$ $Status$" })
 	public void print(final CommandSender sender, final String header)
 	{

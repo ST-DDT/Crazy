@@ -16,6 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
+import de.st_ddt.crazyarena.CrazyArenaPlugin;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaUnsupportedException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
@@ -245,7 +246,6 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 	 * The run number increases every match played and is important for rejoins. A player can only rejoin if the arena has the same run number
 	 * 
 	 * @return the current match number
-	 * 
 	 */
 	public abstract int getRunNumber();
 
@@ -524,4 +524,11 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		else
 			return false;
 	}
+
+	public final CrazyArena getArenaMainPlugin()
+	{
+		return CrazyArena.getPlugin();
+	}
+
+	public abstract CrazyArenaPlugin getArenaPlugin();
 }

@@ -2,7 +2,16 @@ package de.st_ddt.crazyarena.participants;
 
 public enum ParticipantType
 {
-	SELECTING(true, false, false, false), READY(true, true, false, false), PARTICIPANT(false, true, false, false), DEFEADED(false, false, false, true), RESPAWNING(false, true, false, true), SPECTATOR, JUDGE(false), QUITEDPARTICIPANT(false, false, true, false), QUITEDJUDGE(true);
+	SELECTING(true, false, false, false),
+	READY(true, true, false, false),
+	PARTICIPANT(false, true, false, false),
+	DEFEADED(false, false, false, false),
+	RESPAWNING(false, true, false, true),
+	WINNER(false, false, false, false),
+	SPECTATOR,
+	JUDGE(false),
+	QUITEDPARTICIPANT(false, false, true, false),
+	QUITEDJUDGE(true);
 
 	public final static ParticipantType[] SPECTATORTYPES = new ParticipantType[] { SPECTATOR };
 	public final static ParticipantType[] PLAYERTYPES = new ParticipantType[] { SELECTING, READY, PARTICIPANT, DEFEADED, RESPAWNING, QUITEDPARTICIPANT };

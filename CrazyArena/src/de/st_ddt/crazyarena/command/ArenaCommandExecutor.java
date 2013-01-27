@@ -17,6 +17,6 @@ public abstract class ArenaCommandExecutor<S extends Arena<?>> extends CrazyComm
 	{
 		return CrazyArena.getPlugin();
 	}
-	
+
 	public abstract CrazyArenaPlugin getArenaPlugin();
 }
