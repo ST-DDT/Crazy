@@ -28,14 +28,15 @@ public class CommandMainTreeDefault extends CommandExecutor
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (sender instanceof Player && args.length != 0)
+		if (args.length != 0)
 		{
-			final Player player = (Player) sender;
-			final Arena<?> arena = plugin.getArena(player);
+			Arena<?> arena = plugin.getSelections().get(sender.getName().toLowerCase());
+			if (arena == null && sender instanceof Player)
+				arena = plugin.getArena(((Player) sender));
 			if (arena != null)
 				try
 				{
-					arena.getCommandExecutor().command(player, args);
+					arena.getCommandExecutor().command(sender, args);
 				}
 				catch (final CrazyCommandNoSuchException e)
 				{
@@ -62,32 +63,24 @@ public class CommandMainTreeDefault extends CommandExecutor
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		if (sender instanceof Player)
-		{
-			final Player player = (Player) sender;
-			final Arena<?> arena = plugin.getArena(player);
-			if (arena == null)
-				return null;
-			else
-				return arena.getCommandExecutor().tab(player, args);
-		}
-		else
+		Arena<?> arena = plugin.getSelections().get(sender.getName().toLowerCase());
+		if (arena == null && sender instanceof Player)
+			arena = plugin.getArena(((Player) sender));
+		if (arena == null)
 			return null;
+		else
+			return arena.getCommandExecutor().tab(sender, args);
 	}
 
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		if (sender instanceof Player)
-		{
-			final Player player = (Player) sender;
-			final Arena<?> arena = plugin.getArena(player);
-			if (arena == null)
-				return true;
-			else
-				return arena.getCommandExecutor().hasAccessPermission(player);
-		}
-		else
+		Arena<?> arena = plugin.getSelections().get(sender.getName().toLowerCase());
+		if (arena == null && sender instanceof Player)
+			arena = plugin.getArena(((Player) sender));
+		if (arena == null)
 			return true;
+		else
+			return arena.getCommandExecutor().hasAccessPermission(sender);
 	}
 }

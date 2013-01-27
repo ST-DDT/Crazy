@@ -2,7 +2,7 @@ package de.st_ddt.crazyarena.command;
 
 import java.util.List;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
@@ -13,7 +13,7 @@ import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 
-public class CommandMainSelect extends PlayerCommandExecutor
+public class CommandMainSelect extends CommandExecutor
 {
 
 	public CommandMainSelect(final CrazyArena plugin)
@@ -23,23 +23,23 @@ public class CommandMainSelect extends PlayerCommandExecutor
 
 	@Override
 	@Localized("CRAZYARENA.COMMAND.ARENA.SELECTED $ArenaName$")
-	public void command(final Player player, final String[] args) throws CrazyException
+	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		switch (args.length)
 		{
 			case 0:
-				Arena<?> arena = plugin.getSelections().get(player);
+				Arena<?> arena = plugin.getSelections().get(sender);
 				if (arena == null)
 					throw new CrazyCommandUsageException("<Arena>");
 				else
-					plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
+					plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", sender, arena.getName());
 				return;
 			case 1:
 				arena = plugin.getArenaByName(args[0]);
 				if (arena == null)
 					throw new CrazyCommandNoSuchException("Arena", args[0]);
-				plugin.getSelections().put(player.getName().toLowerCase(), arena);
-				plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
+				plugin.getSelections().put(sender.getName().toLowerCase(), arena);
+				plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", sender, arena.getName());
 				return;
 			default:
 				throw new CrazyCommandUsageException("[Arena]");
@@ -47,7 +47,7 @@ public class CommandMainSelect extends PlayerCommandExecutor
 	}
 
 	@Override
-	public List<String> tab(final Player player, final String[] args)
+	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		if (args.length != 1)
 			return null;
@@ -55,8 +55,8 @@ public class CommandMainSelect extends PlayerCommandExecutor
 	}
 
 	@Override
-	public boolean hasAccessPermission(final Player player)
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(player, "crazyarena.arena.modify");
+		return PermissionModule.hasPermission(sender, "crazyarena.arena.modify");
 	}
 }

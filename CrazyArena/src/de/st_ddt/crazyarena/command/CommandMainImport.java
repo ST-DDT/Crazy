@@ -33,7 +33,7 @@ public class CommandMainImport extends CommandExecutor
 		Arena<?> arena = plugin.getArenaByName(name);
 		if (arena != null)
 			throw new CrazyCommandAlreadyExistsException("Arena", name);
-		final File file = new File(Arena.arenaDataRootPath + name + File.separator + "config.yml");
+		final File file = new File(Arena.ARENADATAROOTPATH + name + File.separator + "config.yml");
 		if (!file.exists())
 			throw new CrazyCommandNoSuchException("ArenaFile", name);
 		try
@@ -51,6 +51,7 @@ public class CommandMainImport extends CommandExecutor
 		if (sender != Bukkit.getConsoleSender())
 			plugin.sendLocaleMessage("COMMAND.ARENA.LOADED", Bukkit.getConsoleSender(), arena.getName(), arena.getType());
 		arena.show(sender);
+		arena.saveToFile();
 	}
 
 	@Override

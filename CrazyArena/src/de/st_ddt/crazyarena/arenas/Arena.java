@@ -33,7 +33,7 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatHeaderProvider, ParameterData
 {
 
-	public static final String arenaDataRootPath = "plugins" + File.separator + "CrazyArena" + File.separator + "arenas" + File.separator;
+	public static final String ARENADATAROOTPATH = "plugins" + File.separator + "CrazyArena" + File.separator + "arenas" + File.separator;
 	protected final String name;
 	protected final YamlConfiguration config = new YamlConfiguration();
 	protected final String chatHeader;
@@ -43,7 +43,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 
 	public static Arena<?> loadFromFile(final String name) throws Exception
 	{
-		return loadFromFile(name, new File(arenaDataRootPath + name + File.separator + "config.yml"));
+		return loadFromFile(name, new File(ARENADATAROOTPATH + name + File.separator + "config.yml"));
 	}
 
 	public static Arena<?> loadFromFile(final String name, final File file) throws Exception
@@ -91,44 +91,52 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		typeLocale.setAlternative(defaultLocale);
 	}
 
-	public ArenaStatus getStatus()
+	public final ArenaStatus getStatus()
 	{
 		return status;
 	}
 
+	public final void setStatus(final ArenaStatus status)
+	{
+		this.status = status;
+	}
+
 	@Override
-	public String getName()
+	public final String getName()
 	{
 		return name;
 	}
 
 	@Override
-	public String getChatHeader()
+	public final String getChatHeader()
 	{
 		return chatHeader;
 	}
 
 	public abstract String getType();
 
-	public ConfigurationSection getConfig()
+	public final ConfigurationSection getConfig()
 	{
 		return config;
 	}
 
 	public final File getDataFolder()
 	{
-		return new File(arenaDataRootPath + name);
+		return new File(ARENADATAROOTPATH + name);
 	}
 
 	protected abstract void save();
 
 	public final void saveToFile()
 	{
+		config.set("name", name);
+		config.set("type", getClass().getName());
+		config.set("chatHeader", ChatHelper.decolorise(chatHeader));
 		save();
 		try
 		{
 			getDataFolder().mkdirs();
-			config.save(arenaDataRootPath + name + File.separator + "config.yml");
+			config.save(ARENADATAROOTPATH + name + File.separator + "config.yml");
 		}
 		catch (final Exception e)
 		{
@@ -214,22 +222,22 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		unregisterArenaListener();
 	}
 
-	public boolean isParticipant(final Player player)
+	public final boolean isParticipant(final Player player)
 	{
 		return isParticipant(player.getName());
 	}
 
-	public boolean isParticipant(final String name)
+	public final boolean isParticipant(final String name)
 	{
 		return participants.containsKey(name.toLowerCase());
 	}
 
-	public boolean isParticipant(final Player player, final ParticipantType type)
+	public final boolean isParticipant(final Player player, final ParticipantType type)
 	{
 		return isParticipant(player.getName(), type);
 	}
 
-	public boolean isParticipant(final String name, final ParticipantType type)
+	public final boolean isParticipant(final String name, final ParticipantType type)
 	{
 		final S participant = getParticipant(name);
 		if (participant == null)
@@ -237,7 +245,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		return participant.getParticipantType() == type;
 	}
 
-	public Collection<S> getParticipants()
+	public final Collection<S> getParticipants()
 	{
 		return participants.values();
 	}
@@ -256,7 +264,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 	 */
 	public abstract long getRejoinTime();
 
-	public Set<S> getParticipants(final ParticipantType... types)
+	public final Set<S> getParticipants(final ParticipantType... types)
 	{
 		final Set<S> participants = new HashSet<S>();
 		for (final ParticipantType type : types)
@@ -266,7 +274,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		return participants;
 	}
 
-	public Set<Player> getParticipatingPlayers()
+	public final Set<Player> getParticipatingPlayers()
 	{
 		final Set<Player> players = new HashSet<Player>();
 		for (final S participant : getParticipants())
@@ -275,7 +283,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		return players;
 	}
 
-	public Set<Player> getParticipatingPlayers(final ParticipantType... types)
+	public final Set<Player> getParticipatingPlayers(final ParticipantType... types)
 	{
 		final Set<Player> players = new HashSet<Player>();
 		for (final S participant : getParticipants(types))
@@ -284,7 +292,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		return players;
 	}
 
-	public TreeSet<String> getParticipatingPlayerNames()
+	public final TreeSet<String> getParticipatingPlayerNames()
 	{
 		final TreeSet<String> names = new TreeSet<String>();
 		for (final Player player : getParticipatingPlayers())
@@ -293,7 +301,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		return names;
 	}
 
-	public TreeSet<String> getParticipatingPlayerNames(final ParticipantType... types)
+	public final TreeSet<String> getParticipatingPlayerNames(final ParticipantType... types)
 	{
 		final TreeSet<String> names = new TreeSet<String>();
 		for (final S player : getParticipants(types))
@@ -302,17 +310,17 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		return names;
 	}
 
-	public S getParticipant(final Player player)
+	public final S getParticipant(final Player player)
 	{
 		return getParticipant(player.getName());
 	}
 
-	public S getParticipant(final String name)
+	public final S getParticipant(final String name)
 	{
 		return participants.get(name.toLowerCase());
 	}
 
-	public boolean setEnabled(final CommandSender sender, final boolean enabled)
+	public final boolean setEnabled(final CommandSender sender, final boolean enabled)
 	{
 		if (enabled)
 		{
@@ -390,7 +398,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 
 	public abstract CrazyCommandExecutorInterface getCommandExecutor();
 
-	public CrazyLocale getLocale()
+	public final CrazyLocale getLocale()
 	{
 		return locale;
 	}

@@ -3,7 +3,7 @@ package de.st_ddt.crazyarena.command;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
@@ -17,7 +17,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public class CommandMainCreate extends PlayerCommandExecutor
+public class CommandMainCreate extends CommandExecutor
 {
 
 	public CommandMainCreate(final CrazyArena plugin)
@@ -27,7 +27,7 @@ public class CommandMainCreate extends PlayerCommandExecutor
 
 	@Override
 	@Localized({ "CRAZYARENA.COMMAND.ARENA.CREATED $Name$ $Type$", "CRAZYARENA.COMMAND.ARENA.SELECTED $Name$" })
-	public void command(final Player player, final String[] args) throws CrazyException
+	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length != 2)
 			throw new CrazyCommandUsageException("<Name> <ArenaClass/Type>");
@@ -67,14 +67,15 @@ public class CommandMainCreate extends PlayerCommandExecutor
 		plugin.getArenas().add(arena);
 		plugin.getArenasByName().put(name.toLowerCase(), arena);
 		plugin.getArenasByType().get(arena.getType().toLowerCase()).add(arena);
-		plugin.sendLocaleMessage("COMMAND.ARENA.CREATED", player, arena.getName(), arena.getType());
+		plugin.sendLocaleMessage("COMMAND.ARENA.CREATED", sender, arena.getName(), arena.getType());
 		new CrazyArenaArenaCreateEvent(arena, false).callEvent();
-		plugin.getSelections().put(player.getName().toLowerCase(), arena);
-		plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", player, arena.getName());
+		plugin.getSelections().put(sender.getName().toLowerCase(), arena);
+		plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", sender, arena.getName());
+		arena.saveToFile();
 	}
 
 	@Override
-	public List<String> tab(final Player player, final String[] args)
+	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		if (args.length != 2)
 			return null;
@@ -87,8 +88,8 @@ public class CommandMainCreate extends PlayerCommandExecutor
 	}
 
 	@Override
-	public boolean hasAccessPermission(final Player player)
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(player, "crazyarena.arena.create");
+		return PermissionModule.hasPermission(sender, "crazyarena.arena.create");
 	}
 }

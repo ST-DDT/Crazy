@@ -24,6 +24,7 @@ import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.command.CommandMainCreate;
 import de.st_ddt.crazyarena.command.CommandMainDelete;
 import de.st_ddt.crazyarena.command.CommandMainDisable;
+import de.st_ddt.crazyarena.command.CommandMainEdit;
 import de.st_ddt.crazyarena.command.CommandMainEnable;
 import de.st_ddt.crazyarena.command.CommandMainForceReady;
 import de.st_ddt.crazyarena.command.CommandMainForceStop;
@@ -264,6 +265,7 @@ public class CrazyArena extends CrazyPlugin
 		mainCommand.addSubCommand(new CommandMainImport(this), "import");
 		mainCommand.addSubCommand(new CommandMainSelect(this), "select");
 		mainCommand.addSubCommand(new CommandMainEnable(this), "enable");
+		mainCommand.addSubCommand(new CommandMainEdit(this), "edit");
 		mainCommand.addSubCommand(new CommandMainForceReady(this), "forceready");
 		mainCommand.addSubCommand(new CommandMainKick(this), "kick");
 		mainCommand.addSubCommand(new CommandMainForceStop(this), "forcestop");
