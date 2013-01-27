@@ -43,6 +43,4 @@ public class PrismRoom extends FuncRoom
 		else
 			return "Prism {Region: " + region.toString() + "; Height: " + height + "}";
 	}
-	
-	
 }

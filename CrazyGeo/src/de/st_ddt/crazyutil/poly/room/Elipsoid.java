@@ -43,7 +43,7 @@ public class Elipsoid extends FuncRoom
 	{
 		return new Elipsoid(((CircleRegion) region).clone(), height);
 	}
-	
+
 	@Override
 	public String toString()
 	{
