@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import de.st_ddt.crazyarena.CrazyArena;
+import de.st_ddt.crazyarena.CrazyArenaRace;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.arenas.ArenaStatus;
 import de.st_ddt.crazyarena.commands.race.CommandPlayerSpawns;
@@ -33,6 +34,7 @@ import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class RaceArena extends Arena<RaceParticipant>
 {
@@ -48,6 +50,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	private int winners = 0;
 	private final Date startTime = new Date(0);
 	private final int minParticipants = 2;
+	private final long kickSlowPlayers = 30;
 
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
@@ -235,12 +238,26 @@ public class RaceArena extends Arena<RaceParticipant>
 		return 30000;
 	}
 
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$" })
 	public void reachFinish(final RaceParticipant raceParticipant)
 	{
 		final int position = winners++;
-		raceParticipant.setParticipantType(ParticipantType.SPECTATOR);
+		raceParticipant.setParticipantType(ParticipantType.WINNER);
 		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
-		// EDIT queue kick task for to slow players
+		Bukkit.getScheduler().scheduleSyncDelayedTask(getArenaPlugin(), new Runnable()
+		{
+
+			@Override
+			public void run()
+			{
+				for (final RaceParticipant participant : getParticipants(ParticipantType.PARTICIPANT))
+				{
+					participant.setParticipantType(ParticipantType.DEFEADED);
+					broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.TOOSLOW", raceParticipant.getName());
+				}
+				stop();
+			}
+		}, kickSlowPlayers * 20);
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 			stop();
 	}
@@ -277,6 +294,12 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 		quitLocation.clear();
 		super.stop();
+	}
+
+	@Override
+	public CrazyArenaRace getArenaPlugin()
+	{
+		return CrazyArenaRace.getPlugin();
 	}
 
 	@Override
