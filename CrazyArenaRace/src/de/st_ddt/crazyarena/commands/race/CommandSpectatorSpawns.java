@@ -15,12 +15,12 @@ import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
 
-public class CommandPlayerSpawns extends CrazyCommandListEditor<RaceArena, Location>
+public class CommandSpectatorSpawns extends CrazyCommandListEditor<RaceArena, Location>
 {
 
 	private final ListFormat listFormat;
 
-	public CommandPlayerSpawns(final RaceArena arena)
+	public CommandSpectatorSpawns(final RaceArena arena)
 	{
 		super(arena);
 		listFormat = new ListFormat()
@@ -35,7 +35,7 @@ public class CommandPlayerSpawns extends CrazyCommandListEditor<RaceArena, Locat
 			@Override
 			public String headFormat(final CommandSender target)
 			{
-				return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYARENARACE.COMMAND.PLAYER.LISTHEAD");
+				return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYARENARACE.COMMAND.SPECTATOR.LISTHEAD");
 			}
 
 			@Override
@@ -58,21 +58,21 @@ public class CommandPlayerSpawns extends CrazyCommandListEditor<RaceArena, Locat
 	@Override
 	protected List<Location> getCollection()
 	{
-		return plugin.getPlayerSpawns();
+		return plugin.getSpectatorSpawns();
 	}
 
 	@Override
-	@Localized("CRAZYARENARACE.COMMAND.PLAYER.ADDINDEXED $Element$ $Index$")
+	@Localized("CRAZYARENARACE.COMMAND.SPECTATOR.ADDINDEXED $Element$ $Index$")
 	protected String addViaIndexLocale()
 	{
-		return "CRAZYARENARACE.COMMAND.PLAYER.ADDINDEXED";
+		return "CRAZYARENARACE.COMMAND.SPECTATOR.ADDINDEXED";
 	}
 
 	@Override
-	@Localized("CRAZYARENARACE.COMMAND.PLAYER.REMOVEINDEXED $Element$ $Index$")
+	@Localized("CRAZYARENARACE.COMMAND.SPECTATOR.REMOVEINDEXED $Element$ $Index$")
 	protected String removeViaIndexLocale()
 	{
-		return "CRAZYARENARACE.COMMAND.PLAYER.REMOVEINDEXED";
+		return "CRAZYARENARACE.COMMAND.SPECTATOR.REMOVEINDEXED";
 	}
 
 	@Override
@@ -88,17 +88,17 @@ public class CommandPlayerSpawns extends CrazyCommandListEditor<RaceArena, Locat
 	}
 
 	@Override
-	@Localized("CRAZYARENARACE.COMMAND.PLAYER.ADDED $Element$")
+	@Localized("CRAZYARENARACE.COMMAND.SPECTATOR.ADDED $Element$")
 	protected String addLocale()
 	{
-		return "CRAZYARENARACE.COMMAND.PLAYER.ADDED";
+		return "CRAZYARENARACE.COMMAND.SPECTATOR.ADDED";
 	}
 
 	@Override
-	@Localized("CRAZYARENARACE.COMMAND.PLAYER.REMOVED $Element$")
+	@Localized("CRAZYARENARACE.COMMAND.SPECTATOR.REMOVED $Element$")
 	protected String removeLocale()
 	{
-		return "CRAZYARENARACE.COMMAND.PLAYER.REMOVED";
+		return "CRAZYARENARACE.COMMAND.SPECTATOR.REMOVED";
 	}
 
 	@Override

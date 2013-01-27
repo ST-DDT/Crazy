@@ -5,20 +5,23 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.arenas.race.RaceArena;
-import de.st_ddt.crazyarena.arenas.race.RaceTarget;
+import de.st_ddt.crazyarena.arenas.race.RaceStage;
 import de.st_ddt.crazyarena.participants.Participant;
+import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 {
 
 	protected final Location start;
-	protected RaceTarget target;
+	protected RaceStage stage;
 
-	public RaceParticipant(final Player player, final RaceArena arena, final Location start, final RaceTarget target)
+	public RaceParticipant(final Player player, final RaceArena arena, final Location start, final RaceStage target)
 	{
 		super(player, arena);
 		this.start = start;
-		this.target = target;
+		this.stage = target;
 	}
 
 	public Location getStart()
@@ -26,27 +29,30 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 		return start;
 	}
 
-	public RaceTarget getTarget()
+	public RaceStage getStage()
 	{
-		return target;
+		return stage;
 	}
 
-	public void setTarget(final RaceTarget target)
+	public void setStage(final RaceStage stage)
 	{
-		this.target = target;
+		this.stage = stage;
 	}
 
-	public void reachTarget()
+	public void reachStage()
 	{
-		target = target.getNext();
-		if (target == null)
+		stage = stage.getNext();
+		if (stage == null)
 			arena.reachFinish(this);
 	}
 
 	@Override
+	@Localized({ "CRAZYARENA.PLAYERINFO.ARENA.NAME $Name$ $Type$", "CRAZYARENA.PLAYERINFO.ARENA.NAME $Type$", "CRAZYARENA.PARTICIPANT.ARENA.NAME $Type$" })
 	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
-		// EDIT Auto-generated method stub
+		super.showDetailed(target, chatHeader);
+		final CrazyLocale mainLocale = arena.getLocale().getSecureLanguageEntry("PLAYERINFO");
+		ChatHelper.sendMessage(target, chatHeader, mainLocale.getLanguageEntry("STAGE"), stage.toShortString());
 	}
 
 	@Override
@@ -61,7 +67,7 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 			case 2:
 				return participantType.toString();
 			case 3:
-				return target.getName();
+				return stage.getName();
 			case 4:
 				return "target.location";
 			default:

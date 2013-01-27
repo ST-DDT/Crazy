@@ -3,6 +3,7 @@ package de.st_ddt.crazyarena.arenas.race;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,23 +30,16 @@ import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.ChatConverter;
-import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class RaceArena extends Arena<RaceParticipant>
 {
 
-	protected final List<Location> starts = new ArrayList<Location>();
+	protected final List<Location> playerSpawns = new ArrayList<Location>();
 	protected final SpawnList spectatorSpawns = new SpawnList();
 	protected final Map<String, Location> quitLocation = new HashMap<String, Location>();
-	protected List<RaceTarget> targets = new ArrayList<RaceTarget>();
+	protected final List<RaceStage> targets = new ArrayList<RaceStage>();
 	protected final CrazyCommandTreeExecutor<RaceArena> mainCommand;
 	private int runnumber = 0;
 	// Match Variables
@@ -58,26 +52,29 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 		super(name, config);
 		mainCommand = new CrazyCommandTreeExecutor<RaceArena>(this);
-		final ConfigurationSection startConfig = config.getConfigurationSection("starts");
-		if (startConfig != null)
-			for (final String key : startConfig.getKeys(false))
-				starts.add(ObjectSaveLoadHelper.loadLocation(startConfig.getConfigurationSection(key), null));
+		// Player Spawns
+		final ConfigurationSection playerConfig = config.getConfigurationSection("players");
+		if (playerConfig != null)
+			for (final String key : playerConfig.getKeys(false))
+				playerSpawns.add(ObjectSaveLoadHelper.loadLocation(playerConfig.getConfigurationSection(key), null));
+		// Spectator Spawns
+		final ConfigurationSection spectatorConfig = config.getConfigurationSection("spectators");
+		if (spectatorConfig != null)
+			for (final String key : spectatorConfig.getKeys(false))
+				spectatorSpawns.add(ObjectSaveLoadHelper.loadLocation(spectatorConfig.getConfigurationSection(key), null));
+		// Race Targets
 		final ConfigurationSection targetConfig = config.getConfigurationSection("targets");
 		if (targetConfig != null)
 		{
-			RaceTarget previous = null;
+			RaceStage previous = null;
 			for (final String key : targetConfig.getKeys(false))
 			{
-				final RaceTarget temp = new RaceTarget(this, targetConfig.getConfigurationSection(key));
+				final RaceStage temp = new RaceStage(this, targetConfig.getConfigurationSection(key));
 				if (previous != null)
 					previous.setNext(temp);
 				previous = temp;
 			}
 		}
-		final ConfigurationSection spectatorConfig = config.getConfigurationSection("spectators");
-		if (spectatorConfig != null)
-			for (final String key : spectatorConfig.getKeys(false))
-				spectatorSpawns.add(ObjectSaveLoadHelper.loadLocation(spectatorConfig.getConfigurationSection(key), null));
 		registerCommands();
 	}
 
@@ -90,7 +87,8 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	private void registerCommands()
 	{
-		mainCommand.addSubCommand(new CommandPlayerSpawns(this), "playerspawns", "ps");
+		mainCommand.addSubCommand(new CommandPlayerSpawns(this), "ps", "players", "playerspawns");
+		mainCommand.addSubCommand(new CommandPlayerSpawns(this), "ss", "spectators", "spectatorspawns");
 	}
 
 	@Override
@@ -102,22 +100,6 @@ public class RaceArena extends Arena<RaceParticipant>
 	public boolean command(final CommandSender sender, final String commandLabel, final String[] args) throws CrazyException
 	{
 		// EDIT OUTSOURCEN!
-		if (commandLabel.startsWith("p"))
-			if (commandLabel.equals("p") || commandLabel.equals("player") || commandLabel.equals("players"))
-			{
-				if (status != ArenaStatus.CONSTRUCTING)
-					throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
-				commandPlayerSpawns(sender, args);
-				return true;
-			}
-		if (commandLabel.startsWith("s"))
-			if (commandLabel.equals("s") || commandLabel.equals("spectator") || commandLabel.equals("spectators"))
-			{
-				if (status != ArenaStatus.CONSTRUCTING)
-					throw new CrazyCommandCircumstanceException("when in edit mode", status.toString());
-				commandSpectatorSpawns(sender, args);
-				return true;
-			}
 		if (commandLabel.startsWith("t"))
 			if (commandLabel.equals("t") || commandLabel.equals("target") || commandLabel.equals("targets"))
 			{
@@ -126,226 +108,7 @@ public class RaceArena extends Arena<RaceParticipant>
 				// Targets
 				return true;
 			}
-		if (commandLabel.equals("options") || commandLabel.equals("mode"))
-		{
-			if (status.isActive())
-				throw new CrazyCommandCircumstanceException("while arena is idle", status.toString());
-			// Options (minParticipants)
-			return true;
-		}
 		return false;
-	}
-
-	private void commandPlayerSpawns(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		if (!hasPermission(sender, "playerspawns"))
-			throw new CrazyCommandPermissionException();
-		if (args.length == 0)
-		{
-			commandPlayerSpawnsList(sender, args);
-			return;
-		}
-		final String commandLabel = args[0].toLowerCase();
-		final String[] newArgs = ChatHelperExtended.shiftArray(args, 1);
-		try
-		{
-			if (commandLabel.equals("add"))
-			{
-				commandPlayerSpawnsAdd(sender, newArgs);
-				return;
-			}
-			else if (commandLabel.equals("insert"))
-			{
-				commandPlayerSpawnsInsert(sender, newArgs);
-				return;
-			}
-			else if (commandLabel.equals("del") || commandLabel.equals("delete") || commandLabel.equals("rem") || commandLabel.equals("remove"))
-			{
-				commandPlayerSpawnsRemove(sender, newArgs);
-				return;
-			}
-			else if (commandLabel.equals("list"))
-			{
-				commandPlayerSpawnsList(sender, newArgs);
-				return;
-			}
-		}
-		catch (final CrazyCommandException e)
-		{
-			e.shiftCommandIndex();
-			throw e;
-		}
-		throw new CrazyCommandUsageException("/crazyarena player add [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena player insert <Index> [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena player del(ete)/rem(ove) <Index>", "/crazyarena player [list]");
-	}
-
-	private void commandPlayerSpawnsAdd(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		starts.add(ChatConverter.stringToLocation(sender, args));
-		saveToFile();
-		sendLocaleMessage("PLAYERSPAWNS.ADDED", sender, starts.size());
-	}
-
-	private void commandPlayerSpawnsInsert(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		if (args.length == 0)
-			throw new CrazyCommandUsageException("/crazyarena player insert <Index> [[World] [[X] [Y] [Z]]]");
-		try
-		{
-			final int pos = Integer.parseInt(args[0]);
-			starts.add(pos, ChatConverter.stringToLocation(sender, ChatHelperExtended.shiftArray(args, 1)));
-			saveToFile();
-			sendLocaleMessage("PLAYERSPAWNS.ADDED", sender, pos);
-		}
-		catch (final CrazyCommandException e)
-		{
-			e.shiftCommandIndex();
-			throw e;
-		}
-		catch (final NumberFormatException e)
-		{
-			throw new CrazyCommandParameterException(0, "Number (Integer)");
-		}
-		catch (final IndexOutOfBoundsException e)
-		{
-			throw new CrazyCommandErrorException(e);
-		}
-	}
-
-	private void commandPlayerSpawnsRemove(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		try
-		{
-			final int pos = Integer.parseInt(args[0]);
-			starts.remove(pos);
-			saveToFile();
-			sendLocaleMessage("PLAYERSPAWNS.REMOVED", sender, pos);
-		}
-		catch (final NumberFormatException e)
-		{
-			throw new CrazyCommandParameterException(0, "Number (Integer)");
-		}
-		catch (final IndexOutOfBoundsException e)
-		{
-			throw new CrazyCommandErrorException(e);
-		}
-	}
-
-	private void commandPlayerSpawnsList(final CommandSender sender, final String[] args)
-	{
-		final int length = starts.size();
-		sendLocaleMessage("PLAYERSPAWNS.LIST.HEAD", sender, name);
-		sendLocaleMessage("PLAYERSPAWNS.LIST.SEPERATOR", sender);
-		for (int i = 0; i < length; i++)
-		{
-			final Location start = starts.get(i);
-			sendLocaleMessage("PLAYERSPAWNS.LIST.ENTRY", sender, i + 1, start.getWorld(), start.getX(), start.getY(), start.getZ(), start.getYaw(), start.getPitch());
-		}
-	}
-
-	private void commandSpectatorSpawns(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		if (!hasPermission(sender, "spectatorspawns"))
-			throw new CrazyCommandPermissionException();
-		if (args.length == 0)
-		{
-			commandSpectatorSpawnsList(sender, args);
-			return;
-		}
-		final String commandLabel = args[0].toLowerCase();
-		final String[] newArgs = ChatHelperExtended.shiftArray(args, 1);
-		try
-		{
-			if (commandLabel.equals("add"))
-			{
-				commandSpectatorSpawnsAdd(sender, newArgs);
-				return;
-			}
-			else if (commandLabel.equals("insert"))
-			{
-				commandSpectatorSpawnsInsert(sender, newArgs);
-				return;
-			}
-			else if (commandLabel.equals("del") || commandLabel.equals("delete") || commandLabel.equals("rem") || commandLabel.equals("remove"))
-			{
-				commandSpectatorSpawnsRemove(sender, newArgs);
-				return;
-			}
-			else if (commandLabel.equals("list"))
-			{
-				commandSpectatorSpawnsList(sender, newArgs);
-				return;
-			}
-		}
-		catch (final CrazyCommandException e)
-		{
-			e.shiftCommandIndex();
-			throw e;
-		}
-		throw new CrazyCommandUsageException("/crazyarena spectator add [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena spectator insert <Index> [[World] <X> <Y> <Z> [<Yaw> <Pitch>]]", "/crazyarena spectator del(ete)/rem(ove) <Index>", "/crazyarena spectator [list]");
-	}
-
-	private void commandSpectatorSpawnsAdd(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		spectatorSpawns.add(ChatConverter.stringToLocation(sender, args));
-		saveToFile();
-		sendLocaleMessage("SPECTATORSPAWNS.ADDED", sender, spectatorSpawns.size());
-	}
-
-	private void commandSpectatorSpawnsInsert(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		if (args.length == 0)
-			throw new CrazyCommandUsageException("/crazyarena spectator insert <Index> [[World] [[X] [Y] [Z]]]");
-		try
-		{
-			final int pos = Integer.parseInt(args[0]);
-			spectatorSpawns.add(pos, ChatConverter.stringToLocation(sender, ChatHelperExtended.shiftArray(args, 1)));
-			saveToFile();
-			sendLocaleMessage("SPECTATORSPAWNS.ADDED", sender, pos);
-		}
-		catch (final CrazyCommandException e)
-		{
-			e.shiftCommandIndex();
-			throw e;
-		}
-		catch (final NumberFormatException e)
-		{
-			throw new CrazyCommandParameterException(0, "Number (Integer)");
-		}
-		catch (final IndexOutOfBoundsException e)
-		{
-			throw new CrazyCommandErrorException(e);
-		}
-	}
-
-	private void commandSpectatorSpawnsRemove(final CommandSender sender, final String[] args) throws CrazyException
-	{
-		try
-		{
-			final int pos = Integer.parseInt(args[0]);
-			spectatorSpawns.remove(pos);
-			saveToFile();
-			sendLocaleMessage("SPECTATORSPAWNS.REMOVED", sender, pos);
-		}
-		catch (final NumberFormatException e)
-		{
-			throw new CrazyCommandParameterException(0, "Number (Integer)");
-		}
-		catch (final IndexOutOfBoundsException e)
-		{
-			throw new CrazyCommandErrorException(e);
-		}
-	}
-
-	private void commandSpectatorSpawnsList(final CommandSender sender, final String[] args)
-	{
-		final int length = spectatorSpawns.size();
-		sendLocaleMessage("SPECTATORSPAWNS.LIST.HEAD", sender, name);
-		sendLocaleMessage("SPECTATORSPAWNS.LIST.SEPERATOR", sender);
-		for (int i = 0; i < length; i++)
-		{
-			final Location spawn = spectatorSpawns.get(i);
-			sendLocaleMessage("SPECTATORSPAWNS.LIST.ENTRY", sender, i + 1, spawn.getWorld(), spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getYaw(), spawn.getPitch());
-		}
 	}
 
 	@Override
@@ -360,25 +123,25 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Override
-	public void save()
+	protected void save()
 	{
-		config.set("starts", null);
+		config.set("players", null);
 		int i = 0;
-		for (final Location location : starts)
-			ObjectSaveLoadHelper.saveLocation(config, "starts.start" + (i++) + ".", location, true, true);
-		config.set("targets", null);
-		i = 0;
-		for (final RaceTarget target : targets)
-			target.save(config, "targets.target" + (i++) + ".");
+		for (final Location location : playerSpawns)
+			ObjectSaveLoadHelper.saveLocation(config, "players.spawn" + (i++) + ".", location, true, true);
 		config.set("spectators", null);
 		i = 0;
-		for (final RaceTarget target : targets)
-			target.save(config, "spectators.spectators" + (i++) + ".");
+		for (final Location location : spectatorSpawns)
+			ObjectSaveLoadHelper.saveLocation(config, "spectators.spawn" + (i++) + ".", location, true, true);
+		config.set("targets", null);
+		i = 0;
+		for (final RaceStage target : targets)
+			target.save(config, "targets.target" + (i++) + ".");
 	}
 
 	public Location getEmptyStartLocation()
 	{
-		final ArrayList<Location> locations = new ArrayList<Location>(starts);
+		final List<Location> locations = new LinkedList<Location>(playerSpawns);
 		for (final RaceParticipant participant : getParticipants())
 			if (participant.isPlayer())
 				locations.remove(participant.getStart());
@@ -394,12 +157,10 @@ public class RaceArena extends Arena<RaceParticipant>
 		final Location location = getEmptyStartLocation();
 		if (participant == null)
 			if (location == null)
-				throw new CrazyArenaExceedingParticipantsLimitException(this, starts.size());
+				throw new CrazyArenaExceedingParticipantsLimitException(this, playerSpawns.size());
 			else
-			{
 				participant = new RaceParticipant(player, this, location, targets.get(0));
-				participant.setTarget(targets.get(0));
-			}
+		// participant.setStage(targets.get(0));
 		if (rejoin && status == ArenaStatus.PLAYING)
 			participant.setParticipantType(ParticipantType.PARTICIPANT);
 		else
@@ -533,11 +294,21 @@ public class RaceArena extends Arena<RaceParticipant>
 	@Override
 	public CrazyCommandExecutorInterface getCommandExecutor()
 	{
-		return null;
+		return mainCommand;
 	}
 
-	public List<Location> getStarts()
+	public List<Location> getPlayerSpawns()
 	{
-		return starts;
+		return playerSpawns;
+	}
+
+	public SpawnList getSpectatorSpawns()
+	{
+		return spectatorSpawns;
+	}
+
+	public List<RaceStage> getTargets()
+	{
+		return targets;
 	}
 }

@@ -22,39 +22,36 @@ import de.st_ddt.crazyutil.poly.room.FuncRoom;
 import de.st_ddt.crazyutil.poly.room.Room;
 import de.st_ddt.crazyutil.poly.room.Sphere;
 
-public class RaceTarget implements Named, ConfigurationSaveable
+public class RaceStage implements Named, ConfigurationSaveable
 {
 
 	protected final RaceArena arena;
 	protected String name;
-	protected RealRoom<? extends Room> goal;
-	protected RaceTarget next;
+	protected RealRoom<? extends Room> zone;
+	protected RaceStage next;
 
-	public RaceTarget(final RaceArena arena, final String name, final Location center, final double radius, final RaceTarget next)
+	public RaceStage(final RaceArena arena, final String name, final Location center, final double radius, final RaceStage next)
+	{
+		this(arena, name, new RealRoom<Room>(new Sphere(radius), center));
+	}
+
+	public RaceStage(final RaceArena arena, final ConfigurationSection config)
+	{
+		this(arena, config.getString("name"), RealRoom.load(config.getConfigurationSection("goal"), null));
+	}
+
+	public RaceStage(final RaceArena arena, final String name, final RealRoom<?> zone)
+	{
+		this(arena, name, zone, null);
+	}
+
+	public RaceStage(final RaceArena arena, final String name, final RealRoom<?> zone, final RaceStage next)
 	{
 		super();
 		this.arena = arena;
 		this.name = name;
-		this.goal = new RealRoom<Room>(new Sphere(radius), center);
+		this.zone = zone;
 		this.next = next;
-	}
-
-	public RaceTarget(final RaceArena arena, final String name, final RealRoom<Room> goal, final RaceTarget next)
-	{
-		super();
-		this.arena = arena;
-		this.name = name;
-		this.goal = goal;
-		this.next = next;
-	}
-
-	public RaceTarget(final RaceArena arena, final ConfigurationSection config)
-	{
-		super();
-		this.arena = arena;
-		this.name = config.getString("name");
-		this.goal = RealRoom.load(config.getConfigurationSection("goal"), null);
-		this.next = null;
 	}
 
 	@Override
@@ -68,34 +65,39 @@ public class RaceTarget implements Named, ConfigurationSaveable
 		this.name = name;
 	}
 
-	public RealRoom<? extends Room> getGoal()
+	public RealRoom<? extends Room> getZone()
 	{
-		return goal;
+		return zone;
 	}
 
-	public void setGoal(final RealRoom<Room> goal)
+	public void setZone(final RealRoom<Room> zone)
 	{
-		this.goal = goal;
+		this.zone = zone;
 	}
 
 	public boolean isInside(final Entity entity)
 	{
-		return goal.isInside(entity);
+		return zone.isInside(entity);
 	}
 
 	public boolean isInside(final Location location)
 	{
-		return goal.isInside(location);
+		return zone.isInside(location);
 	}
 
-	public RaceTarget getNext()
+	public RaceStage getNext()
 	{
 		return next;
 	}
 
-	public void setNext(final RaceTarget next)
+	public void setNext(final RaceStage next)
 	{
 		this.next = next;
+	}
+
+	public boolean isGoal()
+	{
+		return next == null;
 	}
 
 	public boolean command(final Player player, final String commandLabel, final String[] args) throws CrazyException
@@ -144,19 +146,19 @@ public class RaceTarget implements Named, ConfigurationSaveable
 		switch (args.length)
 		{
 			case 0:
-				arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, goal.getBasis().getWorld().getName(), goal.getBasis().getX(), goal.getBasis().getY(), goal.getBasis().getZ());
+				arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, zone.getBasis().getWorld().getName(), zone.getBasis().getX(), zone.getBasis().getY(), zone.getBasis().getZ());
 				return;
 			case 1:
 				final String parameter = args[0].toLowerCase();
 				if (parameter.equals("set") || parameter.equals("here"))
 				{
-					goal.setBasis(player.getLocation());
-					arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, goal.getBasis().getWorld().getName(), goal.getBasis().getX(), goal.getBasis().getY(), goal.getBasis().getZ());
+					zone.setBasis(player.getLocation());
+					arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, zone.getBasis().getWorld().getName(), zone.getBasis().getX(), zone.getBasis().getY(), zone.getBasis().getZ());
 					return;
 				}
 				else if (parameter.equals("tp"))
 				{
-					player.teleport(goal.getBasis(), TeleportCause.COMMAND);
+					player.teleport(zone.getBasis(), TeleportCause.COMMAND);
 					return;
 				}
 				else
@@ -190,8 +192,8 @@ public class RaceTarget implements Named, ConfigurationSaveable
 				{
 					throw new CrazyCommandParameterException(2, "Integer/Double");
 				}
-				goal.setBasis(new Location(world, x, y, z));
-				arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, goal.getBasis().getWorld().getName(), goal.getBasis().getX(), goal.getBasis().getY(), goal.getBasis().getZ());
+				zone.setBasis(new Location(world, x, y, z));
+				arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, zone.getBasis().getWorld().getName(), zone.getBasis().getX(), zone.getBasis().getY(), zone.getBasis().getZ());
 				return;
 			case 4:
 				try
@@ -221,8 +223,8 @@ public class RaceTarget implements Named, ConfigurationSaveable
 				world = Bukkit.getWorld(args[0]);
 				if (world == null)
 					throw new CrazyCommandNoSuchException("World", args[0], player.getWorld().getName());
-				goal.setBasis(new Location(world, x, y, z));
-				arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, goal.getBasis().getWorld().getName(), goal.getBasis().getX(), goal.getBasis().getY(), goal.getBasis().getZ());
+				zone.setBasis(new Location(world, x, y, z));
+				arena.sendLocaleMessage("RACETARGET.COMMAND.CENTER", player, zone.getBasis().getWorld().getName(), zone.getBasis().getX(), zone.getBasis().getY(), zone.getBasis().getZ());
 				return;
 		}
 		throw new CrazyCommandUsageException("/crazyarena targets " + name + " center [set/here/tp]", "/crazyarena targets " + name + " center [World] <X> <Y> <Z>");
@@ -233,8 +235,8 @@ public class RaceTarget implements Named, ConfigurationSaveable
 		switch (args.length)
 		{
 			case 0:
-				if (goal.getRoom() instanceof Sphere)
-					arena.sendLocaleMessage("RACETARGET.COMMAND.RADIUS", player, ((Sphere) goal.getRoom()).getRadius());
+				if (zone.getRoom() instanceof Sphere)
+					arena.sendLocaleMessage("RACETARGET.COMMAND.RADIUS", player, ((Sphere) zone.getRoom()).getRadius());
 				else
 					arena.sendLocaleMessage("RACETARGET.COMMAND.RADIUS", player, "UNKNOWN");
 				return;
@@ -248,8 +250,8 @@ public class RaceTarget implements Named, ConfigurationSaveable
 				{
 					throw new CrazyCommandParameterException(0, "Integer/Double");
 				}
-				goal = new RealRoom<Sphere>(new Sphere(radius), goal.getBasis());
-				arena.sendLocaleMessage("RACETARGET.COMMAND.RADIUS", player, ((Sphere) goal.getRoom()).getRadius());
+				zone = new RealRoom<Sphere>(new Sphere(radius), zone.getBasis());
+				arena.sendLocaleMessage("RACETARGET.COMMAND.RADIUS", player, ((Sphere) zone.getRoom()).getRadius());
 				return;
 		}
 		throw new CrazyCommandUsageException("/crazyarena targets " + name + " radius [Radius]");
@@ -263,15 +265,15 @@ public class RaceTarget implements Named, ConfigurationSaveable
 		final CrazyGeo geo = CrazyGeo.getPlugin();
 		if (parameter.equals("get"))
 		{
-			if (goal == null)
+			if (zone == null)
 				throw new CrazyCommandCircumstanceException("when a goal is set");
-			geo.setPlayerSelection(player, goal);
+			geo.setPlayerSelection(player, zone);
 		}
 		else if (parameter.equals("gettowe"))
 		{
-			if (goal == null)
+			if (zone == null)
 				throw new CrazyCommandCircumstanceException("when a goal is set");
-			geo.directExportWE(player, goal);
+			geo.directExportWE(player, zone);
 		}
 		else if (parameter.equals("set"))
 		{
@@ -279,7 +281,7 @@ public class RaceTarget implements Named, ConfigurationSaveable
 			if (sel == null)
 				throw new CrazyCommandCircumstanceException("when a region is set");
 			else
-				goal = sel;
+				zone = sel;
 		}
 		else if (parameter.equals("setfromwe"))
 		{
@@ -287,7 +289,7 @@ public class RaceTarget implements Named, ConfigurationSaveable
 			if (sel == null)
 				throw new CrazyCommandCircumstanceException("when a region is set");
 			else
-				goal = sel;
+				zone = sel;
 		}
 	}
 
@@ -295,6 +297,28 @@ public class RaceTarget implements Named, ConfigurationSaveable
 	public void save(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "name", name);
-		goal.save(config, path + "goal.", true);
+		zone.save(config, path + "zone.", true);
+	}
+
+	@Override
+	public String toString()
+	{
+		if (isGoal())
+			return toShortString() + " {Zone: " + zone.toString() + "}";
+		else
+			return toShortString() + " {Zone: " + zone.toString() + "; Next: " + next.toShortString() + "}";
+	}
+
+	public String toShortString()
+	{
+		if (name == null)
+			if (isGoal())
+				return "RaceGoal";
+			else
+				return "RaceStage";
+		else if (isGoal())
+			return name + " (Goal)";
+		else
+			return name + " (Stage)";
 	}
 }

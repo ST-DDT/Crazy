@@ -38,8 +38,8 @@ public class CrazyRaceArenaPlayerListener implements Listener
 			player.teleport(participant.getStart(), TeleportCause.PLUGIN);
 		}
 		else if (arena.getStatus() == ArenaStatus.PLAYING)
-			if (participant.getTarget().isInside(player))
-				participant.reachTarget();
+			if (participant.getStage().isInside(player))
+				participant.reachStage();
 	}
 
 	@EventHandler
@@ -60,7 +60,7 @@ public class CrazyRaceArenaPlayerListener implements Listener
 			vehicle.teleport(participant.getStart(), TeleportCause.PLUGIN);
 		}
 		else if (arena.getStatus() == ArenaStatus.PLAYING)
-			if (participant.getTarget().isInside(player))
-				participant.reachTarget();
+			if (participant.getStage().isInside(player))
+				participant.reachStage();
 	}
 }
