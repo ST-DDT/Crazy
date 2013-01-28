@@ -25,7 +25,7 @@ public class RaceStage implements Named, ConfigurationSaveable
 
 	public RaceStage(final RaceArena arena, final ConfigurationSection config)
 	{
-		this(arena, config.getString("name"), RealRoom.load(config.getConfigurationSection("goal"), null));
+		this(arena, config.getString("name"), RealRoom.load(config.getConfigurationSection("zone"), null));
 	}
 
 	public RaceStage(final RaceArena arena, final String name, final RealRoom<?> zone)

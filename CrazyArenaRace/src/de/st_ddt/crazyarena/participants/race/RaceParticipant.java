@@ -47,7 +47,7 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 	}
 
 	@Override
-	@Localized({ "CRAZYARENA.PLAYERINFO.ARENA.NAME $Name$ $Type$", "CRAZYARENA.PLAYERINFO.ARENA.NAME $Type$", "CRAZYARENA.PARTICIPANT.ARENA.NAME $Type$" })
+	@Localized("CRAZYARENA.ARENA_RACE.PLAYERINFO.STAGE $Stage$")
 	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		super.showDetailed(target, chatHeader);

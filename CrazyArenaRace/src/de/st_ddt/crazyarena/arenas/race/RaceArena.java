@@ -67,13 +67,13 @@ public class RaceArena extends Arena<RaceParticipant>
 			for (final String key : spectatorConfig.getKeys(false))
 				spectatorSpawns.add(ObjectSaveLoadHelper.loadLocation(spectatorConfig.getConfigurationSection(key), null));
 		// Race Stages
-		final ConfigurationSection targetConfig = config.getConfigurationSection("stages");
-		if (targetConfig != null)
+		final ConfigurationSection stagesConfig = config.getConfigurationSection("stages");
+		if (stagesConfig != null)
 		{
 			RaceStage previous = null;
-			for (final String key : targetConfig.getKeys(false))
+			for (final String key : stagesConfig.getKeys(false))
 			{
-				final RaceStage temp = new RaceStage(this, targetConfig.getConfigurationSection(key));
+				final RaceStage temp = new RaceStage(this, stagesConfig.getConfigurationSection(key));
 				if (previous != null)
 					previous.setNext(temp);
 				previous = temp;
