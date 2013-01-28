@@ -46,7 +46,7 @@ public class CommandMainImport extends CommandExecutor
 		}
 		plugin.getArenas().add(arena);
 		plugin.getArenasByName().put(name, arena);
-		plugin.getArenasByType().get(arena.getType()).add(arena);
+		plugin.getArenasByType().get(arena.getType().toLowerCase()).add(arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.LOADED", sender, arena.getName(), arena.getType());
 		if (sender != Bukkit.getConsoleSender())
 			plugin.sendLocaleMessage("COMMAND.ARENA.LOADED", Bukkit.getConsoleSender(), arena.getName(), arena.getType());
