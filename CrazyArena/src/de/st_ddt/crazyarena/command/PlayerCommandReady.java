@@ -24,7 +24,7 @@ public class PlayerCommandReady extends PlayerCommandExecutor
 			throw new CrazyCommandUsageException("");
 		final Arena<?> arena = plugin.getArena(player);
 		if (arena == null || !arena.isParticipant(player, ParticipantType.SELECTING))
-			throw new CrazyCommandCircumstanceException("when waiting inside an arena!");
+			throw new CrazyCommandCircumstanceException("while waiting inside an arena!");
 		arena.ready(player);
 	}
 }
