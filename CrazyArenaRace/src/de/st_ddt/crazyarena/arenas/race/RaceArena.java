@@ -48,9 +48,9 @@ public class RaceArena extends Arena<RaceParticipant>
 	// Match Variables
 	private CrazyRaceArenaPlayerListener playerMatchListener;
 	private int winners = 0;
-	private final Date startTime = new Date(0);
-	private final int minParticipants = 2;
-	private final long kickSlowPlayers = 30;
+	private Date startTime = new Date(0);
+	private int minParticipants = 2;
+	private long kickSlowPlayers = 30;
 
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
@@ -106,12 +106,16 @@ public class RaceArena extends Arena<RaceParticipant>
 	@Override
 	protected boolean checkArena(final CommandSender sender)
 	{
-		// EDIT Automatisch generierter Methodenstub
-		// minParticpants > 1
-		// Starts > minParticipants
-		// SpectatorsSpawns > 0
-		// StagesCount > 0
-		return true;
+		if (minParticipants < 1)
+			return false;
+		else if (playerSpawns.size() < minParticipants)
+			return false;
+		else if (spectatorSpawns.size() == 0)
+			return false;
+		else if (stages.size() == 0)
+			return false;
+		else
+			return true;
 	}
 
 	@Override
