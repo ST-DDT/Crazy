@@ -50,14 +50,13 @@ public class CountDownTask implements Runnable
 		startCountDown(start, arena, arena.getLocale().getLanguageEntry(localePath), args, timeIndex, zero);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void startCountDown(final int start, final Arena<?> arena, final CrazyLocale locale, final Object[] args, final int timeIndex, final Runnable zero)
 	{
 		for (int i = start; i > 0; i--)
 		{
 			args[timeIndex] = i;
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(CrazyArena.getPlugin(), new CountDownTask(arena, locale, args), (start - i) * 20 + 1);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(CrazyArena.getPlugin(), new CountDownTask(arena, locale, args), (start - i) * 20 + 1);
 		}
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(CrazyArena.getPlugin(), zero, start * 20 + 1);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CrazyArena.getPlugin(), zero, start * 20 + 1);
 	}
 }
