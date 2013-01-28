@@ -147,6 +147,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Override
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.JOINED.BROADCAST $Player$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.JOINED.READYCOMMAND" })
 	public void join(final Player player, final boolean rejoin) throws CrazyException
 	{
 		RaceParticipant participant = getParticipant(player);
@@ -156,7 +157,7 @@ public class RaceArena extends Arena<RaceParticipant>
 				throw new CrazyArenaExceedingParticipantsLimitException(this, playerSpawns.size());
 			else
 				participant = new RaceParticipant(player, this, location, stages.get(0));
-		// participant.setStage(stages.get(0));
+		getArenaMainPlugin().setArenaByPlayer(player, this);
 		if (rejoin && status == ArenaStatus.PLAYING)
 			participant.setParticipantType(ParticipantType.PARTICIPANT);
 		else
@@ -168,6 +169,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Override
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.READY", "CRAZYARENA.ARENA_RACE.START.QUEUED", "CRAZYARENA.ARENA_RACE.START.COUNTDOWN $Remaining$", "CRAZYARENA.ARENA_RACE.START.STARTED $DateTime$", "CRAZYARENA.ARENA_RACE.START.ABORTED" })
 	public boolean ready(final Player player)
 	{
 		final RaceParticipant participant = getParticipant(player);
@@ -193,7 +195,8 @@ public class RaceArena extends Arena<RaceParticipant>
 							{
 								runnumber++;
 								arena.status = ArenaStatus.PLAYING;
-								broadcastLocaleMessage(false, "START.STARTED", CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date()));
+								startTime = new Date();
+								broadcastLocaleMessage(false, "START.STARTED", CrazyLightPluginInterface.DATETIMEFORMAT.format(startTime));
 							}
 							else
 								broadcastLocaleMessage(false, "START.ABORTED");
@@ -206,12 +209,14 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Override
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT $Arena$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT.BROADCAST $Player$" })
 	public void leave(final Player player, final boolean kicked)
 	{
 		quitLocation.remove(player.getName().toLowerCase());
 		final RaceParticipant participant = participants.remove(player.getName().toLowerCase());
 		final ArenaPlayerSaver saver = participant.getSaver();
 		saver.restore(player);
+		getArenaMainPlugin().setArenaByPlayer(player, null);
 		sendLocaleMessage("PARTICIPANT.QUIT", player, name);
 		broadcastLocaleMessage(false, "PARTICIPANT.QUIT.BROADCAST", player.getName());
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
