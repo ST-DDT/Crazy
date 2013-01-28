@@ -74,6 +74,7 @@ public class RaceArena extends Arena<RaceParticipant>
 			for (final String key : stagesConfig.getKeys(false))
 			{
 				final RaceStage temp = new RaceStage(this, stagesConfig.getConfigurationSection(key));
+				stages.add(temp);
 				if (previous != null)
 					previous.setNext(temp);
 				previous = temp;
