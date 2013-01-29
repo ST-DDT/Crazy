@@ -275,7 +275,8 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 		final int position = ++winners;
 		raceParticipant.setParticipantType(ParticipantType.WINNER);
-		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
+		final String time = ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer());
+		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, time);
 		final int run = runnumber;
 		if (position == 1)
 			Bukkit.getScheduler().scheduleSyncDelayedTask(getArenaPlugin(), new Runnable()
@@ -291,14 +292,14 @@ public class RaceArena extends Arena<RaceParticipant>
 							participant.setParticipantType(ParticipantType.DEFEADED);
 							broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.TOOSLOW", participant.getName());
 						}
-						broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
+						broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), time);
 						stop();
 					}
 				}
 			}, kickSlowPlayers * 20);
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 		{
-			broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
+			broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), time);
 			stop();
 		}
 	}
