@@ -42,7 +42,8 @@ public class CommandMainKick extends CommandExecutor
 			final Arena<?> arena = plugin.getArenaByPlayer(player);
 			if (arena == null)
 				throw new CrazyCommandCircumstanceException("when target is in an arena!");
-			arena.leave(player, true);
+			if (arena.leave(player, true))
+				plugin.getArenaByPlayer().remove(player);
 			plugin.sendLocaleMessage("COMMAND.ARENA.KICK", Bukkit.getOnlinePlayers(), sender.getName(), arena.getName(), player.getName());
 			plugin.sendLocaleMessage("COMMAND.ARENA.KICK", Bukkit.getConsoleSender(), sender.getName(), arena.getName(), player.getName());
 		}

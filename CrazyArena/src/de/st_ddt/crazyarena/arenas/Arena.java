@@ -180,19 +180,19 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		throw new CrazyArenaUnsupportedException(this, "Teams");
 	}
 
-	public void spectate(final Player player) throws CrazyException
+	public boolean spectate(final Player player) throws CrazyException
 	{
 		throw new CrazyArenaUnsupportedException(this, "Spectator");
 	}
 
-	public void judge(final Player player) throws CrazyException
+	public boolean judge(final Player player) throws CrazyException
 	{
 		throw new CrazyArenaUnsupportedException(this, "Judges");
 	}
 
-	public abstract void leave(final Player player, final boolean kicked) throws CrazyException;
+	public abstract boolean leave(final Player player, final boolean kicked) throws CrazyException;
 
-	public abstract void quitgame(Player player);
+	public abstract boolean quitgame(Player player);
 
 	public abstract void registerMatchListener();
 
@@ -207,10 +207,12 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 	 */
 	public void stop()
 	{
+		final Map<Player, Arena<?>> arenasByPlayer = getArenaMainPlugin().getArenaByPlayer();
 		for (final Player player : getParticipatingPlayers())
 			try
 			{
 				leave(player, true);
+				arenasByPlayer.remove(player);
 			}
 			catch (final CrazyException e)
 			{}

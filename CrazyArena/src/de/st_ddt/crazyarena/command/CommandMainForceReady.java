@@ -3,10 +3,10 @@ package de.st_ddt.crazyarena.command;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
@@ -32,9 +32,10 @@ public class CommandMainForceReady extends CommandExecutor
 		final Arena<?> arena = plugin.getArenaByName(args[0]);
 		if (arena == null)
 			throw new CrazyCommandNoSuchException("Arena", args[0]);
-		for (final Participant<?, ?> player : arena.getParticipants(ParticipantType.SELECTING))
-			if (!arena.ready(player.getPlayer()))
-				arena.leave(player.getPlayer(), true);
+		for (final Player player : arena.getParticipatingPlayers(ParticipantType.SELECTING))
+			if (!arena.ready(player))
+				if (arena.leave(player, true))
+					plugin.getArenaByPlayer().remove(player);
 		plugin.sendLocaleMessage("COMMAND.FORCEREADY", sender, arena.getName());
 	}
 

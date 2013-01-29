@@ -54,7 +54,8 @@ public class PlayerCommandJudge extends PlayerCommandExecutor
 		}
 		if (!arena.getStatus().isActive())
 			throw new CrazyCommandCircumstanceException("when arena is ready for judges", arena.getStatus().toString());
-		arena.judge(player);
+		if (arena.judge(player))
+			plugin.getArenaByPlayer().put(player, arena);
 	}
 
 	@Override

@@ -56,17 +56,17 @@ public class PlayerCommandJoin extends PlayerCommandExecutor
 		}
 		if (oldArena != null)
 			if (!oldArena.isParticipant(player, ParticipantType.SPECTATOR))
-				throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + oldArena.getName() + ")");
-			else
-				oldArena.leave(player, false);
+				throw new CrazyCommandCircumstanceException("while not in arena.", "(Currently in " + oldArena.getName() + ")");
+			else if (oldArena.leave(player, false))
+				plugin.getArenaByPlayer().remove(player);
 		if (!arena.getStatus().allowJoins())
 			if (arena.getStatus().isActive())
 			{
 				if (!arena.allowJoin(player))
-					throw new CrazyCommandCircumstanceException("when arena is ready for joins", arena.getStatus().toString());
+					throw new CrazyCommandCircumstanceException("while arena is ready for joins", arena.getStatus().toString());
 			}
 			else
-				throw new CrazyCommandCircumstanceException("when arena is ready for joins", arena.getStatus().toString());
+				throw new CrazyCommandCircumstanceException("while arena is ready for joins", arena.getStatus().toString());
 		if (arena.join(player, false))
 			plugin.getArenaByPlayer().put(player, arena);
 	}

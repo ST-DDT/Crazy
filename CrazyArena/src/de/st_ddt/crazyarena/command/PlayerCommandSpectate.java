@@ -54,7 +54,8 @@ public class PlayerCommandSpectate extends PlayerCommandExecutor
 		}
 		if (!arena.getStatus().allowSpectators())
 			throw new CrazyCommandCircumstanceException("when arena is ready for spectators", arena.getStatus().toString());
-		arena.spectate(player);
+		if (arena.spectate(player))
+			plugin.getArenaByPlayer().put(player, arena);
 	}
 
 	@Override

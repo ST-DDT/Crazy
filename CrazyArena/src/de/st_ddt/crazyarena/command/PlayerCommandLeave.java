@@ -20,7 +20,8 @@ public class PlayerCommandLeave extends PlayerCommandExecutor
 	{
 		final Arena<?> arena = plugin.getArenaByPlayer(player);
 		if (arena == null || !arena.isParticipant(player))
-			throw new CrazyCommandCircumstanceException("when participating in an arena!");
-		arena.leave(player, false);
+			throw new CrazyCommandCircumstanceException("while participating in an arena!");
+		if (arena.leave(player, false))
+			plugin.getArenaByPlayer().remove(player);
 	}
 }
