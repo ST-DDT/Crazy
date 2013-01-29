@@ -89,6 +89,10 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		this.locale.setAlternative(typeLocale);
 		final CrazyLocale defaultLocale = pluginLocale.getSecureLanguageEntry("ARENA_DEFAULT");
 		typeLocale.setAlternative(defaultLocale);
+		if (!config.getBoolean("enabled", true))
+			status = ArenaStatus.DISABLED;
+		if (config.getBoolean("edit", false))
+			status = ArenaStatus.CONSTRUCTING;
 	}
 
 	public final ArenaStatus getStatus()
@@ -132,6 +136,8 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		config.set("name", name);
 		config.set("type", getClass().getName());
 		config.set("chatHeader", ChatHelper.decolorise(chatHeader));
+		config.set("enabled", status != ArenaStatus.DISABLED);
+		config.set("edit", status == ArenaStatus.CONSTRUCTING);
 		save();
 		try
 		{
