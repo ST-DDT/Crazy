@@ -224,7 +224,6 @@ public class RaceArena extends Arena<RaceParticipant>
 		quitLocation.remove(player.getName().toLowerCase());
 		final ArenaPlayerSaver saver = participant.getSaver();
 		saver.restore(player);
-		getArenaMainPlugin().getArenaByPlayer().remove(player);
 		sendLocaleMessage("PARTICIPANT.QUIT", player, name);
 		broadcastLocaleMessage(false, "PARTICIPANT.QUIT.BROADCAST", player.getName());
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
