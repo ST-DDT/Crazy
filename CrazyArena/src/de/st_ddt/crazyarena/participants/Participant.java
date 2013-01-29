@@ -157,4 +157,10 @@ public abstract class Participant<S extends Participant<S, T>, T extends Arena<S
 	{
 		return getName().compareTo(o.getName());
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Participant " + name + " {Arena: " + arena.getName() + "; Type: " + participantType.toString() + "}";
+	}
 }
