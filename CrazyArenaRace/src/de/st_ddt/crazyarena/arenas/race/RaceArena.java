@@ -49,8 +49,8 @@ public class RaceArena extends Arena<RaceParticipant>
 	private CrazyRaceArenaPlayerListener playerMatchListener;
 	private int winners = 0;
 	private Date startTime = new Date(0);
-	private int minParticipants = 2;
-	private long kickSlowPlayers = 30;
+	private final int minParticipants;
+	private final long kickSlowPlayers;
 
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
@@ -80,6 +80,8 @@ public class RaceArena extends Arena<RaceParticipant>
 				previous = temp;
 			}
 		}
+		minParticipants = config.getInt("minParticipants", 2);
+		kickSlowPlayers = config.getLong("kickSlowPlayers", 30);
 		registerCommands();
 	}
 
@@ -87,6 +89,8 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 		super(name);
 		mainCommand = new CrazyCommandTreeExecutor<RaceArena>(this);
+		minParticipants = 2;
+		kickSlowPlayers = 30;
 		registerCommands();
 	}
 
@@ -133,6 +137,8 @@ public class RaceArena extends Arena<RaceParticipant>
 		i = 0;
 		for (final RaceStage target : stages)
 			target.save(config, "stages.stage" + (i++) + ".");
+		config.set("minParticipants", minParticipants);
+		config.set("kickSlowPlayers", kickSlowPlayers);
 	}
 
 	public Location getEmptyStartLocation()
@@ -148,7 +154,7 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	@Override
 	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.JOINED.BROADCAST $Player$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.JOINED.READYCOMMAND" })
-	public void join(final Player player, final boolean rejoin) throws CrazyException
+	public boolean join(final Player player, final boolean rejoin) throws CrazyException
 	{
 		RaceParticipant participant = getParticipant(player);
 		final Location location = getEmptyStartLocation();
@@ -157,7 +163,6 @@ public class RaceArena extends Arena<RaceParticipant>
 				throw new CrazyArenaExceedingParticipantsLimitException(this, playerSpawns.size());
 			else
 				participant = new RaceParticipant(player, this, location, stages.get(0));
-		getArenaMainPlugin().setArenaByPlayer(player, this);
 		if (rejoin && status == ArenaStatus.PLAYING)
 			participant.setParticipantType(ParticipantType.PARTICIPANT);
 		else
@@ -166,6 +171,7 @@ public class RaceArena extends Arena<RaceParticipant>
 			status = ArenaStatus.SELECTING;
 		broadcastLocaleMessage(false, "PARTICIPANT.JOINED.BROADCAST", player.getName());
 		sendLocaleMessage("PARTICIPANT.JOINED.READYCOMMAND", player);
+		return true;
 	}
 
 	@Override
@@ -210,30 +216,36 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	@Override
 	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT $Arena$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT.BROADCAST $Player$" })
-	public void leave(final Player player, final boolean kicked)
+	public boolean leave(final Player player, final boolean kicked)
 	{
-		quitLocation.remove(player.getName().toLowerCase());
 		final RaceParticipant participant = participants.remove(player.getName().toLowerCase());
+		if (participant == null)
+			return true;
+		quitLocation.remove(player.getName().toLowerCase());
 		final ArenaPlayerSaver saver = participant.getSaver();
 		saver.restore(player);
-		getArenaMainPlugin().setArenaByPlayer(player, null);
+		getArenaMainPlugin().getArenaByPlayer().remove(player);
 		sendLocaleMessage("PARTICIPANT.QUIT", player, name);
 		broadcastLocaleMessage(false, "PARTICIPANT.QUIT.BROADCAST", player.getName());
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 			stop();
+		return true;
 	}
 
 	@Override
-	public void quitgame(final Player player)
+	public boolean quitgame(final Player player)
 	{
-		quitLocation.put(player.getName().toLowerCase(), player.getLocation().clone());
 		final RaceParticipant participant = getParticipant(player);
+		if (participant == null)
+			return true;
+		quitLocation.put(player.getName().toLowerCase(), player.getLocation().clone());
 		final ArenaPlayerSaver saver = participant.getSaver();
 		saver.restore(player);
 		saver.reset();
 		participant.setParticipantType(ParticipantType.QUITEDPARTICIPANT);
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 			stop();
+		return true;
 	}
 
 	@Override
