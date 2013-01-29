@@ -42,6 +42,7 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 	public void reachStage()
 	{
 		stage = stage.getNext();
+		// EDIT show a message here
 		if (stage == null)
 			arena.reachFinish(this);
 	}
@@ -69,6 +70,7 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 			case 3:
 				return stage.getName();
 			case 4:
+				// EDIT this thing is missing
 				return "target.location";
 			default:
 				return "";
@@ -78,6 +80,12 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 	@Override
 	public int getParameterCount()
 	{
-		return 4;
+		return 5;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Race" + super.toString();
 	}
 }

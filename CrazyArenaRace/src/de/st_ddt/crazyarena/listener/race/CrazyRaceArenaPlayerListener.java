@@ -1,5 +1,6 @@
 package de.st_ddt.crazyarena.listener.race;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
@@ -35,11 +36,20 @@ public class CrazyRaceArenaPlayerListener implements Listener
 		if (arena.getStatus() == ArenaStatus.WAITING)
 		{
 			event.setCancelled(true);
-			player.teleport(participant.getStart(), TeleportCause.PLUGIN);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(arena.getArenaPlugin(), new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					player.teleport(participant.getStart(), TeleportCause.PLUGIN);
+				}
+			});
 		}
 		else if (arena.getStatus() == ArenaStatus.PLAYING)
-			if (participant.getStage().isInside(player))
-				participant.reachStage();
+			if (participant.getStage() != null)
+				if (participant.getStage().isInside(player))
+					participant.reachStage();
 	}
 
 	@EventHandler
@@ -57,7 +67,15 @@ public class CrazyRaceArenaPlayerListener implements Listener
 		if (arena.getStatus() == ArenaStatus.WAITING)
 		{
 			vehicle.setVelocity(new Vector());
-			vehicle.teleport(participant.getStart(), TeleportCause.PLUGIN);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(arena.getArenaPlugin(), new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					vehicle.teleport(participant.getStart(), TeleportCause.PLUGIN);
+				}
+			});
 		}
 		else if (arena.getStatus() == ArenaStatus.PLAYING)
 			if (participant.getStage().isInside(player))

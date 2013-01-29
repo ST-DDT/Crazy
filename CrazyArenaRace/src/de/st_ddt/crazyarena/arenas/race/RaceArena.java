@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.CrazyArenaRace;
@@ -162,7 +163,10 @@ public class RaceArena extends Arena<RaceParticipant>
 			if (location == null)
 				throw new CrazyArenaExceedingParticipantsLimitException(this, playerSpawns.size());
 			else
+			{
 				participant = new RaceParticipant(player, this, location, stages.get(0));
+				participants.put(player.getName().toLowerCase(), participant);
+			}
 		if (rejoin && status == ArenaStatus.PLAYING)
 			participant.setParticipantType(ParticipantType.PARTICIPANT);
 		else
@@ -183,13 +187,15 @@ public class RaceArena extends Arena<RaceParticipant>
 			return false;
 		if (participant.getParticipantType() == ParticipantType.SELECTING)
 		{
+			player.teleport(participant.getStart(), TeleportCause.PLUGIN);
 			sendLocaleMessage("PARTICIPANT.READY", player);
 			participant.setParticipantType(ParticipantType.READY);
-			if (getParticipants(ParticipantType.READY).size() > minParticipants)
+			if (getParticipants(ParticipantType.READY).size() >= minParticipants)
 				if (getParticipants(ParticipantType.SELECTING).size() == 0)
 				{
 					status = ArenaStatus.WAITING;
 					broadcastLocaleMessage(false, "START.QUEUED");
+					registerMatchListener();
 					final RaceArena arena = this;
 					CountDownTask.startCountDown(5, this, "START.COUNTDOWN", new Runnable()
 					{
@@ -202,6 +208,11 @@ public class RaceArena extends Arena<RaceParticipant>
 								runnumber++;
 								arena.status = ArenaStatus.PLAYING;
 								startTime = new Date();
+								for (final RaceParticipant participant : getParticipants(ParticipantType.READY))
+								{
+									participant.setParticipantType(ParticipantType.PARTICIPANT);
+									participant.getPlayer().teleport(participant.getStart(), TeleportCause.PLUGIN);
+								}
 								broadcastLocaleMessage(false, "START.STARTED", CrazyLightPluginInterface.DATETIMEFORMAT.format(startTime));
 							}
 							else
@@ -259,28 +270,37 @@ public class RaceArena extends Arena<RaceParticipant>
 		return 30000;
 	}
 
-	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$" })
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$" })
 	public void reachFinish(final RaceParticipant raceParticipant)
 	{
-		final int position = winners++;
+		final int position = ++winners;
 		raceParticipant.setParticipantType(ParticipantType.WINNER);
 		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
-		Bukkit.getScheduler().scheduleSyncDelayedTask(getArenaPlugin(), new Runnable()
-		{
-
-			@Override
-			public void run()
+		final int run = runnumber;
+		if (position == 1)
+			Bukkit.getScheduler().scheduleSyncDelayedTask(getArenaPlugin(), new Runnable()
 			{
-				for (final RaceParticipant participant : getParticipants(ParticipantType.PARTICIPANT))
+
+				@Override
+				public void run()
 				{
-					participant.setParticipantType(ParticipantType.DEFEADED);
-					broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.TOOSLOW", raceParticipant.getName());
+					if (run == runnumber)
+					{
+						for (final RaceParticipant participant : getParticipants(ParticipantType.PARTICIPANT))
+						{
+							participant.setParticipantType(ParticipantType.DEFEADED);
+							broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.TOOSLOW", participant.getName());
+						}
+						broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
+						stop();
+					}
 				}
-				stop();
-			}
-		}, kickSlowPlayers * 20);
+			}, kickSlowPlayers * 20);
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
+		{
+			broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer()));
 			stop();
+		}
 	}
 
 	@Override
@@ -313,6 +333,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	@Override
 	public void stop()
 	{
+		unregisterMatchListener();
 		quitLocation.clear();
 		super.stop();
 	}
