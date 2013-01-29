@@ -151,8 +151,10 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 	 *            The joining player
 	 * @param rejoin
 	 *            whether he is already in this arena or not. (Rejoins after leaving the server only)
+	 * @return True when successfully joined the arena
+	 * @throws CrazyException
 	 */
-	public abstract void join(Player player, boolean rejoin) throws CrazyException;
+	public abstract boolean join(Player player, boolean rejoin) throws CrazyException;
 
 	/**
 	 * Allow a player to join although the game has started already.

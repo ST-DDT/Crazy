@@ -38,7 +38,7 @@ public class CommandMainSelect extends CommandExecutor
 				arena = plugin.getArenaByName(args[0]);
 				if (arena == null)
 					throw new CrazyCommandNoSuchException("Arena", args[0]);
-				plugin.getSelections().put(sender.getName().toLowerCase(), arena);
+				plugin.getSelections().put(sender, arena);
 				plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", sender, arena.getName());
 				return;
 			default:

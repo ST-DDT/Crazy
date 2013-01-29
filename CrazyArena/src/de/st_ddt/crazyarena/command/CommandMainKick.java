@@ -39,7 +39,7 @@ public class CommandMainKick extends CommandExecutor
 				if (player == null)
 					throw new CrazyCommandNoSuchException("Player", name);
 			}
-			final Arena<?> arena = plugin.getArena(player);
+			final Arena<?> arena = plugin.getArenaByPlayer(player);
 			if (arena == null)
 				throw new CrazyCommandCircumstanceException("when target is in an arena!");
 			arena.leave(player, true);

@@ -26,7 +26,7 @@ public class PlayerCommandJudge extends PlayerCommandExecutor
 	@Override
 	public void command(final Player player, final String[] args) throws CrazyException
 	{
-		Arena<?> arena = plugin.getArena(player);
+		Arena<?> arena = plugin.getArenaByPlayer(player);
 		if (arena != null)
 			throw new CrazyCommandCircumstanceException("when not in arena.", "(Currently in " + arena.getName() + ")");
 		switch (args.length)
@@ -44,7 +44,7 @@ public class PlayerCommandJudge extends PlayerCommandExecutor
 					Player to = Bukkit.getPlayerExact(args[0]);
 					if (to == null)
 						to = Bukkit.getPlayer(args[0]);
-					arena = plugin.getArena(to);
+					arena = plugin.getArenaByPlayer(to);
 				}
 				if (arena == null)
 					throw new CrazyCommandNoSuchException("Arena/Player", args[0], plugin.searchArenaNames(name));

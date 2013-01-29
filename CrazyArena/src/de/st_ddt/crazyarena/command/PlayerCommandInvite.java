@@ -26,21 +26,21 @@ public class PlayerCommandInvite extends PlayerCommandExecutor
 	@Override
 	public void command(final Player player, final String[] args) throws CrazyException
 	{
-		final Arena<?> arena = plugin.getArena(player);
+		final Arena<?> arena = plugin.getArenaByPlayer(player);
 		if (arena == null || !arena.isParticipant(player))
 			throw new CrazyCommandCircumstanceException("when participating in an arena!");
 		if (args.length == 0)
 			throw new CrazyCommandUsageException("<Player1> [Player...]");
-		final Map<String, Arena<?>> invitations = plugin.getInvitations();
+		final Map<Player, Arena<?>> invitations = plugin.getInvitations();
 		if (args[0] == "*")
 			if (player.hasPermission("crazyarena.invite.all"))
 			{
 				int anz = 0;
 				for (final Player invited : Bukkit.getOnlinePlayers())
-					if (plugin.getArena(invited) == null)
+					if (plugin.getArenaByPlayer(invited) == null && invitations.get(invited) != arena)
 					{
 						anz++;
-						invitations.put(invited.getName().toLowerCase(), arena);
+						invitations.put(invited, arena);
 						plugin.sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 					}
 				plugin.sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());
@@ -57,7 +57,7 @@ public class PlayerCommandInvite extends PlayerCommandExecutor
 			if (invited == null)
 				continue;
 			anz++;
-			invitations.put(invited.getName().toLowerCase(), arena);
+			invitations.put(invited, arena);
 			plugin.sendLocaleMessage("COMMAND.INVITATION.MESSAGE", invited, player.getName(), arena.getName());
 		}
 		plugin.sendLocaleMessage("COMMAND.INVITATION.SUMMARY", player, anz, arena.getName());

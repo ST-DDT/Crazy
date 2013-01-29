@@ -18,7 +18,7 @@ public class PlayerCommandLeave extends PlayerCommandExecutor
 	@Override
 	public void command(final Player player, final String[] args) throws CrazyException
 	{
-		final Arena<?> arena = plugin.getArena(player);
+		final Arena<?> arena = plugin.getArenaByPlayer(player);
 		if (arena == null || !arena.isParticipant(player))
 			throw new CrazyCommandCircumstanceException("when participating in an arena!");
 		arena.leave(player, false);

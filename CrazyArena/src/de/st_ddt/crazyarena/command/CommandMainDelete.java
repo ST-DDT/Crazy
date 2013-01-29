@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
@@ -39,14 +40,14 @@ public class CommandMainDelete extends CommandExecutor
 		plugin.getArenas().remove(arena);
 		plugin.getArenasByName().remove(name);
 		plugin.getArenasByType().get(arena.getType()).remove(arena);
-		Iterator<Entry<String, Arena<?>>> it = plugin.getInvitations().entrySet().iterator();
+		final Iterator<Entry<Player, Arena<?>>> it = plugin.getInvitations().entrySet().iterator();
 		while (it.hasNext())
 			if (it.next().getValue() == arena)
 				it.remove();
-		it = plugin.getSelections().entrySet().iterator();
-		while (it.hasNext())
-			if (it.next().getValue() == arena)
-				it.remove();
+		final Iterator<Entry<CommandSender, Arena<?>>> it2 = plugin.getSelections().entrySet().iterator();
+		while (it2.hasNext())
+			if (it2.next().getValue() == arena)
+				it2.remove();
 		plugin.sendLocaleMessage("COMMAND.ARENA.DELETED", sender, arena.getName(), arena.getType());
 		new CrazyArenaArenaDeleteEvent(arena).callEvent();
 	}

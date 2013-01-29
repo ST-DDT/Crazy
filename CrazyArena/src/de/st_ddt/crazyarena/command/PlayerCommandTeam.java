@@ -18,7 +18,7 @@ public class PlayerCommandTeam extends PlayerCommandExecutor
 	@Override
 	public void command(final Player player, final String[] args) throws CrazyException
 	{
-		final Arena<?> arena = plugin.getArena(player);
+		final Arena<?> arena = plugin.getArenaByPlayer(player);
 		if (arena == null || !arena.getParticipant(player).isPlayer())
 			throw new CrazyCommandCircumstanceException("when playing in an arena!");
 		arena.team(player);

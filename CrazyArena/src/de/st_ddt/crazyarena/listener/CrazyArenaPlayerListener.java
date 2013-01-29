@@ -2,6 +2,7 @@ package de.st_ddt.crazyarena.listener;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class CrazyArenaPlayerListener implements Listener
 {
 
-	private final HashMap<String, Rejoin> rejoins = new HashMap<String, Rejoin>();
+	private final Map<String, Rejoin> rejoins = new HashMap<String, Rejoin>();
 	private final CrazyArena plugin;
 
 	public CrazyArenaPlayerListener(final CrazyArena plugin)
@@ -48,7 +49,8 @@ public class CrazyArenaPlayerListener implements Listener
 				return;
 			try
 			{
-				arena.join(player, true);
+				if (arena.join(player, true))
+					plugin.getArenaByPlayer().put(player, arena);
 			}
 			catch (final CrazyException e)
 			{}
@@ -59,7 +61,7 @@ public class CrazyArenaPlayerListener implements Listener
 	public void PlayerQuit(final PlayerQuitEvent event)
 	{
 		final Player player = event.getPlayer();
-		final Arena<?> arena = plugin.getArena(player);
+		final Arena<?> arena = plugin.getArenaByPlayer().remove(player);
 		if (arena != null)
 		{
 			rejoins.put(player.getName(), new Rejoin(arena));
@@ -74,6 +76,8 @@ public class CrazyArenaPlayerListener implements Listener
 				catch (final CrazyException e)
 				{}
 		}
+		plugin.getSelections().remove(player);
+		plugin.getInvitations().remove(player);
 	}
 
 	private final class Rejoin

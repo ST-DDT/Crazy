@@ -15,9 +15,9 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyarena.arenas.Arena;
@@ -55,15 +55,14 @@ import de.st_ddt.crazyutil.modes.Mode;
 public class CrazyArena extends CrazyPlugin
 {
 
-	private final static Set<Arena<?>> arenas = new HashSet<Arena<?>>();
 	private static CrazyArena plugin;
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
-	private final Map<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
+	private final Set<Arena<?>> arenas = new HashSet<Arena<?>>();
 	private final Map<String, Arena<?>> arenasByName = new TreeMap<String, Arena<?>>();
-	private final Map<String, Arena<?>> arenasByPlayer = new HashMap<String, Arena<?>>();
+	private final Map<Player, Arena<?>> arenasByPlayer = new HashMap<Player, Arena<?>>();
 	private final Map<String, Set<Arena<?>>> arenasByType = new TreeMap<String, Set<Arena<?>>>();
-	private final Map<String, Arena<?>> invitations = new HashMap<String, Arena<?>>();
-	private final Map<String, Arena<?>> selections = new HashMap<String, Arena<?>>();
+	private final Map<Player, Arena<?>> invitations = new HashMap<Player, Arena<?>>();
+	private final Map<CommandSender, Arena<?>> selections = new HashMap<CommandSender, Arena<?>>();
 	private boolean crazyChatsEnabled;
 	private String arenaChatFormat = "[Arena]%1$s: %2$s";
 	private String arenaSpectatorChatFormat = "[Arena/S]%1$s: %2$s";
@@ -314,6 +313,9 @@ public class CrazyArena extends CrazyPlugin
 		arenasByName.clear();
 		for (final Set<Arena<?>> type : arenasByType.values())
 			type.clear();
+		arenasByType.clear();
+		for (final String type : CrazyArenaPlugin.getRegisteredArenaTypes().keySet())
+			arenasByType.put(type, new HashSet<Arena<?>>());
 		arenasByPlayer.clear();
 		invitations.clear();
 		selections.clear();
@@ -363,19 +365,6 @@ public class CrazyArena extends CrazyPlugin
 		super.saveConfiguration();
 	}
 
-	public Map<String, Class<? extends Arena<?>>> getArenaTypes()
-	{
-		return arenaTypes;
-	}
-
-	public void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
-	{
-		arenaTypes.put(mainType.toLowerCase(), clazz);
-		for (final String alias : aliases)
-			arenaTypes.put(alias.toLowerCase(), clazz);
-		arenasByType.put(mainType.toLowerCase(), new HashSet<Arena<?>>());
-	}
-
 	public Set<Arena<?>> getArenas()
 	{
 		return arenas;
@@ -419,32 +408,22 @@ public class CrazyArena extends CrazyPlugin
 		return arenasByType.get(name.toLowerCase());
 	}
 
-	public Arena<?> getArena(final OfflinePlayer player)
+	public Map<Player, Arena<?>> getArenaByPlayer()
 	{
-		return getArenaByPlayer(player.getName());
+		return arenasByPlayer;
 	}
 
-	public Arena<?> getArenaByPlayer(final String name)
+	public Arena<?> getArenaByPlayer(final Player player)
 	{
-		return arenasByPlayer.get(name.toLowerCase());
+		return arenasByPlayer.get(player);
 	}
 
-	public void setArenaByPlayer(final OfflinePlayer player, final Arena<?> arena)
-	{
-		setArenaByPlayer(player.getName(), arena);
-	}
-
-	public void setArenaByPlayer(final String name, final Arena<?> arena)
-	{
-		arenasByPlayer.put(name.toLowerCase(), arena);
-	}
-
-	public Map<String, Arena<?>> getSelections()
+	public Map<CommandSender, Arena<?>> getSelections()
 	{
 		return selections;
 	}
 
-	public Map<String, Arena<?>> getInvitations()
+	public Map<Player, Arena<?>> getInvitations()
 	{
 		return invitations;
 	}

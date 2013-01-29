@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -13,10 +14,16 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 {
 
 	private final static Map<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin> arenaPlugins = new LinkedHashMap<Class<? extends CrazyArenaPlugin>, CrazyArenaPlugin>();
+	private final static Map<String, Class<? extends Arena<?>>> arenaTypes = new TreeMap<String, Class<? extends Arena<?>>>();
 
 	public static Collection<CrazyArenaPlugin> getCrazyArenaPlugins()
 	{
 		return arenaPlugins.values();
+	}
+
+	public static Map<String, Class<? extends Arena<?>>> getRegisteredArenaTypes()
+	{
+		return arenaTypes;
 	}
 
 	@Override
@@ -31,9 +38,11 @@ public abstract class CrazyArenaPlugin extends CrazyPlugin
 
 	public abstract String[] getArenaTypes();
 
-	protected void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
+	protected final void registerArenaType(final String mainType, final Class<? extends Arena<?>> clazz, final String... aliases)
 	{
-		getArenaMainPlugin().registerArenaType(mainType, clazz, aliases);
+		arenaTypes.put(mainType.toLowerCase(), clazz);
+		for (final String alias : aliases)
+			arenaTypes.put(alias.toLowerCase(), clazz);
 	}
 
 	public Map<String, Set<Arena<?>>> getArenas()

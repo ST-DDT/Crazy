@@ -30,7 +30,7 @@ public class ArenaChatFormatParameters implements ChatFormatParameters
 	public Object[] getParameters(final Player player)
 	{
 		final String[] res = new String[3];
-		final Arena<?> arena = plugin.getArena(player);
+		final Arena<?> arena = plugin.getArenaByPlayer(player);
 		if (arena == null)
 			Arrays.fill(res, "");
 		else

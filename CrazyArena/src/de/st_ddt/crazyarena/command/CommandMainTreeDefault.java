@@ -28,9 +28,9 @@ public class CommandMainTreeDefault extends CommandExecutor
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		Arena<?> arena = plugin.getSelections().get(sender.getName().toLowerCase());
+		Arena<?> arena = plugin.getSelections().get(sender);
 		if (arena == null && sender instanceof Player)
-			arena = plugin.getArena(((Player) sender));
+			arena = plugin.getArenaByPlayer(((Player) sender));
 		if (arena == null)
 		{
 			String commandLabel = "(none)";
@@ -65,7 +65,7 @@ public class CommandMainTreeDefault extends CommandExecutor
 	{
 		Arena<?> arena = plugin.getSelections().get(sender.getName().toLowerCase());
 		if (arena == null && sender instanceof Player)
-			arena = plugin.getArena(((Player) sender));
+			arena = plugin.getArenaByPlayer(((Player) sender));
 		if (arena == null)
 			return null;
 		else
@@ -77,7 +77,7 @@ public class CommandMainTreeDefault extends CommandExecutor
 	{
 		Arena<?> arena = plugin.getSelections().get(sender.getName().toLowerCase());
 		if (arena == null && sender instanceof Player)
-			arena = plugin.getArena(((Player) sender));
+			arena = plugin.getArenaByPlayer(((Player) sender));
 		if (arena == null)
 			return true;
 		else

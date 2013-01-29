@@ -27,14 +27,14 @@ public class PlayerCommandJoin extends PlayerCommandExecutor
 	@Override
 	public void command(final Player player, final String[] args) throws CrazyException
 	{
-		final Arena<?> oldArena = plugin.getArena(player);
+		final Arena<?> oldArena = plugin.getArenaByPlayer(player);
 		Arena<?> arena = null;
 		switch (args.length)
 		{
 			case 0:
 				arena = oldArena;
 				if (arena == null)
-					arena = plugin.getInvitations().get(player.getName().toLowerCase());
+					arena = plugin.getInvitations().get(player);
 				if (arena == null)
 					throw new CrazyCommandUsageException("<Arena/Player>");
 				break;
@@ -46,7 +46,7 @@ public class PlayerCommandJoin extends PlayerCommandExecutor
 					Player to = Bukkit.getPlayerExact(name);
 					if (to == null)
 						to = Bukkit.getPlayer(name);
-					arena = plugin.getArena(to);
+					arena = plugin.getArenaByPlayer(to);
 				}
 				if (arena == null)
 					throw new CrazyCommandNoSuchException("Arena/Player", name, plugin.searchArenaNames(name));
@@ -67,7 +67,8 @@ public class PlayerCommandJoin extends PlayerCommandExecutor
 			}
 			else
 				throw new CrazyCommandCircumstanceException("when arena is ready for joins", arena.getStatus().toString());
-		arena.join(player, false);
+		if (arena.join(player, false))
+			plugin.getArenaByPlayer().put(player, arena);
 	}
 
 	@Override

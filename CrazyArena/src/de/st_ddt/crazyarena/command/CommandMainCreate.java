@@ -1,11 +1,13 @@
 package de.st_ddt.crazyarena.command;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyarena.CrazyArena;
+import de.st_ddt.crazyarena.CrazyArenaPlugin;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.events.CrazyArenaArenaCreateEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandAlreadyExistsException;
@@ -36,7 +38,7 @@ public class CommandMainCreate extends CommandExecutor
 			throw new CrazyCommandAlreadyExistsException("Arena", name);
 		final String type = args[1];
 		@SuppressWarnings("rawtypes")
-		Class<? extends Arena> clazz = plugin.getArenaTypes().get(type.toLowerCase());
+		Class<? extends Arena> clazz = CrazyArenaPlugin.getRegisteredArenaTypes().get(type.toLowerCase());
 		if (clazz == null)
 			try
 			{
@@ -66,10 +68,12 @@ public class CommandMainCreate extends CommandExecutor
 			throw new CrazyCommandException();
 		plugin.getArenas().add(arena);
 		plugin.getArenasByName().put(name.toLowerCase(), arena);
+		if (!plugin.getArenasByType().containsKey(arena.getType().toLowerCase()))
+			plugin.getArenasByType().put(arena.getType().toLowerCase(), new HashSet<Arena<?>>());
 		plugin.getArenasByType().get(arena.getType().toLowerCase()).add(arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.CREATED", sender, arena.getName(), arena.getType());
 		new CrazyArenaArenaCreateEvent(arena, false).callEvent();
-		plugin.getSelections().put(sender.getName().toLowerCase(), arena);
+		plugin.getSelections().put(sender, arena);
 		plugin.sendLocaleMessage("COMMAND.ARENA.SELECTED", sender, arena.getName());
 		arena.saveToFile();
 	}
@@ -81,7 +85,7 @@ public class CommandMainCreate extends CommandExecutor
 			return null;
 		final List<String> res = new LinkedList<String>();
 		final String arg = args[1].toLowerCase();
-		for (final String type : plugin.getArenaTypes().keySet())
+		for (final String type : CrazyArenaPlugin.getRegisteredArenaTypes().keySet())
 			if (type.startsWith(arg))
 				res.add(type);
 		return res;
