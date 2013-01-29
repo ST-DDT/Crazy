@@ -1,5 +1,7 @@
 package de.st_ddt.crazyarena.tasks;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 
 import de.st_ddt.crazyarena.CrazyArena;
@@ -55,7 +57,7 @@ public class CountDownTask implements Runnable
 		for (int i = start; i > 0; i--)
 		{
 			args[timeIndex] = i;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(CrazyArena.getPlugin(), new CountDownTask(arena, locale, args), (start - i) * 20 + 1);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(CrazyArena.getPlugin(), new CountDownTask(arena, locale, Arrays.copyOf(args, args.length)), (start - i) * 20 + 1);
 		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CrazyArena.getPlugin(), zero, start * 20 + 1);
 	}
