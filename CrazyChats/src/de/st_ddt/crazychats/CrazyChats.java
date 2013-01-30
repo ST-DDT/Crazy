@@ -160,7 +160,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			{
 				if (args.length != 1 && args[0].length() != 0)
 					return null;
-				final List<String> res = new ArrayList<String>(1);
+				final List<String> res = new ArrayList<String>(5);
 				res.add(getValue());
 				res.add("&DCONSOLE");
 				res.add("&DConsole");
