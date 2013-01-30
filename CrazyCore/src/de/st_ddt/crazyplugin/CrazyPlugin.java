@@ -22,6 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
+import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainTree;
 import de.st_ddt.crazyplugin.tasks.LanguageLoadTask;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -39,13 +40,14 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 	protected final CrazyLogger logger = new CrazyLogger(this);
 	protected final CrazyCommandTreeExecutor<CrazyPluginInterface> mainCommand = new CrazyPluginCommandMainTree(this);
+	protected final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	protected CrazyLocale locale = null;
 	protected String previousVersion = "0";
 	protected String updateVersion = "0";
 	protected boolean isUpdated = false;
 	protected boolean isInstalled = false;
 
-	public static Collection<CrazyPlugin> getCrazyPlugins()
+	public final static Collection<CrazyPlugin> getCrazyPlugins()
 	{
 		return plugins.values();
 	}
@@ -76,9 +78,23 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public CrazyCommandTreeExecutor<CrazyPluginInterface> getMainCommand()
+	public final CrazyCommandTreeExecutor<CrazyPluginInterface> getMainCommand()
 	{
 		return mainCommand;
+	}
+
+	public final CrazyPluginCommandMainMode getModeCommand()
+	{
+		return modeCommand;
+	}
+
+	private void registerCommands()
+	{
+		final PluginCommand command = getCommand(getName());
+		if (command != null)
+			command.setExecutor(mainCommand);
+		mainCommand.addSubCommand(modeCommand, "mode");
+		modeCommand.addMode(getChatHeaderMode());
 	}
 
 	@Override
@@ -106,9 +122,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		if (isUpdated)
 			save();
 		super.onEnable();
-		final PluginCommand command = getCommand(getName());
-		if (command != null)
-			command.setExecutor(mainCommand);
+		registerCommands();
 	}
 
 	@Override
@@ -436,9 +450,9 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			}
 	}
 
-	public void unpackLanguage(final String language)
+	public final void unpackLanguage(final String language)
 	{
-		unpackLanguage(language, getServer().getConsoleSender());
+		unpackLanguage(language, Bukkit.getConsoleSender());
 	}
 
 	@Localized("CRAZYPLUGIN.LANGUAGE.ERROR.EXTRACT $Language$ $Plugin$")
@@ -478,7 +492,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		}
 	}
 
-	public void loadLanguageFile(final String language, final File file) throws IOException
+	public final void loadLanguageFile(final String language, final File file) throws IOException
 	{
 		InputStream stream = null;
 		InputStreamReader reader = null;
@@ -498,7 +512,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	public String getUpdateVersion()
+	public final String getUpdateVersion()
 	{
 		return updateVersion;
 	}

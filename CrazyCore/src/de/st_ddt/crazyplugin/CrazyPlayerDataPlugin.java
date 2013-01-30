@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -28,14 +29,36 @@ import de.st_ddt.crazyutil.locales.Localized;
 public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S extends T> extends CrazyPlugin implements CrazyPlayerDataPluginInterface<T, S>
 {
 
-	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>> playerDataPlugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>>();
+	private final static Map<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>> playerDataPlugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>>();
 	protected final Collection<PlayerDataFilter<T>> playerDataFilters = new ArrayList<PlayerDataFilter<T>>();
 	protected final Map<String, PlayerDataComparator<T>> playerDataSorters = new HashMap<String, PlayerDataComparator<T>>();
 	protected final CrazyPlayerDataPluginCommandPlayerTree<T> playerCommand = new CrazyPlayerDataPluginCommandPlayerTree<T>(this);
 	protected PlayerDataDatabase<S> database;
 	protected boolean saveDatabaseOnShutdown;
+	private final ListFormat defaultPlayerListFormat = new ListFormat()
+	{
 
-	public static Collection<CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>> getCrazyPlayerDataPlugins()
+		@Override
+		@Localized({ "CRAZYPLUGIN.COMMAND.PLAYER.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.ENTRYFORMAT $Name$ $...$" })
+		public String headFormat(final CommandSender sender)
+		{
+			return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.HEADER").getLanguageText(sender);
+		}
+
+		@Override
+		public String listFormat(final CommandSender sender)
+		{
+			return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.LISTFORMAT").getLanguageText(sender);
+		}
+
+		@Override
+		public String entryFormat(final CommandSender sender)
+		{
+			return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.ENTRYFORMAT").getLanguageText(sender);
+		}
+	};
+
+	public final static Collection<CrazyPlayerDataPlugin<? extends PlayerDataInterface, ? extends PlayerDataInterface>> getCrazyPlayerDataPlugins()
 	{
 		return playerDataPlugins.values();
 	}
@@ -72,45 +95,49 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public CrazyPlayerDataPluginCommandPlayerTree<T> getPlayerCommand()
+	public final CrazyPlayerDataPluginCommandPlayerTree<T> getPlayerCommand()
 	{
 		return playerCommand;
 	}
 
 	@Override
-	public boolean hasPlayerData(final String name)
+	public final boolean hasPlayerData(final String name)
 	{
 		if (database == null)
 			return false;
-		return database.hasEntry(name);
+		else
+			return database.hasEntry(name);
 	}
 
 	@Override
-	public boolean hasPlayerData(final OfflinePlayer player)
+	public final boolean hasPlayerData(final OfflinePlayer player)
 	{
 		if (database == null)
 			return false;
-		return database.hasEntry(player);
+		else
+			return database.hasEntry(player);
 	}
 
 	@Override
-	public S getPlayerData(final String name)
+	public final S getPlayerData(final String name)
 	{
 		if (database == null)
 			return null;
-		return database.getEntry(name);
+		else
+			return database.getEntry(name);
 	}
 
 	@Override
-	public S getPlayerData(final OfflinePlayer player)
+	public final S getPlayerData(final OfflinePlayer player)
 	{
 		if (database == null)
 			return null;
-		return database.getEntry(player);
+		else
+			return database.getEntry(player);
 	}
 
 	@Override
-	public Object getPlayerDataLock()
+	public final Object getPlayerDataLock()
 	{
 		if (database == null)
 			return new Object();
@@ -119,7 +146,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public Collection<S> getPlayerData()
+	public final Collection<S> getPlayerData()
 	{
 		if (database == null)
 			return new HashSet<S>();
@@ -128,21 +155,21 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public T getAvailablePlayerData(final String name)
+	public final T getAvailablePlayerData(final String name)
 	{
 		return getPlayerData(name);
 	}
 
 	@Override
-	public T getAvailablePlayerData(final OfflinePlayer player)
+	public final T getAvailablePlayerData(final OfflinePlayer player)
 	{
 		return getPlayerData(player);
 	}
 
 	@Override
-	public HashSet<T> getAvailablePlayerData(final boolean includeOnline, final boolean includeAllEntries)
+	public final Set<T> getAvailablePlayerData(final boolean includeOnline, final boolean includeAllEntries)
 	{
-		final HashSet<T> result = new HashSet<T>();
+		final Set<T> result = new HashSet<T>();
 		if (includeAllEntries)
 			if (database != null)
 				synchronized (database.getDatabaseLock())
@@ -157,7 +184,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public <E extends OfflinePlayer> HashSet<S> getPlayerData(final Collection<E> players)
+	public final <E extends OfflinePlayer> Set<S> getPlayerData(final Collection<E> players)
 	{
 		final HashSet<S> datas = new HashSet<S>();
 		for (final OfflinePlayer player : players)
@@ -166,25 +193,27 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public boolean deletePlayerData(final String name)
+	public final boolean deletePlayerData(final String name)
 	{
 		if (database == null)
 			return false;
-		return database.deleteEntry(name);
+		else
+			return database.deleteEntry(name);
 	}
 
 	@Override
-	public boolean deletePlayerData(final OfflinePlayer player)
+	public final boolean deletePlayerData(final OfflinePlayer player)
 	{
 		if (database == null)
 			return false;
-		return database.deleteEntry(player);
+		else
+			return database.deleteEntry(player);
 	}
 
 	@Override
-	public final HashSet<S> getOnlinePlayerDatas()
+	public final Set<S> getOnlinePlayerDatas()
 	{
-		final HashSet<S> res = new HashSet<S>();
+		final Set<S> res = new HashSet<S>();
 		for (final Player player : Bukkit.getOnlinePlayers())
 			res.add(getPlayerData(player));
 		res.remove(null);
@@ -192,9 +221,9 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public final HashSet<Player> getOnlinePlayersPerIP(final String IP)
+	public final Set<Player> getOnlinePlayersPerIP(final String IP)
 	{
-		final HashSet<Player> res = new HashSet<Player>();
+		final Set<Player> res = new HashSet<Player>();
 		for (final Player player : Bukkit.getOnlinePlayers())
 			if (player.getAddress().getAddress().getHostAddress().equals(IP))
 				res.add(player);
@@ -202,9 +231,9 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public final HashSet<S> getOnlinePlayerDatasPerIP(final String IP)
+	public final Set<S> getOnlinePlayerDatasPerIP(final String IP)
 	{
-		final HashSet<S> res = new HashSet<S>();
+		final Set<S> res = new HashSet<S>();
 		for (final Player player : getOnlinePlayersPerIP(IP))
 			res.add(getPlayerData(player));
 		res.remove(null);
@@ -312,28 +341,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	@Override
 	public ListFormat getPlayerDataListFormat()
 	{
-		return new ListFormat()
-		{
-
-			@Override
-			@Localized({ "CRAZYPLUGIN.COMMAND.PLAYER.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.ENTRYFORMAT $Name$ $...$" })
-			public String headFormat(final CommandSender sender)
-			{
-				return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.HEADER").getLanguageText(sender);
-			}
-
-			@Override
-			public String listFormat(final CommandSender sender)
-			{
-				return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.LISTFORMAT").getLanguageText(sender);
-			}
-
-			@Override
-			public String entryFormat(final CommandSender sender)
-			{
-				return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.ENTRYFORMAT").getLanguageText(sender);
-			}
-		};
+		return defaultPlayerListFormat;
 	}
 
 	@Override

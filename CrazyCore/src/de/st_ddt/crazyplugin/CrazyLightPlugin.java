@@ -3,20 +3,23 @@ package de.st_ddt.crazyplugin;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.Mode;
 
 public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightPluginInterface
 {
 
-	private static final LinkedHashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin> lightplugins = new LinkedHashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin>();
+	private static final Map<Class<? extends CrazyLightPlugin>, CrazyLightPlugin> lightplugins = new LinkedHashMap<Class<? extends CrazyLightPlugin>, CrazyLightPlugin>();
 	private String chatHeader = null;
 
 	@Override
@@ -29,10 +32,10 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 
 	protected String getDefaultChatHeader()
 	{
-		return ChatColor.RED + "[" + ChatColor.GREEN + getDescription().getName() + ChatColor.RED + "] " + ChatColor.WHITE;
+		return ChatColor.RED + "[" + ChatColor.GREEN + getName() + ChatColor.RED + "] " + ChatColor.WHITE;
 	}
 
-	public static Collection<CrazyLightPlugin> getCrazyLightPlugins()
+	public final static Collection<CrazyLightPlugin> getCrazyLightPlugins()
 	{
 		return lightplugins.values();
 	}
@@ -104,7 +107,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	}
 
 	@Override
-	public String getVersion()
+	public final String getVersion()
 	{
 		return getDescription().getVersion();
 	}
@@ -150,5 +153,36 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 	public int compareTo(final CrazyLightPluginInterface o)
 	{
 		return getName().compareTo(o.getName());
+	}
+
+	final Mode<String> getChatHeaderMode()
+	{
+		if (this instanceof CrazyPluginInterface)
+			return new Mode<String>((CrazyPluginInterface) this, "chatHeader", String.class)
+			{
+
+				@Override
+				public String getValue()
+				{
+					return chatHeader;
+				}
+
+				@Override
+				public void setValue(final CommandSender sender, final String... args) throws CrazyException
+				{
+					setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
+					showValue(sender);
+				}
+
+				@Override
+				public void setValue(final String newValue) throws CrazyException
+				{
+					chatHeader = newValue;
+					getConfig().set("chatHeader", ChatHelper.decolorise(chatHeader));
+					saveConfig();
+				}
+			};
+		else
+			return null;
 	}
 }
