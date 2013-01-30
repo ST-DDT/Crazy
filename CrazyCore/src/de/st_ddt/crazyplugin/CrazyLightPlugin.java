@@ -1,8 +1,10 @@
 package de.st_ddt.crazyplugin;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
@@ -180,6 +182,16 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 					chatHeader = newValue;
 					getConfig().set("chatHeader", ChatHelper.decolorise(chatHeader));
 					saveConfig();
+				}
+
+				@Override
+				public List<String> tab(final String... args)
+				{
+					if (args.length != 1 && args[0].length() != 0)
+						return null;
+					final List<String> res = new ArrayList<String>(1);
+					res.add(ChatHelper.decolorise(chatHeader));
+					return res;
 				}
 			};
 		else
