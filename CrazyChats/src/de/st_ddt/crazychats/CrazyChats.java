@@ -62,7 +62,6 @@ import de.st_ddt.crazychats.listener.CrazyChatsPlayerListener_132;
 import de.st_ddt.crazychats.listener.CrazyChatsTagAPIListener;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
@@ -92,7 +91,6 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final AdminChannel adminChannel = new AdminChannel();
 	private final Set<ControlledChannelInterface> controlledChannels = Collections.synchronizedSet(new HashSet<ControlledChannelInterface>());
 	private final Map<Integer, CustomChannel> customChannels = Collections.synchronizedMap(new HashMap<Integer, CustomChannel>());
-	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private CrazyChatsPlayerListener playerListener;
 	private int newChannelID;
 	private String consoleDisplayName = "[CONSOLE]";
@@ -644,11 +642,6 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public CrazyChatsPlayerListener getPlayerListener()
 	{
 		return playerListener;
-	}
-
-	public CrazyPluginCommandMainMode getModeCommand()
-	{
-		return modeCommand;
 	}
 
 	public Map<String, String> getGroupPrefixes()

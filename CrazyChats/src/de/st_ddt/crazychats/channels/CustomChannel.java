@@ -770,7 +770,11 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 
 	public static enum CustomChannelPermissionRule
 	{
-		EVERYONE, OWNERONLY, ALLMEMBERS, MEMBERLIST, PERMISSION;
+		EVERYONE,
+		OWNERONLY,
+		ALLMEMBERS,
+		MEMBERLIST,
+		PERMISSION;
 	}
 
 	protected class CustomChannelCommandMode extends CrazyPluginCommandMainMode
