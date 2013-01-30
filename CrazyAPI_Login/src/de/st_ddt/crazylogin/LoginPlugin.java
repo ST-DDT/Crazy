@@ -73,4 +73,20 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 	public void broadcastLocaleRootMessage(boolean console, String[] permissions, boolean loggedInOnly, String localepath, Object... args);
 
 	public void broadcastLocaleMessage(boolean console, String[] permissions, boolean loggedInOnly, CrazyLocale locale, Object... args);
+
+	public class LoginPluginProvider
+	{
+
+		private LoginPlugin<? extends LoginData> plugin;
+
+		public LoginPlugin<? extends LoginData> getPlugin()
+		{
+			return plugin;
+		}
+
+		void setPlugin(final LoginPlugin<? extends LoginData> plugin)
+		{
+			this.plugin = plugin;
+		}
+	}
 }
