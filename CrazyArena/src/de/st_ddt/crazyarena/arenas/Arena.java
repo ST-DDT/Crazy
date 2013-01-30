@@ -17,10 +17,11 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.CrazyArenaPlugin;
+import de.st_ddt.crazyarena.command.ArenaCommandModeEditor;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaUnsupportedException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
-import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
+import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHeaderProvider;
@@ -35,10 +36,12 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 
 	public static final String ARENADATAROOTPATH = "plugins" + File.separator + "CrazyArena" + File.separator + "arenas" + File.separator;
 	protected final String name;
-	protected final YamlConfiguration config = new YamlConfiguration();
 	protected final String chatHeader;
-	protected final Map<String, S> participants = new HashMap<String, S>();
 	protected final CrazyLocale locale;
+	protected final YamlConfiguration config = new YamlConfiguration();
+	protected final Map<String, S> participants = new HashMap<String, S>();
+	protected final CrazyCommandTreeExecutor<Arena<S>> mainCommand = new CrazyCommandTreeExecutor<Arena<S>>(this);
+	protected final ArenaCommandModeEditor<S> modeCommand = new ArenaCommandModeEditor<S>(this);
 	protected ArenaStatus status = ArenaStatus.INITIALIZING;
 
 	public static Arena<?> loadFromFile(final String name) throws Exception
@@ -75,6 +78,8 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		this.locale.setAlternative(typeLocale);
 		final CrazyLocale defaultLocale = pluginLocale.getSecureLanguageEntry("ARENA_DEFAULT");
 		typeLocale.setAlternative(defaultLocale);
+		// Commands
+		mainCommand.addSubCommand(modeCommand, "mode");
 	}
 
 	public Arena(final String name, final ConfigurationSection config)
@@ -93,6 +98,8 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 			status = ArenaStatus.DISABLED;
 		if (config.getBoolean("edit", false))
 			status = ArenaStatus.CONSTRUCTING;
+		// Commands
+		mainCommand.addSubCommand(modeCommand, "mode");
 	}
 
 	public final ArenaStatus getStatus()
@@ -406,7 +413,10 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		// Participants sorted by TypeAndName
 	}
 
-	public abstract CrazyCommandExecutorInterface getCommandExecutor();
+	public final CrazyCommandTreeExecutor<Arena<S>> getMainCommand()
+	{
+		return mainCommand;
+	}
 
 	public final CrazyLocale getLocale()
 	{

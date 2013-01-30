@@ -1,6 +1,6 @@
 package de.st_ddt.crazyarena.utils;
 
-import org.bukkit.command.CommandSender;
+import org.bukkit.Location;
 
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
@@ -18,11 +18,9 @@ public class ArenaChatHelper extends ChatHelperExtended
 	 * 
 	 * @param timeTotal
 	 *            Time in milliseconds.
-	 * @param target
-	 *            The target who should recieve the message.
 	 * @return A time/duration formated like this 2 days 5:12:3.100
 	 */
-	public static String timeConverter(final long timeTotal, final CommandSender target)
+	public static String timeConverter(final long timeTotal)
 	{
 		final StringBuilder res = new StringBuilder();
 		long time = timeTotal;
@@ -30,7 +28,7 @@ public class ArenaChatHelper extends ChatHelperExtended
 		{
 			final long unit = time / 86400000;
 			time %= 86400000;
-			res.append(unit + " " + CrazyLocale.getUnitText("TIME.DAYS", target) + " ");
+			res.append(unit + " " + CrazyLocale.getUnitText("TIME.DAYS", CrazyLocale.getDefaultLanguage()) + " ");
 		}
 		if (timeTotal > 3600000)
 		{
@@ -48,5 +46,18 @@ public class ArenaChatHelper extends ChatHelperExtended
 		time %= 1000;
 		res.append(unit + "." + time);
 		return res.toString();
+	}
+
+	public static String locationConverter(final Location location)
+	{
+		return location.getBlockX() + "," + location.getBlockY() + "," + location.getBlockZ();
+	}
+
+	public static String locationConverter(final Location location, final boolean showWorld)
+	{
+		if (showWorld)
+			return location.getWorld().getName() + " " + locationConverter(location);
+		else
+			return locationConverter(location);
 	}
 }

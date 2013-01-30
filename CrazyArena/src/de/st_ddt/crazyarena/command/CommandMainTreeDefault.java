@@ -41,7 +41,7 @@ public class CommandMainTreeDefault extends CommandExecutor
 		else
 			try
 			{
-				arena.getCommandExecutor().command(sender, args);
+				arena.getMainCommand().command(sender, args);
 			}
 			catch (final CrazyCommandNoSuchException e)
 			{
@@ -69,7 +69,7 @@ public class CommandMainTreeDefault extends CommandExecutor
 		if (arena == null)
 			return null;
 		else
-			return arena.getCommandExecutor().tab(sender, args);
+			return arena.getMainCommand().tab(sender, args);
 	}
 
 	@Override
@@ -81,6 +81,6 @@ public class CommandMainTreeDefault extends CommandExecutor
 		if (arena == null)
 			return true;
 		else
-			return arena.getCommandExecutor().hasAccessPermission(sender);
+			return arena.getMainCommand().hasAccessPermission(sender);
 	}
 }
