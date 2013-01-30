@@ -83,11 +83,6 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		return mainCommand;
 	}
 
-	public final CrazyPluginCommandMainMode getModeCommand()
-	{
-		return modeCommand;
-	}
-
 	private void registerCommands()
 	{
 		final PluginCommand command = getCommand(getName());
