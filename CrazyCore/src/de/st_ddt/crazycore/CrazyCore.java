@@ -181,6 +181,7 @@ public final class CrazyCore extends CrazyPlugin
 		// ChatHeader
 		ChatHelper.setShowChatHeaders(config.getBoolean("showChatHeaders", true));
 		// Language
+		consoleLog("Loading languages...");
 		loadUserLanguages = config.getBoolean("loadUserLanguages", true);
 		final String systemLanguage = System.getProperty("user.language").toLowerCase();
 		final String defaultLanguage = config.getString("defaultLanguage", systemLanguage + "_" + systemLanguage);
