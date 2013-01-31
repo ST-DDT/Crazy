@@ -34,6 +34,11 @@ public class RaceData
 		return stage;
 	}
 
+	public String getName()
+	{
+		return participant.getName();
+	}
+
 	public RaceParticipant getParticipant()
 	{
 		return participant;
@@ -54,6 +59,11 @@ public class RaceData
 		return timeString;
 	}
 
+	public String getTimeString(final RaceData compare)
+	{
+		return ArenaChatHelper.timeConverter(time - compare.getTime());
+	}
+
 	public Object[] getData()
 	{
 		return new Object[] { participant.getName(), position, timeString, "" };
@@ -64,6 +74,6 @@ public class RaceData
 		if (compare == null)
 			return getData();
 		else
-			return new Object[] { participant.getName(), position, timeString, ArenaChatHelper.timeConverter(time - compare.getTime()) };
+			return new Object[] { participant.getName(), position, timeString, getTimeString(compare) };
 	}
 }

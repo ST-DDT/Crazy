@@ -50,6 +50,7 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 			}
 
 			@Override
+			@Localized("CRAZYARENARACE.COMMAND.STAGE.LISTHEAD $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$")
 			public String headFormat(final CommandSender target)
 			{
 				return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYARENARACE.COMMAND.STAGE.LISTHEAD");

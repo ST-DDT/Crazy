@@ -33,6 +33,7 @@ public class CommandSpectatorSpawns extends CrazyCommandListEditor<RaceArena, Lo
 			}
 
 			@Override
+			@Localized("CRAZYARENARACE.COMMAND.SPECTATOR.LISTHEAD $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$")
 			public String headFormat(final CommandSender target)
 			{
 				return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYARENARACE.COMMAND.SPECTATOR.LISTHEAD");

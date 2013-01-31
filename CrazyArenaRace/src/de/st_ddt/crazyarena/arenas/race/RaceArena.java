@@ -269,7 +269,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		return 30000;
 	}
 
-	@Localized({ "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST $Name$ $Stage$ $Position$ $Duration$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE $NextStage$ $Distance$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST $Name$ $Stage$ $Position$ $Duration$ $BehindFirst$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE $NextStage$ $Distance$ $BehindPrevious$" })
+	@Localized({ "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST $Name$ $Stage$ $Duration$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE $NextStage$ $Distance$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST $Name$ $Stage$ $Position$ $Duration$ $BehindFirst$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE $NextStage$ $Distance$ $Position$ $Previous$ $BehindPrevious$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE $Follower$ $BehindPrevious$" })
 	public void reachStage(final RaceParticipant raceParticipant, final RaceStage stage)
 	{
 		final RaceData data = stage.reachStage(raceParticipant, System.currentTimeMillis() - startTime);
@@ -281,16 +281,16 @@ public class RaceArena extends Arena<RaceParticipant>
 			final int position = data.getPosition();
 			if (position == 1)
 			{
-				broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST", raceParticipant.getName(), stage.toShortString(), position, data.getTimeString());
+				broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST", raceParticipant.getName(), stage.toShortString(), data.getTimeString());
 				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()));
 			}
 			else
 			{
-				// EDIT add behindFirst
-				broadcastLocaleMessage(false, false, true, true, "PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST", raceParticipant.getName(), stage.toShortString(), position, data.getTimeString());
-				// EDIT add behindPrevious
-				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()));
-				// EDIT add message for previous player
+				final RaceData first = stage.getDatas().get(0);
+				broadcastLocaleMessage(false, false, true, true, "PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST", raceParticipant.getName(), stage.toShortString(), position, data.getTimeString(), data.getTimeString(first));
+				final RaceData previous = stage.getDatas().get(position - 2);
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), position, previous.getName(), data.getTimeString(previous));
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE", previous.getParticipant(), raceParticipant.getName(), data.getTimeString(previous));
 			}
 		}
 	}
