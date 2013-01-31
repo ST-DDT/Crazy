@@ -1,5 +1,6 @@
 ﻿CRAZYARENARACE=CrazyArenaRace
-CRAZYARENA.ARENA_RACE.FINISHED=&6$0$ &Fwon the race. Time: &2$1$&F\nSee you again in the next race!
+CRAZYARENA.ARENA_RACE.FINISHED=&6$0$ &Fwon the race. Time: &2$1$
+CRAZYARENA.ARENA_RACE.FINISHED.END=&6$0$ &Fwon the race. Time: &2$1$&F\nSee you again in the next race!
 CRAZYARENA.ARENA_RACE.PARTICIPANT.JOINED.BROADCAST=$0$ joined the race.
 CRAZYARENA.ARENA_RACE.PARTICIPANT.JOINED.READYCOMMAND=Type /ready to ready yourself.
 CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT=You left the race.

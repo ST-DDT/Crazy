@@ -295,7 +295,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		}
 	}
 
-	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$" })
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$", "CRAZYARENA.ARENA_RACE.FINISHED.END $Name$ $Time$" })
 	public void reachFinish(final RaceParticipant raceParticipant, final RaceData data, final RaceData winner)
 	{
 		raceParticipant.setParticipantType(ParticipantType.WINNER);
@@ -305,7 +305,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		final int run = runnumber;
 		if (position == 1)
 		{
-			broadcastLocaleMessage(false, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
+			broadcastLocaleMessage(true, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
 			Bukkit.getScheduler().scheduleSyncDelayedTask(getArenaPlugin(), new Runnable()
 			{
 
@@ -317,9 +317,9 @@ public class RaceArena extends Arena<RaceParticipant>
 						for (final RaceParticipant participant : getParticipants(ParticipantType.PARTICIPANT))
 						{
 							participant.setParticipantType(ParticipantType.DEFEADED);
-							broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.TOOSLOW", participant.getName());
+							broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.TOOSLOW", participant.getName());
 						}
-						broadcastLocaleMessage(true, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
+						broadcastLocaleMessage(false, true, true, true, "FINISHED.END", winner.getName(), winner.getTimeString());
 						stop();
 					}
 				}
@@ -327,7 +327,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		}
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 		{
-			broadcastLocaleMessage(true, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
+			broadcastLocaleMessage(false, true, true, true, "FINISHED.END", winner.getName(), winner.getTimeString());
 			stop();
 		}
 	}
