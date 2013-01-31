@@ -1,6 +1,8 @@
 package de.st_ddt.crazyarena.arenas.race;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +27,9 @@ import de.st_ddt.crazyarena.exceptions.CrazyArenaExceedingParticipantsLimitExcep
 import de.st_ddt.crazyarena.listener.race.CrazyRaceArenaPlayerListener;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyarena.participants.race.RaceParticipant;
+import de.st_ddt.crazyarena.score.Score;
+import de.st_ddt.crazyarena.score.Score.ScoreEntry;
+import de.st_ddt.crazyarena.score.ScoreOutputModifier;
 import de.st_ddt.crazyarena.tasks.CountDownTask;
 import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
@@ -37,6 +42,9 @@ import de.st_ddt.crazyutil.locales.Localized;
 public class RaceArena extends Arena<RaceParticipant>
 {
 
+	private final static int DEFAUTLMINPARTICIPANTS = 2;
+	private final static long DEFAULTKICKSLOWPLAYERS = 30;
+	private final static long DEFAULTEXPIRATIONTIME = 1000 * 60 * 60 * 24 * 30;
 	protected final List<Location> playerSpawns = new ArrayList<Location>();
 	protected final SpawnList spectatorSpawns = new SpawnList();
 	protected final Map<String, Location> quitLocation = new HashMap<String, Location>();
@@ -47,6 +55,57 @@ public class RaceArena extends Arena<RaceParticipant>
 	private long startTime = 0;
 	private final int minParticipants;
 	private final long kickSlowPlayers;
+	private final Score currentScore = new Score(this, new String[] { "nextstage" }, new String[] { "nextstageindex", "timeelapsed", "opponents" }, new Comparator<Score.ScoreEntry>()
+	{
+
+		@Override
+		public int compare(final ScoreEntry o1, final ScoreEntry o2)
+		{
+			final RaceStage stage = stages.get(o1.getValue("nextstageindex").intValue() - 1);
+			final int res = compare(stage.getDatas().size(), stages.get(o2.getValue("nextstageindex").intValue() - 1).getDatas().size());
+			// =0 => same stage => calc distance to next target
+			if (res == 0)
+				return compare(o1.getPlayer(), o2.getPlayer(), stage.getNext().getZone().getBasis());
+			else
+				return res;
+		}
+
+		private int compare(final Player player1, final Player player2, final Location basis)
+		{
+			if (player1 == null)
+				if (player2 == null)
+					return 0;
+				else
+					return -1;
+			else if (player2 == null)
+				return 1;
+			else
+				return Double.compare(player1.getLocation().distance(basis), player1.getLocation().distance(basis));
+		}
+
+		private int compare(final int i1, final int i2)
+		{
+			return (i1 < i2 ? -1 : (i1 == i2 ? 0 : 1));
+		}
+	});
+	private final Score permanentScore = new Score(this, new String[] { "date", "time" }, new String[] { "duration", "leadfirst", "opponent" }, "duration", false, new ScoreOutputModifier()
+	{
+
+		@Override
+		public String getStringOutput(final String name, final String value)
+		{
+			return value;
+		}
+
+		@Override
+		public String getDoubleOutput(final String name, final Double value)
+		{
+			if (name.equals("duration") || name.equals("leadfirst"))
+				return ArenaChatHelper.timeConverter(value.longValue());
+			else
+				return value.toString();
+		}
+	});
 
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
@@ -75,16 +134,21 @@ public class RaceArena extends Arena<RaceParticipant>
 				previous = temp;
 			}
 		}
-		minParticipants = config.getInt("minParticipants", 2);
-		kickSlowPlayers = config.getLong("kickSlowPlayers", 30);
+		minParticipants = config.getInt("minParticipants", DEFAUTLMINPARTICIPANTS);
+		kickSlowPlayers = config.getLong("kickSlowPlayers", DEFAULTKICKSLOWPLAYERS);
+		currentScore.setExpiringTime(Long.MAX_VALUE);
+		permanentScore.load(config.getConfigurationSection("score"));
+		permanentScore.setExpiringTime(config.getLong("scoreExpiringTime", DEFAULTEXPIRATIONTIME));
 		registerCommands();
 	}
 
 	public RaceArena(final String name)
 	{
 		super(name);
-		minParticipants = 2;
-		kickSlowPlayers = 30;
+		minParticipants = DEFAUTLMINPARTICIPANTS;
+		kickSlowPlayers = DEFAULTKICKSLOWPLAYERS;
+		currentScore.setExpiringTime(Long.MAX_VALUE);
+		permanentScore.setExpiringTime(DEFAULTEXPIRATIONTIME);
 		registerCommands();
 	}
 
@@ -139,6 +203,9 @@ public class RaceArena extends Arena<RaceParticipant>
 			target.save(config, "stages.stage" + (i++) + ".");
 		config.set("minParticipants", minParticipants);
 		config.set("kickSlowPlayers", kickSlowPlayers);
+		config.set("score", null);
+		permanentScore.save(config, "score.");
+		config.set("scoreExpiringTime", permanentScore.getExpiringTime());
 	}
 
 	public Location getEmptyStartLocation()
@@ -319,17 +386,35 @@ public class RaceArena extends Arena<RaceParticipant>
 							participant.setParticipantType(ParticipantType.DEFEADED);
 							broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.TOOSLOW", participant.getName());
 						}
-						broadcastLocaleMessage(false, true, true, true, "FINISHED.END", winner.getName(), winner.getTimeString());
-						stop();
+						raceEnd(winner);
 					}
 				}
 			}, kickSlowPlayers * 20);
 		}
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
+			raceEnd(winner);
+	}
+
+	private final void raceEnd(final RaceData winner)
+	{
+		final List<RaceData> datas = winner.getStage().getDatas();
+		final Date now = new Date();
+		final String date = CrazyLightPluginInterface.DATEFORMAT.format(now);
+		final String time = CrazyLightPluginInterface.TIMEFORMAT.format(now);
+		for (final RaceData data : datas)
 		{
-			broadcastLocaleMessage(false, true, true, true, "FINISHED.END", winner.getName(), winner.getTimeString());
-			stop();
+			final ScoreEntry score = permanentScore.getOrAddScore(data.getName());
+			if (score.setValueIfLower("duration", data.getTime()))
+			{
+				score.setValue("opponents", datas.size());
+				score.setString("date", date);
+				score.setString("time", time);
+			}
+			score.setValueIfLower("leadfirst", data.getTime(winner));
 		}
+		permanentScore.updateSigns();
+		broadcastLocaleMessage(false, true, true, true, "FINISHED.END", winner.getName(), winner.getTimeString());
+		stop();
 	}
 
 	@Override

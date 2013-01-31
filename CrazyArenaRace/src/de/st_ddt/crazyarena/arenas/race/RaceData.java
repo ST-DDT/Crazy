@@ -54,6 +54,11 @@ public class RaceData
 		return time;
 	}
 
+	public long getTime(final RaceData compare)
+	{
+		return time - compare.getTime();
+	}
+
 	public String getTimeString()
 	{
 		return timeString;
@@ -61,7 +66,7 @@ public class RaceData
 
 	public String getTimeString(final RaceData compare)
 	{
-		return ArenaChatHelper.timeConverter(time - compare.getTime());
+		return ArenaChatHelper.timeConverter(getTime(compare));
 	}
 
 	public Object[] getData()
