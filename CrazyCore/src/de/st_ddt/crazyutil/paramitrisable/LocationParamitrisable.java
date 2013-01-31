@@ -24,7 +24,7 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 
 	public LocationParamitrisable(final CommandSender sender)
 	{
-		this(sender instanceof Player ? ((Player) sender).getLocation() : null, sender);
+		this(sender instanceof Player ? simplyfyLocation(((Player) sender).getLocation()) : null, sender);
 	}
 
 	public LocationParamitrisable(final Location defaultValue, final CommandSender sender)
@@ -152,5 +152,26 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 		for (int i = 0; i < length; i++)
 			res[i] = worlds.get(i).getName();
 		return res;
+	}
+
+	public static Location simplyfyLocation(final Location location)
+	{
+		return simplyfyLocation(location, 10, 1);
+	}
+
+	public static Location simplyfyLocation(final Location location, final int precCoords, final int trimAngles)
+	{
+		if (precCoords > 0)
+		{
+			location.setX(((double) Math.round(location.getX() * precCoords)) / precCoords);
+			location.setY(((double) Math.round(location.getY() * precCoords)) / precCoords);
+			location.setZ(((double) Math.round(location.getZ() * precCoords)) / precCoords);
+		}
+		if (trimAngles > 0)
+		{
+			location.setYaw(Math.round(location.getYaw() / trimAngles) * trimAngles);
+			location.setPitch(Math.round(location.getPitch() / trimAngles) * trimAngles);
+		}
+		return location;
 	}
 }
