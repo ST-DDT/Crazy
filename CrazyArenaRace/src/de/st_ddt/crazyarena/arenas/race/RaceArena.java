@@ -1,7 +1,6 @@
 package de.st_ddt.crazyarena.arenas.race;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,8 +30,6 @@ import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
 import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
-import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
-import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -44,19 +41,16 @@ public class RaceArena extends Arena<RaceParticipant>
 	protected final SpawnList spectatorSpawns = new SpawnList();
 	protected final Map<String, Location> quitLocation = new HashMap<String, Location>();
 	protected final List<RaceStage> stages = new ArrayList<RaceStage>();
-	protected final CrazyCommandTreeExecutor<RaceArena> mainCommand;
 	private int runnumber = 0;
 	// Match Variables
 	private CrazyRaceArenaPlayerListener playerMatchListener;
-	private int winners = 0;
-	private Date startTime = new Date(0);
+	private long startTime = 0;
 	private final int minParticipants;
 	private final long kickSlowPlayers;
 
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
 		super(name, config);
-		mainCommand = new CrazyCommandTreeExecutor<RaceArena>(this);
 		// Player Spawns
 		final ConfigurationSection playerConfig = config.getConfigurationSection("players");
 		if (playerConfig != null)
@@ -89,7 +83,6 @@ public class RaceArena extends Arena<RaceParticipant>
 	public RaceArena(final String name)
 	{
 		super(name);
-		mainCommand = new CrazyCommandTreeExecutor<RaceArena>(this);
 		minParticipants = 2;
 		kickSlowPlayers = 30;
 		registerCommands();
@@ -100,6 +93,12 @@ public class RaceArena extends Arena<RaceParticipant>
 		mainCommand.addSubCommand(new CommandPlayerSpawns(this), "ps", "players", "playerspawns");
 		mainCommand.addSubCommand(new CommandSpectatorSpawns(this), "ss", "spectators", "spectatorspawns");
 		mainCommand.addSubCommand(new CommandRaceStages(this), "rs", "stages", "racestages");
+		registerModes();
+	}
+
+	private void registerModes()
+	{
+		// EDIT Automatisch generierter Methodenstub
 	}
 
 	@Override
@@ -207,7 +206,7 @@ public class RaceArena extends Arena<RaceParticipant>
 							{
 								runnumber++;
 								arena.status = ArenaStatus.PLAYING;
-								startTime = new Date();
+								startTime = System.currentTimeMillis();
 								for (final RaceParticipant participant : getParticipants(ParticipantType.READY))
 								{
 									participant.setParticipantType(ParticipantType.PARTICIPANT);
@@ -270,12 +269,38 @@ public class RaceArena extends Arena<RaceParticipant>
 		return 30000;
 	}
 
-	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$" })
-	public void reachFinish(final RaceParticipant raceParticipant)
+	@Localized({ "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST $Name$ $Stage$ $Position$ $Duration$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE $NextStage$ $Distance$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST $Name$ $Stage$ $Position$ $Duration$ $BehindFirst$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE $NextStage$ $Distance$ $BehindPrevious$" })
+	public void reachStage(final RaceParticipant raceParticipant, final RaceStage stage)
 	{
-		final int position = ++winners;
+		final RaceData data = stage.reachStage(raceParticipant, System.currentTimeMillis() - startTime);
+		if (stage.isGoal())
+			reachFinish(raceParticipant, data);
+		else
+		{
+			final RaceStage next = stage.getNext();
+			final int position = data.getPosition();
+			if (position == 1)
+			{
+				broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST", raceParticipant.getName(), stage.toShortString(), position, data.getTimeString());
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()));
+			}
+			else
+			{
+				// EDIT add behindFirst
+				broadcastLocaleMessage(false, false, true, true, "PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST", raceParticipant.getName(), stage.toShortString(), position, data.getTimeString());
+				// EDIT add behindPrevious
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()));
+				// EDIT add message for previous player
+			}
+		}
+	}
+
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$" })
+	public void reachFinish(final RaceParticipant raceParticipant, final RaceData data)
+	{
 		raceParticipant.setParticipantType(ParticipantType.WINNER);
-		final String time = ArenaChatHelper.timeConverter(new Date().getTime() - startTime.getTime(), raceParticipant.getPlayer());
+		final int position = data.getPosition();
+		final String time = data.getTimeString();
 		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, time);
 		final int run = runnumber;
 		if (position == 1)
@@ -343,12 +368,6 @@ public class RaceArena extends Arena<RaceParticipant>
 	public CrazyArenaRace getArenaPlugin()
 	{
 		return CrazyArenaRace.getPlugin();
-	}
-
-	@Override
-	public CrazyCommandExecutorInterface getCommandExecutor()
-	{
-		return mainCommand;
 	}
 
 	public List<Location> getPlayerSpawns()

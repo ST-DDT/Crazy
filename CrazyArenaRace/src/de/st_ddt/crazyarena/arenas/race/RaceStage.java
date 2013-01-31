@@ -1,9 +1,13 @@
 package de.st_ddt.crazyarena.arenas.race;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
+import de.st_ddt.crazyarena.participants.race.RaceParticipant;
 import de.st_ddt.crazygeo.region.RealRoom;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.Named;
@@ -17,6 +21,7 @@ public class RaceStage implements Named, ConfigurationSaveable
 	protected String name;
 	protected RealRoom<? extends Room> zone;
 	protected RaceStage next;
+	protected final List<RaceData> datas = new ArrayList<RaceData>();
 
 	public RaceStage(final RaceArena arena, final String name, final Location center, final double radius, final RaceStage next)
 	{
@@ -40,6 +45,11 @@ public class RaceStage implements Named, ConfigurationSaveable
 		this.name = name;
 		this.zone = zone;
 		this.next = next;
+	}
+
+	public RaceArena getArena()
+	{
+		return arena;
 	}
 
 	@Override
@@ -86,6 +96,18 @@ public class RaceStage implements Named, ConfigurationSaveable
 	public boolean isGoal()
 	{
 		return next == null;
+	}
+
+	public List<RaceData> getDatas()
+	{
+		return datas;
+	}
+
+	public RaceData reachStage(final RaceParticipant participant, final long time)
+	{
+		final RaceData data = new RaceData(arena, this, participant, datas.size() + 1, time);
+		datas.add(data);
+		return data;
 	}
 
 	@Override

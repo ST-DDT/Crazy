@@ -17,11 +17,11 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 	protected final Location start;
 	protected RaceStage stage;
 
-	public RaceParticipant(final Player player, final RaceArena arena, final Location start, final RaceStage target)
+	public RaceParticipant(final Player player, final RaceArena arena, final Location start, final RaceStage stage)
 	{
 		super(player, arena);
 		this.start = start;
-		this.stage = target;
+		this.stage = stage;
 	}
 
 	public Location getStart()
@@ -41,10 +41,8 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 
 	public void reachStage()
 	{
+		arena.reachStage(this, stage);
 		stage = stage.getNext();
-		// EDIT show a message here
-		if (stage == null)
-			arena.reachFinish(this);
 	}
 
 	@Override
