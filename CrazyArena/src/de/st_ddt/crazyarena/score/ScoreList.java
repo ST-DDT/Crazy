@@ -1,23 +1,30 @@
 package de.st_ddt.crazyarena.score;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
+import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
+import de.st_ddt.crazyarena.utils.SignRotation;
 
 public class ScoreList
 {
 
-	protected final TreeMap<String, Score> scores = new TreeMap<String, Score>();
+	protected final Collection<Location> signs = new ArrayList<Location>();
+	protected final Map<String, Score> scores = new TreeMap<String, Score>();
 	protected final Arena<?> arena;
 	protected final String[] stringnames;
 	protected final String[] valuenames;
@@ -45,6 +52,15 @@ public class ScoreList
 	public Score getScore(final String name)
 	{
 		return scores.get(name.toLowerCase());
+	}
+
+	public Score getOrAddScore(final String name)
+	{
+		final Score score = getScore(name);
+		if (score == null)
+			return addScore(name);
+		else
+			return score;
 	}
 
 	/**
@@ -75,14 +91,14 @@ public class ScoreList
 
 	public List<Score> getStringSortedScore(final String name)
 	{
-		final ArrayList<Score> scores = new ArrayList<Score>(getScores());
+		final List<Score> scores = new ArrayList<Score>(getScores());
 		Collections.sort(scores, new ScoreStringSorter(name));
 		return scores;
 	}
 
 	public List<Score> getDoubleSortedScore(final String name)
 	{
-		final ArrayList<Score> scores = new ArrayList<Score>(getScores());
+		final List<Score> scores = new ArrayList<Score>(getScores());
 		Collections.sort(scores, new ScoreDoubleSorter(name));
 		return scores;
 	}
@@ -92,9 +108,9 @@ public class ScoreList
 		final List<Score> scores = getXSortedScore(sort);
 		int scoreCount = scores.size();
 		final int colCount = columns.length;
-		final String[][] entries = new String[entryCount][];
+		final String[][] entries = new String[scoreCount][colCount];
 		for (int i = scoreCount; i < entryCount; i++)
-			entries[i] = new String[colCount];
+			Arrays.fill(entries[i], "");
 		scoreCount = Math.min(scoreCount, entryCount);
 		for (int i = 0; i < scoreCount; i++)
 			entries[i] = scores.get(i).getSignRow(columns);
@@ -115,68 +131,73 @@ public class ScoreList
 		return entries;
 	}
 
-	public void updateSign(final Location location)
+	public boolean updateSign(final Location location)
 	{
-		// Ausrichtung suchen
-		Vector vector = null;
-		if (location.clone().add(1, 0, 0).getBlock().getType() == Material.WALL_SIGN)
-			vector = new Vector(1, 0, 0);
-		else if (location.clone().add(-1, 0, 0).getBlock().getType() == Material.WALL_SIGN)
-			vector = new Vector(-1, 0, 0);
-		else if (location.clone().add(0, 1, 0).getBlock().getType() == Material.WALL_SIGN)
-			vector = new Vector(0, 1, 0);
-		else if (location.clone().add(0, -1, 0).getBlock().getType() == Material.WALL_SIGN)
-			vector = new Vector(0, -1, 0);
-		else
-			return;
+		final Block block = location.getBlock();
+		if (block.getType() != Material.WALL_SIGN)
+			return false;
+		final SignRotation rotation = SignRotation.getByBytes(block.getData());
+		final Vector vector = rotation.getTextVector();
 		// Spalten suchen
-		final ArrayList<String> columns = new ArrayList<String>();
-		Location search = location.clone();
-		int depth = checkColumn(location);
+		final List<String> columns = new ArrayList<String>();
+		final Location search = location.clone();
+		int depth = checkColumn(location.clone(), rotation);
 		String sort = "name";
 		columns.add("name");
-		while (search.add(vector).getBlock().getType() == Material.WALL_SIGN)
+		while (search.add(vector).getBlock().getType() == Material.WALL_SIGN && search.getBlock().getData() == rotation.getDirection())
 		{
-			final Sign sign = (Sign) search.add(vector).getBlock().getState();
-			if (sign.getLine(2).equals("sort"))
-				sort = sign.getLine(3);
-			columns.add(sign.getLine(3));
-			depth = Math.min(depth, checkColumn(search));
+			final String[] lines = ((Sign) search.getBlock().getState()).getLines();
+			if (!lines[0].equals(CrazyArena.ARENASIGNHEADER))
+				break;
+			if (lines[2].equals("sort"))
+				sort = lines[3];
+			columns.add(lines[3]);
+			depth = Math.min(depth, checkColumn(search.clone(), rotation));
 		}
 		// Einträge holen
 		final String[][] entrylist = getSignEntries(sort, depth * 4, columns);
 		// Einträge anzeigen
+		final Location applier = location.clone();
 		final int columnsAnz = columns.size();
-		location.add(0, -1, 0);
 		for (int i = 0; i < depth; i++)
 		{
-			search = location.clone();
-			search.add(0, -i, 0);
+			applier.add(0, -1, 0);
 			for (int j = 0; j < columnsAnz; j++)
 			{
-				final Sign sign = ((Sign) search.add(vector).getBlock().getState());
+				final Sign sign = ((Sign) applier.clone().add(vector).getBlock().getState());
 				sign.setLine(0, entrylist[i * 4][j]);
-				sign.setLine(1, entrylist[i * 4 + 1][j + 1]);
-				sign.setLine(2, entrylist[i * 4 + 2][j + 2]);
-				sign.setLine(3, entrylist[i * 4 + 3][j + 3]);
+				sign.setLine(1, entrylist[i * 4 + 1][j]);
+				sign.setLine(2, entrylist[i * 4 + 2][j]);
+				sign.setLine(3, entrylist[i * 4 + 3][j]);
 				sign.update();
 			}
 		}
+		return true;
 	}
 
-	private int checkColumn(final Location location)
+	private int checkColumn(final Location location, final SignRotation rotation)
 	{
-		final Location search = location.clone();
-		int anz = -1;
-		while (search.getBlock().getType() == Material.WALL_SIGN)
-		{
-			search.add(0, -1, 0);
+		int anz = 0;
+		while (location.add(0, -1, 0).getBlock().getType() == Material.WALL_SIGN && location.getBlock().getData() == rotation.getDirection())
 			anz++;
-		}
 		return anz;
 	}
 
-	public void updateSignList(final List<Location> locations)
+	public void updateSigns()
+	{
+		final Iterator<Location> it = signs.iterator();
+		while (it.hasNext())
+			if (!updateSign(it.next()))
+				it.remove();
+	}
+
+	public void updateSigns(final Collection<Location> locations)
+	{
+		for (final Location location : locations)
+			updateSign(location);
+	}
+
+	public void updateSigns(final Location... locations)
 	{
 		for (final Location location : locations)
 			updateSign(location);

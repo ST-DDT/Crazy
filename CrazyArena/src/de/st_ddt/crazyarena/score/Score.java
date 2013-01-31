@@ -52,6 +52,18 @@ public class Score extends PlayerData<Score> implements Comparable<Score>
 		values.put(entry, value);
 	}
 
+	public void setValueIfHigher(final String entry, final double value)
+	{
+		if (values.get(entry) < value)
+			values.put(entry, value);
+	}
+
+	public void setValueIfLower(final String entry, final double value)
+	{
+		if (values.get(entry) > value)
+			values.put(entry, value);
+	}
+
 	public void addValue(final String entry, final double add)
 	{
 		double value = values.get(entry);
