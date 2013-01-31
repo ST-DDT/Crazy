@@ -137,7 +137,8 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 		final int last = stages.size() - 1;
 		for (int i = 0; i < last; i++)
 			stages.get(i).setNext(stages.get(i + 1));
-		stages.get(last).setNext(null);
+		if (last >= 0)
+			stages.get(last).setNext(null);
 		plugin.saveToFile();
 	}
 
