@@ -269,7 +269,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		return 30000;
 	}
 
-	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST $Name$ $Stage$ $Duration$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE $NextStage$ $Distance$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST $Name$ $Stage$ $Position$ $Duration$ $BehindFirst$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE $NextStage$ $Distance$ $Position$ $Previous$ $BehindPrevious$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE $Follower$ $BehindPrevious$" })
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST $Name$ $Stage$ $Duration$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE $NextStage$ $Location$ $Distance$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST $Name$ $Stage$ $Position$ $Duration$ $BehindFirst$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE $NextStage$ $Location$ $Distance$ $Position$ $Previous$ $BehindPrevious$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE $Follower$ $BehindPrevious$" })
 	public void reachStage(final RaceParticipant raceParticipant, final RaceStage stage)
 	{
 		final RaceData data = stage.reachStage(raceParticipant, System.currentTimeMillis() - startTime);
@@ -282,14 +282,14 @@ public class RaceArena extends Arena<RaceParticipant>
 			if (position == 1)
 			{
 				broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST", raceParticipant.getName(), stage.toShortString(), data.getTimeString());
-				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()));
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), raceParticipant.getPlayer().getLocation().distance(next.getZone().getBasis()));
 			}
 			else
 			{
 				final RaceData first = stage.getDatas().get(0);
 				broadcastLocaleMessage(false, false, true, true, "PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST", raceParticipant.getName(), stage.toShortString(), position, data.getTimeString(), data.getTimeString(first));
 				final RaceData previous = stage.getDatas().get(position - 2);
-				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), position, previous.getName(), data.getTimeString(previous));
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), raceParticipant.getPlayer().getLocation().distance(next.getZone().getBasis()), position, previous.getName(), data.getTimeString(previous));
 				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE", previous.getParticipant(), raceParticipant.getName(), data.getTimeString(previous));
 			}
 		}
