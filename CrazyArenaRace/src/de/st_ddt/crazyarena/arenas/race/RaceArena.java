@@ -269,12 +269,12 @@ public class RaceArena extends Arena<RaceParticipant>
 		return 30000;
 	}
 
-	@Localized({ "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST $Name$ $Stage$ $Duration$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE $NextStage$ $Distance$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST $Name$ $Stage$ $Position$ $Duration$ $BehindFirst$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE $NextStage$ $Distance$ $Position$ $Previous$ $BehindPrevious$", "CRAZYARENA.ARENA_#TYPE#.PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE $Follower$ $BehindPrevious$" })
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST $Name$ $Stage$ $Duration$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE $NextStage$ $Distance$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST $Name$ $Stage$ $Position$ $Duration$ $BehindFirst$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE $NextStage$ $Distance$ $Position$ $Previous$ $BehindPrevious$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE $Follower$ $BehindPrevious$" })
 	public void reachStage(final RaceParticipant raceParticipant, final RaceStage stage)
 	{
 		final RaceData data = stage.reachStage(raceParticipant, System.currentTimeMillis() - startTime);
 		if (stage.isGoal())
-			reachFinish(raceParticipant, data);
+			reachFinish(raceParticipant, data, stage.getDatas().get(0));
 		else
 		{
 			final RaceStage next = stage.getNext();
@@ -296,12 +296,12 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$" })
-	public void reachFinish(final RaceParticipant raceParticipant, final RaceData data)
+	public void reachFinish(final RaceParticipant raceParticipant, final RaceData data, final RaceData winner)
 	{
 		raceParticipant.setParticipantType(ParticipantType.WINNER);
 		final int position = data.getPosition();
 		final String time = data.getTimeString();
-		broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, time);
+		broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, time);
 		final int run = runnumber;
 		if (position == 1)
 			Bukkit.getScheduler().scheduleSyncDelayedTask(getArenaPlugin(), new Runnable()
@@ -317,14 +317,14 @@ public class RaceArena extends Arena<RaceParticipant>
 							participant.setParticipantType(ParticipantType.DEFEADED);
 							broadcastLocaleMessage(true, true, true, true, "PARTICIPANT.TOOSLOW", participant.getName());
 						}
-						broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), time);
+						broadcastLocaleMessage(true, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
 						stop();
 					}
 				}
 			}, kickSlowPlayers * 20);
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 		{
-			broadcastLocaleMessage(true, true, true, true, "FINISHED", raceParticipant.getName(), time);
+			broadcastLocaleMessage(true, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
 			stop();
 		}
 	}
@@ -361,6 +361,8 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 		unregisterMatchListener();
 		quitLocation.clear();
+		for (final RaceStage stage : stages)
+			stage.getDatas().clear();
 		super.stop();
 	}
 
