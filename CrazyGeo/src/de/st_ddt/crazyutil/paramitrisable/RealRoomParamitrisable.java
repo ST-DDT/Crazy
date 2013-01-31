@@ -25,7 +25,7 @@ public class RealRoomParamitrisable extends TypedParamitrisable<RealRoom<? exten
 		super(null);
 		this.sender = sender;
 		if (sender instanceof Player)
-			value = new RealRoom<Room>(defaultRoom, ((Player) sender).getLocation());
+			value = new RealRoom<Room>(defaultRoom, LocationParamitrisable.simplyfyLocation(((Player) sender).getLocation()));
 		this.defaultRoom = defaultRoom;
 	}
 
