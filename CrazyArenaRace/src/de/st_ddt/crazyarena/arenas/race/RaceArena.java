@@ -304,6 +304,8 @@ public class RaceArena extends Arena<RaceParticipant>
 		broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.REACHEDFINISH", raceParticipant.getName(), position, time);
 		final int run = runnumber;
 		if (position == 1)
+		{
+			broadcastLocaleMessage(false, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
 			Bukkit.getScheduler().scheduleSyncDelayedTask(getArenaPlugin(), new Runnable()
 			{
 
@@ -322,6 +324,7 @@ public class RaceArena extends Arena<RaceParticipant>
 					}
 				}
 			}, kickSlowPlayers * 20);
+		}
 		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
 		{
 			broadcastLocaleMessage(true, true, true, true, "FINISHED", winner.getName(), winner.getTimeString());
