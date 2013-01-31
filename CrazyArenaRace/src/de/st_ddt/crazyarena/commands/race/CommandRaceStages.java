@@ -147,9 +147,14 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 	{
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<index>");
+		final int size = getCollection().size();
+		if (size == 0)
+			throw new CrazyCommandCircumstanceException("if list is not empty!");
 		try
 		{
-			final int index = Integer.parseInt(args[0]);
+			final int index = Integer.parseInt(args[0]) - 1;
+			if (index < 0 || index >= size)
+				throw new CrazyCommandParameterException(0, "Number (Integer)", "0 < x <= " + size);
 			final RaceStage elem = getCollection().remove(index);
 			saveChanges();
 			CrazyLocale.getLocaleHead().getLanguageEntry(removeViaIndexLocale()).sendMessage(sender, elem, index);
