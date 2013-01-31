@@ -10,6 +10,8 @@ import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,6 +23,7 @@ import de.st_ddt.crazyarena.command.ArenaCommandModeEditor;
 import de.st_ddt.crazyarena.exceptions.CrazyArenaUnsupportedException;
 import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.participants.ParticipantType;
+import de.st_ddt.crazyarena.utils.SignRotation;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -29,6 +32,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
+import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatHeaderProvider, ParameterData
@@ -559,4 +563,13 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 	}
 
 	public abstract CrazyArenaPlugin getArenaPlugin();
+
+	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.UNSUPPORTED $ArenaName$", "CRAZYARENA.ARENA_#TYPE#.SIGNS.UNSUPPORTED $ArenaName$" })
+	public void attachSign(final Block block, final SignRotation rotation, final Player player)
+	{
+		sendLocaleMessage("SIGNS.UNSUPPORTED", player, getName());
+		final Sign sign = (Sign) block.getState();
+		sign.setLine(1, "UNSUPPORTED");
+		sign.update();
+	}
 }

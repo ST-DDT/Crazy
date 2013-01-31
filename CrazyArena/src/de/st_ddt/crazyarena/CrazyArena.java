@@ -15,6 +15,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -55,6 +56,7 @@ import de.st_ddt.crazyutil.modes.Mode;
 public class CrazyArena extends CrazyPlugin
 {
 
+	public final static String ARENASIGNHEADER = ChatColor.RED + "[" + ChatColor.GREEN + "CArena" + ChatColor.RED + "]";
 	private static CrazyArena plugin;
 	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private final Set<Arena<?>> arenas = new HashSet<Arena<?>>();

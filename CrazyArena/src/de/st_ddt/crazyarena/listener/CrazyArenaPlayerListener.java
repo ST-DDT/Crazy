@@ -4,17 +4,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.util.Vector;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.participants.ParticipantType;
+import de.st_ddt.crazyarena.utils.SignRotation;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.locales.Localized;
 
 public class CrazyArenaPlayerListener implements Listener
 {
@@ -78,6 +87,75 @@ public class CrazyArenaPlayerListener implements Listener
 		}
 		plugin.getSelections().remove(player);
 		plugin.getInvitations().remove(player);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void SignChangeEvent(final SignChangeEvent event)
+	{
+		final Block block = event.getBlock();
+		if (block.getType() != Material.WALL_SIGN)
+			return;
+		final String[] lines = event.getLines();
+		if (lines[0] == null || lines[1] == null)
+			return;
+		if (!lines[0].equals("[CA]") && !lines[0].equals("[CArena]"))
+			return;
+		final SignRotation rotation = SignRotation.getByBytes(block.getData());
+		if (lines[1].length() == 0)
+		{
+			final Vector flipped = rotation.getTextVector().multiply(-1);
+			final Location search = block.getLocation().clone();
+			while (search.add(flipped).getBlock().getType() == Material.WALL_SIGN)
+			{
+				final Block searchBlock = search.getBlock();
+				if (rotation != SignRotation.getByBytes(searchBlock.getData()))
+					return;
+				final Sign start = (Sign) searchBlock.getState();
+				final String[] lines2 = start.getLines();
+				if (!lines2[0].equals(CrazyArena.ARENASIGNHEADER))
+					return;
+				if (lines2[1].length() == 0)
+					continue;
+				if (searchSigns(plugin.getArenaByName(lines2[1]), searchBlock, rotation, event.getPlayer()))
+					lines[0] = CrazyArena.ARENASIGNHEADER;
+				else
+					event.setCancelled(true);
+				return;
+			}
+		}
+		else
+		{
+			final Arena<?> arena = plugin.getArenaByName(lines[1]);
+			if (searchSigns(arena, block, rotation, event.getPlayer()))
+			{
+				lines[0] = CrazyArena.ARENASIGNHEADER;
+				lines[1] = arena.getName();
+			}
+			else
+				event.setCancelled(true);
+		}
+	}
+
+	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.NOPERMISSION $ArenaName$", "CRAZYARENA.ARENA_#TYPE#.SIGNS.NOPERMISSION $ArenaName$" })
+	private boolean searchSigns(final Arena<?> arena, final Block block, final SignRotation rotation, final Player player)
+	{
+		if (arena == null)
+			return false;
+		if (!arena.hasPermission(player, "signs.create"))
+		{
+			arena.sendLocaleMessage("SIGNS.NOPERMISSION", player, arena.getName());
+			return false;
+		}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+		{
+
+			@Override
+			public void run()
+			{
+				arena.attachSign(block, rotation, player);
+			}
+		});
+		return true;
 	}
 
 	private final class Rejoin
