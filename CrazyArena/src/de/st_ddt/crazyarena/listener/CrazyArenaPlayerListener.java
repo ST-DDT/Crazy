@@ -116,7 +116,7 @@ public class CrazyArenaPlayerListener implements Listener
 					return;
 				if (lines2[1].length() == 0)
 					continue;
-				if (searchSigns(plugin.getArenaByName(lines2[1]), searchBlock, rotation, event.getPlayer()))
+				if (searchSigns(plugin.getArenaByName(lines2[1]), searchBlock, rotation, null, event.getPlayer()))
 					lines[0] = CrazyArena.ARENASIGNHEADER;
 				else
 					event.setCancelled(true);
@@ -126,7 +126,7 @@ public class CrazyArenaPlayerListener implements Listener
 		else
 		{
 			final Arena<?> arena = plugin.getArenaByName(lines[1]);
-			if (searchSigns(arena, block, rotation, event.getPlayer()))
+			if (searchSigns(arena, block, rotation, lines[2], event.getPlayer()))
 			{
 				lines[0] = CrazyArena.ARENASIGNHEADER;
 				lines[1] = arena.getName();
@@ -137,7 +137,7 @@ public class CrazyArenaPlayerListener implements Listener
 	}
 
 	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.NOPERMISSION $ArenaName$", "CRAZYARENA.ARENA_#TYPE#.SIGNS.NOPERMISSION $ArenaName$" })
-	private boolean searchSigns(final Arena<?> arena, final Block block, final SignRotation rotation, final Player player)
+	private boolean searchSigns(final Arena<?> arena, final Block block, final SignRotation rotation, final String type, final Player player)
 	{
 		if (arena == null)
 			return false;
@@ -146,15 +146,16 @@ public class CrazyArenaPlayerListener implements Listener
 			arena.sendLocaleMessage("SIGNS.NOPERMISSION", player, arena.getName());
 			return false;
 		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-		{
-
-			@Override
-			public void run()
+		if (type != null)
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 			{
-				arena.attachSign(block, rotation, player);
-			}
-		});
+
+				@Override
+				public void run()
+				{
+					arena.attachSign(block, rotation, type, player);
+				}
+			});
 		return true;
 	}
 
