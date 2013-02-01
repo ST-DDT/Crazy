@@ -25,6 +25,7 @@ import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.utils.SignRotation;
 import de.st_ddt.crazyplugin.data.PlayerData;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
+import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class Score implements ConfigurationSaveable
 {
@@ -296,35 +297,50 @@ public class Score implements ConfigurationSaveable
 
 	public void load(final ConfigurationSection config)
 	{
+		loadScores(config);
+		loadSigns(config);
+	}
+
+	public void loadScores(ConfigurationSection config)
+	{
 		if (config == null)
 			return;
-		loadScores(config.getConfigurationSection("datas"));
+		config = config.getConfigurationSection("datas");
+		if (config == null)
+			return;
+		for (final String key : config.getKeys(false))
+			scores.put(key, new ScoreEntry(key, config));
 		final long expireTest = System.currentTimeMillis() - expiringTime;
 		final Iterator<ScoreEntry> it = scores.values().iterator();
 		while (it.hasNext())
 			if (it.next().getLastAction() < expireTest)
 				it.remove();
-		loadSigns(config.getConfigurationSection("signs"));
 	}
 
-	private void loadScores(final ConfigurationSection config)
+	public void loadSigns(ConfigurationSection config)
 	{
+		if (config == null)
+			return;
+		config = config.getConfigurationSection("signs");
 		if (config == null)
 			return;
 		for (final String key : config.getKeys(false))
-			scores.put(key, new ScoreEntry(key, config));
-	}
-
-	private void loadSigns(final ConfigurationSection config)
-	{
-		if (config == null)
-			return;
-		// EDIT loadSigns
+		{
+			final Location location = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection(key), null);
+			if (location != null)
+				signs.add(location);
+		}
 	}
 
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
+		saveScore(config, path);
+		saveSigns(config, path);
+	}
+
+	public void saveScore(final ConfigurationSection config, String path)
+	{
 		final long expireTest = System.currentTimeMillis() - expiringTime;
 		final Iterator<ScoreEntry> it = scores.values().iterator();
 		while (it.hasNext())
@@ -332,8 +348,23 @@ public class Score implements ConfigurationSaveable
 				it.remove();
 		if (config == null)
 			return;
+		path += "datas";
+		config.set(path, null);
+		path += path + ".";
 		for (final Entry<String, ScoreEntry> entry : scores.entrySet())
 			entry.getValue().save(config, path + entry.getKey() + ".");
+	}
+
+	public void saveSigns(final ConfigurationSection config, String path)
+	{
+		if (config == null)
+			return;
+		path += "sign";
+		config.set(path, null);
+		path += path + ".s";
+		int i = 0;
+		for (final Location location : signs)
+			ObjectSaveLoadHelper.saveLocation(config, path + i++ + ".", location);
 	}
 
 	private class ScoreStringSorter implements Comparator<ScoreEntry>
@@ -540,21 +571,10 @@ public class Score implements ConfigurationSaveable
 		@Override
 		public void save(final ConfigurationSection config, final String path)
 		{
-			saveScore(config, path + "datas.");
-			saveSigns(config, path + "signs.");
-		}
-
-		private void saveScore(final ConfigurationSection config, final String path)
-		{
 			for (final Entry<String, String> entry : strings.entrySet())
 				config.set(path + entry.getKey(), entry.getValue());
 			for (final Entry<String, Double> entry : values.entrySet())
 				config.set(path + entry.getKey(), entry.getValue());
-		}
-
-		private void saveSigns(final ConfigurationSection config, final String string)
-		{
-			// EDIT saveSigns
 		}
 	}
 }
