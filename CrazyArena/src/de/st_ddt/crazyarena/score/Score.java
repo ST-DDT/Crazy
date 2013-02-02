@@ -18,12 +18,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.utils.SignRotation;
 import de.st_ddt.crazyplugin.data.PlayerData;
+import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
@@ -94,9 +96,29 @@ public class Score implements ConfigurationSaveable
 		return score;
 	}
 
+	public ScoreEntry addScore(final PlayerDataInterface player)
+	{
+		return addScore(player.getName());
+	}
+
+	public ScoreEntry addScore(final Player player)
+	{
+		return addScore(player.getName());
+	}
+
 	public ScoreEntry getScore(final String name)
 	{
 		return scores.get(name.toLowerCase());
+	}
+
+	public ScoreEntry getScore(final PlayerDataInterface player)
+	{
+		return getScore(player.getName());
+	}
+
+	public ScoreEntry getScore(final Player player)
+	{
+		return getScore(player.getName());
 	}
 
 	public ScoreEntry getOrAddScore(final String name)
@@ -106,6 +128,16 @@ public class Score implements ConfigurationSaveable
 			return addScore(name);
 		else
 			return score;
+	}
+
+	public ScoreEntry getOrAddScore(final PlayerDataInterface player)
+	{
+		return getOrAddScore(player.getName());
+	}
+
+	public ScoreEntry getOrAddScore(final Player player)
+	{
+		return getOrAddScore(player.getName());
 	}
 
 	public void clear()
