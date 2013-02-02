@@ -1,5 +1,5 @@
 ﻿CRAZYTIMECARD=CrazyTimeCard
-CRAZYTIMECARD.ACTIVATE.REQUEST=Prosze aktywowac wazna karte /activatecard <Karta>
+CRAZYTIMECARD.ACTIVATE.REQUEST=Prosze aktywowac wazna karte &3/activatecard <Karta>
 CRAZYTIMECARD.COMMAND.ACTIVATE.SUCCESS=Aktywacja karty udana &E$0$&F.\nTwoj czas uplywa $1$.
 CRAZYTIMECARD.COMMAND.COMMANDS.ADDED=Dodano polecenie do BialejListy\n($0$)
 CRAZYTIMECARD.COMMAND.COMMANDS.LISTHEAD=$2$BialaLista polecen (Strona $0$ / $1$)

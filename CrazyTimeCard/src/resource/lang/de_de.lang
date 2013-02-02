@@ -1,5 +1,5 @@
 ﻿CRAZYTIMECARD=CrazyTimeCard
-CRAZYTIMECARD.ACTIVATE.REQUEST=Bitte aktiviere eine gültige KeyCard /activate <Card>
+CRAZYTIMECARD.ACTIVATE.REQUEST=Bitte aktiviere eine gültige KeyCard  mit &3/activate <Card>
 CRAZYTIMECARD.COMMAND.ACTIVATE.SUCCESS=Die Karte &E$0$&F wurde erfolgreich aktiviert.\nDeine Zeit endet nun am $1$.
 CRAZYTIMECARD.COMMAND.COMMANDS.ADDED=Befehl hinzugefügt\n($0$)
 CRAZYTIMECARD.COMMAND.COMMANDS.LISTHEAD=Befehls Whitelist (Seite $0$ / $1$)

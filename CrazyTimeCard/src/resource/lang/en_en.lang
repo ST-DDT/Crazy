@@ -1,5 +1,5 @@
 ﻿CRAZYTIMECARD=CrazyTimeCard
-CRAZYTIMECARD.ACTIVATE.REQUEST=Please activate a valid card /activatecard <Card>
+CRAZYTIMECARD.ACTIVATE.REQUEST=Please activate a valid card via &3/activatecard <Card>
 CRAZYTIMECARD.COMMAND.ACTIVATE.SUCCESS=Successfuly activated card &E$0$&F.\nYour time expires $1$.
 CRAZYTIMECARD.COMMAND.COMMANDS.ADDED=Whitelisted Command added\n($0$)
 CRAZYTIMECARD.COMMAND.COMMANDS.LISTHEAD=$2$Whitelisted Commands (Page $0$ / $1$)

@@ -1,5 +1,5 @@
 ﻿CRAZYTIMECARD=CrazyTimeCard
-CRAZYTIMECARD.ACTIVATE.REQUEST=请激活一个有效的卡 /activatecard <激活卡>
+CRAZYTIMECARD.ACTIVATE.REQUEST=请激活一个有效的卡 &3/activatecard <激活卡>
 CRAZYTIMECARD.COMMAND.ACTIVATE.SUCCESS=卡号:E$0$&F激活成功.\n你的游戏时间直到 $1$!.
 CRAZYTIMECARD.COMMAND.COMMANDS.ADDED=Whitelisted Command added\n($0$)
 CRAZYTIMECARD.COMMAND.COMMANDS.LISTHEAD=$2$Whitelisted Commands (Page $0$ / $1$)
