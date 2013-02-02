@@ -204,6 +204,14 @@ public class CrazyArena extends CrazyPlugin
 	}
 
 	@Override
+	public void onDisable()
+	{
+		for (final Arena<?> arena : arenas)
+			arena.shutdown();
+		super.onDisable();
+	}
+
+	@Override
 	@Localized({ "CRAZYARENA.ARENA.FILENOTFOUND $Arena$", "CRAZYARENA.ARENA.LOADED $Amount$" })
 	public void loadConfiguration()
 	{
@@ -255,7 +263,6 @@ public class CrazyArena extends CrazyPlugin
 		final LinkedList<String> names = new LinkedList<String>();
 		for (final Arena<?> arena : arenas)
 		{
-			arena.shutdown();
 			arena.saveToFile();
 			names.add(arena.getName());
 		}
