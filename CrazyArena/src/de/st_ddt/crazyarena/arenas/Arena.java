@@ -75,7 +75,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		this.name = name;
 		getDataFolder().mkdirs();
 		this.chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE;
-		// Locale CRAZYARENA.ARENA.#NAME#... -> CRAZYARENA.ARENA_#TYPE#... -> CRAZYARENA.ARENA_DEFAULT...
+		// Locale CRAZYARENA.ARENA.$NAME$... -> CRAZYARENA.ARENA_$TYPE$... -> CRAZYARENA.ARENA_DEFAULT...
 		final CrazyLocale pluginLocale = CrazyArena.getPlugin().getLocale();
 		this.locale = pluginLocale.getSecureLanguageEntry("ARENA." + name.toUpperCase());
 		final CrazyLocale typeLocale = pluginLocale.getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
@@ -91,7 +91,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		super();
 		this.name = name;
 		this.chatHeader = ChatHelper.colorise(config.getString("chatHeader", ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE));
-		// Locale CRAZYARENA.ARENA.#NAME#... -> CRAZYARENA.ARENA_#TYPE#... -> CRAZYARENA.ARENA_DEFAULT...
+		// Locale CRAZYARENA.ARENA.$NAME$... -> CRAZYARENA.ARENA_$TYPE$... -> CRAZYARENA.ARENA_DEFAULT...
 		final CrazyLocale pluginLocale = CrazyArena.getPlugin().getLocale();
 		this.locale = pluginLocale.getSecureLanguageEntry("ARENA." + name.toUpperCase());
 		final CrazyLocale typeLocale = pluginLocale.getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
@@ -564,7 +564,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 
 	public abstract CrazyArenaPlugin getArenaPlugin();
 
-	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.UNSUPPORTED $ArenaName$", "CRAZYARENA.ARENA_#TYPE#.SIGNS.UNSUPPORTED $ArenaName$" })
+	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.UNSUPPORTED $ArenaName$", "CRAZYARENA.ARENA_$TYPE$.SIGNS.UNSUPPORTED $ArenaName$" })
 	public void attachSign(final Block block, final SignRotation rotation, final String type, final Player player)
 	{
 		sendLocaleMessage("SIGNS.UNSUPPORTED", player, getName());
