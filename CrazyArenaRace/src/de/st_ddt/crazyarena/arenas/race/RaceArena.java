@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -33,6 +34,7 @@ import de.st_ddt.crazyarena.score.ScoreOutputModifier;
 import de.st_ddt.crazyarena.tasks.CountDownTask;
 import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
+import de.st_ddt.crazyarena.utils.SignRotation;
 import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -55,7 +57,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	private long startTime = 0;
 	private final int minParticipants;
 	private final long kickSlowPlayers;
-	private final Score currentScore = new Score(this, new String[] { "nextstage" }, new String[] { "nextstageindex", "timeelapsed", "opponents" }, new Comparator<Score.ScoreEntry>()
+	private final Score currentScore = new Score(this, new String[] { "nextstage" }, new String[] { "nextstageindex", "timeelapsed" }, new Comparator<Score.ScoreEntry>()
 	{
 
 		@Override
@@ -88,7 +90,7 @@ public class RaceArena extends Arena<RaceParticipant>
 			return (i1 < i2 ? -1 : (i1 == i2 ? 0 : 1));
 		}
 	});
-	private final Score permanentScore = new Score(this, new String[] { "date", "time" }, new String[] { "duration", "leadfirst", "opponent" }, "duration", false, new ScoreOutputModifier()
+	private final Score permanentScore = new Score(this, new String[] { "date", "time" }, new String[] { "duration", "leadfirst", "opponents" }, "duration", false, new ScoreOutputModifier()
 	{
 
 		@Override
@@ -137,7 +139,8 @@ public class RaceArena extends Arena<RaceParticipant>
 		minParticipants = config.getInt("minParticipants", DEFAUTLMINPARTICIPANTS);
 		kickSlowPlayers = config.getLong("kickSlowPlayers", DEFAULTKICKSLOWPLAYERS);
 		currentScore.setExpiringTime(Long.MAX_VALUE);
-		permanentScore.load(config.getConfigurationSection("score"));
+		currentScore.loadSigns(config.getConfigurationSection("currentScore"));
+		permanentScore.load(config.getConfigurationSection("permanentScore"));
 		permanentScore.setExpiringTime(config.getLong("scoreExpiringTime", DEFAULTEXPIRATIONTIME));
 		registerCommands();
 	}
@@ -203,8 +206,8 @@ public class RaceArena extends Arena<RaceParticipant>
 			target.save(config, "stages.stage" + (i++) + ".");
 		config.set("minParticipants", minParticipants);
 		config.set("kickSlowPlayers", kickSlowPlayers);
-		config.set("score", null);
-		permanentScore.save(config, "score.");
+		currentScore.saveSigns(config, "currentScore.");
+		permanentScore.save(config, "permanentScore.");
 		config.set("scoreExpiringTime", permanentScore.getExpiringTime());
 	}
 
@@ -278,7 +281,9 @@ public class RaceArena extends Arena<RaceParticipant>
 								{
 									participant.setParticipantType(ParticipantType.PARTICIPANT);
 									participant.getPlayer().teleport(participant.getStart(), TeleportCause.PLUGIN);
+									currentScore.addScore(participant).setValue("nextstageindex", 1);
 								}
+								currentScore.updateSigns();
 								broadcastLocaleMessage(false, "START.STARTED", CrazyLightPluginInterface.DATETIMEFORMAT.format(startTime));
 							}
 							else
@@ -340,11 +345,18 @@ public class RaceArena extends Arena<RaceParticipant>
 	public void reachStage(final RaceParticipant raceParticipant, final RaceStage stage)
 	{
 		final RaceData data = stage.reachStage(raceParticipant, System.currentTimeMillis() - startTime);
+		final ScoreEntry score = currentScore.getScore(raceParticipant);
+		score.addValue("nextstageindex", 1);
+		score.addValue("timeelapsed", data.getTime());
 		if (stage.isGoal())
+		{
+			score.setString("nextstage", "-");
 			reachFinish(raceParticipant, data, stage.getDatas().get(0));
+		}
 		else
 		{
 			final RaceStage next = stage.getNext();
+			score.setString("nextstage", next.getName());
 			final int position = data.getPosition();
 			if (position == 1)
 			{
@@ -360,6 +372,7 @@ public class RaceArena extends Arena<RaceParticipant>
 				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE", previous.getParticipant(), raceParticipant.getName(), data.getTimeString(previous));
 			}
 		}
+		currentScore.updateSigns();
 	}
 
 	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$", "CRAZYARENA.ARENA_RACE.FINISHED.END $Name$ $Time$" })
@@ -451,6 +464,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		quitLocation.clear();
 		for (final RaceStage stage : stages)
 			stage.getDatas().clear();
+		currentScore.clear();
 		super.stop();
 	}
 
@@ -458,6 +472,17 @@ public class RaceArena extends Arena<RaceParticipant>
 	public CrazyArenaRace getArenaPlugin()
 	{
 		return CrazyArenaRace.getPlugin();
+	}
+
+	@Override
+	public void attachSign(final Block block, final SignRotation rotation, final String type, final Player player)
+	{
+		if (block == null)
+			return;
+		if (rotation == null)
+			return;
+		if (type.equals("") || type.equals("score") || type.equals("currentscore") | type.equals("ranks"))
+			currentScore.getSigns().add(block.getLocation());
 	}
 
 	public List<Location> getPlayerSpawns()
