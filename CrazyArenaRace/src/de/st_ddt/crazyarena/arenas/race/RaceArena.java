@@ -63,11 +63,14 @@ public class RaceArena extends Arena<RaceParticipant>
 		@Override
 		public int compare(final ScoreEntry o1, final ScoreEntry o2)
 		{
-			final RaceStage stage = stages.get(o1.getValue("nextstageindex").intValue() - 1);
-			final int res = compare(stage.getDatas().size(), stages.get(o2.getValue("nextstageindex").intValue() - 1).getDatas().size());
+			int index1 = o1.getValue("nextstageindex").intValue();
+			final int res = -compare(index1, o2.getValue("nextstageindex").intValue());
 			// =0 => same stage => calc distance to next target
 			if (res == 0)
-				return compare(o1.getPlayer(), o2.getPlayer(), stage.getNext().getZone().getBasis());
+				if (index1 == stages.size())
+					return -compare(o2.getValue("timeelapsed").intValue(), o2.getValue("timeelapsed").intValue());
+				else
+					return compare(o1.getPlayer(), o2.getPlayer(), stages.get(o1.getValue("nextstageindex").intValue() - 1).getZone().getBasis());
 			else
 				return res;
 		}
@@ -89,8 +92,27 @@ public class RaceArena extends Arena<RaceParticipant>
 		{
 			return (i1 < i2 ? -1 : (i1 == i2 ? 0 : 1));
 		}
+	}, new ScoreOutputModifier()
+	{
+
+		@Override
+		public String getStringOutput(String name, String value)
+		{
+			return value;
+		}
+
+		@Override
+		public String getDoubleOutput(String name, Double value)
+		{
+			if (name.equals("nextstageindex"))
+				return Integer.toString(value.intValue());
+			else if (name.equals("timeelapsed"))
+				return ArenaChatHelper.timeConverter(value.longValue());
+			else
+				return value.toString();
+		}
 	});
-	private final Score permanentScore = new Score(this, new String[] { "date", "time" }, new String[] { "duration", "leadfirst", "opponents" }, "duration", false, new ScoreOutputModifier()
+	private final Score permanentScore = new Score(this, new String[] { "date", "time" }, new String[] { "timeelapsed", "leadfirst", "opponents" }, "timeelapsed", false, new ScoreOutputModifier()
 	{
 
 		@Override
@@ -102,7 +124,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		@Override
 		public String getDoubleOutput(final String name, final Double value)
 		{
-			if (name.equals("duration") || name.equals("leadfirst"))
+			if (name.equals("timeelapsed") || name.equals("leadfirst"))
 				return ArenaChatHelper.timeConverter(value.longValue());
 			else
 				return value.toString();
@@ -139,8 +161,8 @@ public class RaceArena extends Arena<RaceParticipant>
 		minParticipants = config.getInt("minParticipants", DEFAUTLMINPARTICIPANTS);
 		kickSlowPlayers = config.getLong("kickSlowPlayers", DEFAULTKICKSLOWPLAYERS);
 		currentScore.setExpiringTime(Long.MAX_VALUE);
-		currentScore.loadSigns(config.getConfigurationSection("currentScore"));
-		permanentScore.load(config.getConfigurationSection("permanentScore"));
+		currentScore.load(config.getConfigurationSection("currentScore"), false, true);
+		permanentScore.load(config.getConfigurationSection("permanentScore"), true, true);
 		permanentScore.setExpiringTime(config.getLong("scoreExpiringTime", DEFAULTEXPIRATIONTIME));
 		registerCommands();
 	}
@@ -206,7 +228,7 @@ public class RaceArena extends Arena<RaceParticipant>
 			target.save(config, "stages.stage" + (i++) + ".");
 		config.set("minParticipants", minParticipants);
 		config.set("kickSlowPlayers", kickSlowPlayers);
-		currentScore.saveSigns(config, "currentScore.");
+		currentScore.save(config, "currentScore.", false, true);
 		permanentScore.save(config, "permanentScore.");
 		config.set("scoreExpiringTime", permanentScore.getExpiringTime());
 	}
@@ -351,12 +373,14 @@ public class RaceArena extends Arena<RaceParticipant>
 		if (stage.isGoal())
 		{
 			score.setString("nextstage", "-");
+			currentScore.updateSigns();
 			reachFinish(raceParticipant, data, stage.getDatas().get(0));
 		}
 		else
 		{
 			final RaceStage next = stage.getNext();
 			score.setString("nextstage", next.getName());
+			currentScore.updateSigns();
 			final int position = data.getPosition();
 			if (position == 1)
 			{
@@ -372,7 +396,6 @@ public class RaceArena extends Arena<RaceParticipant>
 				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE", previous.getParticipant(), raceParticipant.getName(), data.getTimeString(previous));
 			}
 		}
-		currentScore.updateSigns();
 	}
 
 	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.REACHEDFINISH $Name$ $Position$ $Time$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.TOOSLOW $Name$", "CRAZYARENA.ARENA_RACE.FINISHED $Name$ $Time$", "CRAZYARENA.ARENA_RACE.FINISHED.END $Name$ $Time$" })
@@ -417,7 +440,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		for (final RaceData data : datas)
 		{
 			final ScoreEntry score = permanentScore.getOrAddScore(data.getName());
-			if (score.setValueIfLower("duration", data.getTime()))
+			if (score.setValueIfLower("timeelapsed", data.getTime()))
 			{
 				score.setValue("opponents", datas.size());
 				score.setString("date", date);
@@ -483,6 +506,9 @@ public class RaceArena extends Arena<RaceParticipant>
 			return;
 		if (type.equals("") || type.equals("score") || type.equals("currentscore") | type.equals("ranks"))
 			currentScore.getSigns().add(block.getLocation());
+		else
+			permanentScore.getSigns().add(block.getLocation());
+		saveToFile();
 	}
 
 	public List<Location> getPlayerSpawns()
