@@ -236,9 +236,9 @@ public class Score implements ConfigurationSaveable
 		final List<ScoreEntry> scores = getXSortedScore(sort, reverse);
 		int scoreCount = scores.size();
 		final int colCount = columns.size();
-		final String[][] entries = new String[entryCount][];
+		final String[][] entries = new String[entryCount][colCount];
 		for (int i = scoreCount; i < entryCount; i++)
-			entries[i] = new String[colCount];
+			Arrays.fill(entries[i], "");
 		scoreCount = Math.min(scoreCount, entryCount);
 		for (int i = 0; i < scoreCount; i++)
 			entries[i] = scores.get(i).getSignRow(columns);
@@ -276,14 +276,13 @@ public class Score implements ConfigurationSaveable
 		// Einträge holen
 		final String[][] entrylist = getSignEntries(sort, reverse, depth * 4, columns);
 		// Einträge anzeigen
-		final Location applier = location.clone();
 		final int columnsAnz = columns.size();
 		for (int i = 0; i < depth; i++)
 		{
-			applier.add(0, -1, 0);
+			final Location applier = location.clone().subtract(0, i + 1, 0).subtract(vector);
 			for (int j = 0; j < columnsAnz; j++)
 			{
-				final Sign sign = ((Sign) applier.clone().add(vector).getBlock().getState());
+				final Sign sign = ((Sign) applier.add(vector).getBlock().getState());
 				sign.setLine(0, entrylist[i * 4][j]);
 				sign.setLine(1, entrylist[i * 4 + 1][j]);
 				sign.setLine(2, entrylist[i * 4 + 2][j]);
@@ -327,17 +326,18 @@ public class Score implements ConfigurationSaveable
 			updateSign(location);
 	}
 
-	public void load(final ConfigurationSection config)
-	{
-		loadScores(config);
-		loadSigns(config);
-	}
-
-	public void loadScores(ConfigurationSection config)
+	public void load(final ConfigurationSection config, final boolean scores, final boolean signs)
 	{
 		if (config == null)
 			return;
-		config = config.getConfigurationSection("datas");
+		if (scores)
+			loadScores(config.getConfigurationSection("datas"));
+		if (signs)
+			loadSigns(config.getConfigurationSection("signs"));
+	}
+
+	private void loadScores(final ConfigurationSection config)
+	{
 		if (config == null)
 			return;
 		for (final String key : config.getKeys(false))
@@ -349,11 +349,8 @@ public class Score implements ConfigurationSaveable
 				it.remove();
 	}
 
-	public void loadSigns(ConfigurationSection config)
+	private void loadSigns(final ConfigurationSection config)
 	{
-		if (config == null)
-			return;
-		config = config.getConfigurationSection("signs");
 		if (config == null)
 			return;
 		for (final String key : config.getKeys(false))
@@ -367,36 +364,41 @@ public class Score implements ConfigurationSaveable
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		saveScore(config, path);
-		saveSigns(config, path);
+		save(config, path, true, true);
 	}
 
-	public void saveScore(final ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path, final boolean scores, final boolean signs)
+	{
+		if (config == null)
+			return;
+		if (scores)
+		{
+			config.set(path + "datas", null);
+			saveScore(config, path + "datas.");
+		}
+		if (signs)
+		{
+			config.set(path + "signs", null);
+			saveSigns(config, path + "signs.s");
+		}
+	}
+
+	private void saveScore(final ConfigurationSection config, final String path)
 	{
 		final long expireTest = System.currentTimeMillis() - expiringTime;
 		final Iterator<ScoreEntry> it = scores.values().iterator();
 		while (it.hasNext())
 			if (it.next().getLastAction() < expireTest)
 				it.remove();
-		if (config == null)
-			return;
-		path += "datas";
-		config.set(path, null);
-		path += path + ".";
 		for (final Entry<String, ScoreEntry> entry : scores.entrySet())
 			entry.getValue().save(config, path + entry.getKey() + ".");
 	}
 
-	public void saveSigns(final ConfigurationSection config, String path)
+	private void saveSigns(final ConfigurationSection config, final String path)
 	{
-		if (config == null)
-			return;
-		path += "sign";
-		config.set(path, null);
-		path += path + ".s";
 		int i = 0;
 		for (final Location location : signs)
-			ObjectSaveLoadHelper.saveLocation(config, path + i++ + ".", location);
+			ObjectSaveLoadHelper.saveLocation(config, path + i++ + ".", location, true, false);
 	}
 
 	private class ScoreStringSorter implements Comparator<ScoreEntry>
@@ -525,18 +527,20 @@ public class Score implements ConfigurationSaveable
 
 		public String getEntry(final String column)
 		{
-			String string = getString(column);
+			final String string = getString(column);
 			if (string == null)
-				string = getValue(column).toString();
-			return string;
+				return getValue(column).toString();
+			else
+				return string;
 		}
 
 		public String getSignEntry(final String column)
 		{
-			String string = scoreOutputModifier.getStringOutput(column, getString(column));
+			final String string = scoreOutputModifier.getStringOutput(column, getString(column));
 			if (string == null)
-				string = scoreOutputModifier.getDoubleOutput(string, getValue(column));
-			return string;
+				return scoreOutputModifier.getDoubleOutput(column, getValue(column));
+			else
+				return string;
 		}
 
 		public String[] getSignRow(final String[] columns)
