@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazypromoter.commands.CrazyPromoterCommandCheck;
 import de.st_ddt.crazypromoter.data.Promotion;
@@ -26,7 +25,6 @@ public class CrazyPromoter extends CrazyPlugin
 {
 
 	private static CrazyPromoter plugin;
-	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	protected ArrayList<Promotion> promotions = new ArrayList<Promotion>();
 	private int checkInterval;
 
@@ -94,7 +92,6 @@ public class CrazyPromoter extends CrazyPlugin
 		registerCommands();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void loadConfiguration()
 	{
@@ -115,7 +112,7 @@ public class CrazyPromoter extends CrazyPlugin
 		else
 			for (final String name : promotionConfig.getKeys(false))
 				promotions.add(new Promotion(promotionConfig.getConfigurationSection(name)));
-		getServer().getScheduler().scheduleAsyncRepeatingTask(this, new CheckTask(plugin), 100, checkInterval * 20 * 60);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new CheckTask(plugin), 100, checkInterval * 20 * 60);
 	}
 
 	@Override
