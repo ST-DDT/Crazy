@@ -120,20 +120,6 @@ public class CrazyLoginRank extends CrazyPlayerDataPlugin<LoginRankData, LoginRa
 	}
 
 	@Override
-	public LoginRankData getAvailablePlayerData(final OfflinePlayer player)
-	{
-		LoginRankData res = null;
-		if (database != null)
-			res = database.getEntry(player);
-		if (res != null)
-			return res;
-		res = getPermissionBasedPlayerData(player);
-		if (res != null)
-			return res;
-		return getDefaultPlayerData(player);
-	}
-
-	@Override
 	public LoginRankData getPermissionBasedPlayerData(final String name)
 	{
 		return getPermissionBasedPlayerData(Bukkit.getPlayerExact(name));
