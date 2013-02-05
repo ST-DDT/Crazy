@@ -202,10 +202,13 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 	@Override
 	public WorldWeather getWorldWeather(final World world)
 	{
+		if (world == null)
+			return null;
 		final WorldWeather weather = worldWeather.get(world.getName());
-		if (weather != null)
+		if (weather == null)
+			return loadWorld(world);
+		else
 			return weather;
-		return loadWorld(world);
 	}
 
 	@Override

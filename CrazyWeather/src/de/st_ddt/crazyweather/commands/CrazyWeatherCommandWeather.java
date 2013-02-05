@@ -1,14 +1,17 @@
 package de.st_ddt.crazyweather.commands;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
@@ -42,7 +45,11 @@ public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor
 		params.put("static", keepStatic);
 		final BooleanParamitrisable keepLoad = new BooleanParamitrisable(false);
 		params.put("load", keepLoad);
-		ChatHelperExtended.readParameters(args, params);
+		ChatHelperExtended.readParameters(args, params, weather, duration, keepStatic, keepLoad);
+		if (world.getValue() == null)
+			throw new CrazyCommandNoSuchException("World", "(none)");
+		if (weather.getValue() == null)
+			throw new CrazyCommandNoSuchException("Weather", "(none)");
 		if (!sender.hasPermission("crazyweather.weather." + weather.getValue().toString().toLowerCase()) && !sender.hasPermission("crazyweather." + world.getValue().getName() + ".weather." + weather.getValue().toString().toLowerCase()))
 			throw new CrazyCommandPermissionException();
 		if (keepStatic.getValue())
@@ -55,5 +62,24 @@ public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor
 		plugin.getCrazyLogger().log("Weather", sender.getName() + " changed the weather on " + world.getValue().getName() + " to " + weather + " for " + duration + " ms. (Static:" + keepStatic + ", Load:" + keepLoad + ")");
 		plugin.sendLocaleMessage("COMMAND.WEATHER", sender, world.getValue().getName(), ChatConverter.timeConverter(duration.getValue() / 1000, 1, sender, 2, false), weather, keepStatic, keepLoad);
 		plugin.broadcastLocaleMessage("BROADCAST.WEATHER", sender.getName(), world.getValue().getName(), weather, keepStatic, keepLoad);
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		final Map<String, Tabbed> params = new TreeMap<String, Tabbed>();
+		final WorldParamitrisable world = new WorldParamitrisable(sender);
+		params.put("world", world);
+		final WeatherParamitrisable weather = new WeatherParamitrisable(null);
+		params.put("weather", weather);
+		params.put("", weather);
+		final DurationParamitrisable duration = new DurationParamitrisable((long) plugin.getRandomDuration());
+		params.put("d", duration);
+		params.put("duration", duration);
+		final BooleanParamitrisable keepStatic = new BooleanParamitrisable(false);
+		params.put("static", keepStatic);
+		final BooleanParamitrisable keepLoad = new BooleanParamitrisable(false);
+		params.put("load", keepLoad);
+		return ChatHelperExtended.tabHelp(args, params, weather, duration, keepStatic, keepLoad);
 	}
 }
