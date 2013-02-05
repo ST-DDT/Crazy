@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -15,10 +16,11 @@ import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.commands.CrazyCommandCollectionEditor;
 import de.st_ddt.crazyplugin.commands.CrazyCommandExecutorInterface;
+import de.st_ddt.crazyplugin.commands.CrazyCommandModeEditor;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHeaderProvider;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
@@ -30,11 +32,11 @@ import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public class CustomChannel extends AbstractMuteableChannel implements ControlledChannelInterface, ConfigurationSaveable
+public class CustomChannel extends AbstractMuteableChannel implements ControlledChannelInterface, ConfigurationSaveable, ChatHeaderProvider
 {
 
 	private final int id;
-	private final CrazyCommandTreeExecutor<CrazyChats> mainCommand;
+	private final CrazyCommandTreeExecutor<CustomChannel> mainCommand = new CrazyCommandTreeExecutor<CustomChannel>(this);
 	private final String owner;
 	private final Set<String> members;
 	private final Set<Player> activeMembers;
@@ -57,7 +59,6 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		this.id = plugin.getNewChannelID();
 		aliases.add(name.toLowerCase());
 		aliases.add(Integer.toString(id));
-		mainCommand = new CrazyCommandTreeExecutor<CrazyChats>(plugin);
 		this.owner = owner.getName();
 		this.members = new HashSet<String>();
 		if (owner instanceof Player)
@@ -87,7 +88,6 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		this.id = plugin.getNewChannelID();
 		aliases.add(name.toLowerCase());
 		aliases.add(Integer.toString(id));
-		this.mainCommand = new CrazyCommandTreeExecutor<CrazyChats>(plugin);
 		this.owner = owner;
 		this.members = new HashSet<String>();
 		this.members.add(owner);
@@ -117,7 +117,6 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		this.id = config.getInt("id", -1);
 		aliases.add(name.toLowerCase());
 		aliases.add(Integer.toString(id));
-		mainCommand = new CrazyCommandTreeExecutor<CrazyChats>(plugin);
 		this.owner = config.getString("owner");
 		this.members = new HashSet<String>();
 		final List<String> members = config.getStringList("members");
@@ -156,7 +155,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 
 	private void registerCommands(final CrazyChats plugin)
 	{
-		final CustomChannelCommandMode modeCommand = new CustomChannelCommandMode(plugin);
+		final CustomChannelCommandMode modeCommand = new CustomChannelCommandMode(this);
 		mainCommand.addSubCommand(modeCommand, "c", "cfg", "config", "o", "option");
 		registerModes(modeCommand);
 		mainCommand.addSubCommand(new CrazyCommandCollectionEditor<CrazyChats, String>(plugin)
@@ -374,7 +373,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 
 	private void registerModes(final CustomChannelCommandMode modeCommand)
 	{
-		modeCommand.addMode(modeCommand.new RuleMode(plugin, "listenRule")
+		modeCommand.addMode(new RuleMode(plugin, "listenRule")
 		{
 
 			@Override
@@ -412,7 +411,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return listenPermission;
 			}
 		});
-		modeCommand.addMode(modeCommand.new RuleMode(plugin, "talkRule")
+		modeCommand.addMode(new RuleMode(plugin, "talkRule")
 		{
 
 			@Override
@@ -450,7 +449,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return talkPermission;
 			}
 		});
-		modeCommand.addMode(modeCommand.new RuleMode(plugin, "joinRule")
+		modeCommand.addMode(new RuleMode(plugin, "joinRule")
 		{
 
 			@Override
@@ -465,7 +464,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 				return joinRule;
 			}
 		});
-		modeCommand.addMode(modeCommand.new RuleMode(plugin, "inviteRule")
+		modeCommand.addMode(new RuleMode(plugin, "inviteRule")
 		{
 
 			@Override
@@ -768,6 +767,12 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		return owner;
 	}
 
+	@Override
+	public String getChatHeader()
+	{
+		return plugin.getChatHeader().replace(']', '_') + ChatColor.GREEN + "Custom" + ChatColor.RED + "]";
+	}
+
 	public static enum CustomChannelPermissionRule
 	{
 		EVERYONE,
@@ -777,12 +782,12 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		PERMISSION;
 	}
 
-	protected class CustomChannelCommandMode extends CrazyPluginCommandMainMode
+	protected class CustomChannelCommandMode extends CrazyCommandModeEditor<CustomChannel>
 	{
 
-		public CustomChannelCommandMode(final CrazyChats plugin)
+		public CustomChannelCommandMode(final CustomChannel channel)
 		{
-			super(plugin);
+			super(channel);
 		}
 
 		@Override
@@ -790,33 +795,33 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		{
 			return sender.getName().equals(owner) || PermissionModule.hasPermission(sender, "crazychats.customchannel.admin");
 		}
+	}
 
-		protected abstract class RuleMode extends Mode<CustomChannelPermissionRule>
+	protected abstract class RuleMode extends Mode<CustomChannelPermissionRule>
+	{
+
+		public RuleMode(final CrazyChats plugin, final String name)
 		{
+			super(plugin, name, CustomChannelPermissionRule.class);
+		}
 
-			public RuleMode(final CrazyChats plugin, final String name)
+		@Override
+		public void setValue(final CommandSender sender, final String... args) throws CrazyException
+		{
+			CustomChannelPermissionRule rule;
+			try
 			{
-				super(plugin, name, CustomChannelPermissionRule.class);
+				rule = CustomChannelPermissionRule.valueOf(args[0].toUpperCase());
 			}
-
-			@Override
-			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			catch (final Exception e)
 			{
-				CustomChannelPermissionRule rule;
-				try
-				{
-					rule = CustomChannelPermissionRule.valueOf(args[0].toUpperCase());
-				}
-				catch (final Exception e)
-				{
-					rule = null;
-				}
-				if (rule == null)
-					throw new CrazyCommandNoSuchException("Rule", args[0]);
-				setValue(rule);
-				if (persistent)
-					plugin.saveConfiguration();
+				rule = null;
 			}
+			if (rule == null)
+				throw new CrazyCommandNoSuchException("Rule", args[0]);
+			setValue(rule);
+			if (persistent)
+				plugin.saveConfiguration();
 		}
 	}
 }
