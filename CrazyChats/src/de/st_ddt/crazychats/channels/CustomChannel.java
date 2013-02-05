@@ -80,6 +80,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		this.chatFormat = CrazyChatsChatHelper.makeFormat("&2[" + name + "] &F$0$: $1$");
 		this.affectedByServerSilence = true;
 		this.persistent = persistent;
+		registerCommands();
 	}
 
 	public CustomChannel(final CrazyChats plugin, final String name, final String owner, final CustomChannelPermissionRule listenRule, final String listenPermission, final CustomChannelPermissionRule talkRule, final String talkPermission, final CustomChannelPermissionRule joinRule, final CustomChannelPermissionRule inviteRule, final String joinPermission, final String chatFormat, final boolean affectedByServerSilence, final boolean persistent)
@@ -109,6 +110,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		this.chatFormat = CrazyChatsChatHelper.makeFormat(chatFormat);
 		this.affectedByServerSilence = affectedByServerSilence;
 		this.persistent = persistent;
+		registerCommands();
 	}
 
 	public CustomChannel(final CrazyChats plugin, final ConfigurationSection config)
@@ -150,10 +152,10 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		this.chatFormat = CrazyChatsChatHelper.makeFormat(config.getString("chatFormat"));
 		this.affectedByServerSilence = config.getBoolean("affectedByServerSilence", true);
 		this.persistent = true;
-		registerCommands(plugin);
+		registerCommands();
 	}
 
-	private void registerCommands(final CrazyChats plugin)
+	private void registerCommands()
 	{
 		final CustomChannelCommandMode modeCommand = new CustomChannelCommandMode(this);
 		mainCommand.addSubCommand(modeCommand, "c", "cfg", "config", "o", "option");
