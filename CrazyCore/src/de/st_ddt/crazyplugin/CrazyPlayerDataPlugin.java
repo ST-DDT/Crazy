@@ -155,7 +155,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	public final T getAvailablePlayerData(final String name)
+	public T getAvailablePlayerData(final String name)
 	{
 		return getPlayerData(name);
 	}
@@ -163,7 +163,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	@Override
 	public final T getAvailablePlayerData(final OfflinePlayer player)
 	{
-		return getPlayerData(player);
+		return getAvailablePlayerData(player.getName());
 	}
 
 	@Override
