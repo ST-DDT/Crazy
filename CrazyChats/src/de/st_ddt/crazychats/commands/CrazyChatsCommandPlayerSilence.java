@@ -59,9 +59,9 @@ public class CrazyChatsCommandPlayerSilence extends CrazyChatsCommandExecutor
 		if (admin.getValue())
 			if (!PermissionModule.hasPermission(sender, "crazychats.player.silence.adminbypass"))
 				throw new CrazyCommandPermissionException();
-		Date date = until.getValue();
+		final Date date = until.getValue();
 		if (!admin.getValue())
-			date = new Date(Math.min(date.getTime(), new Date().getTime() + plugin.getMaxSilenceTime()));
+			date.setTime(Math.min(date.getTime(), System.currentTimeMillis() + plugin.getMaxSilenceTime()));
 		data.setSilenced(date);
 		plugin.sendLocaleMessage("COMMAND.PLAYER.SILENCED.DONE", sender, data.getName(), CrazyLightPluginInterface.DATETIMEFORMAT.format(date));
 		if (!quiet.getValue())
