@@ -1,6 +1,5 @@
 package de.st_ddt.crazyarena.listener;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,10 +50,8 @@ public class CrazyArenaPlayerListener implements Listener
 			// noch gleicher Durchlauf?
 			if (rejoin.getRun() != arena.getRunNumber())
 				return;
-			final Date now = new Date();
-			final Date last = new Date(player.getLastPlayed() + arena.getRejoinTime());
 			// Been away to long?
-			if (last.before(now))
+			if (player.getLastPlayed() + arena.getRejoinTime() < System.currentTimeMillis())
 				return;
 			try
 			{
