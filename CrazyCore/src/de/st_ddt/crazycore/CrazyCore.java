@@ -30,12 +30,14 @@ import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
 import de.st_ddt.crazyplugin.CrazyLightPlugin;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.metrics.Metrics;
 import de.st_ddt.crazyutil.metrics.Metrics.Graph;
 import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public final class CrazyCore extends CrazyPlugin
@@ -56,6 +58,64 @@ public final class CrazyCore extends CrazyPlugin
 	public static CrazyCore getPlugin()
 	{
 		return plugin;
+	}
+
+	public CrazyCore()
+	{
+		super();
+		registerModes();
+	}
+
+	private void registerModes()
+	{
+		modeCommand.addMode(new BooleanFalseMode(this, "loadUserLanguages")
+		{
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				loadUserLanguages = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public Boolean getValue()
+			{
+				return loadUserLanguages;
+			}
+		});
+		modeCommand.addMode(new BooleanFalseMode(this, "wipePlayerBans")
+		{
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				wipePlayerBans = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public Boolean getValue()
+			{
+				return wipePlayerBans;
+			}
+		});
+		modeCommand.addMode(new BooleanFalseMode(this, "checkForUpdates")
+		{
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				checkForUpdates = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public Boolean getValue()
+			{
+				return checkForUpdates;
+			}
+		});
 	}
 
 	private void registerCommands()
