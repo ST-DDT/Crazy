@@ -6,6 +6,8 @@ version: X.Y
 # https://github.com/ST-DDT/Crazy/blob/master/CrazyCore/src/plugin.yml
 # the chat header used ingame (this can only be changed, when server is shut down)
 chatHeader: '&C[&ACrazyCore&C] &F'
+# checks for updates, does not download it (true/false)
+checkForUpdates: true
 # removes the players data file in "world/players" folder too. (true/false)
 # removes op and whitelist
 wipePlayerFiles: true

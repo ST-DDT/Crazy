@@ -51,6 +51,7 @@ public final class CrazyCore extends CrazyPlugin
 	private boolean wipePlayerFiles;
 	private boolean wipePlayerBans;
 	private boolean loadUserLanguages;
+	private boolean checkForUpdates;
 
 	public static CrazyCore getPlugin()
 	{
@@ -154,7 +155,8 @@ public final class CrazyCore extends CrazyPlugin
 		PermissionModule.init(getChatHeader(), Bukkit.getConsoleSender());
 		registerHooks();
 		Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
-		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new PluginUpdateCheckTask(), 6000, 432000);
+		if (checkForUpdates)
+			Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new PluginUpdateCheckTask(), 6000, 432000);
 		super.onEnable();
 		registerCommands();
 		registerMetrics();
@@ -165,6 +167,7 @@ public final class CrazyCore extends CrazyPlugin
 	{
 		super.loadConfiguration();
 		final ConfigurationSection config = getConfig();
+		checkForUpdates = config.getBoolean("checkForUpdates", true);
 		// PlayerWipe
 		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
 		wipePlayerBans = config.getBoolean("wipePlayerBans", false);
@@ -219,12 +222,12 @@ public final class CrazyCore extends CrazyPlugin
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
+		config.set("checkForUpdates", checkForUpdates);
 		// Player Wipe
 		config.set("wipePlayerFiles", wipePlayerFiles);
 		config.set("wipePlayerBans", wipePlayerBans);
 		config.set("playerWipeCommands", playerWipeCommands);
-		final ArrayList<String> protectedList = new ArrayList<String>(protectedPlayers);
-		config.set("protectedPlayers", protectedList);
+		config.set("protectedPlayers", new ArrayList<String>(protectedPlayers));
 		// Pipes
 		config.set("disablePipes", CrazyPipe.isDisabled());
 		// ChatHeader
