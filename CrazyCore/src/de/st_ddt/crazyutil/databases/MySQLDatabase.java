@@ -121,6 +121,8 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	{
 		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
+		if (connection == null)
+			throw new Exception("Database not accessible!");
 		try
 		{
 			// Create Table if not exists
