@@ -42,10 +42,9 @@ public class TargetDateParamitrisable extends DateParamitrisable
 			}
 			catch (final ParseException e)
 			{
-				value = new Date();
 				try
 				{
-					value.setTime(value.getTime() + ChatConverter.stringToDuration(PATTERN_SPACE.split(parameter)));
+					value = new Date(System.currentTimeMillis() + ChatConverter.stringToDuration(PATTERN_SPACE.split(parameter)));
 				}
 				catch (final CrazyCommandException ce)
 				{
