@@ -386,17 +386,18 @@ public class RaceArena extends Arena<RaceParticipant>
 			score.setString("nextstage", next.getName());
 			currentScore.updateSigns();
 			final int position = data.getPosition();
+			final double dist = Math.round(raceParticipant.getPlayer().getLocation().distance(next.getZone().getBasis()) * 10) / 10D;
 			if (position == 1)
 			{
 				broadcastLocaleMessage(false, true, true, true, "PARTICIPANT.REACHEDSTAGE.FIRST.BROADCAST", raceParticipant.getName(), stage.toShortString(), data.getTimeString());
-				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), raceParticipant.getPlayer().getLocation().distance(next.getZone().getBasis()));
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.FIRST.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), dist);
 			}
 			else
 			{
 				final RaceData first = stage.getDatas().get(0);
 				broadcastLocaleMessage(false, false, true, true, "PARTICIPANT.REACHEDSTAGE.OTHER.BROADCAST", raceParticipant.getName(), stage.toShortString(), position, data.getTimeString(), data.getTimeString(first));
 				final RaceData previous = stage.getDatas().get(position - 2);
-				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), raceParticipant.getPlayer().getLocation().distance(next.getZone().getBasis()), position, previous.getName(), data.getTimeString(previous));
+				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.OTHER.MESSAGE", raceParticipant, next.toShortString(), ArenaChatHelper.locationConverter(next.getZone().getBasis()), dist, position, previous.getName(), data.getTimeString(previous));
 				sendLocaleMessage("PARTICIPANT.REACHEDSTAGE.PREVIOUS.MESSAGE", previous.getParticipant(), raceParticipant.getName(), data.getTimeString(previous));
 			}
 		}
