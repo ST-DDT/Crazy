@@ -247,6 +247,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public void save(final S entry)
 	{
+		if (entry == null)
+			return;
 		super.save(entry);
 		entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
 		asyncSaveDatabase();

@@ -361,6 +361,8 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public void save(final S entry)
 	{
+		if (entry == null)
+			return;
 		super.save(entry);
 		final String sql;
 		if (containsEntry(entry.getName()))

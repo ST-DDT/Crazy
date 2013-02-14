@@ -358,6 +358,8 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	@Override
 	public void save(final S entry)
 	{
+		if (entry == null)
+			return;
 		super.save(entry);
 		final String sql;
 		if (containsEntry(entry.getName()))
