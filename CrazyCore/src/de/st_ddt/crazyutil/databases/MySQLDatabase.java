@@ -119,10 +119,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public void checkTable() throws Exception
 	{
-		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
 		if (connection == null)
 			throw new Exception("Database not accessible!");
+		Statement query = null;
 		try
 		{
 			// Create Table if not exists
@@ -154,7 +154,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		}
 		catch (final SQLException e)
 		{
-			e.printStackTrace();
 			throw e;
 		}
 		finally
@@ -201,8 +200,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 
 	protected boolean containsEntry(final String key)
 	{
-		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
+		if (connection == null)
+			return false;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
@@ -214,7 +215,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		}
 		catch (final SQLException e)
 		{
-			e.printStackTrace();
 			return false;
 		}
 		finally
@@ -242,8 +242,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public S loadEntry(final String key)
 	{
-		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
+		if (connection == null)
+			return null;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
@@ -271,7 +273,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		}
 		catch (final SQLException e)
 		{
-			e.printStackTrace();
 			return null;
 		}
 		finally
@@ -290,8 +291,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public void loadAllEntries()
 	{
-		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
+		if (connection == null)
+			return;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
@@ -313,9 +316,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			result.close();
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
@@ -332,17 +333,17 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public boolean deleteEntry(final String key)
 	{
-		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
+		if (connection == null)
+			return false;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
 			query.executeUpdate("DELETE FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "'");
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
@@ -367,6 +368,8 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		else
 			sql = "INSERT INTO `" + tableName + "` SET " + columnNames[0] + "='" + entry.getName() + "', " + entry.saveToMySQLDatabase(columnNames);
 		final Connection connection = mysqlConnectionPool.getConnection();
+		if (connection == null)
+			return;
 		Statement query = null;
 		try
 		{
@@ -374,9 +377,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			query.executeUpdate(sql);
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
@@ -393,17 +394,17 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	@Override
 	public void purgeDatabase()
 	{
-		Statement query = null;
 		final Connection connection = mysqlConnectionPool.getConnection();
+		if (connection == null)
+			return;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
 			query.executeUpdate("DELETE FROM `" + tableName + "`");
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
