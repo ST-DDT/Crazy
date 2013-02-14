@@ -44,7 +44,12 @@ public class ArenaChatHelper extends ChatHelperExtended
 		}
 		final long unit = time / 1000;
 		time %= 1000;
-		res.append(unit + "." + time);
+		if (time >= 100)
+			res.append(unit + "." + time);
+		else if (time >= 10)
+			res.append(unit + ".0" + time);
+		else
+			res.append(unit + ".00" + time);
 		return res.toString();
 	}
 
