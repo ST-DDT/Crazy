@@ -96,15 +96,17 @@ public class RaceArena extends Arena<RaceParticipant>
 	{
 
 		@Override
-		public String getStringOutput(String name, String value)
+		public String getStringOutput(final String name, final String value)
 		{
 			return value;
 		}
 
 		@Override
-		public String getDoubleOutput(String name, Double value)
+		public String getDoubleOutput(final String name, final Double value)
 		{
-			if (name.equals("nextstageindex"))
+			if (value == null)
+				return "UNKNOWN";
+			else if (name.equals("nextstageindex"))
 				return Integer.toString(value.intValue());
 			else if (name.equals("timeelapsed"))
 				return ArenaChatHelper.timeConverter(value.longValue());
@@ -124,7 +126,9 @@ public class RaceArena extends Arena<RaceParticipant>
 		@Override
 		public String getDoubleOutput(final String name, final Double value)
 		{
-			if (name.equals("timeelapsed") || name.equals("leadfirst"))
+			if (value == null)
+				return "UNKNOWN";
+			else if (name.equals("timeelapsed") || name.equals("leadfirst"))
 				return ArenaChatHelper.timeConverter(value.longValue());
 			else
 				return value.toString();
