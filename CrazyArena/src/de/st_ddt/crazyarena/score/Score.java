@@ -516,6 +516,19 @@ public class Score implements ConfigurationSaveable
 				return false;
 		}
 
+		public boolean setValueIfLowerOrZero(final String entry, final double value)
+		{
+			lastAction = System.currentTimeMillis();
+			final double old = values.get(entry);
+			if (old > value || old == 0)
+			{
+				values.put(entry, value);
+				return true;
+			}
+			else
+				return false;
+		}
+
 		public double addValue(final String entry, final double add)
 		{
 			lastAction = System.currentTimeMillis();
