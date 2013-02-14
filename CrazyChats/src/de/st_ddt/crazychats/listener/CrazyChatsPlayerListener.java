@@ -169,7 +169,8 @@ public class CrazyChatsPlayerListener implements Listener
 				channel.unmuteChannel(player);
 		}
 		plugin.getLocalChannel().unmuteChannel(player);
-		plugin.getCrazyDatabase().save(data);
+		if (data != null)
+			plugin.getCrazyDatabase().save(data);
 	}
 
 	@EventHandler(ignoreCancelled = true)
