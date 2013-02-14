@@ -445,7 +445,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		for (final RaceData data : datas)
 		{
 			final ScoreEntry score = permanentScore.getOrAddScore(data.getName());
-			if (score.setValueIfLower("timeelapsed", data.getTime()))
+			if (score.setValueIfLowerOrZero("timeelapsed", data.getTime()))
 			{
 				score.setValue("opponents", datas.size());
 				score.setString("date", date);
