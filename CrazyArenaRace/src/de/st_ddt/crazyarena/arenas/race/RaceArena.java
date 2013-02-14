@@ -63,14 +63,14 @@ public class RaceArena extends Arena<RaceParticipant>
 		@Override
 		public int compare(final ScoreEntry o1, final ScoreEntry o2)
 		{
-			int index1 = o1.getValue("nextstageindex").intValue();
+			final int index1 = o1.getValue("nextstageindex").intValue();
 			final int res = -compare(index1, o2.getValue("nextstageindex").intValue());
 			// =0 => same stage => calc distance to next target
 			if (res == 0)
-				if (index1 == stages.size())
+				if (index1 >= stages.size())
 					return -compare(o2.getValue("timeelapsed").intValue(), o2.getValue("timeelapsed").intValue());
 				else
-					return compare(o1.getPlayer(), o2.getPlayer(), stages.get(o1.getValue("nextstageindex").intValue() - 1).getZone().getBasis());
+					return compare(o1.getPlayer(), o2.getPlayer(), stages.get(index1 - 1).getZone().getBasis());
 			else
 				return res;
 		}
