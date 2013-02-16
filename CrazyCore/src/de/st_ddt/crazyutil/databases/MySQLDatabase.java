@@ -208,10 +208,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 		{
 			query = connection.createStatement();
 			final ResultSet result = query.executeQuery("SELECT `" + columnNames[0] + "` FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
-			if (result.next())
-				return true;
-			else
-				return false;
+			return result.next();
 		}
 		catch (final SQLException e)
 		{
