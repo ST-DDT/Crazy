@@ -90,7 +90,7 @@ public abstract class SQLConnectionPool
 			lock.unlock();
 		}
 	}
-	
+
 	public abstract boolean isValid(Connection connection) throws SQLException;
 
 	public void releaseConnection(final Connection connection)
