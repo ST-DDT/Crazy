@@ -14,8 +14,8 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 {
 
 	final Map<String, S> datas = Collections.synchronizedMap(new HashMap<String, S>());
-	private final DatabaseType type;
-	private final Class<S> clazz;
+	final DatabaseType type;
+	final Class<S> clazz;
 	final Constructor<S> constructor;
 	final String[] defaultColumnNames;
 
