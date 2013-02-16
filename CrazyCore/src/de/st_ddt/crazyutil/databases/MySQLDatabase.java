@@ -13,11 +13,11 @@ import org.bukkit.configuration.ConfigurationSection;
 public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S>
 {
 
-	protected final String tableName;
+	final String tableName;
 	private final SQLConnection connection;
-	protected final SQLConnectionPool connectionPool;
-	protected final SQLColumn[] columns;
-	protected final String[] columnNames;
+	final SQLConnectionPool connectionPool;
+	final SQLColumn[] columns;
+	final String[] columnNames;
 	private final boolean cached;
 	private final boolean doNotUpdate;
 
@@ -66,7 +66,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 	}
 
 	@Override
-	protected Constructor<S> getConstructor(final Class<S> clazz)
+	Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{
@@ -198,7 +198,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends BasicDatabase<S
 			return loadEntry(key) != null;
 	}
 
-	protected boolean containsEntry(final String key)
+	boolean containsEntry(final String key)
 	{
 		System.out.println(System.currentTimeMillis() + " MySQLDatabase.containsEntry() " + key);
 		final Connection connection = connectionPool.getConnection();

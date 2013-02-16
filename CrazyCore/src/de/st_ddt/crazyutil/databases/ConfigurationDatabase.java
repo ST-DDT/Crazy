@@ -12,9 +12,9 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 {
 
 	private final JavaPlugin plugin;
-	protected final ConfigurationSection config;
-	protected final String path;
-	protected final String[] columnNames;
+	final ConfigurationSection config;
+	final String path;
+	final String[] columnNames;
 	private final Runnable delayedSave = new Runnable()
 	{
 
@@ -56,7 +56,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@Override
-	protected Constructor<S> getConstructor(final Class<S> clazz)
+	Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{
@@ -200,7 +200,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	}
 
 	@SuppressWarnings("deprecation")
-	protected final void asyncSaveDatabase()
+	final void asyncSaveDatabase()
 	{
 		if (!requireSave)
 		{

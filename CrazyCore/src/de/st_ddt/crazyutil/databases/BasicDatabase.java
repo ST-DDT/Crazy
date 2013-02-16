@@ -13,11 +13,11 @@ import de.st_ddt.crazyutil.ChatHelper;
 public abstract class BasicDatabase<S extends DatabaseEntry> implements Database<S>
 {
 
-	protected final Map<String, S> datas = Collections.synchronizedMap(new HashMap<String, S>());
+	final Map<String, S> datas = Collections.synchronizedMap(new HashMap<String, S>());
 	private final DatabaseType type;
 	private final Class<S> clazz;
-	protected final Constructor<S> constructor;
-	protected final String[] defaultColumnNames;
+	final Constructor<S> constructor;
+	final String[] defaultColumnNames;
 
 	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final String[] defaultColumnNames)
 	{
@@ -40,7 +40,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		return clazz;
 	}
 
-	protected abstract Constructor<S> getConstructor(final Class<S> clazz);
+	abstract Constructor<S> getConstructor(final Class<S> clazz);
 
 	@Override
 	public abstract void initialize() throws Exception;
@@ -168,7 +168,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		config.set(path + "saveType", type.toString());
 	}
 
-	protected final void shortPrintStackTrace(final Throwable main, final Throwable throwable)
+	final void shortPrintStackTrace(final Throwable main, final Throwable throwable)
 	{
 		ChatHelper.shortPrintStackTrace(main, throwable, this);
 	}
