@@ -12,11 +12,11 @@ import org.bukkit.configuration.ConfigurationSection;
 public abstract class SQLDatabase<S extends SQLDatabaseEntry> extends BasicDatabase<S>
 {
 
-	final String tableName;
-	final SQLColumn[] columns;
-	final String[] columnNames;
-	final boolean cached;
-	final boolean doNotUpdate;
+	protected final String tableName;
+	protected final SQLColumn[] columns;
+	protected final String[] columnNames;
+	protected final boolean cached;
+	protected final boolean doNotUpdate;
 
 	public SQLDatabase(final DatabaseType type, final Class<S> clazz, final SQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{
@@ -79,7 +79,7 @@ public abstract class SQLDatabase<S extends SQLDatabaseEntry> extends BasicDatab
 	}
 
 	@Override
-	Constructor<S> getConstructor(final Class<S> clazz)
+	protected Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{

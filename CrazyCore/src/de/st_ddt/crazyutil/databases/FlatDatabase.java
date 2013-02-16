@@ -32,12 +32,12 @@ import de.st_ddt.crazyutil.ChatHelper;
 public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 {
 
-	private final static String lineSeparator = System.getProperty("line.separator");
-	final static Pattern PATTERN_DATASEPARATOR = Pattern.compile("\\|");
+	protected final static String LINESEPERATOR = System.getProperty("line.separator");
+	protected final static Pattern PATTERN_DATASEPARATOR = Pattern.compile("\\|");
 	private final JavaPlugin plugin;
 	private final Map<String, String> entries = Collections.synchronizedMap(new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER));
 	private final Map<String, String> backupEntries = new HashMap<String, String>();
-	private final String filePath;
+	protected final String filePath;
 	private final File file;
 	private final File backupFile;
 	private final Lock lock = new ReentrantLock();
@@ -72,7 +72,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	Constructor<S> getConstructor(final Class<S> clazz)
+	protected Constructor<S> getConstructor(final Class<S> clazz)
 	{
 		try
 		{

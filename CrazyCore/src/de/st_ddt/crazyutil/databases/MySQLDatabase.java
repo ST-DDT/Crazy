@@ -11,8 +11,8 @@ import org.bukkit.configuration.ConfigurationSection;
 public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 {
 
-	final SQLConnection connection;
-	final SQLConnectionPool connectionPool;
+	private final SQLConnection connection;
+	protected final SQLConnectionPool connectionPool;
 
 	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{

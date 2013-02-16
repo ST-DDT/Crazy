@@ -13,11 +13,11 @@ import de.st_ddt.crazyutil.ChatHelper;
 public abstract class BasicDatabase<S extends DatabaseEntry> implements Database<S>
 {
 
-	final Map<String, S> datas = Collections.synchronizedMap(new HashMap<String, S>());
-	final DatabaseType type;
-	final Class<S> clazz;
-	final Constructor<S> constructor;
-	final String[] defaultColumnNames;
+	protected final Map<String, S> datas = Collections.synchronizedMap(new HashMap<String, S>());
+	protected final DatabaseType type;
+	protected final Class<S> clazz;
+	protected final Constructor<S> constructor;
+	protected final String[] defaultColumnNames;
 
 	public BasicDatabase(final DatabaseType type, final Class<S> clazz, final String[] defaultColumnNames)
 	{
@@ -40,7 +40,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		return clazz;
 	}
 
-	abstract Constructor<S> getConstructor(final Class<S> clazz);
+	protected abstract Constructor<S> getConstructor(final Class<S> clazz);
 
 	@Override
 	public abstract void initialize() throws Exception;
