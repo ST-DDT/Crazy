@@ -168,7 +168,7 @@ public abstract class BasicDatabase<S extends DatabaseEntry> implements Database
 		config.set(path + "saveType", type.toString());
 	}
 
-	final void shortPrintStackTrace(final Throwable main, final Throwable throwable)
+	protected final void shortPrintStackTrace(final Throwable main, final Throwable throwable)
 	{
 		ChatHelper.shortPrintStackTrace(main, throwable, this);
 	}
