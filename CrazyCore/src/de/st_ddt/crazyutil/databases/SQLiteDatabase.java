@@ -119,8 +119,10 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	@Override
 	public void checkTable() throws Exception
 	{
-		Statement query = null;
 		final Connection connection = connectionPool.getConnection();
+		if (connection == null)
+			throw new Exception("Database not accessible!");
+		Statement query = null;
 		try
 		{
 			// Create Table if not exists
@@ -152,7 +154,6 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 		}
 		catch (final SQLException e)
 		{
-			e.printStackTrace();
 			throw e;
 		}
 		finally
@@ -199,20 +200,18 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 
 	protected boolean containsEntry(final String key)
 	{
-		Statement query = null;
 		final Connection connection = connectionPool.getConnection();
+		if (connection == null)
+			return false;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
 			final ResultSet result = query.executeQuery("SELECT `" + columnNames[0] + "` FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
-			if (result.next())
-				return true;
-			else
-				return false;
+			return result.next();
 		}
 		catch (final SQLException e)
 		{
-			e.printStackTrace();
 			return false;
 		}
 		finally
@@ -240,8 +239,10 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	@Override
 	public S loadEntry(final String key)
 	{
-		Statement query = null;
 		final Connection connection = connectionPool.getConnection();
+		if (connection == null)
+			return null;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
@@ -269,7 +270,6 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 		}
 		catch (final SQLException e)
 		{
-			e.printStackTrace();
 			return null;
 		}
 		finally
@@ -288,8 +288,10 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	@Override
 	public void loadAllEntries()
 	{
-		Statement query = null;
 		final Connection connection = connectionPool.getConnection();
+		if (connection == null)
+			return;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
@@ -311,9 +313,7 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 			result.close();
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
@@ -330,17 +330,17 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	@Override
 	public boolean deleteEntry(final String key)
 	{
-		Statement query = null;
 		final Connection connection = connectionPool.getConnection();
+		if (connection == null)
+			return false;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
 			query.executeUpdate("DELETE FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "'");
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
@@ -367,6 +367,8 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 		else
 			sql = "INSERT INTO `" + tableName + "`" + entry.saveInsertToSQLiteDatabase(columnNames);
 		final Connection connection = connectionPool.getConnection();
+		if (connection == null)
+			return;
 		Statement query = null;
 		try
 		{
@@ -374,9 +376,7 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 			query.executeUpdate(sql);
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
@@ -393,17 +393,17 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	@Override
 	public void purgeDatabase()
 	{
-		Statement query = null;
 		final Connection connection = connectionPool.getConnection();
+		if (connection == null)
+			return;
+		Statement query = null;
 		try
 		{
 			query = connection.createStatement();
 			query.executeUpdate("DELETE FROM `" + tableName + "`");
 		}
 		catch (final SQLException e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		finally
 		{
 			if (query != null)
