@@ -162,7 +162,7 @@ public class ConfigurationDatabase<S extends ConfigurationDatabaseEntry> extends
 	@Override
 	public void save(final S entry)
 	{
-		if (entry==null)
+		if (entry == null)
 			return;
 		super.save(entry);
 		entry.saveToConfigDatabase(config, path + "." + entry.getName().toLowerCase() + ".", columnNames);
