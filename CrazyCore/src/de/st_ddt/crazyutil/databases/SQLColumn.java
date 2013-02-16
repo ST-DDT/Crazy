@@ -3,13 +3,13 @@ package de.st_ddt.crazyutil.databases;
 public class SQLColumn
 {
 
-	protected final String name;
-	protected String realName;
-	protected final String type;
-	protected final boolean primary;
-	protected final boolean nulled;
-	protected final String defaults;
-	protected final boolean autoincrement;
+	final String name;
+	String realName;
+	final String type;
+	final boolean primary;
+	final boolean nulled;
+	final String defaults;
+	final boolean autoincrement;
 
 	public SQLColumn(final String name, final String type)
 	{
