@@ -1,7 +1,5 @@
 package de.st_ddt.crazyutil.databases;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,107 +8,41 @@ import java.util.HashSet;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase<S>
+public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends SQLDatabase<S>
 {
 
-	protected final String tableName;
-	private final SQLConnection connection;
-	protected final SQLConnectionPool connectionPool;
-	protected final SQLColumn[] columns;
-	protected final String[] columnNames;
-	private final boolean cached;
-	private final boolean doNotUpdate;
+	final SQLConnection connection;
+	final SQLConnectionPool connectionPool;
 
 	public SQLiteDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultPath, final String defaultTableName, final ConfigurationSection config)
 	{
-		super(DatabaseType.SQLITE, clazz, convertColumnNames(columns));
+		super(DatabaseType.SQLITE, clazz, columns, defaultTableName, config);
 		if (config == null)
 		{
-			this.tableName = defaultTableName;
 			this.connection = new SQLiteConnection(defaultPath);
 			this.connectionPool = new SQLiteConnectionPool(connection);
-			this.columns = columns;
-			this.columnNames = defaultColumnNames;
-			this.cached = true;
-			this.doNotUpdate = false;
 		}
 		else
 		{
-			this.tableName = config.getString("tableName", defaultTableName);
 			this.connection = SQLiteConnection.getConnection(config.getConfigurationSection("connection"), defaultPath);
 			this.connectionPool = new SQLiteConnectionPool(connection);
-			this.columns = columns;
-			this.columnNames = new String[defaultColumnNames.length];
-			for (int i = 0; i < defaultColumnNames.length; i++)
-			{
-				columnNames[i] = config.getString("columns." + defaultColumnNames[i], defaultColumnNames[i]);
-				columns[i].setRealName(columnNames[i]);
-			}
-			this.cached = config.getBoolean("cached", true);
-			this.doNotUpdate = config.getBoolean("static", false);
 		}
 	}
 
 	public SQLiteDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String path, final boolean cached, final boolean doNoUpdate)
 	{
-		super(DatabaseType.SQLITE, clazz, convertColumnNames(columns));
-		this.tableName = tableName;
+		super(DatabaseType.SQLITE, clazz, columns, tableName, columnNames, cached, doNoUpdate);
 		this.connection = new SQLiteConnection(path);
 		this.connectionPool = new SQLiteConnectionPool(connection);
-		this.columns = columns;
-		this.columnNames = columnNames;
-		for (int i = 0; i < columns.length; i++)
-			columns[i].setRealName(columnNames[i]);
-		this.cached = cached;
-		this.doNotUpdate = doNoUpdate;
 	}
 
 	@Override
-	protected Constructor<S> getConstructor(final Class<S> clazz)
-	{
-		try
-		{
-			return clazz.getConstructor(ResultSet.class, String[].class);
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private static String[] convertColumnNames(final SQLColumn[] columns)
-	{
-		final int length = columns.length;
-		final String[] names = new String[length];
-		for (int i = 0; i < length; i++)
-			names[i] = columns[i].getName();
-		return names;
-	}
-
-	public static String readName(final ResultSet rawData, final String colName)
-	{
-		try
-		{
-			return rawData.getString(colName);
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-			return "ERROR";
-		}
-	}
-
-	public final SQLColumn[] getColumns()
-	{
-		return columns;
-	}
-
 	public final SQLConnection getConnection()
 	{
 		return connection;
 	}
 
+	@Override
 	public final SQLConnectionPool getConnectionpool()
 	{
 		return connectionPool;
@@ -170,192 +102,6 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 	}
 
 	@Override
-	public void initialize() throws Exception
-	{
-		checkTable();
-		if (cached)
-			loadAllEntries();
-	}
-
-	@Override
-	public final boolean isStaticDatabase()
-	{
-		return doNotUpdate;
-	}
-
-	@Override
-	public final boolean isCachedDatabase()
-	{
-		return cached;
-	}
-
-	@Override
-	public boolean hasEntry(final String key)
-	{
-		if (super.hasEntry(key))
-			return true;
-		else
-			return loadEntry(key) != null;
-	}
-
-	protected boolean containsEntry(final String key)
-	{
-		final Connection connection = connectionPool.getConnection();
-		if (connection == null)
-			return false;
-		Statement query = null;
-		try
-		{
-			query = connection.createStatement();
-			final ResultSet result = query.executeQuery("SELECT `" + columnNames[0] + "` FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
-			return result.next();
-		}
-		catch (final SQLException e)
-		{
-			return false;
-		}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final Exception e)
-				{}
-			connectionPool.releaseConnection(connection);
-		}
-	}
-
-	@Override
-	public S updateEntry(final String key)
-	{
-		if (doNotUpdate)
-			return getEntry(key);
-		else
-			return loadEntry(key);
-	}
-
-	@Override
-	public S loadEntry(final String key)
-	{
-		final Connection connection = connectionPool.getConnection();
-		if (connection == null)
-			return null;
-		Statement query = null;
-		try
-		{
-			query = connection.createStatement();
-			final ResultSet result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "' LIMIT 1");
-			if (result.next())
-				try
-				{
-					final S data = constructor.newInstance(result, columnNames);
-					datas.put(data.getName().toLowerCase(), data);
-					result.close();
-					return data;
-				}
-				catch (final InvocationTargetException e)
-				{
-					System.err.println("Error occured while trying to load entry: " + key);
-					shortPrintStackTrace(e, e.getCause());
-				}
-				catch (final Exception e)
-				{
-					System.err.println("Error occured while trying to load entry: " + key);
-					e.printStackTrace();
-				}
-			result.close();
-			return null;
-		}
-		catch (final SQLException e)
-		{
-			return null;
-		}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final Exception e)
-				{}
-			connectionPool.releaseConnection(connection);
-		}
-	}
-
-	@Override
-	public void loadAllEntries()
-	{
-		final Connection connection = connectionPool.getConnection();
-		if (connection == null)
-			return;
-		Statement query = null;
-		try
-		{
-			query = connection.createStatement();
-			final ResultSet result = query.executeQuery("SELECT * FROM `" + tableName + "` WHERE 1=1");
-			while (result.next())
-				try
-				{
-					final S data = constructor.newInstance(result, columnNames);
-					datas.put(data.getName().toLowerCase(), data);
-				}
-				catch (final InvocationTargetException e)
-				{
-					shortPrintStackTrace(e, e.getCause());
-				}
-				catch (final Exception e)
-				{
-					e.printStackTrace();
-				}
-			result.close();
-		}
-		catch (final SQLException e)
-		{}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final Exception e)
-				{}
-			connectionPool.releaseConnection(connection);
-		}
-	}
-
-	@Override
-	public boolean deleteEntry(final String key)
-	{
-		final Connection connection = connectionPool.getConnection();
-		if (connection == null)
-			return false;
-		Statement query = null;
-		try
-		{
-			query = connection.createStatement();
-			query.executeUpdate("DELETE FROM `" + tableName + "` WHERE " + columnNames[0] + "='" + key + "'");
-		}
-		catch (final SQLException e)
-		{}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final SQLException e)
-				{}
-			connectionPool.releaseConnection(connection);
-		}
-		return super.deleteEntry(key);
-	}
-
-	@Override
 	public void save(final S entry)
 	{
 		if (entry == null)
@@ -388,50 +134,5 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 				{}
 			connectionPool.releaseConnection(connection);
 		}
-	}
-
-	@Override
-	public void purgeDatabase()
-	{
-		final Connection connection = connectionPool.getConnection();
-		if (connection == null)
-			return;
-		Statement query = null;
-		try
-		{
-			query = connection.createStatement();
-			query.executeUpdate("DELETE FROM `" + tableName + "`");
-		}
-		catch (final SQLException e)
-		{}
-		finally
-		{
-			if (query != null)
-				try
-				{
-					query.close();
-				}
-				catch (final SQLException e)
-				{}
-			connectionPool.releaseConnection(connection);
-		}
-		super.purgeDatabase();
-	}
-
-	@Override
-	public void saveDatabase()
-	{
-	}
-
-	@Override
-	public void save(final ConfigurationSection config, final String path)
-	{
-		super.save(config, path);
-		connection.save(config, path + "SQLITE.connection.");
-		config.set(path + "SQLITE.tableName", tableName);
-		config.set(path + "SQLITE.cached", cached);
-		config.set(path + "SQLITE.static", doNotUpdate);
-		for (int i = 0; i < defaultColumnNames.length; i++)
-			config.set(path + "SQLITE.columns." + defaultColumnNames[i], columnNames[i]);
 	}
 }
