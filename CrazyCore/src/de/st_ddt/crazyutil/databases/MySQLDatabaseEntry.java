@@ -1,6 +1,6 @@
 package de.st_ddt.crazyutil.databases;
 
-public interface MySQLDatabaseEntry extends DatabaseEntry
+public interface MySQLDatabaseEntry extends SQLDatabaseEntry
 {
 
 	// public MySQLDatabaseEntry(ResultSet rawData, String[] columnNames);
