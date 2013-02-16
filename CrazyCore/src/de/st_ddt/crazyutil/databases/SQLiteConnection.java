@@ -11,7 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 
-public class SQLiteConnection implements ConfigurationSaveable, MainConnection
+public class SQLiteConnection implements ConfigurationSaveable, SQLConnection
 {
 
 	private final String path;

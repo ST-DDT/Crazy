@@ -14,8 +14,8 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 {
 
 	protected final String tableName;
-	private final SQLiteConnection connection;
-	protected final ConnectionPool connectionPool;
+	private final SQLConnection connection;
+	protected final SQLConnectionPool connectionPool;
 	protected final SQLColumn[] columns;
 	protected final String[] columnNames;
 	private final boolean cached;
@@ -106,12 +106,12 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends BasicDatabase
 		return columns;
 	}
 
-	public final SQLiteConnection getConnection()
+	public final SQLConnection getConnection()
 	{
 		return connection;
 	}
 
-	public final ConnectionPool getConnectionpool()
+	public final SQLConnectionPool getConnectionpool()
 	{
 		return connectionPool;
 	}

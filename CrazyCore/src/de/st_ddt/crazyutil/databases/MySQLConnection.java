@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 
-public class MySQLConnection implements ConfigurationSaveable, MainConnection
+public class MySQLConnection implements ConfigurationSaveable, SQLConnection
 {
 
 	private final String host;
