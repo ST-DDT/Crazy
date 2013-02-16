@@ -33,6 +33,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 {
 
 	protected final static String LINESEPERATOR = System.getProperty("line.separator");
+	protected final static String DATASEPARATOR = "|";
 	protected final static Pattern PATTERN_DATASEPARATOR = Pattern.compile("\\|");
 	private final JavaPlugin plugin;
 	private final Map<String, String> entries = Collections.synchronizedMap(new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER));
@@ -201,14 +202,14 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 
 	private S loadEntryWithRepairedData(final String key, final String rawData) throws Exception
 	{
-		final int count = defaultColumnNames.length - StringUtils.countMatches(rawData, "|") - 1;
+		final int count = defaultColumnNames.length - StringUtils.countMatches(rawData, DATASEPARATOR) - 1;
 		if (count > 0)
 		{
 			final StringBuilder builder = new StringBuilder(rawData);
 			for (int i = 0; i < count; i++)
-				builder.append("|");
+				builder.append(DATASEPARATOR);
 			builder.append(".|");
-			builder.append(lineSeparator);
+			builder.append(LINESEPERATOR);
 			return loadEntryWithData(key, builder.toString());
 		}
 		else
@@ -250,7 +251,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		if (entry == null)
 			return;
 		super.save(entry);
-		entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+		entries.put(entry.getName().toLowerCase(), ChatHelper.listingString(DATASEPARATOR, entry.saveToFlatDatabase()) + LINESEPERATOR);
 		asyncSaveDatabase();
 	}
 
@@ -260,7 +261,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		for (final S entry : entries)
 		{
 			super.save(entry);
-			this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString("|", entry.saveToFlatDatabase()) + lineSeparator);
+			this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString(DATASEPARATOR, entry.saveToFlatDatabase()) + LINESEPERATOR);
 		}
 		asyncSaveDatabase();
 	}
@@ -305,7 +306,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 					continue;
 				try
 				{
-					entries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0].toLowerCase(), zeile + lineSeparator);
+					entries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0].toLowerCase(), zeile + LINESEPERATOR);
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
@@ -385,8 +386,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		try
 		{
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-			writer.write(ChatHelper.listingString("|", defaultColumnNames));
-			writer.write(lineSeparator);
+			writer.write(ChatHelper.listingString(DATASEPARATOR, defaultColumnNames));
+			writer.write(LINESEPERATOR);
 			synchronized (entries)
 			{
 				for (final String string : entries.values())
