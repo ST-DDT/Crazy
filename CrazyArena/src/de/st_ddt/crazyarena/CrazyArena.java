@@ -1,16 +1,20 @@
 package de.st_ddt.crazyarena;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,6 +67,7 @@ public class CrazyArena extends CrazyPlugin
 	private final Map<String, Set<Arena<?>>> arenasByType = new TreeMap<String, Set<Arena<?>>>();
 	private final Map<Player, Arena<?>> invitations = new HashMap<Player, Arena<?>>();
 	private final Map<CommandSender, Arena<?>> selections = new HashMap<CommandSender, Arena<?>>();
+	private final Random random = new Random();
 	private boolean crazyChatsEnabled;
 	private String arenaChatFormat = "[Arena]%1$s: %2$s";
 	private String arenaSpectatorChatFormat = "[Arena/S]%1$s: %2$s";
@@ -287,12 +292,65 @@ public class CrazyArena extends CrazyPlugin
 		return arenasByName.get(name.toLowerCase());
 	}
 
+	/**
+	 * Tries to find a arena based on the given args. <br>
+	 * 1) ? return a random arena.<br>
+	 * 2) ?_<Type> return a random arena with the given type.<br>
+	 * 3) ?<Name> return a random arena, matching args. <br>
+	 * 4) <Name> return an arena with the given name.<br>
+	 * 5) <Player> return the arena the player is currently in.
+	 * 
+	 * @param param
+	 *            Specifies the desired arena.
+	 * @return The arena specified by param.
+	 */
+	public Arena<?> getArenaAdvanced(final String param)
+	{
+		if (param.startsWith("?"))
+			if (param.length() == 1)
+				return selectRandom(arenas);
+			else if (param.startsWith("_", 1))
+				return selectRandom(getArenasByType(param.substring(2)));
+			else
+				return selectRandom(searchArenasPattern(param.substring(1)));
+		else
+		{
+			final Arena<?> arena = plugin.getArenaByName(param);
+			if (arena != null)
+				return arena;
+			Player to = Bukkit.getPlayerExact(param);
+			if (to == null)
+				to = Bukkit.getPlayer(param);
+			return plugin.getArenaByPlayer(to);
+		}
+	}
+
+	private Arena<?> selectRandom(final Collection<Arena<?>> arenas)
+	{
+		if (arenas == null)
+			return null;
+		else if (arenas.size() == 0)
+			return null;
+		else
+			return new ArrayList<Arena<?>>(arenas).get(random.nextInt(arenas.size()));
+	}
+
 	public Set<Arena<?>> searchArenas(String name)
 	{
 		name = name.toLowerCase();
 		final HashSet<Arena<?>> arenas = new HashSet<Arena<?>>();
 		for (final Entry<String, Arena<?>> entry : arenasByName.entrySet())
-			if (entry.getKey().toLowerCase().startsWith(name))
+			if (entry.getKey().startsWith(name))
+				arenas.add(entry.getValue());
+		return arenas;
+	}
+
+	public Set<Arena<?>> searchArenasPattern(final String pattern)
+	{
+		final HashSet<Arena<?>> arenas = new HashSet<Arena<?>>();
+		final Pattern pattern_Name = Pattern.compile(pattern.toLowerCase());
+		for (final Entry<String, Arena<?>> entry : arenasByName.entrySet())
+			if (pattern_Name.matcher(entry.getKey()).find())
 				arenas.add(entry.getValue());
 		return arenas;
 	}
