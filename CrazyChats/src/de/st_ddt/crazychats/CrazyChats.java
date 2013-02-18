@@ -37,6 +37,7 @@ import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerDisplayName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerHeadName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerListName;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerMute;
+import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerSearch;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerSilence;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandPlayerUnmute;
 import de.st_ddt.crazychats.commands.CrazyChatsCommandSay;
@@ -454,6 +455,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerSilence(this), "silence", "globalmute");
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerMute(this), "mute");
 		playerCommand.addSubCommand(new CrazyChatsCommandPlayerUnmute(this), "unmute");
+		playerCommand.addSubCommand(new CrazyChatsCommandPlayerSearch(this), "s", "search");
 		final CrazyCommandTreeExecutor<CrazyChats> groupCommand = new CrazyCommandTreeExecutor<CrazyChats>(this);
 		groupCommand.addSubCommand(new CrazyChatsCommandGroupPrefix(this), "prefix");
 		groupCommand.addSubCommand(new CrazyChatsCommandGroupSuffix(this), "suffix");
