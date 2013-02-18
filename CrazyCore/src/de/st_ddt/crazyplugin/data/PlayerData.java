@@ -32,7 +32,7 @@ public abstract class PlayerData<S extends PlayerDataInterface> implements Playe
 	}
 
 	@Override
-	@Localized({ "CRAZYPLUGIN.PLAYERINFO.HEAD", "CRAZYPLUGIN.PLAYERINFO.USERNAME", "CRAZYPLUGIN.PLAYERINFO.DISPLAYNAME", "CRAZYPLUGIN.PLAYERINFO.IPADDRESS", "CRAZYPLUGIN.PLAYERINFO.CONNECTION", "CRAZYPLUGIN.PLAYERINFO.URL", "CRAZYPLUGIN.PLAYERINFO.OP", "CRAZYPLUGIN.PLAYERINFO.WHITELISTED", "CRAZYPLUGIN.PLAYERINFO.BANNED", "CRAZYPLUGIN.PLAYERINFO.SEPARATOR" })
+	@Localized({ "CRAZYPLUGIN.PLAYERINFO.HEAD $DateTime$", "CRAZYPLUGIN.PLAYERINFO.USERNAME $Username$", "CRAZYPLUGIN.PLAYERINFO.DISPLAYNAME $Displayname$", "CRAZYPLUGIN.PLAYERINFO.IPADDRESS $IPAdress$", "CRAZYPLUGIN.PLAYERINFO.CONNECTION $Connection$", "CRAZYPLUGIN.PLAYERINFO.URL $IPAddress$", "CRAZYPLUGIN.PLAYERINFO.FIRSTCONNECT $DateTime$", "CRAZYPLUGIN.PLAYERINFO.LASTCONNECT $DateTime$", "CRAZYPLUGIN.PLAYERINFO.OP $OP$", "CRAZYPLUGIN.PLAYERINFO.WHITELISTED $Whitelisted$", "CRAZYPLUGIN.PLAYERINFO.BANNED $Banned$", "CRAZYPLUGIN.PLAYERINFO.SEPARATOR" })
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLAYERINFO");
@@ -51,6 +51,8 @@ public abstract class PlayerData<S extends PlayerDataInterface> implements Playe
 		final OfflinePlayer plr = getOfflinePlayer();
 		if (plr != null)
 		{
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("FIRSTCONNECT"), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date(plr.getFirstPlayed())));
+			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("LASTCONNECT"), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date(plr.getLastPlayed())));
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("OP"), plr.isOp() ? "True" : "False");
 			if (Bukkit.hasWhitelist())
 				ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("WHITELISTED"), plr.isWhitelisted() ? "True" : "False");
