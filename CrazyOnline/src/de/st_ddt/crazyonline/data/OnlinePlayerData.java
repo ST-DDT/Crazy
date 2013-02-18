@@ -19,8 +19,8 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.databases.ConfigurationPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.databases.FlatPlayerDataDatabaseEntry;
-import de.st_ddt.crazyutil.databases.MySQLDatabase;
 import de.st_ddt.crazyutil.databases.MySQLPlayerDataDatabaseEntry;
+import de.st_ddt.crazyutil.databases.SQLDatabase;
 import de.st_ddt.crazyutil.databases.SQLitePlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -158,7 +158,7 @@ public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements Co
 	// aus MySQL-Datenbank laden
 	public OnlinePlayerData(final ResultSet rawData, final String[] columnNames)
 	{
-		super(MySQLDatabase.readName(rawData, columnNames[0]));
+		super(SQLDatabase.readName(rawData, columnNames[0]));
 		String temp;
 		try
 		{
