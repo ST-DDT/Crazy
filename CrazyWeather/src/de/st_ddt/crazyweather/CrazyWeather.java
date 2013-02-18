@@ -1,6 +1,7 @@
 package de.st_ddt.crazyweather;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -22,6 +22,7 @@ import de.st_ddt.crazyweather.commands.CrazyWeatherCommandStrike;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandSun;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandThunderRain;
 import de.st_ddt.crazyweather.commands.CrazyWeatherCommandWeather;
+import de.st_ddt.crazyweather.data.WorldWeather;
 import de.st_ddt.crazyweather.listener.CrazyWeatherPlayerListener;
 import de.st_ddt.crazyweather.listener.CrazyWeatherWeatherListener;
 
@@ -29,10 +30,7 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 {
 
 	private static CrazyWeather plugin;
-	private final HashMap<String, WorldWeather> worldWeather = new HashMap<String, WorldWeather>();
-	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
-	private CrazyWeatherPlayerListener playerListener = null;
-	private CrazyWeatherWeatherListener weatherListener = null;
+	private final Map<String, WorldWeather> worldWeather = new HashMap<String, WorldWeather>();
 	private int tool = 280;
 	private boolean lightningdisabled = false;
 	private boolean lightningdamagedisabled = false;
@@ -118,16 +116,15 @@ public class CrazyWeather extends CrazyPlugin implements WeatherPlugin
 
 	private void registerHooks()
 	{
-		this.playerListener = new CrazyWeatherPlayerListener(this);
-		this.weatherListener = new CrazyWeatherWeatherListener(this);
 		final PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvents(weatherListener, this);
-		pm.registerEvents(playerListener, this);
+		pm.registerEvents(new CrazyWeatherWeatherListener(this), this);
+		pm.registerEvents(new CrazyWeatherPlayerListener(this), this);
 	}
 
 	@Override
 	public void onLoad()
 	{
+		WEATHERPLUGINPROVIDER.setPlugin(this);
 		plugin = this;
 		super.onLoad();
 	}

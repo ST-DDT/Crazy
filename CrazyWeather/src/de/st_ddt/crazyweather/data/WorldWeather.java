@@ -1,9 +1,10 @@
-package de.st_ddt.crazyweather;
+package de.st_ddt.crazyweather.data;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
+import de.st_ddt.crazyweather.Weather;
 
 public class WorldWeather implements ConfigurationSaveable, WeatherData
 {

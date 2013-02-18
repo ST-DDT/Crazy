@@ -8,7 +8,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 import de.st_ddt.crazyweather.CrazyWeather;
-import de.st_ddt.crazyweather.WorldWeather;
+import de.st_ddt.crazyweather.data.WorldWeather;
 
 public class CrazyWeatherWeatherListener implements Listener
 {

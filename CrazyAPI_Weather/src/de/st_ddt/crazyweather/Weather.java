@@ -2,7 +2,10 @@ package de.st_ddt.crazyweather;
 
 public enum Weather
 {
-	SUN(false, false), RAIN(true, false), THUNDER(false, true), THUNDERRAIN(true, true);
+	SUN(false, false),
+	RAIN(true, false),
+	THUNDER(false, true),
+	THUNDERRAIN(true, true);
 
 	private final boolean rain;
 	private final boolean thunder;

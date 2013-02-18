@@ -1,6 +1,8 @@
-package de.st_ddt.crazyweather;
+package de.st_ddt.crazyweather.data;
 
 import org.bukkit.World;
+
+import de.st_ddt.crazyweather.Weather;
 
 public interface WeatherData
 {
