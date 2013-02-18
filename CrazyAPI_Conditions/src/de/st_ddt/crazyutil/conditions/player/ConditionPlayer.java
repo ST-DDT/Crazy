@@ -8,7 +8,7 @@ import de.st_ddt.crazyutil.conditions.ConditionBase;
 public abstract class ConditionPlayer extends ConditionBase<Player>
 {
 
-	public ConditionPlayer(ConfigurationSection config)
+	public ConditionPlayer(final ConfigurationSection config)
 	{
 		super(config);
 	}

@@ -5,7 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 public class Condition_TRUE<T> extends ConditionBase<T>
 {
 
-	public Condition_TRUE(ConfigurationSection config)
+	public Condition_TRUE(final ConfigurationSection config)
 	{
 		super(config);
 	}
@@ -16,7 +16,7 @@ public class Condition_TRUE<T> extends ConditionBase<T>
 	}
 
 	@Override
-	public boolean match(T tester)
+	public boolean match(final T tester)
 	{
 		return true;
 	}

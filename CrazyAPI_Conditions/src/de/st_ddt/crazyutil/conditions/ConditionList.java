@@ -1,6 +1,7 @@
 package de.st_ddt.crazyutil.conditions;
 
 import java.util.ArrayList;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class ConditionList<T> extends ConditionBase<T>
@@ -14,21 +15,19 @@ public abstract class ConditionList<T> extends ConditionBase<T>
 		config = config.getConfigurationSection("conditions");
 		if (config == null)
 			return;
-		for (String name : config.getKeys(false))
-		{
+		for (final String name : config.getKeys(false))
 			try
 			{
 				@SuppressWarnings("unchecked")
-				ConditionBase<T> condition = (ConditionBase<T>) ConditionBase.load(config.getConfigurationSection(name));
+				final ConditionBase<T> condition = (ConditionBase<T>) ConditionBase.load(config.getConfigurationSection(name));
 				if (condition != null)
 					conditions.add(condition);
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				System.out.println("Error loading condition: " + name);
 				e.printStackTrace();
 			}
-		}
 	}
 
 	public ConditionList()
@@ -37,12 +36,12 @@ public abstract class ConditionList<T> extends ConditionBase<T>
 	}
 
 	@Override
-	public final void save(ConfigurationSection config, String path)
+	public final void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		int a = 0;
 		config.set(path + "conditions", null);
-		for (ConditionBase<? extends T> condition : conditions)
+		for (final ConditionBase<? extends T> condition : conditions)
 			condition.save(config, path + "conditions." + condition.getTypeIdentifier() + (a++) + ".");
 	}
 

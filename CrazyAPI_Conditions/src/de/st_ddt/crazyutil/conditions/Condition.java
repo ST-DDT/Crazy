@@ -20,6 +20,7 @@ public interface Condition<T> extends ConfigurationSaveable
 	 * @param path
 	 *            The path in the config to save the data (path should end with ".")
 	 */
+	@Override
 	public abstract void save(ConfigurationSection config, String path);
 
 	/**

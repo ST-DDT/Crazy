@@ -8,7 +8,7 @@ public class Condition_NOT<T> extends ConditionBase<T>
 	protected ConditionBase<T> condition = null;
 
 	@SuppressWarnings("unchecked")
-	public Condition_NOT(ConfigurationSection config)
+	public Condition_NOT(final ConfigurationSection config)
 	{
 		super(config);
 		condition = (ConditionBase<T>) ConditionBase.load(config.getConfigurationSection("condition"));
@@ -21,7 +21,7 @@ public class Condition_NOT<T> extends ConditionBase<T>
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		super.save(config, path);
 		condition.save(config, path + "condition.");
@@ -34,7 +34,7 @@ public class Condition_NOT<T> extends ConditionBase<T>
 	}
 
 	@Override
-	public boolean match(T tester)
+	public boolean match(final T tester)
 	{
 		return !condition.match(tester);
 	}

@@ -5,7 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 public class Condition_OR<T> extends ConditionList<T>
 {
 
-	public Condition_OR(ConfigurationSection config)
+	public Condition_OR(final ConfigurationSection config)
 	{
 		super(config);
 	}
@@ -16,9 +16,9 @@ public class Condition_OR<T> extends ConditionList<T>
 	}
 
 	@Override
-	public boolean match(T tester)
+	public boolean match(final T tester)
 	{
-		for (Condition<T> condition : conditions)
+		for (final Condition<T> condition : conditions)
 			if (condition.match(tester))
 				return true;
 		return false;

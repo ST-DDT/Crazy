@@ -12,12 +12,12 @@ public abstract class ConditionBase<T> implements Condition<T>
 {
 
 	@SuppressWarnings("unchecked")
-	public static <T> ConditionBase<T> load(ConfigurationSection config)
+	public static <T> ConditionBase<T> load(final ConfigurationSection config)
 	{
-		return (ConditionBase<T>) ObjectSaveLoadHelper.load(config, ConditionBase.class, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
+		return ObjectSaveLoadHelper.load(config, ConditionBase.class, new Class<?>[] { ConfigurationSection.class }, new Object[] { config }, "de.st_ddt.crazyutil.conditions");
 	}
 
-	public ConditionBase(ConfigurationSection config)
+	public ConditionBase(final ConfigurationSection config)
 	{
 		super();
 	}
@@ -28,7 +28,7 @@ public abstract class ConditionBase<T> implements Condition<T>
 	}
 
 	@Override
-	public void save(ConfigurationSection config, String path)
+	public void save(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "type", getClass().getName());
 	}
@@ -43,38 +43,38 @@ public abstract class ConditionBase<T> implements Condition<T>
 	public abstract boolean match(T tester);
 
 	@Override
-	public final boolean match(T[] testers)
+	public final boolean match(final T[] testers)
 	{
-		for (T tester : testers)
+		for (final T tester : testers)
 			if (!match(tester))
 				return false;
 		return true;
 	}
 
 	@Override
-	public final boolean match(List<? extends T> testers)
+	public final boolean match(final List<? extends T> testers)
 	{
-		for (T tester : testers)
+		for (final T tester : testers)
 			if (!match(tester))
 				return false;
 		return true;
 	}
 
 	@Override
-	public final List<T> getMatching(T[] testers)
+	public final List<T> getMatching(final T[] testers)
 	{
-		ArrayList<T> list = new ArrayList<T>();
-		for (T tester : testers)
+		final ArrayList<T> list = new ArrayList<T>();
+		for (final T tester : testers)
 			if (match(tester))
 				list.add(tester);
 		return list;
 	}
 
 	@Override
-	public final List<T> getMatching(Collection<? extends T> testers)
+	public final List<T> getMatching(final Collection<? extends T> testers)
 	{
-		ArrayList<T> list = new ArrayList<T>();
-		for (T tester : testers)
+		final ArrayList<T> list = new ArrayList<T>();
+		for (final T tester : testers)
 			if (match(tester))
 				list.add(tester);
 		return list;
