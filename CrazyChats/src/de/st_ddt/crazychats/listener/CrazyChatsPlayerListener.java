@@ -318,10 +318,11 @@ public class CrazyChatsPlayerListener implements Listener
 				lastPrivateChatSenders.put(target, senderName);
 		}
 		targets.add(player);
-		for (final Player online : Bukkit.getOnlinePlayers())
-			if (PermissionModule.hasPermission(online, "crazychats.chatspy"))
-				if (!plugin.getAvailablePlayerData(online).isMuted(player) || PermissionModule.hasPermission(player, "crazychats.unmutable"))
-					targets.add(online);
+		if (!(channel instanceof PrivateChannel) || plugin.isPrivateChatSpyingEnabled())
+			for (final Player online : Bukkit.getOnlinePlayers())
+				if (PermissionModule.hasPermission(online, "crazychats.chatspy"))
+					if (!plugin.getAvailablePlayerData(online).isMuted(player) || PermissionModule.hasPermission(player, "crazychats.unmutable"))
+						targets.add(online);
 		if (plugin.isCleaningRepetitionsEnabled() && !PermissionModule.hasPermission(player, "crazychats.nocleaning"))
 			message = CrazyChatsChatHelper.cleanRepetitions(message);
 		if (plugin.isCleaningCapsEnabled() && !PermissionModule.hasPermission(player, "crazychats.nocleaning"))

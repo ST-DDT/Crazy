@@ -102,6 +102,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private String localChatFormat = "[Local]%1$s: %2$s";
 	private double localChatRange = 50;
 	private String privateChatFormat = "[Private]%1$s: %2$s";
+	private boolean privateChatSpyingEnabled = true;
 	private String adminChatFormat = "[Admin]%1$s: %2$s";
 	private String ownChatNamePrefix = ChatColor.ITALIC.toString();
 	private String defaultChannelKey;
@@ -285,6 +286,22 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			public void setValue(final String newValue) throws CrazyException
 			{
 				privateChatFormat = newValue;
+				saveConfiguration();
+			}
+		});
+		modeCommand.addMode(new BooleanFalseMode(this, "privateChatSpyingEnabled")
+		{
+
+			@Override
+			public Boolean getValue()
+			{
+				return privateChatSpyingEnabled;
+			}
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				privateChatSpyingEnabled = newValue;
 				saveConfiguration();
 			}
 		});
@@ -582,6 +599,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		localChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("localChatFormat", "&2[Local] &F%1$s&F: &F%2$s"));
 		localChatRange = config.getDouble("localChatRange", 30);
 		privateChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("privateChatFormat", "&7[Private] &F%1$s&F: &F%2$s"));
+		privateChatSpyingEnabled = config.getBoolean("privateChatSpyingEnabled", false);
 		adminChatFormat = CrazyChatsChatHelper.makeFormat(config.getString("adminChatFormat", "&C[Admin] &F%1$s&F: &F%2$s"));
 		ownChatNamePrefix = ChatHelper.colorise(config.getString("ownChatNamePrefix", ChatColor.ITALIC.toString()));
 		defaultChannelKey = config.getString("defaultChannelKey", "w");
@@ -621,6 +639,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		config.set("localChatFormat", CrazyChatsChatHelper.unmakeFormat(localChatFormat));
 		config.set("localChatRange", localChatRange);
 		config.set("privateChatFormat", CrazyChatsChatHelper.unmakeFormat(privateChatFormat));
+		config.set("privateChatSpyingEnabled", privateChatSpyingEnabled);
 		config.set("adminChatFormat", CrazyChatsChatHelper.unmakeFormat(adminChatFormat));
 		config.set("ownChatNamePrefix", ChatHelper.decolorise(ownChatNamePrefix));
 		config.set("defaultChannelKey", defaultChannelKey);
@@ -809,6 +828,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	public String getPrivateChatFormat()
 	{
 		return privateChatFormat;
+	}
+
+	public boolean isPrivateChatSpyingEnabled()
+	{
+		return privateChatSpyingEnabled;
 	}
 
 	public String getAdminChatFormat()
