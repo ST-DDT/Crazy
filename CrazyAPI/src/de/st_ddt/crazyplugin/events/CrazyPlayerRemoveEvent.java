@@ -19,27 +19,33 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent
 
 	public CrazyPlayerRemoveEvent(final OfflinePlayer player)
 	{
-		super();
-		this.player = player.getName();
+		this(player.getName());
 	}
 
 	public CrazyPlayerRemoveEvent(final String player)
 	{
 		super();
+		if (player == null)
+			throw new IllegalArgumentException("Playername cannot be null!");
+		if (player.length() == 0)
+			throw new IllegalArgumentException("Playername cannot be empty!");
 		this.player = player;
 	}
 
 	@Deprecated
 	public CrazyPlayerRemoveEvent(final CrazyPluginInterface plugin, final OfflinePlayer player)
 	{
-		super(plugin);
-		this.player = player.getName();
+		this(plugin, player.getName());
 	}
 
 	@Deprecated
 	public CrazyPlayerRemoveEvent(final CrazyPluginInterface plugin, final String player)
 	{
 		super(plugin);
+		if (player == null)
+			throw new IllegalArgumentException("Playername cannot be null!");
+		if (player.length() == 0)
+			throw new IllegalArgumentException("Playername cannot be empty!");
 		this.player = player;
 	}
 
