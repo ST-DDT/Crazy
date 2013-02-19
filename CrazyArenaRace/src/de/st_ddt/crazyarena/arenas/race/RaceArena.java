@@ -46,7 +46,7 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	private final static int DEFAUTLMINPARTICIPANTS = 2;
 	private final static long DEFAULTKICKSLOWPLAYERS = 30;
-	private final static long DEFAULTEXPIRATIONTIME = 1000 * 60 * 60 * 24 * 30;
+	private final static long DEFAULTEXPIRATIONTIME = 1000L * 60 * 60 * 24 * 30;
 	protected final List<Location> playerSpawns = new ArrayList<Location>();
 	protected final SpawnList spectatorSpawns = new SpawnList();
 	protected final Map<String, Location> quitLocation = new HashMap<String, Location>();

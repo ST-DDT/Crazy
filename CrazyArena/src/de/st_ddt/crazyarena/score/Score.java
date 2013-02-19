@@ -39,7 +39,7 @@ public class Score implements ConfigurationSaveable
 	protected final String[] valuenames;
 	protected final Comparator<ScoreEntry> defaultComparator;
 	protected final ScoreOutputModifier scoreOutputModifier;
-	protected long expiringTime;
+	protected long expiringTime = 1000L * 60 * 60 * 24 * 30;
 
 	public Score(final Arena<?> arena, final String[] stringnames, final String[] valuenames, final String compareField, final boolean reverse)
 	{
