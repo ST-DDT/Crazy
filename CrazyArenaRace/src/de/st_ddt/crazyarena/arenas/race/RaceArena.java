@@ -166,8 +166,8 @@ public class RaceArena extends Arena<RaceParticipant>
 		kickSlowPlayers = config.getLong("kickSlowPlayers", DEFAULTKICKSLOWPLAYERS);
 		currentScore.setExpiringTime(Long.MAX_VALUE);
 		currentScore.load(config.getConfigurationSection("currentScore"), false, true);
-		permanentScore.load(config.getConfigurationSection("permanentScore"), true, true);
 		permanentScore.setExpiringTime(config.getLong("scoreExpiringTime", DEFAULTEXPIRATIONTIME));
+		permanentScore.load(config.getConfigurationSection("permanentScore"), true, true);
 		registerCommands();
 	}
 
