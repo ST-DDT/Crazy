@@ -300,7 +300,6 @@ public class RaceArena extends Arena<RaceParticipant>
 						{
 							if (arena.getStatus() == ArenaStatus.WAITING)
 							{
-								runnumber++;
 								arena.status = ArenaStatus.PLAYING;
 								startTime = System.currentTimeMillis();
 								for (final RaceParticipant participant : getParticipants(ParticipantType.READY))
@@ -438,6 +437,7 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	private final void raceEnd(final RaceData winner)
 	{
+		runnumber++;
 		final List<RaceData> datas = winner.getStage().getDatas();
 		final Date now = new Date();
 		final String date = CrazyLightPluginInterface.DATEFORMAT.format(now);
