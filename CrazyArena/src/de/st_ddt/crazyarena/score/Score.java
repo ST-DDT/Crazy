@@ -437,16 +437,17 @@ public class Score implements ConfigurationSaveable
 		}
 	}
 
-	public class ScoreEntry extends PlayerData<ScoreEntry> implements Comparable<ScoreEntry>, ConfigurationSaveable
+	public class ScoreEntry extends PlayerData<ScoreEntry> implements ConfigurationSaveable
 	{
 
 		protected final Map<String, String> strings = new LinkedHashMap<String, String>();
 		protected final Map<String, Double> values = new LinkedHashMap<String, Double>();
-		protected long lastAction = System.currentTimeMillis();
+		protected long lastAction;
 
 		protected ScoreEntry(final String name)
 		{
 			super(name);
+			lastAction = System.currentTimeMillis();
 			for (final String string : stringnames)
 				strings.put(string, "");
 			strings.put("name", name);
@@ -454,9 +455,10 @@ public class Score implements ConfigurationSaveable
 				values.put(string, 0d);
 		}
 
-		public ScoreEntry(final String name, final ConfigurationSection config)
+		protected ScoreEntry(final String name, final ConfigurationSection config)
 		{
 			super(name);
+			lastAction = config.getLong("_lastAction", 0);
 			for (final String string : stringnames)
 				strings.put(string, config.getString(string, ""));
 			strings.put("name", name);
@@ -464,7 +466,7 @@ public class Score implements ConfigurationSaveable
 				values.put(string, config.getDouble(string, 0));
 		}
 
-		public Arena<?> getArena()
+		public final Arena<?> getArena()
 		{
 			return arena;
 		}
@@ -577,7 +579,7 @@ public class Score implements ConfigurationSaveable
 		@Override
 		public int compareTo(final ScoreEntry score)
 		{
-			return getName().compareTo(score.getName());
+			return name.compareTo(score.name);
 		}
 
 		@Override
@@ -592,7 +594,7 @@ public class Score implements ConfigurationSaveable
 			switch (index)
 			{
 				case 0:
-					return getName();
+					return name;
 				case 1:
 					return arena.getName();
 				default:
@@ -620,10 +622,17 @@ public class Score implements ConfigurationSaveable
 		@Override
 		public void save(final ConfigurationSection config, final String path)
 		{
+			config.set(path + "_lastAction", lastAction);
 			for (final Entry<String, String> entry : strings.entrySet())
 				config.set(path + entry.getKey(), entry.getValue());
 			for (final Entry<String, Double> entry : values.entrySet())
 				config.set(path + entry.getKey(), entry.getValue());
+		}
+
+		@Override
+		public String toString()
+		{
+			return "ScoreData {Username: " + name + "; Arena: " + arena.getName() + "}";
 		}
 	}
 }
