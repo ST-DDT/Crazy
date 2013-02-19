@@ -97,7 +97,7 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 
 	public final RealRoom<Room> cloneAsRealRoom()
 	{
-		return new RealRoom<Room>(room.clone(), basis);
+		return new RealRoom<Room>(room.clone(), basis.clone());
 	}
 
 	public void show(final CommandSender target)
