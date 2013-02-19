@@ -447,11 +447,11 @@ public class RaceArena extends Arena<RaceParticipant>
 			final ScoreEntry score = permanentScore.getOrAddScore(data.getName());
 			if (score.setValueIfLowerOrZero("timeelapsed", data.getTime()))
 			{
-				score.setValue("opponents", datas.size());
+				score.setValue("opponents", datas.size() - 1);
 				score.setString("date", date);
 				score.setString("time", time);
 			}
-			score.setValueIfLower("leadfirst", data.getTime(winner));
+			score.setValueIfLowerOrZero("leadfirst", data.getTime(winner) + 1);
 		}
 		permanentScore.updateSigns();
 		broadcastLocaleMessage(false, true, true, true, "FINISHED.END", winner.getName(), winner.getTimeString());
