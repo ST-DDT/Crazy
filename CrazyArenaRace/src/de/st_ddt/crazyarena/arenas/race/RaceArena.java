@@ -456,6 +456,7 @@ public class RaceArena extends Arena<RaceParticipant>
 		permanentScore.updateSigns();
 		broadcastLocaleMessage(false, true, true, true, "FINISHED.END", winner.getName(), winner.getTimeString());
 		stop();
+		saveToFile();
 	}
 
 	@Override
