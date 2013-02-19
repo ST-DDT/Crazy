@@ -8,10 +8,9 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutorInterface;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.Logger;
-import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public interface CrazyPluginInterface extends Named, CrazyLightPluginInterface
+public interface CrazyPluginInterface extends CrazyLightPluginInterface
 {
 
 	public boolean isInstalled();

@@ -9,9 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.ConfigurationSaveable;
-
-public class SQLiteConnection implements ConfigurationSaveable, SQLConnection
+public class SQLiteConnection implements SQLConnection
 {
 
 	private final String path;

@@ -5,9 +5,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyutil.databases.FlatPlayerDataDatabase;
-import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 
-public class CrazyOnlineFlatDatabase extends FlatPlayerDataDatabase<OnlinePlayerData> implements PlayerDataDatabase<OnlinePlayerData>
+public class CrazyOnlineFlatDatabase extends FlatPlayerDataDatabase<OnlinePlayerData>
 {
 
 	public CrazyOnlineFlatDatabase(final JavaPlugin plugin, final ConfigurationSection config)

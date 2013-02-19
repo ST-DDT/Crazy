@@ -8,9 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.ConfigurationSaveable;
-
-public class MySQLConnection implements ConfigurationSaveable, SQLConnection
+public class MySQLConnection implements SQLConnection
 {
 
 	private final String host;

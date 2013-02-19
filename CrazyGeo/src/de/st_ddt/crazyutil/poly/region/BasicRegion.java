@@ -2,10 +2,9 @@ package de.st_ddt.crazyutil.poly.region;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
-public abstract class BasicRegion implements ConfigurationSaveable, Region
+public abstract class BasicRegion implements Region
 {
 
 	public static Region load(final ConfigurationSection config)

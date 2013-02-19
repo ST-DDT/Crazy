@@ -84,7 +84,7 @@ public abstract class Filter<S> implements FilterInterface<S>
 		return new ArrayList<String>();
 	}
 
-	protected abstract class FilterInstance implements Named, FilterInstanceInterface<S>
+	protected abstract class FilterInstance implements FilterInstanceInterface<S>
 	{
 
 		@Override

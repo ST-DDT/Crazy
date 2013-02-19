@@ -6,11 +6,10 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
-import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 import de.st_ddt.crazyutil.databases.SQLColumn;
 import de.st_ddt.crazyutil.databases.SQLitePlayerDataDatabase;
 
-public class CrazyOnlineSQLiteDatabase extends SQLitePlayerDataDatabase<OnlinePlayerData> implements PlayerDataDatabase<OnlinePlayerData>
+public class CrazyOnlineSQLiteDatabase extends SQLitePlayerDataDatabase<OnlinePlayerData>
 {
 
 	public CrazyOnlineSQLiteDatabase(final ConfigurationSection config)

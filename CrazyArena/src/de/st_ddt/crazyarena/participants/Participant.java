@@ -11,7 +11,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
 
-public abstract class Participant<S extends Participant<S, T>, T extends Arena<S>> extends PlayerData<Participant<S, T>> implements Comparable<Participant<S, T>>
+public abstract class Participant<S extends Participant<S, T>, T extends Arena<S>> extends PlayerData<Participant<S, T>>
 {
 
 	protected final T arena;
