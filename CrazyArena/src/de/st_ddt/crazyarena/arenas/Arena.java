@@ -1,9 +1,11 @@
 package de.st_ddt.crazyarena.arenas;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,6 +35,7 @@ import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
 public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatHeaderProvider, ParameterData
@@ -40,7 +43,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 
 	public static final String ARENADATAROOTPATH = "plugins" + File.separator + "CrazyArena" + File.separator + "arenas" + File.separator;
 	protected final String name;
-	protected final String chatHeader;
+	protected String chatHeader;
 	protected final CrazyLocale locale;
 	protected final YamlConfiguration config = new YamlConfiguration();
 	protected final Map<String, S> participants = new HashMap<String, S>();
@@ -83,7 +86,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		final CrazyLocale defaultLocale = pluginLocale.getSecureLanguageEntry("ARENA_DEFAULT");
 		typeLocale.setAlternative(defaultLocale);
 		// Commands
-		mainCommand.addSubCommand(modeCommand, "mode");
+		registerCommands();
 	}
 
 	public Arena(final String name, final ConfigurationSection config)
@@ -103,7 +106,50 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		if (config.getBoolean("edit", false))
 			status = ArenaStatus.CONSTRUCTING;
 		// Commands
+		registerCommands();
+	}
+
+	private void registerCommands()
+	{
 		mainCommand.addSubCommand(modeCommand, "mode");
+		registerModes();
+	}
+
+	private void registerModes()
+	{
+		modeCommand.addMode(new Mode<String>(CrazyArena.getPlugin(), "chatHeader", String.class)
+		{
+
+			@Override
+			public String getValue()
+			{
+				return chatHeader;
+			}
+
+			@Override
+			public void setValue(final CommandSender sender, final String... args) throws CrazyException
+			{
+				setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
+				showValue(sender);
+			}
+
+			@Override
+			public void setValue(final String newValue) throws CrazyException
+			{
+				chatHeader = newValue;
+				saveToFile();
+			}
+
+			@Override
+			public List<String> tab(final String... args)
+			{
+				if (args.length != 1 && args[0].length() != 0)
+					return null;
+				final List<String> res = new ArrayList<String>(1);
+				res.add(ChatHelper.decolorise(chatHeader));
+				return res;
+			}
+		});
 	}
 
 	public final ArenaStatus getStatus()
