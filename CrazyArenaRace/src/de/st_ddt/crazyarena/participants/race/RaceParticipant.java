@@ -72,8 +72,7 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 			case 3:
 				return stage.getName();
 			case 4:
-				// EDIT this thing is missing
-				return "target.location";
+				return ArenaChatHelper.locationConverter(stage.getZone().getBasis());
 			default:
 				return "";
 		}
