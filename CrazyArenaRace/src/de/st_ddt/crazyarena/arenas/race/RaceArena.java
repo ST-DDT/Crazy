@@ -40,6 +40,8 @@ import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.modes.IntegerMode;
+import de.st_ddt.crazyutil.modes.LongMode;
 
 public class RaceArena extends Arena<RaceParticipant>
 {
@@ -55,8 +57,8 @@ public class RaceArena extends Arena<RaceParticipant>
 	// Match Variables
 	private CrazyRaceArenaPlayerListener playerMatchListener;
 	private long startTime = 0;
-	private final int minParticipants;
-	private final long kickSlowPlayers;
+	private int minParticipants;
+	private long kickSlowPlayers;
 	private final Score currentScore = new Score(this, new String[] { "nextstage" }, new String[] { "nextstageindex", "timeelapsed" }, new Comparator<Score.ScoreEntry>()
 	{
 
@@ -191,7 +193,55 @@ public class RaceArena extends Arena<RaceParticipant>
 
 	private void registerModes()
 	{
-		// EDIT Automatisch generierter Methodenstub
+		final CrazyArena plugin = CrazyArena.getPlugin();
+		modeCommand.addMode(new IntegerMode(plugin, "minParticipants")
+		{
+
+			@Override
+			public Integer getValue()
+			{
+				return minParticipants;
+			}
+
+			@Override
+			public void setValue(final Integer newValue) throws CrazyException
+			{
+				minParticipants = newValue;
+				saveToFile();
+			}
+		});
+		modeCommand.addMode(new LongMode(plugin, "startTime")
+		{
+
+			@Override
+			public Long getValue()
+			{
+				return startTime;
+			}
+
+			@Override
+			public void setValue(final Long newValue) throws CrazyException
+			{
+				startTime = newValue;
+				saveToFile();
+			}
+		});
+		modeCommand.addMode(new LongMode(plugin, "kickSlowPlayers")
+		{
+
+			@Override
+			public Long getValue()
+			{
+				return kickSlowPlayers;
+			}
+
+			@Override
+			public void setValue(final Long newValue) throws CrazyException
+			{
+				kickSlowPlayers = newValue;
+				saveToFile();
+			}
+		});
 	}
 
 	@Override
@@ -477,13 +527,12 @@ public class RaceArena extends Arena<RaceParticipant>
 	@Override
 	public void registerArenaListener()
 	{
-		// EDIT Automatisch generierter Methodenstub
+		// EDIT Implementiere RaceArena.registerArenaListener()
 	}
 
 	@Override
 	public void unregisterArenaListener()
 	{
-		// EDIT Automatisch generierter Methodenstub
 	}
 
 	@Override
