@@ -11,11 +11,9 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 public class CrazyPluginCommandMainReload extends CrazyCommandExecutor<CrazyPluginInterface>
 {
 
-	@SuppressWarnings("deprecation")
 	public CrazyPluginCommandMainReload(final CrazyPluginInterface plugin)
 	{
-		// temp method to avoid version dismatching
-		super(plugin, true);
+		super(plugin);
 	}
 
 	@Override

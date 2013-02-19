@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -18,22 +17,6 @@ public abstract class CrazyCommandListEditor<S extends ChatHeaderProvider, T> ex
 	public CrazyCommandListEditor(final S chatHeaderProvider)
 	{
 		this(chatHeaderProvider, true, true, true);
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public CrazyCommandListEditor(final CrazyPluginInterface chatHeaderProvider)
-	{
-		// EDIT remove compatibility code
-		this((S) chatHeaderProvider, true, true, true);
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public CrazyCommandListEditor(final CrazyPluginInterface chatHeaderProvider, final boolean add, final boolean insert, final boolean remove)
-	{
-		// EDIT remove compatibility code
-		this((S) chatHeaderProvider, add, insert, remove);
 	}
 
 	public CrazyCommandListEditor(final S chatHeaderProvider, final boolean add, final boolean insert, final boolean remove)

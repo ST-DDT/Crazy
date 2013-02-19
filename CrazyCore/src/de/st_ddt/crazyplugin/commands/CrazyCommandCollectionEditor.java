@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHeaderProvider;
@@ -25,21 +24,6 @@ public abstract class CrazyCommandCollectionEditor<S extends ChatHeaderProvider,
 	public CrazyCommandCollectionEditor(final S chatHeaderProvider)
 	{
 		this(chatHeaderProvider, true, true);
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public CrazyCommandCollectionEditor(final CrazyPluginInterface chatHeaderProvider)
-	{
-		// EDIT remove compatibility code
-		this((S) chatHeaderProvider, true, true);
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public CrazyCommandCollectionEditor(final CrazyPluginInterface chatHeaderProvider, final boolean add, final boolean remove)
-	{
-		this((S) chatHeaderProvider, add, remove);
 	}
 
 	public CrazyCommandCollectionEditor(final S chatHeaderProvider, final boolean add, final boolean remove)

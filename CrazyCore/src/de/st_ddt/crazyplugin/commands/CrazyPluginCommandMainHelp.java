@@ -8,11 +8,9 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class CrazyPluginCommandMainHelp extends CrazyCommandExecutor<CrazyPluginInterface>
 {
 
-	@SuppressWarnings("deprecation")
 	public CrazyPluginCommandMainHelp(final CrazyPluginInterface plugin)
 	{
-		// temp method to avoid version dismatching
-		super(plugin, true);
+		super(plugin);
 	}
 
 	@Override
