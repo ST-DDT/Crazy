@@ -341,7 +341,7 @@ public class Score implements ConfigurationSaveable
 		if (config == null)
 			return;
 		for (final String key : config.getKeys(false))
-			scores.put(key, new ScoreEntry(key, config));
+			scores.put(key, new ScoreEntry(key, config.getConfigurationSection(key)));
 		final long expireTest = System.currentTimeMillis() - expiringTime;
 		final Iterator<ScoreEntry> it = scores.values().iterator();
 		while (it.hasNext())
