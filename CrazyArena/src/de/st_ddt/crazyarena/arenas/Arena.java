@@ -457,7 +457,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 	@Override
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
-		// EDIT show
+		// EDIT Implementiere Arena.show()
 		// Name & Type
 		// Separator
 		// Participants sorted by TypeAndName
