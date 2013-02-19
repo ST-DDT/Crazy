@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazyarena.arenas.race.RaceArena;
 import de.st_ddt.crazyarena.arenas.race.RaceStage;
 import de.st_ddt.crazyarena.participants.Participant;
+import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -46,12 +47,15 @@ public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 	}
 
 	@Override
-	@Localized("CRAZYARENA.ARENA_RACE.PLAYERINFO.STAGE $Stage$")
+	@Localized({ "CRAZYARENA.ARENA_RACE.PLAYERINFO.STAGE $Stage$", "CRAZYARENA.ARENA_RACE.PLAYERINFO.STAGELOCATION $Location$" })
 	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		super.showDetailed(target, chatHeader);
+		if (stage == null)
+			return;
 		final CrazyLocale mainLocale = arena.getLocale().getSecureLanguageEntry("PLAYERINFO");
 		ChatHelper.sendMessage(target, chatHeader, mainLocale.getLanguageEntry("STAGE"), stage.toShortString());
+		ChatHelper.sendMessage(target, chatHeader, mainLocale.getLanguageEntry("STAGELOCATION"), ArenaChatHelper.locationConverter(stage.getZone().getBasis()));
 	}
 
 	@Override
