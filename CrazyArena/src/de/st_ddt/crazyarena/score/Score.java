@@ -585,9 +585,9 @@ public class Score implements ConfigurationSaveable
 		@Override
 		public void showDetailed(final CommandSender target, final String chatHeader)
 		{
-			for (Entry<String, String> entry : strings.entrySet())
+			for (final Entry<String, String> entry : strings.entrySet())
 				target.sendMessage(chatHeader + entry.getKey() + " = " + entry.getValue());
-			for (Entry<String, Double> entry : values.entrySet())
+			for (final Entry<String, Double> entry : values.entrySet())
 				target.sendMessage(chatHeader + entry.getKey() + " = " + entry.getValue());
 		}
 
