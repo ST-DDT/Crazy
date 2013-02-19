@@ -247,7 +247,11 @@ public final class CrazyCore extends CrazyPlugin
 		consoleLog("Loading languages...");
 		loadUserLanguages = config.getBoolean("loadUserLanguages", true);
 		final String systemLanguage = System.getProperty("user.language").toLowerCase();
-		final String defaultLanguage = config.getString("defaultLanguage", systemLanguage + "_" + systemLanguage);
+		String defaultLanguage = config.getString("defaultLanguage", systemLanguage + "_" + systemLanguage);
+		if (defaultLanguage.startsWith("custom_"))
+			defaultLanguage = defaultLanguage.substring(7);
+		if (defaultLanguage.endsWith(".lang"))
+			defaultLanguage = defaultLanguage.substring(0, defaultLanguage.length() - 5);
 		CrazyLocale.setDefaultLanguage(defaultLanguage);
 		preloadedLanguages.add(defaultLanguage);
 		if (isInstalled)
