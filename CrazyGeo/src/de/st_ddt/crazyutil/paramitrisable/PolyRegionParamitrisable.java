@@ -14,6 +14,6 @@ public class PolyRegionParamitrisable extends TypedParamitrisable<Region>
 	@Override
 	public void setParameter(final String parameter) throws CrazyException
 	{
-		// EDIT Automatisch generierter Methodenstub
+		// EDIT Implementiere TypedParamitrisable<Region>.setParameter()
 	}
 }

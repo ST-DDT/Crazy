@@ -102,7 +102,7 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 
 	public void show(final CommandSender target)
 	{
-		// EDIT add show method
+		// EDIT Implementiere RealRoom.show()
 	}
 
 	@Override
