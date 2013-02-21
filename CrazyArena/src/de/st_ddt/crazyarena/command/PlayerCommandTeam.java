@@ -21,6 +21,6 @@ public class PlayerCommandTeam extends PlayerCommandExecutor
 		final Arena<?> arena = plugin.getArenaByPlayer(player);
 		if (arena == null || !arena.getParticipant(player).isPlayer())
 			throw new CrazyCommandCircumstanceException("when playing in an arena!");
-		arena.team(player);
+		arena.team(player, args);
 	}
 }
