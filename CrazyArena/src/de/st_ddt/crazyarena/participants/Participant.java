@@ -20,9 +20,14 @@ public abstract class Participant<S extends Participant<S, T>, T extends Arena<S
 
 	public Participant(final Player player, final T arena)
 	{
+		this(player, arena, new ArenaPlayerSaver(player));
+	}
+
+	protected Participant(final Player player, final T arena, final ArenaPlayerSaver saver)
+	{
 		super(player.getName());
 		this.arena = arena;
-		this.saver = new ArenaPlayerSaver(player);
+		this.saver = saver;
 	}
 
 	public final T getArena()
