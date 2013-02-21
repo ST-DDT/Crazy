@@ -2,8 +2,8 @@ package de.st_ddt.crazyarena.command;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
@@ -31,10 +31,10 @@ public class CommandMainForceStop extends CommandExecutor
 		final Arena<?> arena = plugin.getArenaByName(args[0]);
 		if (arena == null)
 			throw new CrazyCommandNoSuchException("Arena", args[0]);
+		if (!(sender instanceof Player) && !arena.isParticipant((Player) sender))
+			plugin.sendLocaleMessage("COMMAND.STOP.FORCE", sender, sender.getName(), arena.getName());
+		arena.broadcastLocaleMessage(true, "COMMAND.STOP.FORCE", sender.getName(), arena.getName());
 		arena.stop();
-		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", sender, sender.getName(), arena.getName());
-		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", arena.getParticipatingPlayers(), sender.getName(), arena.getName());
-		plugin.sendLocaleMessage("COMMAND.STOP.FORCE", Bukkit.getConsoleSender(), sender.getName(), arena.getName());
 	}
 
 	@Override
