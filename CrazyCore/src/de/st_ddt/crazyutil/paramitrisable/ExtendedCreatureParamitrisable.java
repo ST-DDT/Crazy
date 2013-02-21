@@ -1,5 +1,6 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -45,6 +46,24 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			CREATURE_TYPES.put(alias.toUpperCase(), type);
 	}
 
+	public static ExtendedCreatureType getExtendedCreatureType(final String name)
+	{
+		if (name == null)
+			return null;
+		else
+			return CREATURE_TYPES.get(name.toUpperCase());
+	}
+
+	public static List<ExtendedCreatureType> getExtendedCreatureTypeList(final Collection<String> names)
+	{
+		if (names == null)
+			return new ArrayList<ExtendedCreatureType>(0);
+		final List<ExtendedCreatureType> res = new ArrayList<ExtendedCreatureType>(names.size());
+		for (final String name : names)
+			res.add(getExtendedCreatureType(name));
+		return res;
+	}
+
 	static
 	{
 		registerExtendedEntityType(new ExtendedCreatureType()
@@ -80,6 +99,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
 		}, "POWEREDCREEPER", "CHARGEDCREEPER");
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
@@ -113,6 +138,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 					if (!((Creeper) it.next()).isPowered())
 						it.remove();
 				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
 			}
 		}, "UNCHARGEDCREEPER");
 		registerExtendedEntityType(new ExtendedCreatureType()
@@ -148,6 +179,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
@@ -181,6 +218,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 					if (((Slime) it.next()).getSize() != 1)
 						it.remove();
 				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
 			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
@@ -216,6 +259,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
@@ -249,6 +298,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 					if (((Slime) it.next()).getSize() != 2)
 						it.remove();
 				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
 			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
@@ -284,6 +339,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
@@ -317,6 +378,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 					if (((Slime) it.next()).getSize() != 3)
 						it.remove();
 				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
 			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
@@ -352,6 +419,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
@@ -385,6 +458,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 					if (((Slime) it.next()).getSize() != 4)
 						it.remove();
 				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
 			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
@@ -420,6 +499,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
@@ -453,6 +538,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 					if (((Ocelot) it.next()).isTamed())
 						it.remove();
 				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
 			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
@@ -488,6 +579,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
 		});
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
@@ -521,6 +618,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 					if (((Skeleton) it.next()).getSkeletonType() != SkeletonType.WITHER)
 						it.remove();
 				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
 			}
 		});
 		for (final DyeColor color : DyeColor.values())
@@ -556,6 +659,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						if (((Sheep) it.next()).getColor() != color)
 							it.remove();
 					return entities;
+				}
+
+				@Override
+				public String toString()
+				{
+					return getName();
 				}
 			});
 	}
@@ -637,6 +746,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		public Collection<? extends Entity> getEntities(final World world)
 		{
 			return world.getEntitiesByClass(type.getEntityClass());
+		}
+
+		@Override
+		public String toString()
+		{
+			return getName();
 		}
 	}
 }
