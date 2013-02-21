@@ -14,6 +14,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandAlreadyExistsException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.Localized;
@@ -54,6 +55,14 @@ public class CommandMainCreate extends CommandExecutor
 				{
 					throw new CrazyCommandNoSuchException("ArenaClass/Type", type);
 				}
+				catch (final ClassCastException e2)
+				{
+					throw new CrazyCommandParameterException(1, type, CrazyArenaPlugin.getRegisteredArenaTypes().keySet());
+				}
+			}
+			catch (final ClassCastException e2)
+			{
+				throw new CrazyCommandParameterException(1, type, CrazyArenaPlugin.getRegisteredArenaTypes().keySet());
 			}
 		Arena<?> arena = null;
 		try
