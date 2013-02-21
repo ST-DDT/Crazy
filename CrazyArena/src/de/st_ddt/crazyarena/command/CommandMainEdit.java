@@ -50,6 +50,6 @@ public class CommandMainEdit extends CommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazyarena.arena.switchmode");
+		return PermissionModule.hasPermission(sender, "crazyarena.arena.modify");
 	}
 }
