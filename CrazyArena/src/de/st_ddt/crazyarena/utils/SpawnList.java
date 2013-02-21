@@ -1,6 +1,7 @@
 package de.st_ddt.crazyarena.utils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,6 +16,7 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 {
 
 	private static final long serialVersionUID = -4995034097544178441L;
+	private final Random random = new Random();
 
 	public SpawnList()
 	{
@@ -47,7 +49,8 @@ public class SpawnList extends ArrayList<Location> implements ConfigurationSavea
 	{
 		if (size() == 0)
 			return null;
-		return get((int) (Math.random() * size()));
+		else
+			return get(random.nextInt(size()));
 	}
 
 	public Location findNearest(final Location target)
