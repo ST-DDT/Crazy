@@ -1,20 +1,31 @@
 package de.st_ddt.crazyarena;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import de.st_ddt.crazyarena.arenas.Arena;
 
 public class CrazyArenaPvE extends CrazyArenaPlugin
 {
 
+	private static CrazyArenaPvE plugin;
+
 	@Override
-	public Map<String, Class<? extends Arena>> getArenaTypes()
+	public void onLoad()
 	{
-		Map<String, Class<? extends Arena>> types = new HashMap<>();
-		types.put("PvE", de.st_ddt.crazyarena.pve.ArenaPvE.class);
-		types.put("Monster", de.st_ddt.crazyarena.pve.ArenaPvE.class);
-		types.put("Monsterarena", de.st_ddt.crazyarena.pve.ArenaPvE.class);
-		return types;
+		super.onLoad();
+		plugin = this;
+	}
+
+	public static CrazyArenaPvE getPlugin()
+	{
+		return plugin;
+	}
+
+	@Override
+	protected void registerArenaTypes()
+	{
+	}
+
+	@Override
+	public String[] getArenaTypes()
+	{
+		return new String[] { "PvE", "Monster" };
 	}
 }
