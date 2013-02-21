@@ -47,6 +47,7 @@ public class RaceArena extends Arena<RaceParticipant>
 {
 
 	private final static int DEFAUTLMINPARTICIPANTS = 2;
+	private static final int DEFAUTLSTARTDELAY = 5;
 	private final static long DEFAULTKICKSLOWPLAYERS = 30;
 	private final static long DEFAULTEXPIRATIONTIME = 1000L * 60 * 60 * 24 * 30;
 	protected final List<Location> playerSpawns = new ArrayList<Location>();
@@ -58,6 +59,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	private CrazyRaceArenaPlayerListener playerMatchListener;
 	private long startTime = 0;
 	private int minParticipants;
+	private int startDelay;
 	private long kickSlowPlayers;
 	private final Score currentScore = new Score(this, new String[] { "nextstage" }, new String[] { "nextstageindex", "timeelapsed" }, new Comparator<Score.ScoreEntry>()
 	{
@@ -140,6 +142,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
 		super(name, config);
+		startDelay = config.getInt("startDelay", DEFAUTLSTARTDELAY);
 		// Player Spawns
 		final ConfigurationSection playerConfig = config.getConfigurationSection("players");
 		if (playerConfig != null)
@@ -210,19 +213,19 @@ public class RaceArena extends Arena<RaceParticipant>
 				saveToFile();
 			}
 		});
-		modeCommand.addMode(new LongMode(plugin, "startTime")
+		modeCommand.addMode(new IntegerMode(plugin, "startDelay")
 		{
 
 			@Override
-			public Long getValue()
+			public Integer getValue()
 			{
-				return startTime;
+				return startDelay;
 			}
 
 			@Override
-			public void setValue(final Long newValue) throws CrazyException
+			public void setValue(final Integer newValue) throws CrazyException
 			{
-				startTime = newValue;
+				startDelay = newValue;
 				saveToFile();
 			}
 		});
@@ -268,6 +271,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	@Override
 	protected void save()
 	{
+		config.set("startDelay", startDelay);
 		config.set("players", null);
 		int i = 0;
 		for (final Location location : playerSpawns)
@@ -341,16 +345,15 @@ public class RaceArena extends Arena<RaceParticipant>
 					status = ArenaStatus.WAITING;
 					broadcastLocaleMessage(false, "START.QUEUED");
 					registerMatchListener();
-					final RaceArena arena = this;
-					CountDownTask.startCountDown(5, this, "START.COUNTDOWN", new Runnable()
+					CountDownTask.startCountDown(startDelay, this, "START.COUNTDOWN", new Runnable()
 					{
 
 						@Override
 						public void run()
 						{
-							if (arena.getStatus() == ArenaStatus.WAITING)
+							if (status == ArenaStatus.WAITING)
 							{
-								arena.status = ArenaStatus.PLAYING;
+								status = ArenaStatus.PLAYING;
 								startTime = System.currentTimeMillis();
 								for (final RaceParticipant participant : getParticipants(ParticipantType.READY))
 								{
