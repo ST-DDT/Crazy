@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -38,6 +39,7 @@ import de.st_ddt.crazyarena.utils.SignRotation;
 import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.IntegerMode;
@@ -333,7 +335,7 @@ public class RaceArena extends Arena<RaceParticipant>
 	}
 
 	@Override
-	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.READY", "CRAZYARENA.ARENA_RACE.START.QUEUED", "CRAZYARENA.ARENA_RACE.START.COUNTDOWN $Remaining$", "CRAZYARENA.ARENA_RACE.START.STARTED $DateTime$", "CRAZYARENA.ARENA_RACE.START.ABORTED" })
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.READY", "CRAZYARENA.ARENA_RACE.START.QUEUED", "CRAZYARENA.ARENA_RACE.START.COUNTDOWN $Remaining$", "CRAZYARENA.ARENA_RACE.START.STARTED $DateTime$", "CRAZYARENA.ARENA_RACE.START.ABORTED", "CRAZYARENA.ARENA_RACE.PARTICIPANT.READY.BROADCAST $Selecting$" })
 	public boolean ready(final Player player)
 	{
 		final RaceParticipant participant = getParticipant(player);
@@ -345,7 +347,9 @@ public class RaceArena extends Arena<RaceParticipant>
 			sendLocaleMessage("PARTICIPANT.READY", player);
 			participant.setParticipantType(ParticipantType.READY);
 			if (getParticipants(ParticipantType.READY).size() >= minParticipants)
-				if (getParticipants(ParticipantType.SELECTING).size() == 0)
+			{
+				final Set<String> selecting = getParticipatingPlayerNames(ParticipantType.SELECTING);
+				if (selecting.size() == 0)
 				{
 					status = ArenaStatus.WAITING;
 					broadcastLocaleMessage(false, "START.QUEUED");
@@ -374,6 +378,9 @@ public class RaceArena extends Arena<RaceParticipant>
 						}
 					});
 				}
+				else
+					broadcastLocaleMessage(false, ParticipantType.READY, "PARTICIPANT.READY.BROADCAST", ChatHelper.listingString(selecting));
+			}
 			return true;
 		}
 		return false;
