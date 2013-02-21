@@ -142,7 +142,9 @@ public class RaceArena extends Arena<RaceParticipant>
 	public RaceArena(final String name, final ConfigurationSection config)
 	{
 		super(name, config);
+		minParticipants = config.getInt("minParticipants", DEFAUTLMINPARTICIPANTS);
 		startDelay = config.getInt("startDelay", DEFAUTLSTARTDELAY);
+		kickSlowPlayers = config.getLong("kickSlowPlayers", DEFAULTKICKSLOWPLAYERS);
 		// Player Spawns
 		final ConfigurationSection playerConfig = config.getConfigurationSection("players");
 		if (playerConfig != null)
@@ -167,8 +169,7 @@ public class RaceArena extends Arena<RaceParticipant>
 				previous = temp;
 			}
 		}
-		minParticipants = config.getInt("minParticipants", DEFAUTLMINPARTICIPANTS);
-		kickSlowPlayers = config.getLong("kickSlowPlayers", DEFAULTKICKSLOWPLAYERS);
+		// Scores
 		currentScore.setExpiringTime(Long.MAX_VALUE);
 		currentScore.load(config.getConfigurationSection("currentScore"), false, true);
 		permanentScore.setExpiringTime(config.getLong("scoreExpiringTime", DEFAULTEXPIRATIONTIME));
@@ -271,21 +272,25 @@ public class RaceArena extends Arena<RaceParticipant>
 	@Override
 	protected void save()
 	{
+		config.set("minParticipants", minParticipants);
 		config.set("startDelay", startDelay);
+		config.set("kickSlowPlayers", kickSlowPlayers);
 		config.set("players", null);
+		// Player Spawns
 		int i = 0;
 		for (final Location location : playerSpawns)
 			ObjectSaveLoadHelper.saveLocation(config, "players.spawn" + (i++) + ".", location, true, true);
 		config.set("spectators", null);
+		// Spectator Spawns
 		i = 0;
 		for (final Location location : spectatorSpawns)
 			ObjectSaveLoadHelper.saveLocation(config, "spectators.spawn" + (i++) + ".", location, true, true);
+		// Race Stages
 		config.set("stages", null);
 		i = 0;
 		for (final RaceStage target : stages)
 			target.save(config, "stages.stage" + (i++) + ".");
-		config.set("minParticipants", minParticipants);
-		config.set("kickSlowPlayers", kickSlowPlayers);
+		// Scores
 		currentScore.save(config, "currentScore.", false, true);
 		permanentScore.save(config, "permanentScore.");
 		config.set("scoreExpiringTime", permanentScore.getExpiringTime());
