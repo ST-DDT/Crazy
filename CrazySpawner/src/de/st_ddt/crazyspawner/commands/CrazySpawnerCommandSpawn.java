@@ -15,9 +15,9 @@ import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
-import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
@@ -35,7 +35,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
-		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
+		final ExtendedCreatureParamitrisable creature = new ExtendedCreatureParamitrisable();
 		params.put("c", creature);
 		params.put("creature", creature);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
@@ -159,7 +159,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
-		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
+		final ExtendedCreatureParamitrisable creature = new ExtendedCreatureParamitrisable();
 		params.put("c", creature);
 		params.put("creature", creature);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);

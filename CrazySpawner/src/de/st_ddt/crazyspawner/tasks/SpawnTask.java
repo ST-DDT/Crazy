@@ -2,21 +2,21 @@ package de.st_ddt.crazyspawner.tasks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
+import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
 public class SpawnTask implements Runnable, ConfigurationSaveable
 {
 
 	private final CrazySpawner plugin;
-	private final EntityType type;
+	private final ExtendedCreatureType type;
 	private final Location location;
 	private final int amount;
 	private final long interval;
@@ -26,7 +26,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 	private final int playerMinCount;
 	private final double playerRange;
 
-	public SpawnTask(final CrazySpawner plugin, final EntityType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange)
 	{
 		super();
 		this.plugin = plugin;
@@ -45,7 +45,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 	{
 		super();
 		this.plugin = plugin;
-		this.type = EntityType.valueOf(config.getString("type"));
+		this.type = ExtendedCreatureParamitrisable.CREATURE_TYPES.get(config.getString("type").toUpperCase());
 		this.location = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("location"), null);
 		this.amount = config.getInt("amount", 1);
 		this.interval = config.getLong("interval", 20);
@@ -62,10 +62,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		if (checkPlayers())
 		{
 			final int amount = checkCreatures();
-			final World world = location.getWorld();
-			final Class<? extends Entity> typeClass = type.getEntityClass();
 			for (int i = 0; i < amount; i++)
-				world.spawn(location, typeClass);
+				type.spawn(location);
 			if (amount > 0)
 				if (repeat > 0)
 					repeat--;
@@ -93,7 +91,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		if (creatureMaxCount == 0)
 			return amount;
 		int count = amount;
-		for (final Entity entity : location.getWorld().getEntitiesByClass(type.getEntityClass()))
+		for (final Entity entity : type.getEntities(location.getWorld()))
 			if (location.distance(entity.getLocation()) < creatureRange)
 				count--;
 		return count;

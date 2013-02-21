@@ -16,6 +16,8 @@ import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandKill;
 import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandSpawn;
 import de.st_ddt.crazyspawner.listener.CrazySpawnerPlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
 public class CrazySpawner extends CrazyPlugin
 {
@@ -50,8 +52,10 @@ public class CrazySpawner extends CrazyPlugin
 	}
 
 	@Override
+	@Localized("CRAZYSPAWNER.CREATURES.AVAILABLE $Count$")
 	public void onEnable()
 	{
+		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
 		super.onEnable();
 		registerHooks();
 		registerCommands();

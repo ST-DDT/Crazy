@@ -8,3 +8,4 @@ CRAZYSPAWNER.COMMAND.KILLED.MONSTERS=$0$ &4Monster &Fgetötet!
 CRAZYSPAWNER.COMMAND.KILLED.TYPE=$0$ &4$1$ &Fgetötet!
 CRAZYSPAWNER.COMMAND.KILLED.VILLAGER=$0$ &EDorfbewohner &Fgetötet!
 CRAZYSPAWNER.COMMAND.SPAWNED=$0$ &9$1$ &Fwurden gespawned!
+CRAZYSPAWNER.CREATURES.AVAILABLE=$0$ Kreaturentypen warten darauf gespawnt zu werden!
