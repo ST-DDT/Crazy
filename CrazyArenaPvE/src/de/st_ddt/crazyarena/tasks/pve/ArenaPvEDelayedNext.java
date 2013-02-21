@@ -1,11 +1,13 @@
-package de.st_ddt.crazyarena.pve;
+package de.st_ddt.crazyarena.tasks.pve;
+
+import de.st_ddt.crazyarena.arenas.pve.PvEArena;
 
 public class ArenaPvEDelayedNext extends ArenaPvEDelayed
 {
 
 	private boolean canceled;
 
-	public ArenaPvEDelayedNext(ArenaPvE arena)
+	public ArenaPvEDelayedNext(final PvEArena arena)
 	{
 		super(arena);
 	}

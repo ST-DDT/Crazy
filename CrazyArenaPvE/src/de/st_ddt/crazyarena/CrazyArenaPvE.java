@@ -1,5 +1,6 @@
 package de.st_ddt.crazyarena;
 
+import de.st_ddt.crazyarena.arenas.pve.PvEArena;
 
 public class CrazyArenaPvE extends CrazyArenaPlugin
 {
@@ -21,6 +22,7 @@ public class CrazyArenaPvE extends CrazyArenaPlugin
 	@Override
 	protected void registerArenaTypes()
 	{
+		registerArenaType("PvE", PvEArena.class, "Monster");
 	}
 
 	@Override
