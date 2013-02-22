@@ -12,7 +12,7 @@ commands:
   crazyarenapve:
     description: Plugin Main Menu.
     usage: /<command> [subcommands]
-    aliases: [car]
+    aliases: [capve]
 permissions:
   crazyarenapve.*:
     description: Gives access to all crazyarenapve functions.
