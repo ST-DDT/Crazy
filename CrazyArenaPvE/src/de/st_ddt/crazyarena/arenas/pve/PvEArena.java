@@ -1,19 +1,25 @@
 package de.st_ddt.crazyarena.arenas.pve;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import de.st_ddt.crazyarena.CrazyArenaPlugin;
+import de.st_ddt.crazyarena.CrazyArenaPvE;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyarena.arenas.ArenaStatus;
+import de.st_ddt.crazyarena.arenas.pve.rounds.Round;
 import de.st_ddt.crazyarena.participants.ParticipantType;
 import de.st_ddt.crazyarena.participants.pve.PvEParticipant;
 import de.st_ddt.crazyarena.tasks.CountDownTask;
+import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
 import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -24,11 +30,17 @@ public class PvEArena extends Arena<PvEParticipant>
 {
 
 	protected final SpawnList playerSpawns = new SpawnList();
+	protected final SpawnList monsterSpawns = new SpawnList();
+	protected final List<Round> rounds = new ArrayList<Round>();
+	protected double antiSpawnRadius;
+	protected double activeSpawnRadius;
 	protected Location lobby;
+	protected int runnumber;
+	protected int roundnumber;
 	protected int minParticipants;
 	protected int maxParticipants;
-	private long startTime;
-	private int startDelay;
+	protected long startTime;
+	protected int startDelay;
 
 	public PvEArena(final String name)
 	{
@@ -114,7 +126,8 @@ public class PvEArena extends Arena<PvEParticipant>
 									participant.getPlayer().teleport(playerSpawns.randomSpawn(), TeleportCause.PLUGIN);
 								}
 								broadcastLocaleMessage(false, "START.STARTED", CrazyLightPluginInterface.DATETIMEFORMAT.format(startTime));
-								// This arena requires a real start or something
+								roundnumber = 0;
+								nextRound();
 							}
 							else
 								broadcastLocaleMessage(false, "START.ABORTED");
@@ -130,68 +143,136 @@ public class PvEArena extends Arena<PvEParticipant>
 	}
 
 	@Override
+	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT $Arena$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT.BROADCAST $Player$" })
 	public boolean leave(final Player player, final boolean kicked) throws CrazyException
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.leave()
-		return false;
+		final PvEParticipant participant = participants.remove(player.getName().toLowerCase());
+		if (participant == null)
+			return true;
+		final ArenaPlayerSaver saver = participant.getSaver();
+		saver.restore(player);
+		sendLocaleMessage("PARTICIPANT.QUIT", player, name);
+		broadcastLocaleMessage(false, "PARTICIPANT.QUIT.BROADCAST", player.getName());
+		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
+			stop();
+		return true;
 	}
 
 	@Override
 	public boolean quitgame(final Player player)
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.quitgame()
-		return false;
+		final PvEParticipant participant = getParticipant(player);
+		if (participant == null)
+			return true;
+		final ArenaPlayerSaver saver = participant.getSaver();
+		saver.restore(player);
+		saver.reset();
+		participant.setParticipantType(ParticipantType.QUITEDPARTICIPANT);
+		if (getParticipants(ParticipantType.PARTICIPANT).size() == 0)
+			stop();
+		return true;
+	}
+
+	protected void nextRound()
+	{
+		rounds.get(roundnumber).next();
+		roundnumber++;
+		if (roundnumber < rounds.size())
+		{
+			final Round round = rounds.get(roundnumber);
+			round.activate(roundnumber);
+			broadcastLocaleMessage(false, "ROUND.START", round.getType(), roundnumber, rounds.size());
+		}
+		else
+			fightFinished();
+	}
+
+	protected void fightFinished()
+	{
+		broadcastLocaleMessage(false, "ROUND.END", rounds.size());
+		fightEnd(true);
+	}
+
+	protected void fightEnd(final boolean won)
+	{
+		// EDIT Implementiere PvEArena.fightEnd()
+		// Give Rewards
+		stop();
+	}
+
+	@Override
+	public void stop()
+	{
+		super.stop();
+		for (final Round round : rounds)
+			round.reset();
+	}
+
+	public void creatureDeath(final LivingEntity entity)
+	{
+		rounds.get(roundnumber).creatureDeath(entity);
+	}
+
+	public void playerDeath(final Player player)
+	{
+		// EDIT Implementiere PvEArena.playerDeath()
 	}
 
 	@Override
 	public void registerMatchListener()
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.registerMatchListener()
+		// EDIT Implementiere PvEArena.registerMatchListener()
 	}
 
 	@Override
 	public void unregisterMatchListener()
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.unregisterMatchListener()
+		// EDIT Implementiere PvEArena.unregisterMatchListener()
 	}
 
 	@Override
 	public void registerArenaListener()
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.registerArenaListener()
+		// EDIT Implementiere PvEArena.registerArenaListener()
 	}
 
 	@Override
 	public void unregisterArenaListener()
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.unregisterArenaListener()
+		// EDIT Implementiere PvEArena.unregisterArenaListener()
 	}
 
 	@Override
-	public int getRunNumber()
+	public final int getRunNumber()
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.getRunNumber()
-		return 0;
+		return runnumber;
 	}
 
 	@Override
 	public long getRejoinTime()
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.getRejoinTime()
-		return 0;
+		return 30000;
+	}
+
+	public SpawnList getActiveMonsterSpawns()
+	{
+		return monsterSpawns;
 	}
 
 	@Override
 	protected boolean checkArena(final CommandSender sender)
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.checkArena()
-		return false;
+		if (playerSpawns.size() < maxParticipants)
+			return false;
+		if (monsterSpawns.size() == 0)
+			return false;
+		// EDIT Implementiere PvEArena.checkArena()
+		return true;
 	}
 
 	@Override
-	public CrazyArenaPlugin getArenaPlugin()
+	public final CrazyArenaPlugin getArenaPlugin()
 	{
-		// EDIT Implementiere Arena<PvEParticipant>.getArenaPlugin()
-		return null;
+		return CrazyArenaPvE.getPlugin();
 	}
 }
