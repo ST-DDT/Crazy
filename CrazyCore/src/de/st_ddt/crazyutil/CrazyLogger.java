@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,10 +20,10 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 public class CrazyLogger implements Logger
 {
 
-	protected static final HashMap<String, CrazyLog> logChannelsByRootPath = new HashMap<String, CrazyLog>();
-	protected final HashMap<String, CrazyLog> logChannelsByName = new HashMap<String, CrazyLog>();
-	protected final HashMap<String, Boolean> logToConsoleByName = new HashMap<String, Boolean>();
-	protected final HashMap<String, String> logPathsByName = new HashMap<String, String>();
+	protected static final Map<String, CrazyLog> logChannelsByRootPath = new HashMap<String, CrazyLog>();
+	protected final Map<String, CrazyLog> logChannelsByName = new TreeMap<String, CrazyLog>();
+	protected final Map<String, Boolean> logToConsoleByName = new HashMap<String, Boolean>();
+	protected final Map<String, String> logPathsByName = new HashMap<String, String>();
 	protected final CrazyPluginInterface plugin;
 
 	public CrazyLogger(final CrazyPluginInterface plugin)
