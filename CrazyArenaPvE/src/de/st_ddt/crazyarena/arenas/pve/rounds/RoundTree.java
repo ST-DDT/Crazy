@@ -6,12 +6,13 @@ import java.util.List;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyarena.arenas.pve.PvEArena;
+import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
-public class RoundTree
+public class RoundTree implements ConfigurationSaveable
 {
 
-	protected final ArrayList<Round> rounds = new ArrayList<Round>();
+	protected final List<Round> rounds = new ArrayList<Round>();
 	protected final PvEArena arena;
 
 	public RoundTree(final PvEArena arena)
@@ -34,7 +35,14 @@ public class RoundTree
 	{
 		if (config == null)
 			return;
-		final List<Round> list = ObjectSaveLoadHelper.loadList(config, Round.class, new Class<?>[] { PvEArena.class, ConfigurationSection.class }, new Object[] { arena, config }, "de.st_ddt.crazyarena.rounds");
-		rounds.addAll(list);
+		rounds.addAll(ObjectSaveLoadHelper.loadList(config, Round.class, new Class<?>[] { PvEArena.class, ConfigurationSection.class }, new Object[] { arena, config }, "de.st_ddt.crazyarena.arenas.pve.rounds"));
+	}
+
+	@Override
+	public void save(final ConfigurationSection config, final String path)
+	{
+		final int i = 0;
+		for (final Round round : rounds)
+			round.save(config, path + "r" + i + ".");
 	}
 }
