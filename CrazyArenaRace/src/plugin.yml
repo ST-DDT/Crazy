@@ -15,7 +15,7 @@ commands:
     aliases: [car]
 permissions:
   crazyarenarace.*:
-    description: Gives access to all crazyarena functions
+    description: Gives access to all crazyarenarace functions.
     default: op
     children:
       crazyarenarace.dummy: true
