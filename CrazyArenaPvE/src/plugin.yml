@@ -1,8 +1,21 @@
-name: CrazyArena_PvE
+name: CrazyArenaPvE
 main: de.st_ddt.crazyarena.CrazyArenaPvE
 author: ST-DDT
-version: C6.4_A0.1_0.1
-softdepend: [PermissionsBukkit]
-depend: [CrazyCore,CrazyArena]
+version: 0.1
+# requires CrazyCore v10.2
+# requires CrazyGeo v0.3
+# requires CrazyArena v0.3.1
+depend: [CrazyCore,CrazyGeo,CrazyArena]
 description: >
-            PvE Arena Plugin
+            Adds PvE (Monster) Arenas to your server.
+commands:
+  crazyarenapve:
+    description: Plugin Main Menu.
+    usage: /<command> [subcommands]
+    aliases: [car]
+permissions:
+  crazyarenapve.*:
+    description: Gives access to all crazyarenapve functions.
+    default: op
+    children:
+      crazyarenarace.dummy: true
