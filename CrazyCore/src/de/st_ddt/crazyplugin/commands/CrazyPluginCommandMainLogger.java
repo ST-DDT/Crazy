@@ -38,6 +38,15 @@ public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPlug
 		}
 		if (args.length == 0)
 			throw new CrazyCommandNoSuchException("LogChannel", "(none)", logger.getLogChannelNames());
+		if (args[0].equals("*"))
+		{
+			for (final String channel : logger.getLogChannelNames())
+			{
+				args[0] = channel;
+				command(sender, args);
+			}
+			return;
+		}
 		final String channel = args[0];
 		if (!logger.hasLogChannel(channel))
 			throw new CrazyCommandNoSuchException("LogChannel", channel, logger.getLogChannelNames());
