@@ -15,8 +15,8 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.databases.ConfigurationPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.databases.FlatPlayerDataDatabaseEntry;
-import de.st_ddt.crazyutil.databases.MySQLDatabase;
 import de.st_ddt.crazyutil.databases.MySQLPlayerDataDatabaseEntry;
+import de.st_ddt.crazyutil.databases.SQLDatabase;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
 public class PlayerTimeData extends PlayerData<PlayerTimeData> implements ConfigurationPlayerDataDatabaseEntry, FlatPlayerDataDatabaseEntry, MySQLPlayerDataDatabaseEntry
@@ -85,7 +85,7 @@ public class PlayerTimeData extends PlayerData<PlayerTimeData> implements Config
 	// aus MySQL-Datenbank laden
 	public PlayerTimeData(final ResultSet rawData, final String[] columnNames)
 	{
-		super(MySQLDatabase.readName(rawData, columnNames[0]));
+		super(SQLDatabase.readName(rawData, columnNames[0]));
 		try
 		{
 			card = rawData.getString(columnNames[1]);

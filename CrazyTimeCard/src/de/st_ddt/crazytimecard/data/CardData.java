@@ -6,12 +6,11 @@ import java.sql.SQLException;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.databases.ConfigurationDatabaseEntry;
-import de.st_ddt.crazyutil.databases.DatabaseEntry;
 import de.st_ddt.crazyutil.databases.FlatDatabaseEntry;
-import de.st_ddt.crazyutil.databases.MySQLDatabase;
 import de.st_ddt.crazyutil.databases.MySQLDatabaseEntry;
+import de.st_ddt.crazyutil.databases.SQLDatabase;
 
-public class CardData implements DatabaseEntry, ConfigurationDatabaseEntry, FlatDatabaseEntry, MySQLDatabaseEntry
+public class CardData implements ConfigurationDatabaseEntry, FlatDatabaseEntry, MySQLDatabaseEntry
 {
 
 	private final String name;
@@ -84,7 +83,7 @@ public class CardData implements DatabaseEntry, ConfigurationDatabaseEntry, Flat
 	// aus MySQL-Datenbank laden
 	public CardData(final ResultSet rawData, final String[] columnNames)
 	{
-		this.name = MySQLDatabase.readName(rawData, columnNames[0]);
+		this.name = SQLDatabase.readName(rawData, columnNames[0]);
 		String tempOwner = null;
 		try
 		{
