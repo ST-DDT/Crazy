@@ -207,7 +207,10 @@ public final class TypeCaptchaGenerator extends AbstractCaptchaGenerator
 
 	private enum Type
 	{
-		NUMERIC("0123456789"), LOWERCASE("abcdefghijklmnopqrstuvwxyz"), UPPERCASE("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), OTHER("");
+		NUMERIC("0123456789"),
+		LOWERCASE("abcdefghijklmnopqrstuvwxyz"),
+		UPPERCASE("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+		OTHER("");
 
 		private final static Random random = new Random();
 		private final String entries;
