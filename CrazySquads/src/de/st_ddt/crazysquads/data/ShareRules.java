@@ -2,7 +2,10 @@ package de.st_ddt.crazysquads.data;
 
 public enum ShareRules
 {
-	SHARE(true, false), SHARESILENT(true, true), PRIVATE(false, false), PRIVATESILENT(false, true);
+	SHARE(true, false),
+	SHARESILENT(true, true),
+	PRIVATE(false, false),
+	PRIVATESILENT(false, true);
 
 	private final boolean share;
 	private final boolean silent;
