@@ -14,12 +14,12 @@ import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.IntegerMode;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public final class BasicCaptchaGenerator extends AbstractCaptchaGenerator
 {

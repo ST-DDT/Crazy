@@ -24,7 +24,7 @@ import de.st_ddt.crazyarena.utils.SpawnList;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class PvEArena extends Arena<PvEParticipant>
 {

@@ -16,8 +16,8 @@ import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandKill;
 import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandSpawn;
 import de.st_ddt.crazyspawner.listener.CrazySpawnerPlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySpawner extends CrazyPlugin
 {

@@ -12,12 +12,12 @@ import de.st_ddt.crazytimecard.CrazyTimeCard;
 import de.st_ddt.crazytimecard.data.CardData;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.databases.Database;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyTimeCardCommandRegister extends CrazyCommandExecutor<CrazyTimeCard>
 {

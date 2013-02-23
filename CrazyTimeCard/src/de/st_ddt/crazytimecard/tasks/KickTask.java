@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazytimecard.CrazyTimeCard;
 import de.st_ddt.crazytimecard.data.PlayerTimeData;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class KickTask implements Runnable
 {

@@ -33,8 +33,8 @@ import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsPlayerListener implements Listener
 {

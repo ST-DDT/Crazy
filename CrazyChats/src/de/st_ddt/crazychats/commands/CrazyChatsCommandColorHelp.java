@@ -5,8 +5,8 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsCommandColorHelp extends CrazyChatsCommandExecutor
 {

@@ -12,7 +12,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.databases.ConfigurationPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implements ConfigurationPlayerDataDatabaseEntry
 {

@@ -13,7 +13,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelperExtended;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
@@ -21,6 +20,7 @@ import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 {

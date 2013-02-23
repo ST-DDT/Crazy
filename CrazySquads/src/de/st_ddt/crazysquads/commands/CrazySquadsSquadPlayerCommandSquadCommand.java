@@ -12,7 +12,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySquadsSquadPlayerCommandSquadCommand extends CrazySquadsSquadPlayerCommandExecutor
 {

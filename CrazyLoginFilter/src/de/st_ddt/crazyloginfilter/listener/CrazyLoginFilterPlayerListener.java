@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyLoginFilterPlayerListener implements Listener
 {

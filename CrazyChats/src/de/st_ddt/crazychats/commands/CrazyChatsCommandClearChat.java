@@ -14,9 +14,9 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsCommandClearChat extends CrazyChatsCommandExecutor
 {

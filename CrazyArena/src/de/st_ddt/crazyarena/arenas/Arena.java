@@ -34,9 +34,9 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatHeaderProvider, ParameterData
 {

@@ -7,7 +7,7 @@ import de.st_ddt.crazyloginfilter.CrazyLoginFilter;
 import de.st_ddt.crazyloginfilter.data.PlayerAccessFilter;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyLoginFilterCommandCreate extends CrazyLoginFilterCommandExecutor
 {

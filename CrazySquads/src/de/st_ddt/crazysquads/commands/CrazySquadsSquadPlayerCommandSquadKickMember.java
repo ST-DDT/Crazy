@@ -14,7 +14,7 @@ import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadDeleteEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadLeaveEvent;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySquadsSquadPlayerCommandSquadKickMember extends CrazySquadsSquadPlayerCommandExecutor
 {

@@ -18,8 +18,8 @@ import de.st_ddt.crazyutil.conditions.ConditionList;
 import de.st_ddt.crazyutil.conditions.Condition_AND;
 import de.st_ddt.crazyutil.conditions.Condition_FALSE;
 import de.st_ddt.crazyutil.conditions.player.ConditionPlayerPermissionGroup;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.IntegerMode;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyPromoter extends CrazyPlugin
 {

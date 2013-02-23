@@ -11,7 +11,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatConverter;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyweather.CrazyWeather;
 
 public class CrazyWeatherCommandStrike extends CrazyWeatherCommandExecutor

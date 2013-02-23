@@ -1,7 +1,7 @@
 package de.st_ddt.crazycore.tasks;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class PluginUpdateCheckTask implements Runnable
 {

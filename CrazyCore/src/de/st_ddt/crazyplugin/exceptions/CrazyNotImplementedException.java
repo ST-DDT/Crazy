@@ -1,6 +1,6 @@
 package de.st_ddt.crazyplugin.exceptions;
 
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyNotImplementedException extends CrazyException
 {

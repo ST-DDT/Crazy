@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public abstract class PlayerData<S extends PlayerDataInterface> implements PlayerDataInterface, Comparable<S>
 {

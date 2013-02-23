@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Showable;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyException extends Exception implements Showable
 {

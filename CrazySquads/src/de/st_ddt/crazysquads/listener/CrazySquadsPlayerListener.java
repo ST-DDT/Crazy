@@ -30,7 +30,7 @@ import de.st_ddt.crazysquads.events.CrazySquadsSquadDeleteEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadJoinEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadLeaveEvent;
 import de.st_ddt.crazysquads.tasks.RejoinTimeoutTask;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySquadsPlayerListener implements Listener
 {

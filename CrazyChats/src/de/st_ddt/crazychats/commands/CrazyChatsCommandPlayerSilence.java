@@ -16,13 +16,13 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.PlayerDataParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TargetDateParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsCommandPlayerSilence extends CrazyChatsCommandExecutor
 {

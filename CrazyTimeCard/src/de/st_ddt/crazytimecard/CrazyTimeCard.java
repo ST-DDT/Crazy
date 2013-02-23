@@ -34,12 +34,12 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.databases.Database;
 import de.st_ddt.crazyutil.databases.DatabaseType;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modes.DoubleMode;
 import de.st_ddt.crazyutil.modes.DurationMode;
 import de.st_ddt.crazyutil.modes.IntegerMode;
 import de.st_ddt.crazyutil.modes.Mode;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyTimeCard extends CrazyPlayerDataPlugin<PlayerTimeData, PlayerTimeData>
 {

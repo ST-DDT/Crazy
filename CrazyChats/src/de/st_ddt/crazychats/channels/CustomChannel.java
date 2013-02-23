@@ -26,11 +26,11 @@ import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CustomChannel extends AbstractMuteableChannel implements ControlledChannelInterface, ConfigurationSaveable, ChatHeaderProvider
 {

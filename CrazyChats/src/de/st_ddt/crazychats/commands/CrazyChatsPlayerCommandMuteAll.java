@@ -9,7 +9,7 @@ import de.st_ddt.crazychats.channels.ChannelInterface;
 import de.st_ddt.crazychats.channels.MuteableChannelInterface;
 import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsPlayerCommandMuteAll extends CrazyChatsPlayerCommandExecutor
 {

@@ -7,8 +7,8 @@ import de.st_ddt.crazyonline.data.OnlinePlayerData;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyOnlineCommandPlayerReset extends CrazyOnlineCommandExecutor
 {

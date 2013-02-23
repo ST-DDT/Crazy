@@ -11,8 +11,8 @@ import de.st_ddt.crazytimecard.data.CardData;
 import de.st_ddt.crazytimecard.data.PlayerTimeData;
 import de.st_ddt.crazytimecard.exceptions.CrazyTimeCardCardAlreadyUsedException;
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyTimeCardCommandActivate extends CrazyCommandExecutor<CrazyTimeCard>
 {

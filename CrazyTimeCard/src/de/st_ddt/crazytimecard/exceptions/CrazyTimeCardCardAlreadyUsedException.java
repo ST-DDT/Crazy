@@ -1,6 +1,6 @@
 package de.st_ddt.crazytimecard.exceptions;
 
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyTimeCardCardAlreadyUsedException extends CrazyTimeCardCardException
 {

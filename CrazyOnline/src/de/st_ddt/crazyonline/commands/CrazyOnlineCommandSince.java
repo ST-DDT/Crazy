@@ -19,8 +19,8 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.FilterInterface;
 import de.st_ddt.crazyutil.FilterInterface.FilterInstanceInterface;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyOnlineCommandSince extends CrazyOnlineCommandExecutor
 {

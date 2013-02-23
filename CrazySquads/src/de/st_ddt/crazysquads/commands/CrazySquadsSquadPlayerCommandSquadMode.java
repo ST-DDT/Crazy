@@ -21,7 +21,7 @@ import de.st_ddt.crazysquads.data.ShareRules;
 import de.st_ddt.crazysquads.data.Squad;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Named;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySquadsSquadPlayerCommandSquadMode extends CrazySquadsSquadPlayerCommandExecutor
 {

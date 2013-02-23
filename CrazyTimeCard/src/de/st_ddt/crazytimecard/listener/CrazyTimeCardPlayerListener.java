@@ -39,7 +39,7 @@ import de.st_ddt.crazytimecard.CrazyTimeCard;
 import de.st_ddt.crazytimecard.data.PlayerTimeData;
 import de.st_ddt.crazytimecard.tasks.KickTask;
 import de.st_ddt.crazyutil.ChatConverter;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyTimeCardPlayerListener implements Listener
 {

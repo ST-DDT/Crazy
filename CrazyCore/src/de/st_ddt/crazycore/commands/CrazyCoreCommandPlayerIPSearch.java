@@ -17,10 +17,10 @@ import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyCoreCommandPlayerIPSearch extends CrazyCoreCommandExecutor
 {

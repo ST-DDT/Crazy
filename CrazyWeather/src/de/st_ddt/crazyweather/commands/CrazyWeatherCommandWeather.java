@@ -12,12 +12,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Tabbed;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WeatherParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WorldParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyweather.CrazyWeather;
 
 public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor

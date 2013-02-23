@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyutil.ChatHelper;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyCommandNoSuchException extends CrazyCommandException
 {

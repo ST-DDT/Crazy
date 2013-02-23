@@ -15,12 +15,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Tabbed;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyEnchanterPlayerCommandEnchant extends CrazyEnchanterPlayerCommandExecutor
 {

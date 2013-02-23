@@ -19,7 +19,7 @@ import de.st_ddt.crazyplugin.events.CrazyPlayerRemoveEvent;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyCoreCrazyListener implements Listener
 {

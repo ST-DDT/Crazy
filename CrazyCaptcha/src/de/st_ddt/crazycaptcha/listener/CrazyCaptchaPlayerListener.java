@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.st_ddt.crazycaptcha.CrazyCaptcha;
 import de.st_ddt.crazycaptcha.tasks.ScheduledKickTask;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyCaptchaPlayerListener implements Listener
 {

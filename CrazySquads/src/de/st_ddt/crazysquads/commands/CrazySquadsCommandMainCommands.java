@@ -9,8 +9,8 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ListFormat;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySquadsCommandMainCommands extends CrazyCommandListEditor<CrazySquads, String>
 {

@@ -6,7 +6,7 @@ import de.st_ddt.crazyplugin.data.PlayerData;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 {

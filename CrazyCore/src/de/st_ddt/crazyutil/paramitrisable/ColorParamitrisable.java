@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.bukkit.ChatColor;
 
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class ColorParamitrisable extends EnumParamitrisable<ChatColor>
 {

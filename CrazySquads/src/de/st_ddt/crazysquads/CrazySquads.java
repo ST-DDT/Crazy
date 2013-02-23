@@ -40,12 +40,12 @@ import de.st_ddt.crazysquads.listener.CrazySquadsPlayerListener;
 import de.st_ddt.crazysquads.listener.CrazySquadsTagAPIListener;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.DoubleMode;
 import de.st_ddt.crazyutil.modes.IntegerMode;
 import de.st_ddt.crazyutil.modes.LongMode;
 import de.st_ddt.crazyutil.modes.Mode;
+import de.st_ddt.crazyutil.source.Localized;
 
 public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 {

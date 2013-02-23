@@ -9,9 +9,9 @@ import de.st_ddt.crazyarena.CrazyArena;
 import de.st_ddt.crazyarena.arenas.Arena;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CommandMainEnable extends CommandExecutor
 {

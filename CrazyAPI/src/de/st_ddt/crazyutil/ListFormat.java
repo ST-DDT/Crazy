@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public interface ListFormat
 {

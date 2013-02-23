@@ -23,13 +23,13 @@ import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.VersionComparator;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 {

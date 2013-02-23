@@ -23,7 +23,7 @@ import de.st_ddt.crazyutil.databases.MySQLPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.databases.SQLDatabase;
 import de.st_ddt.crazyutil.databases.SQLitePlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class OnlinePlayerData extends PlayerData<OnlinePlayerData> implements ConfigurationPlayerDataDatabaseEntry, FlatPlayerDataDatabaseEntry, MySQLPlayerDataDatabaseEntry, SQLitePlayerDataDatabaseEntry, OnlineData
 {

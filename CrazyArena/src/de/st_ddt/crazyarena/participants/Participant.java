@@ -9,7 +9,7 @@ import de.st_ddt.crazyarena.utils.ArenaPlayerSaver;
 import de.st_ddt.crazyplugin.data.PlayerData;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public abstract class Participant<S extends Participant<S, T>, T extends Arena<S>> extends PlayerData<Participant<S, T>>
 {

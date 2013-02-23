@@ -18,11 +18,11 @@ import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyCoreCommandPlayerAssociates extends CrazyCoreCommandExecutor
 {

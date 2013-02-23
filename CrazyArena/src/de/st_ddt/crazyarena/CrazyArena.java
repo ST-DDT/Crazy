@@ -51,9 +51,9 @@ import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.Mode;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyArena extends CrazyPlugin
 {

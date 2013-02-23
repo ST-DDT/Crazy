@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.Named;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public abstract class Mode<S> implements Named
 {

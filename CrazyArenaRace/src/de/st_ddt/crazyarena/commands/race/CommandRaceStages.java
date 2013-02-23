@@ -22,7 +22,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.PolyRoomParamitrisable;
@@ -31,6 +30,7 @@ import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.poly.room.Room;
 import de.st_ddt.crazyutil.poly.room.Sphere;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceStage>
 {

@@ -16,8 +16,8 @@ import de.st_ddt.crazysquads.events.CrazySquadsSquadCreateEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadDeleteEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadInviteEvent;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadJoinEvent;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySquadsPlayerCommandSquadCreate extends CrazySquadsPlayerCommandExecutor
 {

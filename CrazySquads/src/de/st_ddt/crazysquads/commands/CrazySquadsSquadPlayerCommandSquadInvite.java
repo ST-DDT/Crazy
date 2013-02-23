@@ -13,7 +13,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazysquads.CrazySquads;
 import de.st_ddt.crazysquads.data.Squad;
 import de.st_ddt.crazysquads.events.CrazySquadsSquadInviteEvent;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazySquadsSquadPlayerCommandSquadInvite extends CrazySquadsSquadPlayerCommandExecutor
 {

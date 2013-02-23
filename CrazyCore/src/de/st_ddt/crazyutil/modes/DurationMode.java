@@ -7,8 +7,8 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatConverter;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public abstract class DurationMode extends LongMode
 {

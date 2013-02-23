@@ -10,7 +10,7 @@ import de.st_ddt.crazyarena.participants.Participant;
 import de.st_ddt.crazyarena.utils.ArenaChatHelper;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class RaceParticipant extends Participant<RaceParticipant, RaceArena>
 {

@@ -69,7 +69,6 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.databases.DatabaseType;
-import de.st_ddt.crazyutil.locales.Localized;
 import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modes.BooleanTrueMode;
 import de.st_ddt.crazyutil.modes.ChatFormatMode;
@@ -77,6 +76,7 @@ import de.st_ddt.crazyutil.modes.DoubleMode;
 import de.st_ddt.crazyutil.modes.DurationMode;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 
 public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, ChatPlayerData>
 {

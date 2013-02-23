@@ -24,7 +24,7 @@ import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.databases.ConfigurationPlayerDataDatabaseEntry;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class ChatPlayerData extends PlayerData<ChatPlayerData> implements ConfigurationPlayerDataDatabaseEntry
 {

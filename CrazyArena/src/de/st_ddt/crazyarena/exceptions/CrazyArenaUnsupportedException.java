@@ -1,7 +1,7 @@
 package de.st_ddt.crazyarena.exceptions;
 
 import de.st_ddt.crazyarena.arenas.Arena;
-import de.st_ddt.crazyutil.locales.Localized;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyArenaUnsupportedException extends CrazyArenaException
 {
