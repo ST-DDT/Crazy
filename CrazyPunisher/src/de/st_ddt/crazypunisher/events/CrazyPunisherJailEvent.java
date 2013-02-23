@@ -12,7 +12,7 @@ public class CrazyPunisherJailEvent extends CrazyPunisherEvent
 	protected final OfflinePlayer player;
 	protected final Date jailedUntil;
 
-	public CrazyPunisherJailEvent(OfflinePlayer player, Date jailedUntil)
+	public CrazyPunisherJailEvent(final OfflinePlayer player, final Date jailedUntil)
 	{
 		super();
 		this.player = player;

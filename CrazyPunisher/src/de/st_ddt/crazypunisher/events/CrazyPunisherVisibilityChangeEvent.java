@@ -12,7 +12,7 @@ public class CrazyPunisherVisibilityChangeEvent extends CrazyPunisherEvent imple
 	protected final boolean newVisibility;
 	protected boolean cancelled;
 
-	public CrazyPunisherVisibilityChangeEvent(OfflinePlayer player, boolean willbeVisible)
+	public CrazyPunisherVisibilityChangeEvent(final OfflinePlayer player, final boolean willbeVisible)
 	{
 		super();
 		this.player = player;
@@ -46,7 +46,7 @@ public class CrazyPunisherVisibilityChangeEvent extends CrazyPunisherEvent imple
 	}
 
 	@Override
-	public void setCancelled(boolean cancel)
+	public void setCancelled(final boolean cancel)
 	{
 		this.cancelled = cancel;
 	}

@@ -9,7 +9,7 @@ public class CrazyPunisherUnjailEvent extends CrazyPunisherEvent
 	private static final HandlerList handlers = new HandlerList();
 	protected final OfflinePlayer player;
 
-	public CrazyPunisherUnjailEvent(OfflinePlayer player)
+	public CrazyPunisherUnjailEvent(final OfflinePlayer player)
 	{
 		super();
 		this.player = player;

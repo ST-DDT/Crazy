@@ -9,33 +9,32 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class CrazyPunisherPlayerListener implements Listener
 {
 
 	private final CrazyPunisher plugin;
 
-	public CrazyPunisherPlayerListener(CrazyPunisher plugin)
+	public CrazyPunisherPlayerListener(final CrazyPunisher plugin)
 	{
 		super();
 		this.plugin = plugin;
 	}
 
 	@EventHandler
-	public void PlayerChat(AsyncPlayerChatEvent event)
+	public void PlayerChat(final AsyncPlayerChatEvent event)
 	{
 		if (!plugin.isJailed(event.getPlayer()))
 			return;
@@ -86,7 +85,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerInteract(PlayerInteractEvent event)
+	public void PlayerInteract(final PlayerInteractEvent event)
 	{
 		if (!plugin.isJailed(event.getPlayer()))
 			return;
@@ -95,7 +94,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerInteractEntity(PlayerInteractEntityEvent event)
+	public void PlayerInteractEntity(final PlayerInteractEntityEvent event)
 	{
 		if (!plugin.isJailed(event.getPlayer()))
 			return;
@@ -104,11 +103,11 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerJoin(PlayerJoinEvent event)
+	public void PlayerJoin(final PlayerJoinEvent event)
 	{
-		Player player = event.getPlayer();
-		boolean hidden = plugin.isHidden(player);
-		for (Player plr : plugin.getServer().getOnlinePlayers())
+		final Player player = event.getPlayer();
+		final boolean hidden = plugin.isHidden(player);
+		for (final Player plr : plugin.getServer().getOnlinePlayers())
 			if ((plr.hasPermission("crazypunisher.showall") || plugin.isHidden(plr)) && hidden)
 			{
 				player.showPlayer(plr);
@@ -120,9 +119,7 @@ public class CrazyPunisherPlayerListener implements Listener
 				plr.hidePlayer(player);
 			}
 			else
-			{
 				plr.showPlayer(player);
-			}
 		if (!plugin.isJailed(player))
 		{
 			if (plugin.isInsideJail(player.getLocation()))
@@ -139,7 +136,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerMove(PlayerMoveEvent event)
+	public void PlayerMove(final PlayerMoveEvent event)
 	{
 		if (!plugin.isJailed(event.getPlayer()))
 			return;
@@ -148,7 +145,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerTeleport(PlayerTeleportEvent event)
+	public void PlayerTeleport(final PlayerTeleportEvent event)
 	{
 		if (!plugin.isJailed(event.getPlayer()))
 			return;
@@ -157,7 +154,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerRespawn(PlayerRespawnEvent event)
+	public void PlayerRespawn(final PlayerRespawnEvent event)
 	{
 		if (!plugin.isJailed(event.getPlayer()))
 			return;
@@ -165,9 +162,9 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerLogin(PlayerLoginEvent event)
+	public void PlayerLogin(final PlayerLoginEvent event)
 	{
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		if (!plugin.isBanned(player))
 			return;
 		if (plugin.isAutoBanIPEnabled())
@@ -178,7 +175,7 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerDamage(EntityDamageByEntityEvent event)
+	public void PlayerDamage(final EntityDamageByEntityEvent event)
 	{
 		if (!(event.getEntity() instanceof Player))
 			return;
@@ -200,11 +197,11 @@ public class CrazyPunisherPlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void PlayerDamage(EntityDamageByBlockEvent event)
+	public void PlayerDamage(final EntityDamageByBlockEvent event)
 	{
 		if (!(event.getEntity() instanceof Player))
 			return;
-		Player player = (Player) event.getEntity();
+		final Player player = (Player) event.getEntity();
 		if (!plugin.isJailed(player))
 			return;
 		Location location = player.getBedSpawnLocation();

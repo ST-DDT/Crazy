@@ -9,7 +9,7 @@ public class CrazyPunisherHardbanEvent extends CrazyPunisherEvent
 	private static final HandlerList handlers = new HandlerList();
 	protected final OfflinePlayer player;
 
-	public CrazyPunisherHardbanEvent(OfflinePlayer player)
+	public CrazyPunisherHardbanEvent(final OfflinePlayer player)
 	{
 		super();
 		this.player = player;

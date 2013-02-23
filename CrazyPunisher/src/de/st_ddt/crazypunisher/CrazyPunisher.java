@@ -1,5 +1,6 @@
 package de.st_ddt.crazypunisher;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,9 +17,9 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.plugin.PluginManager;
 import org.dynmap.DynmapAPI;
 
 import de.st_ddt.crazygeo.region.RealRoom;
@@ -73,10 +74,11 @@ public class CrazyPunisher extends CrazyPlugin
 		super.onEnable();
 	}
 
+	@Override
 	public void load()
 	{
 		super.load();
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		jailworld = getServer().getWorld(config.getString("jail.world", "world"));
 		if (jailworld == null)
 		{
@@ -93,7 +95,7 @@ public class CrazyPunisher extends CrazyPlugin
 		dynmapEnabled = config.getBoolean("dynmapEnabled", true);
 		if (dynmapEnabled)
 		{
-			DynmapAPI dynmapAPI = (DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap");
+			final DynmapAPI dynmapAPI = (DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap");
 			if (dynmapAPI != null)
 			{
 				dynmap = new DynmapAddIn(dynmapAPI, this);
@@ -104,16 +106,14 @@ public class CrazyPunisher extends CrazyPlugin
 		}
 		// Banned
 		if (config.getConfigurationSection("player.banned") != null)
-		{
 			if (config.isList("player.banned"))
 				banned.addAll(config.getStringList("player.banned"));
 			else
-				for (String name : config.getConfigurationSection("player.banned").getKeys(false))
+				for (final String name : config.getConfigurationSection("player.banned").getKeys(false))
 					banned.add(name.toLowerCase());
-		}
-		for (String ban : banned)
+		for (final String ban : banned)
 		{
-			Player player = getServer().getPlayer(ban);
+			final Player player = getServer().getPlayer(ban);
 			if (player != null)
 			{
 				player.setBanned(true);
@@ -121,14 +121,14 @@ public class CrazyPunisher extends CrazyPlugin
 			}
 		}
 		// Jailed
-		Date now = new Date();
+		final Date now = new Date();
 		Set<String> list = null;
 		if (config.getConfigurationSection("player.jailed") != null)
 			list = config.getConfigurationSection("player.jailed").getKeys(false);
 		if (list != null)
-			for (String jail : list)
+			for (final String jail : list)
 			{
-				OfflinePlayer player = getServer().getOfflinePlayer(jail);
+				final OfflinePlayer player = getServer().getOfflinePlayer(jail);
 				if (player == null)
 					continue;
 				Date until;
@@ -138,13 +138,13 @@ public class CrazyPunisher extends CrazyPlugin
 					{
 						until = DateFormat.parse(config.getString("player.jailed." + player.getName()));
 					}
-					catch (NullPointerException e)
+					catch (final NullPointerException e)
 					{
 						until = DateFormat.parse(config.getString("player.jailed." + jail));
 						config.set("player.jailed." + jail, null);
 					}
 				}
-				catch (ParseException e)
+				catch (final ParseException e)
 				{
 					until = now;
 				}
@@ -156,14 +156,14 @@ public class CrazyPunisher extends CrazyPlugin
 	@Override
 	public void save()
 	{
-		ConfigurationSection config = getConfig();
+		final ConfigurationSection config = getConfig();
 		ObjectSaveLoadHelper.saveLocation(config, "jail.", jailcenter);
 		config.set("jail.range", jailrange);
 		config.set("autoBanIP", autoBanIP);
 		if (dynmap != null)
 			config.set("dynmapEnabled", dynmapEnabled);
 		config.set("player.banned", banned);
-		for (Entry<String, Date> entry : jailed.entrySet())
+		for (final Entry<String, Date> entry : jailed.entrySet())
 			config.set("player.jailed." + entry.getKey(), DateFormat.format(entry.getValue()));
 		super.save();
 	}
@@ -171,7 +171,7 @@ public class CrazyPunisher extends CrazyPlugin
 	public void registerHooks()
 	{
 		this.playerListener = new CrazyPunisherPlayerListener(this);
-		PluginManager pm = this.getServer().getPluginManager();
+		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(this.playerListener, this);
 	}
 
@@ -233,7 +233,7 @@ public class CrazyPunisher extends CrazyPlugin
 		switch (args.length)
 		{
 			case 1:
-				String name = args[0];
+				final String name = args[0];
 				OfflinePlayer player = getServer().getPlayerExact(name);
 				if (player == null)
 				{
@@ -265,7 +265,7 @@ public class CrazyPunisher extends CrazyPlugin
 		player.setWhitelisted(false);
 		if (player instanceof Player)
 		{
-			Player p = (Player) player;
+			final Player p = (Player) player;
 			if (autoBanIP)
 				getServer().banIP(p.getAddress().getAddress().getHostAddress());
 			p.getInventory().clear();
@@ -287,7 +287,7 @@ public class CrazyPunisher extends CrazyPlugin
 		switch (args.length)
 		{
 			case 1:
-				String name = args[0];
+				final String name = args[0];
 				OfflinePlayer player = getServer().getPlayerExact(name);
 				if (player == null)
 				{
@@ -315,7 +315,7 @@ public class CrazyPunisher extends CrazyPlugin
 		player.setBanned(true);
 		if (player instanceof Player)
 		{
-			Player p = (Player) player;
+			final Player p = (Player) player;
 			if (autoBanIP)
 				getServer().banIP(p.getAddress().getAddress().getHostAddress());
 			kick(p, locale.getLocaleMessage(p, "MESSAGE.BAN"));
@@ -332,7 +332,7 @@ public class CrazyPunisher extends CrazyPlugin
 		switch (args.length)
 		{
 			case 1:
-				String name = args[0];
+				final String name = args[0];
 				OfflinePlayer player = getServer().getPlayerExact(name);
 				if (player == null)
 				{
@@ -373,7 +373,7 @@ public class CrazyPunisher extends CrazyPlugin
 		{
 			case 3:
 				interval = 1;
-				String unit = args[2];
+				final String unit = args[2];
 				if (unit.equalsIgnoreCase("s") || unit.equalsIgnoreCase("sec") || unit.equalsIgnoreCase("second") || unit.equalsIgnoreCase("seconds"))
 					interval = 1;
 				else if (unit.equalsIgnoreCase("m") || unit.equalsIgnoreCase("min") || unit.equalsIgnoreCase("minute") || unit.equalsIgnoreCase("minutes"))
@@ -395,12 +395,12 @@ public class CrazyPunisher extends CrazyPlugin
 				{
 					duration = Integer.parseInt(args[1]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(1, "small Integer");
 				}
 			case 1:
-				String name = args[0];
+				final String name = args[0];
 				OfflinePlayer player = getServer().getPlayerExact(name);
 				if (player == null)
 				{
@@ -421,7 +421,7 @@ public class CrazyPunisher extends CrazyPlugin
 
 	public void jail(final OfflinePlayer player, final long duration)
 	{
-		Date time = new Date();
+		final Date time = new Date();
 		time.setTime(time.getTime() + duration * 1000);
 		jail(player, time);
 	}
@@ -447,7 +447,7 @@ public class CrazyPunisher extends CrazyPlugin
 		switch (args.length)
 		{
 			case 1:
-				String name = args[0];
+				final String name = args[0];
 				OfflinePlayer player = getServer().getPlayerExact(name);
 				if (player == null)
 				{
@@ -475,7 +475,7 @@ public class CrazyPunisher extends CrazyPlugin
 		save();
 		if (player instanceof Player)
 		{
-			Player p = (Player) player;
+			final Player p = (Player) player;
 			Location target = p.getBedSpawnLocation();
 			if (target == null)
 				target = p.getWorld().getSpawnLocation();
@@ -496,7 +496,7 @@ public class CrazyPunisher extends CrazyPlugin
 		switch (args.length)
 		{
 			case 1:
-				String name = args[0];
+				final String name = args[0];
 				player = getServer().getPlayerExact(name);
 				if (player == null)
 				{
@@ -531,12 +531,12 @@ public class CrazyPunisher extends CrazyPlugin
 		switch (args.length)
 		{
 			case 1:
-				String name = args[0];
+				final String name = args[0];
 				if (name.equalsIgnoreCase("*"))
 				{
 					if (!sender.hasPermission("crazypunisher.kick.all"))
 						throw new CrazyCommandPermissionException();
-					for (Player player : getServer().getOnlinePlayers())
+					for (final Player player : getServer().getOnlinePlayers())
 						if (player != sender)
 							kick(player);
 					return;
@@ -560,7 +560,7 @@ public class CrazyPunisher extends CrazyPlugin
 		kick(player, locale.getLocaleMessage(player, "MESSAGE.KICK"));
 	}
 
-	public void kick(final Player player, String message)
+	public void kick(final Player player, final String message)
 	{
 		if (player == null)
 			return;
@@ -574,30 +574,30 @@ public class CrazyPunisher extends CrazyPlugin
 	{
 		if (!sender.hasPermission("crazypunisher.show"))
 			throw new CrazyCommandPermissionException();
-		ArrayList<Player> players = new ArrayList<Player>();
+		final ArrayList<Player> players = new ArrayList<Player>();
 		if (args.length == 0)
 		{
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandUsageException("/show <Player>");
 			players.add((Player) sender);
 		}
-		for (String name : args)
+		for (final String name : args)
 		{
-			Player player = getServer().getPlayer(name);
+			final Player player = getServer().getPlayer(name);
 			if (player == null)
 				throw new CrazyCommandNoSuchException("Player", name);
 			players.add(player);
 		}
-		for (Player player : players)
+		for (final Player player : players)
 		{
-			CrazyPunisherVisibilityChangeEvent event = new CrazyPunisherVisibilityChangeEvent(player, true);
+			final CrazyPunisherVisibilityChangeEvent event = new CrazyPunisherVisibilityChangeEvent(player, true);
 			event.callEvent();
 			if (event.isCancelled())
 				continue;
 			hidden.remove(player.getName());
 			if (dynmap != null)
 				dynmap.getDynmapApi().setPlayerVisiblity(player, true);
-			for (Player plr : getServer().getOnlinePlayers())
+			for (final Player plr : getServer().getOnlinePlayers())
 				plr.showPlayer(player);
 			sendLocaleMessage("COMMAND.SHOW", player);
 		}
@@ -608,30 +608,30 @@ public class CrazyPunisher extends CrazyPlugin
 	{
 		if (!sender.hasPermission("crazypunisher.show"))
 			throw new CrazyCommandPermissionException();
-		ArrayList<Player> players = new ArrayList<Player>();
+		final ArrayList<Player> players = new ArrayList<Player>();
 		if (args.length == 0)
 		{
 			if (sender instanceof ConsoleCommandSender)
 				throw new CrazyCommandUsageException("/show <Player>");
 			players.add((Player) sender);
 		}
-		for (String name : args)
+		for (final String name : args)
 		{
-			Player player = getServer().getPlayer(name);
+			final Player player = getServer().getPlayer(name);
 			if (player == null)
 				throw new CrazyCommandNoSuchException("Player", name);
 			players.add(player);
 		}
-		for (Player player : players)
+		for (final Player player : players)
 		{
-			CrazyPunisherVisibilityChangeEvent event = new CrazyPunisherVisibilityChangeEvent(player, false);
+			final CrazyPunisherVisibilityChangeEvent event = new CrazyPunisherVisibilityChangeEvent(player, false);
 			event.callEvent();
 			if (event.isCancelled())
 				continue;
 			hidden.add(player.getName());
 			if (dynmap != null)
 				dynmap.getDynmapApi().setPlayerVisiblity(player, false);
-			for (Player plr : getServer().getOnlinePlayers())
+			for (final Player plr : getServer().getOnlinePlayers())
 				if (plr.hasPermission("crazypunisher.showall") || isHidden(plr))
 				{
 					player.showPlayer(plr);
@@ -692,7 +692,7 @@ public class CrazyPunisher extends CrazyPlugin
 				{
 					x = Integer.parseInt(args[0]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(1, "Integer");
 				}
@@ -700,7 +700,7 @@ public class CrazyPunisher extends CrazyPlugin
 				{
 					y = Integer.parseInt(args[1]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(2, "Integer");
 				}
@@ -708,7 +708,7 @@ public class CrazyPunisher extends CrazyPlugin
 				{
 					z = Integer.parseInt(args[2]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(3, "Integer");
 				}
@@ -748,7 +748,7 @@ public class CrazyPunisher extends CrazyPlugin
 				{
 					range = Integer.parseInt(args[0]);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					throw new CrazyCommandParameterException(1, "Integer");
 				}
@@ -781,7 +781,7 @@ public class CrazyPunisher extends CrazyPlugin
 
 	public boolean isJailed(final Player player)
 	{
-		Date time = jailed.get(player.getName().toLowerCase());
+		final Date time = jailed.get(player.getName().toLowerCase());
 		if (time == null)
 			return false;
 		return time.after(new Date());

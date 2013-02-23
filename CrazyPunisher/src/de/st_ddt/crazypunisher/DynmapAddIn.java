@@ -22,17 +22,17 @@ public class DynmapAddIn
 	protected MarkerIcon icon = null;
 	protected MarkerSet markerSet = null;
 
-	public DynmapAddIn(DynmapAPI dynmapApi, CrazyPunisher plugin)
+	public DynmapAddIn(final DynmapAPI dynmapApi, final CrazyPunisher plugin)
 	{
 		super();
 		this.dynmapApi = dynmapApi;
-		if (dynmapApi==null)
+		if (dynmapApi == null)
 			throw new NullPointerException();
 		this.plugin = plugin;
 		// Initialize
-		MarkerAPI markerAPI = dynmapApi.getMarkerAPI();
+		final MarkerAPI markerAPI = dynmapApi.getMarkerAPI();
 		MarkerIcon icon = markerAPI.getMarkerIcon("crazypunisher_jail");
-		HashSet<MarkerIcon> icons = new HashSet<MarkerIcon>();
+		final HashSet<MarkerIcon> icons = new HashSet<MarkerIcon>();
 		if (icon == null)
 		{
 			InputStream stream = null;
@@ -43,7 +43,7 @@ public class DynmapAddIn
 				icons.add(icon);
 				markerSet = markerAPI.createMarkerSet("CrazyPunisher", "CrazyPunisher", icons, false);
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				//
 			}
@@ -59,13 +59,11 @@ public class DynmapAddIn
 	{
 		if (icon == null || markerSet == null)
 			return;
-		for (Marker marker : markerSet.getMarkers())
+		for (final Marker marker : markerSet.getMarkers())
 			marker.deleteMarker();
 		int anz = 0;
-		for (RealRoom<? extends Room> jail : plugin.getJails())
-		{
+		for (final RealRoom<? extends Room> jail : plugin.getJails())
 			markerSet.createMarker("crazypunisher_jailIco" + (anz++), "Jail", jail.getWorld().getName(), jail.getBasis().getX(), jail.getBasis().getY(), jail.getBasis().getZ(), icon, false);
-			// draw JailRegion?
-		}
+		// draw JailRegion?
 	}
 }
