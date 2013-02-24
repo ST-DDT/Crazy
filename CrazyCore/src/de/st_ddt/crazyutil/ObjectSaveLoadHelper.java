@@ -195,17 +195,17 @@ public final class ObjectSaveLoadHelper
 	 */
 	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects, final String alternativePackage)
 	{
-		return loadList(config, parentClazz, paraClazzes, paraObjects, null);
-	}
-
-	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
-	{
 		final ArrayList<T> list = new ArrayList<T>();
 		if (config == null)
 			return list;
 		for (final String key : config.getKeys(false))
-			list.add(load(config.getConfigurationSection(key), parentClazz, paraClazzes, paraObjects));
+			list.add(load(config.getConfigurationSection(key), parentClazz, paraClazzes, paraObjects, alternativePackage));
 		return list;
+	}
+
+	public static <T> List<T> loadList(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
+	{
+		return loadList(config, parentClazz, paraClazzes, paraObjects, null);
 	}
 
 	public static <T> T load(final ConfigurationSection config, final Class<T> parentClazz, final Class<?>[] paraClazzes, final Object[] paraObjects)
