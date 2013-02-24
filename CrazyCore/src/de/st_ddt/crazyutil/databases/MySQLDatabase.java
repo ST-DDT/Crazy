@@ -34,7 +34,7 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 
 	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
 	{
-		super(DatabaseType.MYSQL, clazz, columns, tableName, columnNames, doNoUpdate, doNoUpdate);
+		super(DatabaseType.MYSQL, clazz, columns, tableName, columnNames, cached, doNoUpdate);
 		this.connection = new MySQLConnection(host, port, database, user, password);
 		this.connectionPool = new MySQLConnectionPool(connection);
 		mysqlConnectionPool = connectionPool;
