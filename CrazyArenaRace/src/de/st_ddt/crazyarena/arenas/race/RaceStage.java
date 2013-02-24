@@ -25,7 +25,7 @@ public class RaceStage implements Named, ConfigurationSaveable
 
 	public RaceStage(final RaceArena arena, final String name, final Location center, final double radius, final RaceStage next)
 	{
-		this(arena, name, new RealRoom<Room>(new Sphere(radius), center));
+		this(arena, name, new RealRoom<Room>(new Sphere(radius), center), next);
 	}
 
 	public RaceStage(final RaceArena arena, final ConfigurationSection config)
