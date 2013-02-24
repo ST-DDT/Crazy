@@ -37,7 +37,9 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables = "ARENA_NAME", values = "$NAME$")
 public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatHeaderProvider, ParameterData
 {
 
@@ -78,7 +80,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		this.name = name;
 		getDataFolder().mkdirs();
 		this.chatHeader = ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE;
-		// Locale CRAZYARENA.ARENA.$NAME$... -> CRAZYARENA.ARENA_$TYPE$... -> CRAZYARENA.ARENA_DEFAULT...
+		// Locale CRAZYARENA.ARENA.$ARENA_NAME$... -> CRAZYARENA.ARENA_$ARENA_TYPE$... -> CRAZYARENA.ARENA_DEFAULT...
 		final CrazyLocale pluginLocale = CrazyArena.getPlugin().getLocale();
 		this.locale = pluginLocale.getSecureLanguageEntry("ARENA." + name.toUpperCase());
 		final CrazyLocale typeLocale = pluginLocale.getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
@@ -94,7 +96,7 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 		super();
 		this.name = name;
 		this.chatHeader = ChatHelper.colorise(config.getString("chatHeader", ChatColor.RED + "[" + ChatColor.GREEN + name + ChatColor.RED + "]" + ChatColor.WHITE));
-		// Locale CRAZYARENA.ARENA.$NAME$... -> CRAZYARENA.ARENA_$TYPE$... -> CRAZYARENA.ARENA_DEFAULT...
+		// Locale CRAZYARENA.ARENA.$ARENA_NAME$... -> CRAZYARENA.ARENA_$ARENA_TYPE$... -> CRAZYARENA.ARENA_DEFAULT...
 		final CrazyLocale pluginLocale = CrazyArena.getPlugin().getLocale();
 		this.locale = pluginLocale.getSecureLanguageEntry("ARENA." + name.toUpperCase());
 		final CrazyLocale typeLocale = pluginLocale.getSecureLanguageEntry("ARENA_" + getType().toUpperCase());
@@ -610,10 +612,10 @@ public abstract class Arena<S extends Participant<S, ?>> implements Named, ChatH
 
 	public abstract CrazyArenaPlugin getArenaPlugin();
 
-	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.UNSUPPORTED $ArenaName$", "CRAZYARENA.ARENA_$TYPE$.SIGNS.UNSUPPORTED $ArenaName$" })
+	@Localized("CRAZYARENA.ARENA.SIGNS.UNSUPPORTED $ArenaName$ $ArenaType$")
 	public void attachSign(final Block block, final SignRotation rotation, final String type, final Player player)
 	{
-		sendLocaleMessage("SIGNS.UNSUPPORTED", player, getName());
+		sendLocaleMessage("SIGNS.UNSUPPORTED", player, getName(), getType());
 		final Sign sign = (Sign) block.getState();
 		sign.setLine(1, "UNSUPPORTED");
 		sign.update();

@@ -133,7 +133,7 @@ public class CrazyArenaPlayerListener implements Listener
 		}
 	}
 
-	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.NOPERMISSION $ArenaName$", "CRAZYARENA.ARENA_$TYPE$.SIGNS.NOPERMISSION $ArenaName$" })
+	@Localized({ "CRAZYARENA.ARENA_DEFAULT.SIGNS.NOPERMISSION $ArenaName$", "CRAZYARENA.ARENA_$ARENA_TYPE$.SIGNS.NOPERMISSION $ArenaName$" })
 	private boolean searchSigns(final Arena<?> arena, final Block block, final SignRotation rotation, final String type, final Player player)
 	{
 		if (arena == null)

@@ -44,7 +44,9 @@ import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.modes.IntegerMode;
 import de.st_ddt.crazyutil.modes.LongMode;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables = "ARENA_TYPE", values = "RACE")
 public class RaceArena extends Arena<RaceParticipant>
 {
 

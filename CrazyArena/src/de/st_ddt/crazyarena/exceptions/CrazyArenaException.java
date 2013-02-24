@@ -31,7 +31,7 @@ public class CrazyArenaException extends CrazyException
 	}
 
 	@Override
-	@Localized({ "CRAZYARENA.ARENA_DEFAULT.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA_$TYPE$.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA.$NAME$.EXCEPTION $Name$ $Type$ $Status$" })
+	@Localized({ "CRAZYARENA.ARENA_DEFAULT.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA_$ARENA_TYPE$.EXCEPTION $Name$ $Type$ $Status$", "CRAZYARENA.ARENA.$ARENA_NAME$.EXCEPTION $Name$ $Type$ $Status$" })
 	public void print(final CommandSender sender, final String header)
 	{
 		ChatHelper.sendMessage(sender, header, locale, arena.getName(), arena.getType(), arena.getStatus().toString());
