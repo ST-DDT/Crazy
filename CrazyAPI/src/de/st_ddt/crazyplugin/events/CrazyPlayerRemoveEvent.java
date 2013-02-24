@@ -7,7 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyutil.Named;
 
 public class CrazyPlayerRemoveEvent extends CrazyEvent
@@ -25,23 +24,6 @@ public class CrazyPlayerRemoveEvent extends CrazyEvent
 	public CrazyPlayerRemoveEvent(final String player)
 	{
 		super();
-		if (player == null)
-			throw new IllegalArgumentException("Playername cannot be null!");
-		if (player.length() == 0)
-			throw new IllegalArgumentException("Playername cannot be empty!");
-		this.player = player;
-	}
-
-	@Deprecated
-	public CrazyPlayerRemoveEvent(final CrazyPluginInterface plugin, final OfflinePlayer player)
-	{
-		this(plugin, player.getName());
-	}
-
-	@Deprecated
-	public CrazyPlayerRemoveEvent(final CrazyPluginInterface plugin, final String player)
-	{
-		super(plugin);
 		if (player == null)
 			throw new IllegalArgumentException("Playername cannot be null!");
 		if (player.length() == 0)

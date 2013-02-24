@@ -6,8 +6,6 @@ import java.util.TreeSet;
 
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
-
 public class CrazyPlayerIPsConnectedToNameEvent extends CrazyEvent
 {
 
@@ -18,13 +16,6 @@ public class CrazyPlayerIPsConnectedToNameEvent extends CrazyEvent
 	public CrazyPlayerIPsConnectedToNameEvent(final String name)
 	{
 		super();
-		this.name = name;
-	}
-
-	@Deprecated
-	public CrazyPlayerIPsConnectedToNameEvent(final CrazyLightPluginInterface plugin, final String name)
-	{
-		super(plugin);
 		this.name = name;
 	}
 

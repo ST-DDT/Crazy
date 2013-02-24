@@ -4,8 +4,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
-
 public class CrazyPlayerPreRemoveEvent extends CrazyEvent implements Cancellable
 {
 
@@ -22,20 +20,6 @@ public class CrazyPlayerPreRemoveEvent extends CrazyEvent implements Cancellable
 	public CrazyPlayerPreRemoveEvent(final String player)
 	{
 		super();
-		this.player = player;
-	}
-
-	@Deprecated
-	public CrazyPlayerPreRemoveEvent(final CrazyPluginInterface plugin, final OfflinePlayer player)
-	{
-		super(plugin);
-		this.player = player.getName();
-	}
-
-	@Deprecated
-	public CrazyPlayerPreRemoveEvent(final CrazyPluginInterface plugin, final String player)
-	{
-		super(plugin);
 		this.player = player;
 	}
 

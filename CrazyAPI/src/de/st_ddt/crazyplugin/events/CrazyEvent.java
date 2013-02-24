@@ -4,8 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 
-import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
-
 public abstract class CrazyEvent extends Event
 {
 
@@ -14,21 +12,9 @@ public abstract class CrazyEvent extends Event
 		super();
 	}
 
-	@Deprecated
-	public CrazyEvent(final CrazyLightPluginInterface plugin)
-	{
-		super();
-	}
-
 	public void callEvent()
 	{
 		Bukkit.getPluginManager().callEvent(this);
-	}
-
-	@Deprecated
-	public void callAsyncEvent()
-	{
-		callEvent();
 	}
 
 	@SuppressWarnings("deprecation")

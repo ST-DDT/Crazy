@@ -9,7 +9,6 @@ import java.util.TreeSet;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
 
-import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyutil.Named;
 
 public class CrazyPlayerAssociatesEvent extends CrazyEvent
@@ -29,21 +28,6 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent
 	public CrazyPlayerAssociatesEvent(final String name, final int recursionDepth)
 	{
 		super();
-		this.name = name;
-		this.recursionDepth = recursionDepth;
-		this.associates.add(name);
-	}
-
-	@Deprecated
-	public CrazyPlayerAssociatesEvent(final CrazyLightPluginInterface plugin, final String name)
-	{
-		this(plugin, name, 0);
-	}
-
-	@Deprecated
-	public CrazyPlayerAssociatesEvent(final CrazyLightPluginInterface plugin, final String name, final int recursionDepth)
-	{
-		super(plugin);
 		this.name = name;
 		this.recursionDepth = recursionDepth;
 		this.associates.add(name);
