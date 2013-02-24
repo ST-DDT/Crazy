@@ -8,7 +8,6 @@ import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
@@ -25,21 +24,6 @@ public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends Craz
 	public CrazyCommandTreeExecutor(final S chatHeaderProvider)
 	{
 		super(chatHeaderProvider);
-		defaultExecutor = new CrazyCommandTreeDefaultExecutor(plugin);
-	}
-
-	@Deprecated
-	protected CrazyCommandTreeExecutor(final S chatHeaderProvider, final boolean dummy)
-	{
-		super(chatHeaderProvider);
-		defaultExecutor = new CrazyCommandTreeDefaultExecutor(plugin);
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public CrazyCommandTreeExecutor(final CrazyPluginInterface chatHeaderProvider)
-	{
-		super((S) chatHeaderProvider);
 		defaultExecutor = new CrazyCommandTreeDefaultExecutor(plugin);
 	}
 
