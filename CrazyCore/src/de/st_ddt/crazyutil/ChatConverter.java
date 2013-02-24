@@ -219,7 +219,7 @@ public class ChatConverter
 	{
 		long res = 0;
 		final List<String> units = Arrays.asList("Y", "M", "W", "D", "h", "m", "s", "t");
-		final long[] values = new long[] { 31556952000L, 2629746000L, 604800000L, 86400000L, 3600000L, 60000L, 1000L, 50L };
+		final long[] values = new long[] { 31556925216L, 2629743768L, 604800000L, 86400000L, 3600000L, 60000L, 1000L, 50L };
 		final int length = args.length;
 		for (int i = 0; i < length; i++)
 		{
