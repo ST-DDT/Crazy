@@ -111,17 +111,19 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	public static String getSaveLanguageName(final String language, final boolean appendLanguage)
 	{
 		final String res = getSaveLanguageName(language);
-		if (res == null)
-			return null;
-		return res + " (" + language + ")";
+		if (appendLanguage)
+			return res + " (" + language + ")";
+		else
+			return res;
 	}
 
 	public static String getSaveShortLanguageName(final String language, final boolean appendLanguage)
 	{
 		final String res = getSaveLanguageName(language);
-		if (res == null)
-			return null;
-		return res.split(" - ")[0] + " (" + language + ")";
+		if (appendLanguage)
+			return res.split(" - ")[0] + " (" + language + ")";
+		else
+			return res.split(" - ")[0];
 	}
 
 	public static boolean isActiveLanguage(final String language)
@@ -451,7 +453,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 
 	public static void printAll(final String language)
 	{
-		printAll(Bukkit.getConsoleSender());
+		printAll(language, Bukkit.getConsoleSender());
 	}
 
 	public static void printAll(final CommandSender sender)
