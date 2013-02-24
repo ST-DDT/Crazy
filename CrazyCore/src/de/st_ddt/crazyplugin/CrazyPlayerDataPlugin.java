@@ -41,19 +41,21 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	{
 
 		@Override
-		@Localized({ "$CRAZYPLAYERDATAPLUGIN$.COMMAND.PLAYER.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "$CRAZYPLAYERDATAPLUGIN$.COMMAND.PLAYER.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "$CRAZYPLAYERDATAPLUGIN$.COMMAND.PLAYER.LIST.ENTRYFORMAT $Name$ $...$" })
+		@Localized("CRAZYPLUGIN.COMMAND.PLAYER.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$")
 		public String headFormat(final CommandSender sender)
 		{
 			return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.HEADER").getLanguageText(sender);
 		}
 
 		@Override
+		@Localized("CRAZYPLUGIN.COMMAND.PLAYER.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$")
 		public String listFormat(final CommandSender sender)
 		{
 			return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.LISTFORMAT").getLanguageText(sender);
 		}
 
 		@Override
+		@Localized("CRAZYPLUGIN.COMMAND.PLAYER.LIST.ENTRYFORMAT $Name$ $...$")
 		public String entryFormat(final CommandSender sender)
 		{
 			return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.ENTRYFORMAT").getLanguageText(sender);
