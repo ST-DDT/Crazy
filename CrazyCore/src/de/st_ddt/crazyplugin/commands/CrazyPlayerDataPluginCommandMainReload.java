@@ -27,7 +27,7 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 	}
 
 	@Override
-	@Localized({ "CRAZYPLUGIN.COMMAND.CONFIG.RELOADED", "CRAZYPLUGIN.COMMAND.DATABASE.RELOADED" })
+	@Localized({ "$CRAZYPLAYERDATAPLUGIN$.COMMAND.CONFIG.RELOADED", "$CRAZYPLAYERDATAPLUGIN$.COMMAND.DATABASE.RELOADED" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();

@@ -33,7 +33,9 @@ import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables = "CRAZYPLUGIN", values = "CRAZYPLUGIN")
 public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPluginInterface
 {
 
@@ -240,7 +242,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	}
 
 	@Override
-	@Localized({ "CRAZYPLUGIN.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYPLUGIN.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYPLUGIN.LIST.ENTRYFORMAT" })
+	@Localized({ "CRAZYPLUGIN.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYPLUGIN.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYPLUGIN.LIST.ENTRYFORMAT $Name$ ..." })
 	public final void sendLocaleList(final CommandSender target, CrazyLocale headFormat, CrazyLocale listFormat, CrazyLocale entryFormat, final int amount, final int page, final List<?> datas)
 	{
 		if (headFormat == null)
@@ -328,7 +330,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		getServer().getScheduler().scheduleAsyncDelayedTask(this, new LanguageLoadTask(this, language, sender));
 	}
 
-	@Localized({ "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE $Language$ $Plugin$", "CRAZYPLUGIN.LANGUAGE.ERROR.READ $Language$ $Plugin$" })
+	@Localized({ "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE $Language$ CRAZYPLUGIN.LANGUAGE", "CRAZYPLUGIN.LANGUAGE.ERROR.READ $Language$ $Plugin$" })
 	public void loadLanguage(final String language, final CommandSender sender)
 	{
 		if (!isSupportingLanguages())

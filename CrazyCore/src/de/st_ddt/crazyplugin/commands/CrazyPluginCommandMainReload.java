@@ -17,7 +17,7 @@ public class CrazyPluginCommandMainReload extends CrazyCommandExecutor<CrazyPlug
 	}
 
 	@Override
-	@Localized("CRAZYPLUGIN.COMMAND.CONFIG.RELOADED")
+	@Localized("$CRAZYPLUGIN$.COMMAND.CONFIG.RELOADED")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length != 0)

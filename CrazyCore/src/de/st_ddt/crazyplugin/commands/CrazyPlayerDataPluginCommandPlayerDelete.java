@@ -22,7 +22,7 @@ public class CrazyPlayerDataPluginCommandPlayerDelete<T extends PlayerDataInterf
 	}
 
 	@Override
-	@Localized("CRAZYPLUGIN.COMMAND.PLAYER.DELETE.SUCCESS $Name$")
+	@Localized("$CRAZYPLAYERDATAPLUGIN$.COMMAND.PLAYER.DELETE.SUCCESS $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final String name = ChatHelper.listingString(" ", args);

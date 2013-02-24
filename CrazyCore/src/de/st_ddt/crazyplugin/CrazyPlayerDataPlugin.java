@@ -25,7 +25,9 @@ import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables = "CRAZYPLAYERDATAPLUGIN", values = "CRAZYPLUGIN")
 public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S extends T> extends CrazyPlugin implements CrazyPlayerDataPluginInterface<T, S>
 {
 
@@ -39,7 +41,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	{
 
 		@Override
-		@Localized({ "CRAZYPLUGIN.COMMAND.PLAYER.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "CRAZYPLUGIN.COMMAND.PLAYER.LIST.ENTRYFORMAT $Name$ $...$" })
+		@Localized({ "$CRAZYPLAYERDATAPLUGIN$.COMMAND.PLAYER.LIST.HEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "$CRAZYPLAYERDATAPLUGIN$.COMMAND.PLAYER.LIST.LISTFORMAT $Index$ $Entry$ $ChatHeader$", "$CRAZYPLAYERDATAPLUGIN$.COMMAND.PLAYER.LIST.ENTRYFORMAT $Name$ $...$" })
 		public String headFormat(final CommandSender sender)
 		{
 			return getLocale().getLanguageEntry("COMMAND.PLAYER.LIST.HEADER").getLanguageText(sender);
@@ -241,7 +243,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	@Localized("CRAZYPLUGIN.PLUGININFO.DATABASEENTRIES")
+	@Localized("$CRAZYPLAYERDATAPLUGIN$.PLUGININFO.DATABASEENTRIES")
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		super.show(target, chatHeader, showDetailed);
@@ -281,7 +283,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	@Localized({ "CRAZYPLUGIN.DATABASE.ACCESSWARN", "CRAZYPLUGIN.DATABASE.LOADED" })
+	@Localized({ "$CRAZYPLAYERDATAPLUGIN$.DATABASE.ACCESSWARN", "$CRAZYPLAYERDATAPLUGIN$.DATABASE.LOADED" })
 	public void loadDatabase()
 	{
 	}

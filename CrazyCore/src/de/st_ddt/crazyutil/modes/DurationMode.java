@@ -8,7 +8,6 @@ import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
-import de.st_ddt.crazyutil.source.Localized;
 
 public abstract class DurationMode extends LongMode
 {
@@ -19,7 +18,6 @@ public abstract class DurationMode extends LongMode
 	}
 
 	@Override
-	@Localized("CRAZYPLUGIN.MODE.CHANGE $Name$ $Value$")
 	public void showValue(final CommandSender sender)
 	{
 		plugin.sendLocaleMessage("MODE.CHANGE", sender, name, ChatConverter.timeConverter(getValue() / 1000, 1, sender, 0, true));

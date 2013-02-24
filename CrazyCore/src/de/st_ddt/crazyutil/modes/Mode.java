@@ -36,7 +36,7 @@ public abstract class Mode<S> implements Named
 		return clazz;
 	}
 
-	@Localized("CRAZYPLUGIN.MODE.CHANGE $Name$ $Value$")
+	@Localized("$CRAZYPLUGIN$.MODE.CHANGE $Name$ $Value$")
 	public void showValue(final CommandSender sender)
 	{
 		plugin.sendLocaleMessage("MODE.CHANGE", sender, name, getValue());
