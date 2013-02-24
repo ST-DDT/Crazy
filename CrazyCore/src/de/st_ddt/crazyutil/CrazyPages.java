@@ -139,29 +139,28 @@ public class CrazyPages
 		for (int i = lastIndex; i > 0; i /= 10)
 			formatString.append(" ");
 		String format = formatString.toString();
-		final int length = format.length();
 		lastIndex = Math.min(lastIndex, page * amount);
 		final StringBuilder message = new StringBuilder();
 		if (target instanceof ConsoleCommandSender)
 		{
 			for (int i = page * amount - amount; i < lastIndex; i++)
 				if (datas.get(i) instanceof ParameterData)
-					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), length, format), ChatHelper.putArgsPara(target, entryFormat, (ParameterData) datas.get(i)), chatHeader));
+					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), format), ChatHelper.putArgsPara(target, entryFormat, (ParameterData) datas.get(i)), chatHeader));
 				else if (datas.get(i) instanceof Showable)
-					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), length, format), ((Showable) datas.get(i)).getShortInfo(), chatHeader));
+					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), format), ((Showable) datas.get(i)).getShortInfo(), chatHeader));
 				else
-					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), length, format), datas.get(i).toString(), chatHeader));
+					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), format), datas.get(i).toString(), chatHeader));
 		}
 		else
 		{
 			format += format;
 			for (int i = page * amount - amount; i < lastIndex; i++)
 				if (datas.get(i) instanceof ParameterData)
-					message.append(ChatHelper.putArgs(listFormat, listShiftHelper(String.valueOf(i + 1), length, format), ChatHelper.putArgsPara(target, entryFormat, (ParameterData) datas.get(i)), chatHeader));
+					message.append(ChatHelper.putArgs(listFormat, listShiftHelper(String.valueOf(i + 1), format), ChatHelper.putArgsPara(target, entryFormat, (ParameterData) datas.get(i)), chatHeader));
 				else if (datas.get(i) instanceof Showable)
-					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), length, format), ((Showable) datas.get(i)).getShortInfo(), chatHeader));
+					message.append(ChatHelper.putArgs(listFormat, listShiftHelperConsole(String.valueOf(i + 1), format), ((Showable) datas.get(i)).getShortInfo(), chatHeader));
 				else
-					message.append(ChatHelper.putArgs(listFormat, listShiftHelper(String.valueOf(i + 1), length, format), datas.get(i).toString(), chatHeader));
+					message.append(ChatHelper.putArgs(listFormat, listShiftHelper(String.valueOf(i + 1), format), datas.get(i).toString(), chatHeader));
 		}
 		String listMessage = message.toString();
 		if (listMessage.endsWith("\n"))
@@ -172,13 +171,13 @@ public class CrazyPages
 		ChatHelper.sendFinalMessage(target, listMessage);
 	}
 
-	private static String listShiftHelper(final String number, final int length, final String filler)
+	private static String listShiftHelper(final String number, final String filler)
 	{
 		final String res = filler + number;
 		return res.substring(number.length() * 2);
 	}
 
-	private static String listShiftHelperConsole(final String number, final int length, final String filler)
+	private static String listShiftHelperConsole(final String number, final String filler)
 	{
 		final String res = filler + number;
 		return res.substring(number.length());
