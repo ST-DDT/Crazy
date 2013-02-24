@@ -243,7 +243,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	@Localized("$CRAZYPLAYERDATAPLUGIN$.PLUGININFO.DATABASEENTRIES")
+	@Localized("$CRAZYPLAYERDATAPLUGIN$.PLUGININFO.DATABASEENTRIES $EntryCount$")
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		super.show(target, chatHeader, showDetailed);
@@ -283,7 +283,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	}
 
 	@Override
-	@Localized({ "$CRAZYPLAYERDATAPLUGIN$.DATABASE.ACCESSWARN", "$CRAZYPLAYERDATAPLUGIN$.DATABASE.LOADED" })
+	@Localized({ "$CRAZYPLAYERDATAPLUGIN$.DATABASE.ACCESSWARN $SaveType$", "$CRAZYPLAYERDATAPLUGIN$.DATABASE.LOADED $EntryCount$" })
 	public void loadDatabase()
 	{
 	}
