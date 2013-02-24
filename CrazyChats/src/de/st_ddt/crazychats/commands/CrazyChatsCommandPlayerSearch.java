@@ -44,11 +44,11 @@ public class CrazyChatsCommandPlayerSearch extends CrazyChatsCommandExecutor
 		for (final ChatPlayerData data : plugin.getPlayerData())
 			if (pattern.matcher(data.getName()).find())
 				names.add(data.getName());
-			else if (pattern.matcher(ChatColor.stripColor(data.getDisplayName())).find())
+			else if (data.getDisplayName() != null && pattern.matcher(ChatColor.stripColor(data.getDisplayName())).find())
 				names.add(data.getName() + " (" + data.getDisplayName() + ")");
-			else if (pattern.matcher(ChatColor.stripColor(data.getListName())).find())
+			else if (data.getListName() != null && pattern.matcher(ChatColor.stripColor(data.getListName())).find())
 				names.add(data.getName() + " (" + data.getListName() + ")");
-			else if (pattern.matcher(ChatColor.stripColor(data.getHeadName())).find())
+			else if (data.getHeadName() != null && pattern.matcher(ChatColor.stripColor(data.getHeadName())).find())
 				names.add(data.getName() + " (" + data.getHeadName() + ")");
 		plugin.sendLocaleList(sender, "COMMAND.PLAYER.SEARCH", -1, -1, new ArrayList<String>(names));
 	}
