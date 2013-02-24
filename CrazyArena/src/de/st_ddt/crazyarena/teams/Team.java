@@ -133,7 +133,7 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 
 	public void setTeamColor(final Player player)
 	{
-		ItemStack helmet = null;
+		final ItemStack helmet;
 		switch (color)
 		{
 			case WHITE:
@@ -186,6 +186,7 @@ public class Team<S extends Participant<S, T>, T extends Arena<S>> implements Na
 				break;
 			default:
 				helmet = null;
+				break;
 		}
 		player.getInventory().setHelmet(helmet);
 	}
