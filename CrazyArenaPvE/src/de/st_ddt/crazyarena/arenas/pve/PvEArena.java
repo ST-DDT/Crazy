@@ -94,7 +94,7 @@ public class PvEArena extends Arena<PvEParticipant>
 	}
 
 	@Override
-	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.READY", "CRAZYARENA.ARENA_RACE.START.QUEUED", "CRAZYARENA.ARENA_RACE.START.COUNTDOWN $Remaining$", "CRAZYARENA.ARENA_RACE.START.STARTED $DateTime$", "CRAZYARENA.ARENA_RACE.START.ABORTED", "CRAZYARENA.ARENA_RACE.PARTICIPANT.READY.BROADCAST $Selecting$" })
+	@Localized({ "CRAZYARENA.ARENA_PVE.PARTICIPANT.READY", "CRAZYARENA.ARENA_PVE.START.QUEUED", "CRAZYARENA.ARENA_PVE.START.COUNTDOWN $Remaining$", "CRAZYARENA.ARENA_PVE.START.STARTED $DateTime$", "CRAZYARENA.ARENA_PVE.START.ABORTED", "CRAZYARENA.ARENA_PVE.PARTICIPANT.READY.BROADCAST $Selecting$" })
 	public boolean ready(final Player player)
 	{
 		final PvEParticipant participant = getParticipant(player);
@@ -145,7 +145,7 @@ public class PvEArena extends Arena<PvEParticipant>
 	}
 
 	@Override
-	@Localized({ "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT $Arena$", "CRAZYARENA.ARENA_RACE.PARTICIPANT.QUIT.BROADCAST $Player$" })
+	@Localized({ "CRAZYARENA.ARENA_PVE.PARTICIPANT.QUIT $Arena$", "CRAZYARENA.ARENA_PVE.PARTICIPANT.QUIT.BROADCAST $Player$" })
 	public boolean leave(final Player player, final boolean kicked) throws CrazyException
 	{
 		final PvEParticipant participant = participants.remove(player.getName().toLowerCase());
