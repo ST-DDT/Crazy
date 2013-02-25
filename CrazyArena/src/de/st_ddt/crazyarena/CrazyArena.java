@@ -54,7 +54,9 @@ import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables="CRAZYPLUGIN",values="CRAZYARENA")
 public class CrazyArena extends CrazyPlugin
 {
 

@@ -1,7 +1,9 @@
 package de.st_ddt.crazyarena;
 
 import de.st_ddt.crazyarena.arenas.race.RaceArena;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables="CRAZYPLUGIN",values="CRAZYARENARACE")
 public class CrazyArenaRace extends CrazyArenaPlugin
 {
 

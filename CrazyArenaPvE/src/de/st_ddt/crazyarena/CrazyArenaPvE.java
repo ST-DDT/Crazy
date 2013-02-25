@@ -1,7 +1,9 @@
 package de.st_ddt.crazyarena;
 
 import de.st_ddt.crazyarena.arenas.pve.PvEArena;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables="CRAZYPLUGIN",values="CRAZYARENAPVE")
 public class CrazyArenaPvE extends CrazyArenaPlugin
 {
 
