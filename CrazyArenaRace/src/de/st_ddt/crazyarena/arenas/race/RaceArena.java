@@ -51,7 +51,7 @@ public class RaceArena extends Arena<RaceParticipant>
 {
 
 	private final static int DEFAUTLMINPARTICIPANTS = 2;
-	private static final int DEFAUTLSTARTDELAY = 5;
+	private final static int DEFAUTLSTARTDELAY = 5;
 	private final static long DEFAULTKICKSLOWPLAYERS = 30;
 	private final static long DEFAULTEXPIRATIONTIME = 1000L * 60 * 60 * 24 * 30;
 	protected final List<Location> playerSpawns = new ArrayList<Location>();
