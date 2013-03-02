@@ -14,11 +14,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.PlayerDataProvider;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
-import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -40,7 +38,6 @@ import de.st_ddt.crazysquads.listener.CrazySquadsPlayerListener;
 import de.st_ddt.crazysquads.listener.CrazySquadsTagAPIListener;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
-import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.DoubleMode;
 import de.st_ddt.crazyutil.modes.IntegerMode;
 import de.st_ddt.crazyutil.modes.LongMode;
@@ -53,7 +50,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	private static CrazySquads plugin;
 	private final Map<Player, Squad> squads = new HashMap<Player, Squad>();
 	private final Map<Player, Squad> invites = new HashMap<Player, Squad>();
-	private final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	private final List<String> commandWhiteList = new ArrayList<String>();
 	private CrazySquadsPlayerListener playerListener;
 	private int maxSquadSize = 1;
@@ -222,43 +218,7 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 	@Localized({ "CRAZYSQUADS.FORMAT.CHANGE $FormatName$ $Value$", "CRAZYSQUADS.FORMAT.EXAMPLE $Example$" })
 	private void registerModesCrazyChats()
 	{
-		final Mode<String> squadChatFormatMode = new ChatFormatMode(this, "squadChatFormat")
-		{
-
-			@Override
-			public String getValue()
-			{
-				return squadChatFormat;
-			}
-
-			@Override
-			public void setValue(final String newValue) throws CrazyException
-			{
-				squadChatFormat = newValue;
-				saveConfiguration();
-			}
-		};
-		final Mode<String> squadLeaderChatFormatMode = new ChatFormatMode(this, "squadLeaderChatFormat")
-		{
-
-			@Override
-			public String getValue()
-			{
-				return squadLeaderChatFormat;
-			}
-
-			@Override
-			public void setValue(final String newValue) throws CrazyException
-			{
-				squadLeaderChatFormat = newValue;
-				saveConfiguration();
-			}
-		};
-		modeCommand.addMode(squadChatFormatMode);
-		modeCommand.addMode(squadLeaderChatFormatMode);
-		final CrazyPluginCommandMainMode chatsModeCommand = CrazyChats.getPlugin().getModeCommand();
-		chatsModeCommand.addMode(squadChatFormatMode);
-		chatsModeCommand.addMode(squadLeaderChatFormatMode);
+		SquadChatFormatSupport.registerChatFormats(this, modeCommand);
 	}
 
 	private void registerModesTagAPI()
@@ -307,7 +267,6 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		squadCommand.addSubCommand(new CrazySquadsSquadPlayerCommandSquadDelete(this), "del", "delete");
 		squadCommand.addSubCommand(new CrazySquadsSquadPlayerCommandSquadMode(this), "o", "option", "cfg", "config");
 		squadCommand.addSubCommand(new CrazySquadsSquadPlayerCommandSquadCommand(this), "cmd", "command");
-		mainCommand.addSubCommand(modeCommand, "mode");
 		mainCommand.addSubCommand(new CrazySquadsCommandMainCommands(this), "commands");
 	}
 
@@ -473,9 +432,19 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		return squadChatFormat;
 	}
 
+	void setSquadChatFormat(final String squadChatFormat)
+	{
+		this.squadChatFormat = squadChatFormat;
+	}
+
 	public String getSquadLeaderChatFormat()
 	{
 		return squadLeaderChatFormat;
+	}
+
+	void setSquadHeadNamePrefix(final String squadHeadNamePrefix)
+	{
+		this.squadHeadNamePrefix = squadHeadNamePrefix;
 	}
 
 	public String getSquadHeadNamePrefix()
