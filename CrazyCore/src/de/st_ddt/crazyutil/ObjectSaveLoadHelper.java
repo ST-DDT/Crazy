@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,19 +17,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
-public final class ObjectSaveLoadHelper
+public class ObjectSaveLoadHelper
 {
 
 	private static DateFormat OLDDATETIMEFORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-	private ObjectSaveLoadHelper()
+	protected ObjectSaveLoadHelper()
 	{
+		super();
 	}
 
 	// Location
@@ -101,16 +99,47 @@ public final class ObjectSaveLoadHelper
 	}
 
 	// ItemStack
-	public static HashMap<Integer, ItemStack> loadInventory(final ConfigurationSection config)
+	public static Map<Integer, ItemStack> loadInventory(final ConfigurationSection config, Inventory inventory)
 	{
 		final Set<String> entries = config.getKeys(false);
-		final HashMap<Integer, ItemStack> res = new HashMap<Integer, ItemStack>(entries.size());
+		final Map<Integer, ItemStack> res = new HashMap<Integer, ItemStack>(entries.size());
 		for (final String key : entries)
-			res.put(Integer.parseInt(key), loadItemStack(config.getConfigurationSection(key)));
+			try
+			{
+				inventory.setItem(Integer.parseInt(key), loadItemStack(config.getConfigurationSection(key)));
+			}
+			catch (final NumberFormatException e)
+			{
+				System.err.println("Failed to read Inventory Index Key. Fix your config! " + config.getCurrentPath() + "." + key);
+				e.printStackTrace();
+			}
 		return res;
 	}
 
-	public static void saveInventory(final ConfigurationSection config, final String path, final HashMap<Integer, ItemStack> items)
+	public static Map<Integer, ItemStack> loadInventory(final ConfigurationSection config)
+	{
+		final Set<String> entries = config.getKeys(false);
+		final Map<Integer, ItemStack> res = new HashMap<Integer, ItemStack>(entries.size());
+		for (final String key : entries)
+			try
+			{
+				res.put(Integer.parseInt(key), loadItemStack(config.getConfigurationSection(key)));
+			}
+			catch (final NumberFormatException e)
+			{
+				System.err.println("Failed to read Inventory Index Key. Fix your config! " + config.getCurrentPath() + "." + key);
+				e.printStackTrace();
+			}
+		return res;
+	}
+
+	public static void saveInventory(final ConfigurationSection config, final String path, final Inventory inventory)
+	{
+		for (int i = 0; i < inventory.getSize(); i++)
+			saveItemStack(config, path + i + ".", inventory.getItem(i));
+	}
+
+	public static void saveInventory(final ConfigurationSection config, final String path, final Map<Integer, ItemStack> items)
 	{
 		for (final Entry<Integer, ItemStack> entry : items.entrySet())
 			saveItemStack(config, path + entry.getKey().toString() + ".", entry.getValue());
@@ -118,6 +147,8 @@ public final class ObjectSaveLoadHelper
 
 	public static ArrayList<ItemStack> loadItemStacks(final ConfigurationSection config)
 	{
+		if (config == null)
+			return new ArrayList<ItemStack>(0);
 		final Set<String> entries = config.getKeys(false);
 		final ArrayList<ItemStack> res = new ArrayList<ItemStack>(entries.size());
 		for (final String key : entries)
@@ -127,66 +158,21 @@ public final class ObjectSaveLoadHelper
 
 	public static void saveItemStacks(final ConfigurationSection config, final String path, final Collection<ItemStack> items)
 	{
-		final int i = 0;
-		final Iterator<ItemStack> it = items.iterator();
-		while (it.hasNext())
-			saveItemStack(config, path + i + ".", it.next());
+		int i = 0;
+		for (final ItemStack item : items)
+			saveItemStack(config, path + i++ + ".", item);
 	}
 
 	public static ItemStack loadItemStack(final ConfigurationSection config)
 	{
-		final ItemStack item = new MaterialData(config.getInt("id"), (byte) config.getInt("data")).toItemStack(config.getInt("amount", 1));
-		if (config.contains("durability"))
-			item.setDurability((short) config.getInt("durability"));
-		if (config.contains("enchantments"))
-			item.addEnchantments(loadEnchantments(config.getConfigurationSection("enchantments")));
-		return item;
+		return ItemStack.deserialize(config.getValues(true));
 	}
 
 	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item)
 	{
-		saveItemStack(config, path, item, true, true);
-	}
-
-	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item, final boolean includeDurability)
-	{
-		saveItemStack(config, path, item, includeDurability, true);
-	}
-
-	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item, final boolean includeDurability, final boolean includeEnchantments)
-	{
 		if (item == null)
 			return;
-		config.set(path + "id", item.getTypeId());
-		config.set(path + "data", item.getData().getData());
-		config.set(path + "amount", item.getAmount());
-		if (includeDurability)
-			config.set(path + "durability", item.getDurability());
-		else
-			config.set(path + "durability", null);
-		config.set(path + "enchantments", null);
-		if (includeEnchantments)
-			saveEnchantments(config, path + "enchantments.", item);
-	}
-
-	// Enchantments
-	public static Map<Enchantment, Integer> loadEnchantments(final ConfigurationSection config)
-	{
-		final Map<Enchantment, Integer> map = new LinkedHashMap<Enchantment, Integer>();
-		for (final String name : config.getKeys(false))
-			map.put(Enchantment.getByName(name), config.getInt(name));
-		return map;
-	}
-
-	public static void saveEnchantments(final ConfigurationSection config, final String path, final ItemStack item)
-	{
-		saveEnchantments(config, path, item.getEnchantments());
-	}
-
-	public static void saveEnchantments(final ConfigurationSection config, final String path, final Map<Enchantment, Integer> enchantments)
-	{
-		for (final Entry<Enchantment, Integer> entry : enchantments.entrySet())
-			config.set(path + entry.getKey().getName(), entry.getValue());
+		config.set(path, item.serialize());
 	}
 
 	/* Load Objects */
