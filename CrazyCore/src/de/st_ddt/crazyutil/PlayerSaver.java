@@ -309,7 +309,7 @@ public class PlayerSaver implements Named
 	{
 		config.set("compass", null);
 		if (compass == null)
-			ObjectSaveLoadHelper.saveLocation(config, "compass.", compass, true, true);
+			ObjectSaveLoadHelper.saveLocation(config, "compass.", compass, true, false);
 		config.set("bed", null);
 		if (bed != null)
 			ObjectSaveLoadHelper.saveLocation(config, "bed.", bed, true, true);
