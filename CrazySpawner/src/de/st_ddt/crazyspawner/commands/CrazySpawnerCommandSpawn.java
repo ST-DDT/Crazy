@@ -38,9 +38,6 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 		final ExtendedCreatureParamitrisable creature = new ExtendedCreatureParamitrisable();
 		params.put("c", creature);
 		params.put("creature", creature);
-		final LocationParamitrisable location = new LocationParamitrisable(sender);
-		location.addFullParams(params, "l", "loc", "location");
-		location.addAdvancedParams(params, "");
 		final IntegerParamitrisable amount = new IntegerParamitrisable(1)
 		{
 
@@ -105,6 +102,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			}
 		};
 		params.put("m", creatureMaxCount);
+		params.put("cm", creatureMaxCount);
 		params.put("max", creatureMaxCount);
 		params.put("cmax", creatureMaxCount);
 		params.put("creaturecount", creatureMaxCount);
@@ -121,6 +119,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			}
 		};
 		params.put("cr", creatureRange);
+		params.put("crange", creatureRange);
 		params.put("creaturerange", creatureRange);
 		final IntegerParamitrisable playerCount = new IntegerParamitrisable(0)
 		{
@@ -133,6 +132,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 					throw new CrazyCommandParameterException(0, "positive Number (Integer)");
 			}
 		};
+		params.put("pm", playerCount);
 		params.put("min", playerCount);
 		params.put("pmin", playerCount);
 		params.put("playercount", playerCount);
@@ -149,7 +149,11 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			}
 		};
 		params.put("pr", playerRange);
+		params.put("prange", playerRange);
 		params.put("playerrange", playerRange);
+		final LocationParamitrisable location = new LocationParamitrisable(sender);
+		location.addFullParams(params, "l", "loc", "location");
+		location.addAdvancedParams(params, "");
 		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval, delay);
 		if (creature.getValue() == null)
 			throw new CrazyCommandUsageException("<creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [location:Location]");
