@@ -106,6 +106,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 		};
 		params.put("m", creatureMaxCount);
 		params.put("max", creatureMaxCount);
+		params.put("cmax", creatureMaxCount);
 		params.put("creaturecount", creatureMaxCount);
 		params.put("creaturemaxcount", creatureMaxCount);
 		final DoubleParamitrisable creatureRange = new DoubleParamitrisable(16D)
@@ -119,6 +120,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 					throw new CrazyCommandParameterException(0, "positive Number (Double)");
 			}
 		};
+		params.put("cr", creatureRange);
 		params.put("creaturerange", creatureRange);
 		final IntegerParamitrisable playerCount = new IntegerParamitrisable(0)
 		{
@@ -132,6 +134,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			}
 		};
 		params.put("min", playerCount);
+		params.put("pmin", playerCount);
 		params.put("playercount", playerCount);
 		params.put("playermincount", playerCount);
 		final DoubleParamitrisable playerRange = new DoubleParamitrisable(16D)
@@ -145,10 +148,11 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 					throw new CrazyCommandParameterException(0, "positive Number (Double)");
 			}
 		};
+		params.put("pr", playerRange);
 		params.put("playerrange", playerRange);
 		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval, delay);
 		if (creature.getValue() == null)
-			throw new CrazyCommandUsageException("<Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [monstermaxcount:Integer [monsterradius:Double]] [playermincount:Integer [playerradius:Double]] [location:Location]");
+			throw new CrazyCommandUsageException("<creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [location:Location]");
 		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue());
 		plugin.addSpawnTask(task);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, task, delay.getValue() / 50);
