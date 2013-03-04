@@ -19,7 +19,10 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -28,16 +31,7 @@ import de.st_ddt.crazyutil.ExtendedCreatureType;
 public class ExtendedCreatureParamitrisable extends TypedParamitrisable<ExtendedCreatureType>
 {
 
-	public final static Map<String, ExtendedCreatureType> CREATURE_TYPES = getDefaultCreatureTypes();
-
-	private static Map<String, ExtendedCreatureType> getDefaultCreatureTypes()
-	{
-		final Map<String, ExtendedCreatureType> res = new TreeMap<String, ExtendedCreatureType>(String.CASE_INSENSITIVE_ORDER);
-		for (final EntityType type : EntityType.values())
-			if (type.isAlive() && type.isSpawnable())
-				res.put(type.toString(), new DefaultExtendedEntityType(type));
-		return res;
-	}
+	public final static Map<String, ExtendedCreatureType> CREATURE_TYPES = new TreeMap<String, ExtendedCreatureType>(String.CASE_INSENSITIVE_ORDER);
 
 	public static void registerExtendedEntityType(final ExtendedCreatureType type, final String... aliases)
 	{
@@ -66,6 +60,51 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 
 	static
 	{
+		for (final EntityType type : EntityType.values())
+			if (type.isAlive() && type.isSpawnable())
+				registerExtendedEntityType(new DefaultExtendedEntityType(type), type.toString());
+		for (final Profession profession : Profession.values())
+			registerExtendedEntityType(new VillagerExtendedEntityType(profession), "VILLAGER_" + profession.toString());
+		registerExtendedEntityType(new ExtendedCreatureType()
+		{
+
+			@Override
+			public String getName()
+			{
+				return "ZOMBIE_VILLAGER";
+			}
+
+			@Override
+			public EntityType getType()
+			{
+				return EntityType.VILLAGER;
+			}
+
+			@Override
+			public Zombie spawn(final Location location)
+			{
+				final Zombie zombie = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
+				zombie.setVillager(true);
+				return zombie;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.ZOMBIE.getEntityClass());
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (!((Zombie) it.next()).isVillager())
+						it.remove();
+				return entities;
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
+		});
 		registerExtendedEntityType(new ExtendedCreatureType()
 		{
 
@@ -82,11 +121,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Creeper spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.CREEPER);
-				((Creeper) entity).setPowered(true);
-				return entity;
+				final Creeper creeper = (Creeper) location.getWorld().spawnEntity(location, EntityType.CREEPER);
+				creeper.setPowered(true);
+				return creeper;
 			}
 
 			@Override
@@ -122,11 +161,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Creeper spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.CREEPER);
-				((Creeper) entity).setPowered(true);
-				return entity;
+				final Creeper creeper = (Creeper) location.getWorld().spawnEntity(location, EntityType.CREEPER);
+				creeper.setPowered(false);
+				return creeper;
 			}
 
 			@Override
@@ -135,7 +174,7 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.CREEPER.getEntityClass());
 				final Iterator<? extends Entity> it = entities.iterator();
 				while (it.hasNext())
-					if (!((Creeper) it.next()).isPowered())
+					if (((Creeper) it.next()).isPowered())
 						it.remove();
 				return entities;
 			}
@@ -162,11 +201,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Wolf spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.WOLF);
-				((Wolf) entity).setAngry(true);
-				return entity;
+				final Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
+				wolf.setAngry(true);
+				return wolf;
 			}
 
 			@Override
@@ -202,11 +241,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.SLIME);
-				((Slime) entity).setSize(1);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
+				slime.setSize(1);
+				return slime;
 			}
 
 			@Override
@@ -242,11 +281,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				((Slime) entity).setSize(1);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
+				slime.setSize(1);
+				return slime;
 			}
 
 			@Override
@@ -282,11 +321,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.SLIME);
-				((Slime) entity).setSize(2);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
+				slime.setSize(2);
+				return slime;
 			}
 
 			@Override
@@ -322,11 +361,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				((Slime) entity).setSize(2);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
+				slime.setSize(2);
+				return slime;
 			}
 
 			@Override
@@ -362,11 +401,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.SLIME);
-				((Slime) entity).setSize(3);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
+				slime.setSize(3);
+				return slime;
 			}
 
 			@Override
@@ -402,11 +441,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				((Slime) entity).setSize(3);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
+				slime.setSize(3);
+				return slime;
 			}
 
 			@Override
@@ -442,11 +481,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.SLIME);
-				((Slime) entity).setSize(4);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
+				slime.setSize(4);
+				return slime;
 			}
 
 			@Override
@@ -482,11 +521,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Slime spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				((Slime) entity).setSize(4);
-				return entity;
+				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
+				slime.setSize(4);
+				return slime;
 			}
 
 			@Override
@@ -522,11 +561,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Ocelot spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.OCELOT);
-				((Ocelot) entity).setTamed(true);
-				return entity;
+				final Ocelot ocelot = (Ocelot) location.getWorld().spawnEntity(location, EntityType.OCELOT);
+				ocelot.setTamed(true);
+				return ocelot;
 			}
 
 			@Override
@@ -562,11 +601,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Skeleton spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.SKELETON);
-				((Skeleton) entity).setSkeletonType(SkeletonType.NORMAL);
-				return entity;
+				final Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
+				skeleton.setSkeletonType(SkeletonType.NORMAL);
+				return skeleton;
 			}
 
 			@Override
@@ -602,11 +641,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public Entity spawn(final Location location)
+			public Skeleton spawn(final Location location)
 			{
-				final Entity entity = location.getWorld().spawnEntity(location, EntityType.SKELETON);
-				((Skeleton) entity).setSkeletonType(SkeletonType.WITHER);
-				return entity;
+				final Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
+				skeleton.setSkeletonType(SkeletonType.WITHER);
+				return skeleton;
 			}
 
 			@Override
@@ -643,11 +682,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 				}
 
 				@Override
-				public Entity spawn(final Location location)
+				public Sheep spawn(final Location location)
 				{
-					final Entity entity = location.getWorld().spawnEntity(location, EntityType.SHEEP);
-					((Sheep) entity).setColor(color);
-					return entity;
+					final Sheep sheep = (Sheep) location.getWorld().spawnEntity(location, EntityType.SHEEP);
+					sheep.setColor(color);
+					return sheep;
 				}
 
 				@Override
@@ -695,6 +734,8 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		try
 		{
 			value = CREATURE_TYPES.get(parameter.toUpperCase());
+			if (value == null)
+				throw new CrazyCommandNoSuchException("CreatureType", parameter, tabHelp(parameter));
 		}
 		catch (final Exception e)
 		{
@@ -703,7 +744,12 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 	}
 
 	@Override
-	public List<String> tab(String parameter)
+	public List<String> tab(final String parameter)
+	{
+		return tabHelp(parameter);
+	}
+
+	public static List<String> tabHelp(String parameter)
 	{
 		parameter = parameter.toUpperCase();
 		final List<String> res = new LinkedList<String>();
@@ -746,6 +792,55 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		public Collection<? extends Entity> getEntities(final World world)
 		{
 			return world.getEntitiesByClass(type.getEntityClass());
+		}
+
+		@Override
+		public String toString()
+		{
+			return getName();
+		}
+	}
+
+	private static class VillagerExtendedEntityType implements ExtendedCreatureType
+	{
+
+		private final Profession profession;
+
+		public VillagerExtendedEntityType(final Profession profession)
+		{
+			super();
+			this.profession = profession;
+		}
+
+		@Override
+		public String getName()
+		{
+			return profession.toString();
+		}
+
+		@Override
+		public EntityType getType()
+		{
+			return EntityType.VILLAGER;
+		}
+
+		@Override
+		public Villager spawn(final Location location)
+		{
+			final Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
+			villager.setProfession(profession);
+			return villager;
+		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.VILLAGER.getEntityClass());
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+				if (((Villager) it.next()).getProfession() != profession)
+					it.remove();
+			return entities;
 		}
 
 		@Override
