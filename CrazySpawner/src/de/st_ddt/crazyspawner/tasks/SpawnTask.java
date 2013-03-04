@@ -32,9 +32,15 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		super();
 		this.plugin = plugin;
 		this.type = type;
+		if (type == null)
+			throw new IllegalArgumentException("Type cannot be null!");
 		this.location = location;
+		if (location == null)
+			throw new IllegalArgumentException("Location cannot be null!");
+		if (location.getWorld() == null)
+			throw new IllegalArgumentException("Location.world cannot be null!");
 		this.amount = creatureMaxCount > 0 ? Math.min(amount, creatureMaxCount) : amount;
-		this.interval = interval;
+		this.interval = Math.max(interval, 1);
 		this.repeat = repeat;
 		this.creatureMaxCount = creatureMaxCount;
 		this.creatureRange = creatureRange;
@@ -47,14 +53,20 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		super();
 		this.plugin = plugin;
 		this.type = ExtendedCreatureParamitrisable.CREATURE_TYPES.get(config.getString("type").toUpperCase());
+		if (type == null)
+			throw new IllegalArgumentException("Type " + config.getString("type") + " wasn't found!");
 		this.location = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("location"), null);
-		this.amount = config.getInt("amount", 1);
-		this.interval = config.getLong("interval", 20);
-		this.repeat = config.getInt("repeat", 0);
-		this.creatureMaxCount = config.getInt("creatureMaxCount", 0);
-		this.creatureRange = config.getDouble("creatureMaxCount", 16);
-		this.playerMinCount = config.getInt("playerMinCount", 0);
-		this.playerRange = config.getDouble("playerRange", 16);
+		if (location == null)
+			throw new IllegalArgumentException("Location cannot be null!");
+		if (location.getWorld() == null)
+			throw new IllegalArgumentException("Location.world cannot be null!");
+		this.amount = Math.max(config.getInt("amount", 1), 1);
+		this.interval = Math.max(config.getLong("interval", 20), 1);
+		this.repeat = Math.max(config.getInt("repeat", 0), -1);
+		this.creatureMaxCount = Math.max(config.getInt("creatureMaxCount", 0), 0);
+		this.creatureRange = Math.max(config.getDouble("creatureRange", 16), 0);
+		this.playerMinCount = Math.max(config.getInt("playerMinCount", 0), 0);
+		this.playerRange = Math.max(config.getDouble("playerRange", 16), 0);
 	}
 
 	@Override

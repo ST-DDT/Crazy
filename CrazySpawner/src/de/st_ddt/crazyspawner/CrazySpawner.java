@@ -65,11 +65,18 @@ public class CrazySpawner extends CrazyPlugin
 	public void loadConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		final ConfigurationSection taskConfig = config.getConfigurationSection("tasks");
 		tasks.clear();
+		final ConfigurationSection taskConfig = config.getConfigurationSection("tasks");
 		if (taskConfig != null)
 			for (final String key : taskConfig.getKeys(false))
-				tasks.add(new SpawnTask(plugin, taskConfig.getConfigurationSection(key)));
+				try
+				{
+					tasks.add(new SpawnTask(plugin, taskConfig.getConfigurationSection(key)));
+				}
+				catch (final IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
 		for (final SpawnTask task : tasks)
 			task.run();
 	}
