@@ -99,7 +99,7 @@ public class ObjectSaveLoadHelper
 	}
 
 	// ItemStack
-	public static Map<Integer, ItemStack> loadInventory(final ConfigurationSection config, Inventory inventory)
+	public static Map<Integer, ItemStack> loadInventory(final ConfigurationSection config, final Inventory inventory)
 	{
 		final Set<String> entries = config.getKeys(false);
 		final Map<Integer, ItemStack> res = new HashMap<Integer, ItemStack>(entries.size());
