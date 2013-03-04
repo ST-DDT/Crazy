@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
@@ -159,7 +158,7 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 			throw new CrazyCommandUsageException("<creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [location:Location]");
 		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue());
 		plugin.addSpawnTask(task);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, task, delay.getValue() / 50);
+		task.start(delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);
 	}
 

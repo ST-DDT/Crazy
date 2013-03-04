@@ -1,7 +1,7 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-version: 3.5
+version: 3.6
 website: http://dev.bukkit.org/server-mods/crazyspawner/
 # requires CrazyCore v10.0.3 or later
 depend: [CrazyCore]
@@ -10,7 +10,7 @@ description: >
 commands:
   crazyspawn:
     description: Spawn living Creatures...
-    usage: /<command> "<creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [location:Location]
+    usage: /<command> <creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [location:Location]
     aliases: [crazymobs, cms]
   crazykill:
     description: Kill living Creatures...

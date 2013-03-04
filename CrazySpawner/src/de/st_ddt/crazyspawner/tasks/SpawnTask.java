@@ -69,6 +69,26 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		this.playerRange = Math.max(config.getDouble("playerRange", 16), 0);
 	}
 
+	public final void start()
+	{
+		start(1);
+	}
+
+	public void start(final long delay)
+	{
+		if (taskID == -1)
+			taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, delay, interval);
+	}
+
+	public void cancel()
+	{
+		if (taskID != -1)
+		{
+			taskID = -1;
+			Bukkit.getScheduler().cancelTask(taskID);
+		}
+	}
+
 	@Override
 	public void run()
 	{
@@ -83,10 +103,9 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 				else if (repeat == 0)
 				{
 					plugin.removeSpawnTask(this);
-					return;
+					cancel();
 				}
 		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, interval);
 	}
 
 	protected boolean checkPlayers()

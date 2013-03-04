@@ -78,7 +78,7 @@ public class CrazySpawner extends CrazyPlugin
 					e.printStackTrace();
 				}
 		for (final SpawnTask task : tasks)
-			task.run();
+			task.start(100);
 	}
 
 	@Override
