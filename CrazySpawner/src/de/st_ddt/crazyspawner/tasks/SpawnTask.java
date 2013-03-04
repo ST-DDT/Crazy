@@ -15,16 +15,17 @@ import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 public class SpawnTask implements Runnable, ConfigurationSaveable
 {
 
-	private final CrazySpawner plugin;
-	private final ExtendedCreatureType type;
-	private final Location location;
-	private final int amount;
-	private final long interval;
-	private int repeat;
-	private final int creatureMaxCount;
-	private final double creatureRange;
-	private final int playerMinCount;
-	private final double playerRange;
+	protected final CrazySpawner plugin;
+	protected final ExtendedCreatureType type;
+	protected final Location location;
+	protected final int amount;
+	protected final long interval;
+	protected int repeat;
+	protected final int creatureMaxCount;
+	protected final double creatureRange;
+	protected final int playerMinCount;
+	protected final double playerRange;
+	protected int taskID = -1;
 
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange)
 	{
@@ -76,7 +77,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, interval);
 	}
 
-	public boolean checkPlayers()
+	protected boolean checkPlayers()
 	{
 		int count = 0;
 		for (final Player player : Bukkit.getOnlinePlayers())
@@ -86,7 +87,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		return count >= playerMinCount;
 	}
 
-	public int checkCreatures()
+	protected int checkCreatures()
 	{
 		if (creatureMaxCount == 0)
 			return amount;
