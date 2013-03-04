@@ -102,8 +102,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 	{
 		if (repeat == 0)
 			return;
-		config.set(path + "type", type.toString());
-		ObjectSaveLoadHelper.saveLocation(config, path + "location.", location);
+		config.set(path + "type", type.getName());
+		ObjectSaveLoadHelper.saveLocation(config, path + "location.", location, true, false);
 		config.set(path + "amount", amount);
 		config.set(path + "interval", interval);
 		config.set(path + "repeat", repeat);
