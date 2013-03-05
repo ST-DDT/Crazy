@@ -12,7 +12,7 @@ import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
-public class SpawnTask implements Runnable, ConfigurationSaveable
+public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>
 {
 
 	protected final CrazySpawner plugin;
@@ -143,5 +143,22 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 		config.set(path + "creatureRange", creatureRange);
 		config.set(path + "playerMinCount", playerMinCount);
 		config.set(path + "playerRange", playerRange);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "SpawnTask {Type=" + type + "; " + location + "}";
+	}
+
+	@Override
+	public int compareTo(final SpawnTask o)
+	{
+		int res = location.getWorld().getName().compareToIgnoreCase(o.location.getWorld().getName());
+		if (res == 0)
+			res = type.getName().compareTo(o.type.getName());
+		if (res == 0)
+			res = Integer.valueOf(super.hashCode()).compareTo(o.hashCode());
+		return res;
 	}
 }

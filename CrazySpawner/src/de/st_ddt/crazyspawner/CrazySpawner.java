@@ -1,12 +1,17 @@
 package de.st_ddt.crazyspawner;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -15,8 +20,10 @@ import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
 import de.st_ddt.crazyspawner.commands.CommandKill;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
+import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.listener.CrazySpawnerPlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
@@ -24,7 +31,7 @@ public class CrazySpawner extends CrazyPlugin
 {
 
 	private static CrazySpawner plugin;
-	private final Set<SpawnTask> tasks = new HashSet<SpawnTask>();
+	private final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	private final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 
 	public static CrazySpawner getPlugin()
