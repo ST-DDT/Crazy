@@ -6,8 +6,8 @@ import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
@@ -155,7 +155,9 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 		location.addAdvancedParams(params, "");
 		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval, delay);
 		if (creature.getValue() == null)
-			throw new CrazyCommandUsageException("<creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [location:Location]");
+			throw new CrazyCommandNoSuchException("Creature", "(none)");
+		if (location.getValue().getWorld() == null)
+			throw new CrazyCommandNoSuchException("World", "(none)");
 		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue());
 		plugin.addSpawnTask(task);
 		task.start(delay.getValue() / 50);
