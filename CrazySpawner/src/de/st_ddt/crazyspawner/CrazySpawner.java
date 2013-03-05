@@ -74,6 +74,8 @@ public class CrazySpawner extends CrazyPlugin
 	public void loadConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
+		for (final SpawnTask task : tasks)
+			task.cancel();
 		tasks.clear();
 		final ConfigurationSection taskConfig = config.getConfigurationSection("tasks");
 		if (taskConfig != null)
@@ -95,9 +97,9 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		final ConfigurationSection config = getConfig();
 		config.set("tasks", null);
-		final int i = 0;
+		int i = 0;
 		for (final SpawnTask task : tasks)
-			task.save(config, "tasks." + i + ".");
+			task.save(config, "tasks.t" + i++ + ".");
 		super.saveConfiguration();
 	}
 
