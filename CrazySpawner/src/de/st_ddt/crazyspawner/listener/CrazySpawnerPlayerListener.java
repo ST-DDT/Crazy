@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.source.Localized;
@@ -18,9 +19,9 @@ public class CrazySpawnerPlayerListener implements Listener
 {
 
 	private final CrazySpawner plugin;
-	private final Map<String, EntityType> creatureSelection;
+	private final Map<Player, EntityType> creatureSelection;
 
-	public CrazySpawnerPlayerListener(final CrazySpawner plugin, final Map<String, EntityType> creatureSelection)
+	public CrazySpawnerPlayerListener(final CrazySpawner plugin, final Map<Player, EntityType> creatureSelection)
 	{
 		super();
 		this.plugin = plugin;
@@ -38,10 +39,16 @@ public class CrazySpawnerPlayerListener implements Listener
 			return;
 		final Player player = event.getPlayer();
 		final CreatureSpawner spawner = (CreatureSpawner) block;
-		final EntityType creature = creatureSelection.remove(player.getName());
+		final EntityType creature = creatureSelection.remove(player);
 		spawner.setSpawnedType(creature);
 		spawner.update();
 		event.setCancelled(true);
 		plugin.sendLocaleMessage("COMMAND.CREATURESPAWNER.APPLIED", player, creature.toString());
+	}
+
+	@EventHandler
+	public void PlayerQuit(final PlayerQuitEvent event)
+	{
+		creatureSelection.remove(event.getPlayer());
 	}
 }
