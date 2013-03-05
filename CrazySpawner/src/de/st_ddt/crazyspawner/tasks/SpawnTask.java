@@ -84,8 +84,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable
 	{
 		if (taskID != -1)
 		{
-			taskID = -1;
 			Bukkit.getScheduler().cancelTask(taskID);
+			taskID = -1;
 		}
 	}
 
