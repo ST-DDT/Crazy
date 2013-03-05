@@ -21,10 +21,10 @@ import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
+public class CommandSpawn extends CommandExecutor
 {
 
-	public CrazySpawnerCommandSpawn(final CrazySpawner plugin)
+	public CommandSpawn(final CrazySpawner plugin)
 	{
 		super(plugin);
 	}

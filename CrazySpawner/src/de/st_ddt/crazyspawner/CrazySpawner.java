@@ -8,12 +8,13 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
-import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandCreatureSpawner;
-import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandKill;
-import de.st_ddt.crazyspawner.commands.CrazySpawnerCommandSpawn;
+import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
+import de.st_ddt.crazyspawner.commands.CommandKill;
+import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.listener.CrazySpawnerPlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
@@ -24,7 +25,7 @@ public class CrazySpawner extends CrazyPlugin
 
 	private static CrazySpawner plugin;
 	private final Set<SpawnTask> tasks = new HashSet<SpawnTask>();
-	private final Map<String, EntityType> creatureSelection = new HashMap<String, EntityType>();
+	private final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 
 	public static CrazySpawner getPlugin()
 	{
@@ -39,9 +40,10 @@ public class CrazySpawner extends CrazyPlugin
 
 	private void registerCommands()
 	{
-		getCommand("crazyspawn").setExecutor(new CrazySpawnerCommandSpawn(this));
-		getCommand("crazykill").setExecutor(new CrazySpawnerCommandKill(this));
-		getCommand("crazycreaturespawner").setExecutor(new CrazySpawnerCommandCreatureSpawner(this, creatureSelection));
+		getCommand("crazyspawn").setExecutor(new CommandSpawn(this));
+		getCommand("crazykill").setExecutor(new CommandKill(this));
+		getCommand("crazycreaturespawner").setExecutor(new CommandCreatureSpawner(this, creatureSelection));
+		getCommand("crazytheendautorespawn").setExecutor(new CommandTheEndAutoRespawn(this));
 	}
 
 	@Override

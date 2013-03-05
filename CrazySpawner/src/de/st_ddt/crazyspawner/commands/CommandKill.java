@@ -32,12 +32,12 @@ import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
+public class CommandKill extends CommandExecutor
 {
 
 	private final boolean v142OrLater;
 
-	public CrazySpawnerCommandKill(final CrazySpawner plugin)
+	public CommandKill(final CrazySpawner plugin)
 	{
 		super(plugin);
 		final String mcVersion = ChatHelper.getMinecraftVersion();

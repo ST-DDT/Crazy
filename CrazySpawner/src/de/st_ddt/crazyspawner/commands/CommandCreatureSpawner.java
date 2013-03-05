@@ -19,12 +19,12 @@ import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazySpawnerCommandCreatureSpawner extends CrazySpawnerCommandExecutor
+public class CommandCreatureSpawner extends CommandExecutor
 {
 
-	private final Map<String, EntityType> creatureSelection;
+	private final Map<Player, EntityType> creatureSelection;
 
-	public CrazySpawnerCommandCreatureSpawner(final CrazySpawner plugin, final Map<String, EntityType> creatureSelection)
+	public CommandCreatureSpawner(final CrazySpawner plugin, final Map<Player, EntityType> creatureSelection)
 	{
 		super(plugin);
 		this.creatureSelection = creatureSelection;
@@ -36,6 +36,7 @@ public class CrazySpawnerCommandCreatureSpawner extends CrazySpawnerCommandExecu
 	{
 		if (!(sender instanceof Player))
 			throw new CrazyCommandExecutorException(false);
+		final Player player = (Player) sender;
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
 		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
 		params.put("c", creature);
@@ -43,8 +44,8 @@ public class CrazySpawnerCommandCreatureSpawner extends CrazySpawnerCommandExecu
 		ChatHelperExtended.readParameters(args, params, creature);
 		if (creature.getValue() == null)
 			throw new CrazyCommandUsageException("<Creature>");
-		creatureSelection.put(sender.getName(), creature.getValue());
-		plugin.sendLocaleMessage("COMMAND.CREATURESPAWNER.SELECTED", sender, creature.getValue());
+		creatureSelection.put(player, creature.getValue());
+		plugin.sendLocaleMessage("COMMAND.CREATURESPAWNER.SELECTED", player, creature.getValue());
 	}
 
 	@Override
