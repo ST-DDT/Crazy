@@ -64,10 +64,60 @@ public class CrazySpawner extends CrazyPlugin
 	@Localized("CRAZYSPAWNER.CREATURES.AVAILABLE $Count$")
 	public void onEnable()
 	{
-		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
+		registerEnderCrystalType();
 		super.onEnable();
 		registerHooks();
 		registerCommands();
+		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
+	}
+
+	private void registerEnderCrystalType()
+	{
+		ExtendedCreatureParamitrisable.registerExtendedEntityType(new ExtendedCreatureType()
+		{
+
+			@Override
+			public String getName()
+			{
+				return "ENDER_CRYSTAL";
+			}
+
+			@Override
+			public EntityType getType()
+			{
+				return EntityType.ENDER_CRYSTAL;
+			}
+
+			@Override
+			public Entity spawn(final Location location)
+			{
+				if (location.getChunk().isLoaded())
+				{
+					location.setX(Math.floor(location.getX()) + 0.5);
+					location.setY(Math.floor(location.getY()));
+					location.setZ(Math.floor(location.getZ()) + 0.5);
+					location.setYaw(0);
+					location.setPitch(0);
+					location.clone().add(0, 1, 0).getBlock().setType(Material.FIRE);
+					location.getBlock().setType(Material.BEDROCK);
+					return location.getWorld().spawnEntity(location, EntityType.ENDER_CRYSTAL);
+				}
+				else
+					return null;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				return world.getEntitiesByClass(EntityType.ENDER_CRYSTAL.getEntityClass());
+			}
+
+			@Override
+			public String toString()
+			{
+				return getName();
+			}
+		}, "DRAGON_CRYSTAL", "HEAL_CRYSTAL", "ENDERCRYSTAL");
 	}
 
 	@Override
