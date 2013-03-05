@@ -18,6 +18,7 @@ import org.bukkit.entity.Squid;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wither;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -78,6 +79,8 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 		}
 		ChatHelperExtended.readParameters(args, params, range, monster, animals, golems, villager, bosses);
 		final World world = location.getValue().getWorld();
+		if (world == null)
+			throw new CrazyCommandNoSuchException("World", "(none)");
 		if (monster.getValue())
 			plugin.sendLocaleMessage("COMMAND.KILLED.MONSTERS", sender, killEntities(world.getEntitiesByClasses(Monster.class, Slime.class), location.getValue(), range.getValue()));
 		if (animals.getValue())
@@ -162,6 +165,14 @@ public class CrazySpawnerCommandKill extends CrazySpawnerCommandExecutor
 				if (arg.startsWith("r:"))
 					continue;
 				else if (arg.startsWith("range:"))
+					continue;
+				else if (arg.startsWith("world:"))
+					continue;
+				else if (arg.startsWith("lworld:"))
+					continue;
+				else if (arg.startsWith("locworld:"))
+					continue;
+				else if (arg.startsWith("locationworld:"))
 					continue;
 				return false;
 			}
