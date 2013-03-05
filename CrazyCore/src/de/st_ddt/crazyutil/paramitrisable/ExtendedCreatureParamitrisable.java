@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -62,10 +64,42 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 	{
 		for (final EntityType type : EntityType.values())
 			if (type.isAlive() && type.isSpawnable())
+			{
 				registerExtendedEntityType(new DefaultExtendedEntityType(type), type.toString());
+				if (Ageable.class.isAssignableFrom(type.getEntityClass()))
+					registerExtendedEntityType(new BabyExtendedEntityType(type));
+			}
 		for (final Profession profession : Profession.values())
-			registerExtendedEntityType(new VillagerExtendedEntityType(profession), "VILLAGER_" + profession.toString());
-		registerExtendedEntityType(new ExtendedCreatureType()
+			registerExtendedEntityType(new VillagerExtendedEntityType(profession));
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.ZOMBIE)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "BABY_ZOMBIE";
+			}
+
+			@Override
+			public Zombie spawn(final Location location)
+			{
+				final Zombie zombie = (Zombie) super.spawn(location);
+				zombie.setBaby(true);
+				return zombie;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (!((Zombie) it.next()).isBaby())
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.ZOMBIE)
 		{
 
 			@Override
@@ -75,15 +109,9 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public EntityType getType()
-			{
-				return EntityType.VILLAGER;
-			}
-
-			@Override
 			public Zombie spawn(final Location location)
 			{
-				final Zombie zombie = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
+				final Zombie zombie = (Zombie) super.spawn(location);
 				zombie.setVillager(true);
 				return zombie;
 			}
@@ -91,501 +119,47 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			@Override
 			public Collection<? extends Entity> getEntities(final World world)
 			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.ZOMBIE.getEntityClass());
+				final Collection<? extends Entity> entities = super.getEntities(world);
 				final Iterator<? extends Entity> it = entities.iterator();
 				while (it.hasNext())
 					if (!((Zombie) it.next()).isVillager())
 						it.remove();
 				return entities;
 			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.ZOMBIE)
+		{
 
 			@Override
-			public String toString()
+			public String getName()
 			{
-				return getName();
+				return "BABY_ZOMBIE_VILLAGER";
+			}
+
+			@Override
+			public Zombie spawn(final Location location)
+			{
+				final Zombie zombie = (Zombie) super.spawn(location);
+				zombie.setVillager(true);
+				zombie.setBaby(true);
+				return zombie;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+				{
+					final Zombie zombie = (Zombie) it.next();
+					if (!zombie.isVillager() || !zombie.isBaby())
+						it.remove();
+				}
+				return entities;
 			}
 		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "POWEREDCREEPER";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.CREEPER;
-			}
-
-			@Override
-			public Creeper spawn(final Location location)
-			{
-				final Creeper creeper = (Creeper) location.getWorld().spawnEntity(location, EntityType.CREEPER);
-				creeper.setPowered(true);
-				return creeper;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.CREEPER.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (!((Creeper) it.next()).isPowered())
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		}, "POWEREDCREEPER", "CHARGEDCREEPER");
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "UNPOWEREDCREEPER";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.CREEPER;
-			}
-
-			@Override
-			public Creeper spawn(final Location location)
-			{
-				final Creeper creeper = (Creeper) location.getWorld().spawnEntity(location, EntityType.CREEPER);
-				creeper.setPowered(false);
-				return creeper;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.CREEPER.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Creeper) it.next()).isPowered())
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		}, "UNCHARGEDCREEPER");
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "ANGRYWOLF";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.WOLF;
-			}
-
-			@Override
-			public Wolf spawn(final Location location)
-			{
-				final Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
-				wolf.setAngry(true);
-				return wolf;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.WOLF.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (!((Wolf) it.next()).isAngry())
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "TINYSLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.SLIME;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
-				slime.setSize(1);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.SLIME.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 1)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "TINYMAGMASLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.MAGMA_CUBE;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				slime.setSize(1);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.MAGMA_CUBE.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 1)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "SMALLSLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.SLIME;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
-				slime.setSize(2);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.SLIME.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 2)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "SMALLMAGMASLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.MAGMA_CUBE;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				slime.setSize(2);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.MAGMA_CUBE.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 2)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "BIGSLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.SLIME;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
-				slime.setSize(3);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.SLIME.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 3)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "BIGMAGMASLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.MAGMA_CUBE;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				slime.setSize(3);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.MAGMA_CUBE.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 3)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "HUGESLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.SLIME;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.SLIME);
-				slime.setSize(4);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.SLIME.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 4)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "HUGEMAGMASLIME";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.MAGMA_CUBE;
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
-				slime.setSize(4);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.MAGMA_CUBE.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 4)
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "CAT";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.OCELOT;
-			}
-
-			@Override
-			public Ocelot spawn(final Location location)
-			{
-				final Ocelot ocelot = (Ocelot) location.getWorld().spawnEntity(location, EntityType.OCELOT);
-				ocelot.setTamed(true);
-				return ocelot;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.OCELOT.getEntityClass());
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Ocelot) it.next()).isTamed())
-						it.remove();
-				return entities;
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		});
-		registerExtendedEntityType(new ExtendedCreatureType()
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SKELETON)
 		{
 
 			@Override
@@ -595,15 +169,9 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public EntityType getType()
-			{
-				return EntityType.SKELETON;
-			}
-
-			@Override
 			public Skeleton spawn(final Location location)
 			{
-				final Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
+				final Skeleton skeleton = (Skeleton) super.spawn(location);
 				skeleton.setSkeletonType(SkeletonType.NORMAL);
 				return skeleton;
 			}
@@ -611,21 +179,15 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			@Override
 			public Collection<? extends Entity> getEntities(final World world)
 			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.SKELETON.getEntityClass());
+				final Collection<? extends Entity> entities = super.getEntities(world);
 				final Iterator<? extends Entity> it = entities.iterator();
 				while (it.hasNext())
 					if (((Skeleton) it.next()).getSkeletonType() != SkeletonType.NORMAL)
 						it.remove();
 				return entities;
 			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
 		});
-		registerExtendedEntityType(new ExtendedCreatureType()
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SKELETON)
 		{
 
 			@Override
@@ -635,15 +197,9 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			}
 
 			@Override
-			public EntityType getType()
-			{
-				return EntityType.SKELETON;
-			}
-
-			@Override
 			public Skeleton spawn(final Location location)
 			{
-				final Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
+				final Skeleton skeleton = (Skeleton) super.spawn(location);
 				skeleton.setSkeletonType(SkeletonType.WITHER);
 				return skeleton;
 			}
@@ -651,61 +207,352 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			@Override
 			public Collection<? extends Entity> getEntities(final World world)
 			{
-				final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.SKELETON.getEntityClass());
+				final Collection<? extends Entity> entities = super.getEntities(world);
 				final Iterator<? extends Entity> it = entities.iterator();
 				while (it.hasNext())
 					if (((Skeleton) it.next()).getSkeletonType() != SkeletonType.WITHER)
 						it.remove();
 				return entities;
 			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.CREEPER)
+		{
 
 			@Override
-			public String toString()
+			public String getName()
 			{
-				return getName();
+				return "UNPOWEREDCREEPER";
+			}
+
+			@Override
+			public Creeper spawn(final Location location)
+			{
+				final Creeper creeper = (Creeper) super.spawn(location);
+				creeper.setPowered(false);
+				return creeper;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Creeper) it.next()).isPowered())
+						it.remove();
+				return entities;
+			}
+		}, "UNCHARGEDCREEPER");
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.CREEPER)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "POWEREDCREEPER";
+			}
+
+			@Override
+			public Creeper spawn(final Location location)
+			{
+				final Creeper creeper = (Creeper) super.spawn(location);
+				creeper.setPowered(true);
+				return creeper;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (!((Creeper) it.next()).isPowered())
+						it.remove();
+				return entities;
+			}
+		}, "POWEREDCREEPER", "CHARGEDCREEPER");
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.WOLF)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "ANGRYWOLF";
+			}
+
+			@Override
+			public Wolf spawn(final Location location)
+			{
+				final Wolf wolf = (Wolf) super.spawn(location);
+				wolf.setAngry(true);
+				return wolf;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (!((Wolf) it.next()).isAngry())
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "TINYSLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(1);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 1)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "TINYMAGMASLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(1);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 1)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "SMALLSLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(2);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 2)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "SMALLMAGMASLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(2);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 2)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "BIGSLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(3);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 3)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "BIGMAGMASLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(3);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 3)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "HUGESLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(4);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 4)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "HUGEMAGMASLIME";
+			}
+
+			@Override
+			public Slime spawn(final Location location)
+			{
+				final Slime slime = (Slime) super.spawn(location);
+				slime.setSize(4);
+				return slime;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Slime) it.next()).getSize() != 4)
+						it.remove();
+				return entities;
+			}
+		});
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.OCELOT)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "CAT";
+			}
+
+			@Override
+			public Ocelot spawn(final Location location)
+			{
+				final Ocelot ocelot = (Ocelot) super.spawn(location);
+				ocelot.setTamed(true);
+				return ocelot;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (((Ocelot) it.next()).isTamed())
+						it.remove();
+				return entities;
 			}
 		});
 		for (final DyeColor color : DyeColor.values())
-			registerExtendedEntityType(new ExtendedCreatureType()
-			{
-
-				@Override
-				public String getName()
-				{
-					return color.name() + "SHEEP";
-				}
-
-				@Override
-				public EntityType getType()
-				{
-					return EntityType.SHEEP;
-				}
-
-				@Override
-				public Sheep spawn(final Location location)
-				{
-					final Sheep sheep = (Sheep) location.getWorld().spawnEntity(location, EntityType.SHEEP);
-					sheep.setColor(color);
-					return sheep;
-				}
-
-				@Override
-				public Collection<? extends Entity> getEntities(final World world)
-				{
-					final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.SKELETON.getEntityClass());
-					final Iterator<? extends Entity> it = entities.iterator();
-					while (it.hasNext())
-						if (((Sheep) it.next()).getColor() != color)
-							it.remove();
-					return entities;
-				}
-
-				@Override
-				public String toString()
-				{
-					return getName();
-				}
-			});
+			registerExtendedEntityType(new SheepExtendedEntityType(color));
 	}
 
 	public ExtendedCreatureParamitrisable()
@@ -731,16 +578,9 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 	@Override
 	public void setParameter(final String parameter) throws CrazyException
 	{
-		try
-		{
-			value = CREATURE_TYPES.get(parameter.toUpperCase());
-			if (value == null)
-				throw new CrazyCommandNoSuchException("CreatureType", parameter, tabHelp(parameter));
-		}
-		catch (final Exception e)
-		{
-			throw new CrazyCommandNoSuchException("CreatureType", parameter, CREATURE_TYPES.keySet());
-		}
+		value = CREATURE_TYPES.get(parameter.toUpperCase());
+		if (value == null)
+			throw new CrazyCommandNoSuchException("CreatureType", parameter, tabHelp(parameter));
 	}
 
 	@Override
@@ -753,16 +593,19 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 	{
 		parameter = parameter.toUpperCase();
 		final List<String> res = new LinkedList<String>();
-		for (final String name : CREATURE_TYPES.keySet())
-			if (name.startsWith(parameter))
-				res.add(name);
+		if (parameter.length() == 0)
+			res.addAll(CREATURE_TYPES.keySet());
+		else
+			for (final Entry<String, ExtendedCreatureType> entry : CREATURE_TYPES.entrySet())
+				if (entry.getKey().contains(parameter) || entry.getValue().getType().name().startsWith(parameter) || entry.getValue().getType().getName().toUpperCase().startsWith(parameter))
+					res.add(entry.getKey());
 		return res;
 	}
 
 	private static class DefaultExtendedEntityType implements ExtendedCreatureType
 	{
 
-		private final EntityType type;
+		protected final EntityType type;
 
 		public DefaultExtendedEntityType(final EntityType type)
 		{
@@ -773,11 +616,11 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		@Override
 		public String getName()
 		{
-			return type.getName();
+			return type.getName().toUpperCase();
 		}
 
 		@Override
-		public EntityType getType()
+		public final EntityType getType()
 		{
 			return type;
 		}
@@ -795,20 +638,54 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		}
 
 		@Override
-		public String toString()
+		public final String toString()
 		{
 			return getName();
 		}
 	}
 
-	private static class VillagerExtendedEntityType implements ExtendedCreatureType
+	private static class BabyExtendedEntityType extends DefaultExtendedEntityType
+	{
+
+		public BabyExtendedEntityType(final EntityType type)
+		{
+			super(type);
+		}
+
+		@Override
+		public String getName()
+		{
+			return "BABY_" + super.getName();
+		}
+
+		@Override
+		public Ageable spawn(final Location location)
+		{
+			final Ageable ageable = (Ageable) super.spawn(location);
+			ageable.setBaby();
+			return ageable;
+		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = super.getEntities(world);
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+				if (((Ageable) it.next()).isAdult())
+					it.remove();
+			return entities;
+		}
+	}
+
+	private static class VillagerExtendedEntityType extends DefaultExtendedEntityType
 	{
 
 		private final Profession profession;
 
 		public VillagerExtendedEntityType(final Profession profession)
 		{
-			super();
+			super(EntityType.VILLAGER);
 			this.profession = profession;
 		}
 
@@ -819,15 +696,9 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		}
 
 		@Override
-		public EntityType getType()
-		{
-			return EntityType.VILLAGER;
-		}
-
-		@Override
 		public Villager spawn(final Location location)
 		{
-			final Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
+			final Villager villager = (Villager) super.spawn(location);
 			villager.setProfession(profession);
 			return villager;
 		}
@@ -835,18 +706,49 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		@Override
 		public Collection<? extends Entity> getEntities(final World world)
 		{
-			final Collection<? extends Entity> entities = world.getEntitiesByClass(EntityType.VILLAGER.getEntityClass());
+			final Collection<? extends Entity> entities = super.getEntities(world);
 			final Iterator<? extends Entity> it = entities.iterator();
 			while (it.hasNext())
 				if (((Villager) it.next()).getProfession() != profession)
 					it.remove();
 			return entities;
 		}
+	}
+
+	private static class SheepExtendedEntityType extends DefaultExtendedEntityType
+	{
+
+		private final DyeColor color;
+
+		public SheepExtendedEntityType(final DyeColor color)
+		{
+			super(EntityType.SHEEP);
+			this.color = color;
+		}
 
 		@Override
-		public String toString()
+		public String getName()
 		{
-			return getName();
+			return color.name() + "_SHEEP";
+		}
+
+		@Override
+		public Sheep spawn(final Location location)
+		{
+			final Sheep sheep = (Sheep) super.spawn(location);
+			sheep.setColor(color);
+			return sheep;
+		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = super.getEntities(world);
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+				if (((Sheep) it.next()).getColor() != color)
+					it.remove();
+			return entities;
 		}
 	}
 }

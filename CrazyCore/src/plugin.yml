@@ -1,7 +1,7 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 10.1
+version: 10.2
 website: http://dev.bukkit.org/server-mods/crazycore/
 softdepend: [PermissionsEx,GroupManager,PermissionsBukkit]
 description: >
