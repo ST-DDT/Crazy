@@ -171,9 +171,6 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 		final ExtendedCreatureParamitrisable creature = new ExtendedCreatureParamitrisable();
 		params.put("c", creature);
 		params.put("creature", creature);
-		final LocationParamitrisable location = new LocationParamitrisable(sender);
-		location.addFullParams(params, "l", "loc", "location");
-		location.addAdvancedParams(params, "");
 		final IntegerParamitrisable amount = new IntegerParamitrisable(1);
 		params.put("a", amount);
 		params.put("amount", amount);
@@ -188,17 +185,28 @@ public class CrazySpawnerCommandSpawn extends CrazySpawnerCommandExecutor
 		params.put("repeat", repeat);
 		final IntegerParamitrisable creatureMaxCount = new IntegerParamitrisable(0);
 		params.put("m", creatureMaxCount);
+		params.put("cm", creatureMaxCount);
 		params.put("max", creatureMaxCount);
+		params.put("cmax", creatureMaxCount);
 		params.put("creaturecount", creatureMaxCount);
 		params.put("creaturemaxcount", creatureMaxCount);
 		final DoubleParamitrisable creatureRange = new DoubleParamitrisable(16D);
+		params.put("cr", creatureRange);
+		params.put("crange", creatureRange);
 		params.put("creaturerange", creatureRange);
 		final IntegerParamitrisable playerCount = new IntegerParamitrisable(0);
+		params.put("pm", playerCount);
 		params.put("min", playerCount);
+		params.put("pmin", playerCount);
 		params.put("playercount", playerCount);
 		params.put("playermincount", playerCount);
 		final DoubleParamitrisable playerRange = new DoubleParamitrisable(16D);
+		params.put("pr", playerRange);
+		params.put("prange", playerRange);
 		params.put("playerrange", playerRange);
+		final LocationParamitrisable location = new LocationParamitrisable(sender);
+		location.addFullParams(params, "l", "loc", "location");
+		location.addAdvancedParams(params, "");
 		return ChatHelperExtended.tabHelp(args, params, creature, amount, repeat, interval);
 	}
 
