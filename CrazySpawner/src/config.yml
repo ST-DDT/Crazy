@@ -25,13 +25,19 @@ example:
 # Spawn as ChargedCreeper (Creeper)
     charged: boolean
 # Spawn as colored sheep (Colorable (Sheep))
+# For a full list visit the javadocs page
+# http://jd.bukkit.org/rb/apidocs/org/bukkit/DyeColor.html
     color: DyeColor
+# Spawn sized slime (Clime + Magma_Cube)
+    size: int (1-4)
 # Spawn as angry wolf (Wolf)
     angry: boolean
 # Spawn as tamed pet (Tameable (Wolf + Ocelot/Cat))
     tamed: boolean
 # Spawn as tamed pet owned by player (Tameable (Wolf + Ocelot/Cat))
     tamer: Player
+# Spawn with additional health
+    maxHealth: int
 # Spawn with boots
     boots: Item
     bootsDropChance: float (0-1)
