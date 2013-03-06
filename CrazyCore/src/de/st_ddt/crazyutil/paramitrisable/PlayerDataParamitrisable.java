@@ -58,8 +58,8 @@ public class PlayerDataParamitrisable<S extends PlayerDataInterface> extends Typ
 				if (entry.getName().toLowerCase().startsWith(parameter))
 				{
 					res.add(entry.getName());
-					if (max-- < 1)
-						continue;
+					if (--max < 1)
+						break;
 				}
 		}
 		return res;

@@ -42,7 +42,7 @@ public class OfflinePlayerParamitrisable extends TypedParamitrisable<OfflinePlay
 			if (player.getName().toLowerCase().startsWith(parameter))
 			{
 				res.add(player.getName());
-				if (max-- < 1)
+				if (--max < 1)
 					break;
 			}
 		return res;

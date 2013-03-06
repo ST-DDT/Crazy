@@ -118,8 +118,11 @@ public class PlayerParamitrisable extends TypedParamitrisable<Player>
 		final List<Player> res = new ArrayList<Player>();
 		for (final Player player : players)
 			if (player.getName().toLowerCase().startsWith(parameter))
-				if (max-- != 0)
-					res.add(player);
+			{
+				res.add(player);
+				if (max-- < 1)
+					break;
+			}
 		return res;
 	}
 
@@ -139,8 +142,11 @@ public class PlayerParamitrisable extends TypedParamitrisable<Player>
 		final List<Player> res = new ArrayList<Player>();
 		for (final Player player : players)
 			if (player.getName().toLowerCase().startsWith(parameter))
-				if (max-- != 0)
-					res.add(player);
+			{
+				res.add(player);
+				if (--max < 1)
+					break;
+			}
 		return res;
 	}
 }
