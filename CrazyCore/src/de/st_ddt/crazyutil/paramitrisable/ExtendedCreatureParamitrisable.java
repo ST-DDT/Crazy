@@ -599,7 +599,7 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			for (final Entry<String, ExtendedCreatureType> entry : CREATURE_TYPES.entrySet())
 				if (entry.getKey().contains(parameter) || entry.getValue().getType().name().startsWith(parameter) || entry.getValue().getType().getName().toUpperCase().startsWith(parameter))
 					res.add(entry.getKey());
-		return res;
+		return res.subList(0, Math.min(res.size(), 20));
 	}
 
 	private static class DefaultExtendedEntityType implements ExtendedCreatureType
