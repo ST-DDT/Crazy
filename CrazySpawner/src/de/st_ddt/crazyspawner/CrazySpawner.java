@@ -2,6 +2,7 @@ package de.st_ddt.crazyspawner;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,6 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
@@ -21,16 +23,21 @@ import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
 import de.st_ddt.crazyspawner.commands.CommandKill;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
+import de.st_ddt.crazyspawner.data.CustomCreature;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
+import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables = { "CRAZYPLUGIN" }, values = { "CRAZYSPAWNER" })
 public class CrazySpawner extends CrazyPlugin
 {
 
 	private static CrazySpawner plugin;
+	private final Set<CustomCreature> creatures = new LinkedHashSet<CustomCreature>();
 	private final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	private final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 
@@ -66,6 +73,20 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		registerEnderCrystalType();
 		super.onEnable();
+		if (isUpdated)
+			if (VersionComparator.compareVersions(previousVersion, "3.7") == -1)
+			{
+				CustomCreature.dummySave(getConfig(), "example.creature.");
+				final CustomCreature spiderSkeleton = new CustomCreature("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
+				creatures.add(spiderSkeleton);
+				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderSkeleton);
+				final CustomCreature diamondZombie = new CustomCreature("Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
+				creatures.add(diamondZombie);
+				ExtendedCreatureParamitrisable.registerExtendedEntityType(diamondZombie);
+				final CustomCreature spiderDiamondZombie = new CustomCreature("Spider_Diamont_Zombie", EntityType.SPIDER, diamondZombie);
+				creatures.add(spiderDiamondZombie);
+				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderDiamondZombie);
+			}
 		registerHooks();
 		registerCommands();
 		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
@@ -121,9 +142,26 @@ public class CrazySpawner extends CrazyPlugin
 	}
 
 	@Override
+	@Localized("CRAZYSPAWNER.CREATURES.LOADED $Count$")
 	public void loadConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
+		creatures.clear();
+		final ConfigurationSection creatureConfig = config.getConfigurationSection("creatures");
+		if (creatureConfig != null)
+			for (final String key : creatureConfig.getKeys(false))
+				try
+				{
+					final CustomCreature creature = new CustomCreature(creatureConfig.getConfigurationSection(key));
+					creatures.add(creature);
+					ExtendedCreatureParamitrisable.registerExtendedEntityType(creature);
+				}
+				catch (final IllegalArgumentException e)
+				{
+					System.err.println("Could not load creature " + key);
+					System.err.println(e.getMessage());
+				}
+		sendLocaleMessage("CREATURES.LOADED", Bukkit.getConsoleSender(), creatures.size());
 		for (final SpawnTask task : tasks)
 			task.cancel();
 		tasks.clear();
@@ -146,6 +184,9 @@ public class CrazySpawner extends CrazyPlugin
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
+		config.set("creatures", null);
+		for (final CustomCreature creature : creatures)
+			creature.save(config, "creatures." + creature.getName() + ".");
 		config.set("tasks", null);
 		int i = 0;
 		for (final SpawnTask task : tasks)
