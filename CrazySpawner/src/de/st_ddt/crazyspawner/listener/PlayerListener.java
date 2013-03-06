@@ -15,13 +15,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazySpawnerPlayerListener implements Listener
+public class PlayerListener implements Listener
 {
 
 	private final CrazySpawner plugin;
 	private final Map<Player, EntityType> creatureSelection;
 
-	public CrazySpawnerPlayerListener(final CrazySpawner plugin, final Map<Player, EntityType> creatureSelection)
+	public PlayerListener(final CrazySpawner plugin, final Map<Player, EntityType> creatureSelection)
 	{
 		super();
 		this.plugin = plugin;
@@ -38,8 +38,10 @@ public class CrazySpawnerPlayerListener implements Listener
 		if (!(block instanceof CreatureSpawner))
 			return;
 		final Player player = event.getPlayer();
-		final CreatureSpawner spawner = (CreatureSpawner) block;
 		final EntityType creature = creatureSelection.remove(player);
+		if (creature == null)
+			return;
+		final CreatureSpawner spawner = (CreatureSpawner) block;
 		spawner.setSpawnedType(creature);
 		spawner.update();
 		event.setCancelled(true);

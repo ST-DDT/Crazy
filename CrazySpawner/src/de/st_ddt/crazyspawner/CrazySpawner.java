@@ -21,7 +21,7 @@ import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
 import de.st_ddt.crazyspawner.commands.CommandKill;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
-import de.st_ddt.crazyspawner.listener.CrazySpawnerPlayerListener;
+import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
@@ -42,7 +42,7 @@ public class CrazySpawner extends CrazyPlugin
 	public void registerHooks()
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new CrazySpawnerPlayerListener(this, creatureSelection), this);
+		pm.registerEvents(new PlayerListener(this, creatureSelection), this);
 	}
 
 	private void registerCommands()
