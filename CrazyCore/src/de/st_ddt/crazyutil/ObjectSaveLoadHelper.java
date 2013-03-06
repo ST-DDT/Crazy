@@ -165,7 +165,10 @@ public class ObjectSaveLoadHelper
 
 	public static ItemStack loadItemStack(final ConfigurationSection config)
 	{
-		return ItemStack.deserialize(config.getValues(true));
+		if (config == null)
+			return null;
+		else
+			return ItemStack.deserialize(config.getValues(true));
 	}
 
 	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item)
