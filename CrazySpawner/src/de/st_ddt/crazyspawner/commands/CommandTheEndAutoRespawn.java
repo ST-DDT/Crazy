@@ -69,12 +69,12 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 		if (world.getEnvironment() != Environment.THE_END)
 			throw new CrazyCommandCircumstanceException("the world must be a The_End world!");
 		final Location location = new Location(world, 0, 0, 0);
-		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, location, 1, interval.getValue(), -1, 1, DRAGONRANGE, 0, PLAYERRANGE);
+		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, location, 1, interval.getValue(), -1, 1, DRAGONRANGE, 0, PLAYERRANGE, 0);
 		plugin.addSpawnTask(dragon);
 		dragon.start(20);
 		for (final Entity entity : CRYSTALTYPE.getEntities(world))
 		{
-			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), 1, interval.getValue(), -1, 1, CRYSTALERANGE, 0, PLAYERRANGE);
+			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), 1, interval.getValue(), -1, 1, CRYSTALERANGE, 0, PLAYERRANGE, 0);
 			plugin.addSpawnTask(crystal);
 			crystal.start(20);
 		}

@@ -25,9 +25,10 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final double creatureRange;
 	protected final int playerMinCount;
 	protected final double playerRange;
+	protected final double blockingRange;
 	protected int taskID = -1;
 
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange)
 	{
 		super();
 		this.plugin = plugin;
@@ -46,6 +47,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.creatureRange = creatureRange;
 		this.playerMinCount = playerMinCount;
 		this.playerRange = playerRange;
+		this.blockingRange = blockingRange;
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -67,6 +69,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.creatureRange = Math.max(config.getDouble("creatureRange", 16), 0);
 		this.playerMinCount = Math.max(config.getInt("playerMinCount", 0), 0);
 		this.playerRange = Math.max(config.getDouble("playerRange", 16), 0);
+		this.blockingRange = Math.max(config.getDouble("blockingRange", 0), 0);
 	}
 
 	public final void start()
@@ -113,8 +116,13 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		int count = 0;
 		for (final Player player : Bukkit.getOnlinePlayers())
 			if (player.getWorld().equals(location.getWorld()))
-				if (location.distance(player.getLocation()) < playerRange)
+			{
+				final double distance = location.distance(player.getLocation());
+				if (distance < blockingRange)
+					return false;
+				if (distance < playerRange)
 					count++;
+			}
 		return count >= playerMinCount;
 	}
 
@@ -143,6 +151,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		config.set(path + "creatureRange", creatureRange);
 		config.set(path + "playerMinCount", playerMinCount);
 		config.set(path + "playerRange", playerRange);
+		config.set(path + "blockingRange", blockingRange);
 	}
 
 	@Override

@@ -150,6 +150,20 @@ public class CommandSpawn extends CommandExecutor
 		params.put("pr", playerRange);
 		params.put("prange", playerRange);
 		params.put("playerrange", playerRange);
+		final DoubleParamitrisable blockingRange = new DoubleParamitrisable(16D)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				super.setParameter(parameter);
+				if (value < 0)
+					throw new CrazyCommandParameterException(0, "positive Number (Double)");
+			}
+		};
+		params.put("br", blockingRange);
+		params.put("brange", blockingRange);
+		params.put("blockingrange", blockingRange);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");
@@ -158,7 +172,7 @@ public class CommandSpawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
 		if (location.getValue().getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue());
+		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue());
 		plugin.addSpawnTask(task);
 		task.start(delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);
