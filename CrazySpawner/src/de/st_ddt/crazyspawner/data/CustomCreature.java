@@ -1,6 +1,5 @@
 package de.st_ddt.crazyspawner.data;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
@@ -316,7 +315,7 @@ public class CustomCreature implements ExtendedCreatureType, ConfigurationSaveab
 	@Override
 	public Collection<? extends Entity> getEntities(final World world)
 	{
-		return new ArrayList<Entity>();
+		return world.getEntitiesByClass(type.getEntityClass());
 	}
 
 	@Override
