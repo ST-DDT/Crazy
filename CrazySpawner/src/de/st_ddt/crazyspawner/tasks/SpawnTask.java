@@ -28,6 +28,30 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final double blockingRange;
 	protected int taskID = -1;
 
+	/**
+	 * @param plugin
+	 *            CrazySpawner
+	 * @param type
+	 *            The type to be spawned.
+	 * @param location
+	 *            The Location where to spawn the creature.
+	 * @param amount
+	 *            The maximum amount of creatures spawned at once per execution.
+	 * @param interval
+	 *            Repeat interval in ticks
+	 * @param repeat
+	 *            Reapeat it repeat times. (-1 = infinite)
+	 * @param creatureMaxCount
+	 *            Maximum allowed creatures of the given type. (Cuts amount).
+	 * @param creatureRange
+	 *            Search range for the given type.
+	 * @param playerMinCount
+	 *            If there aren't at least playerMinCount near this spawner it won't be executed.
+	 * @param playerRange
+	 *            The range where to search for nearby players for playerMinCount.
+	 * @param blockingRange
+	 *            This task won't be executed if a player is within this range.
+	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange)
 	{
 		super();
