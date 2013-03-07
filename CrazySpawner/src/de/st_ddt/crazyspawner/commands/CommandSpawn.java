@@ -150,7 +150,7 @@ public class CommandSpawn extends CommandExecutor
 		params.put("pr", playerRange);
 		params.put("prange", playerRange);
 		params.put("playerrange", playerRange);
-		final DoubleParamitrisable blockingRange = new DoubleParamitrisable(16D)
+		final DoubleParamitrisable blockingRange = new DoubleParamitrisable(0D)
 		{
 
 			@Override
