@@ -31,6 +31,14 @@ public class DurationParamitrisable extends LongParamitrisable
 		}
 	}
 
+	public Long getTicks()
+	{
+		if (value == null)
+			return null;
+		else
+			return value / 50;
+	}
+
 	@Override
 	public List<String> tab(final String parameter)
 	{
