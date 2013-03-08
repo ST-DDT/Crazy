@@ -21,9 +21,7 @@ import org.bukkit.entity.Wither;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
-import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
@@ -35,13 +33,9 @@ import de.st_ddt.crazyutil.source.Localized;
 public class CommandKill extends CommandExecutor
 {
 
-	private final boolean v142OrLater;
-
 	public CommandKill(final CrazySpawner plugin)
 	{
 		super(plugin);
-		final String mcVersion = ChatHelper.getMinecraftVersion();
-		v142OrLater = (VersionComparator.compareVersions(mcVersion, "1.4.2") >= 0);
 	}
 
 	@Override
@@ -90,10 +84,7 @@ public class CommandKill extends CommandExecutor
 		if (villager.getValue())
 			plugin.sendLocaleMessage("COMMAND.KILLED.VILLAGER", sender, killEntities(world.getEntitiesByClasses(Villager.class), location.getValue(), range.getValue()));
 		if (bosses.getValue())
-			if (v142OrLater)
-				plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class, Wither.class), location.getValue(), range.getValue()));
-			else
-				plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class), location.getValue(), range.getValue()));
+			plugin.sendLocaleMessage("COMMAND.KILLED.BOSSES", sender, killEntities(world.getEntitiesByClasses(EnderDragon.class, Wither.class), location.getValue(), range.getValue()));
 		for (int i = 0; i < length; i++)
 			if (creatures[i].getValue())
 				plugin.sendLocaleMessage("COMMAND.KILLED.TYPE", sender, killEntities(world.getEntitiesByClasses(CreatureParamitrisable.CREATURE_TYPES[i].getEntityClass()), location.getValue(), range.getValue()), CreatureParamitrisable.CREATURE_NAMES[i]);

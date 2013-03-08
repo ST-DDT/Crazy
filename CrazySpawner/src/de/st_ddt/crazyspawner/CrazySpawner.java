@@ -29,8 +29,11 @@ import de.st_ddt.crazyspawner.commands.CommandKill;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.data.CustomCreature;
+import de.st_ddt.crazyspawner.data.CustomCreature_145;
+import de.st_ddt.crazyspawner.data.CustomCreature_146;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
@@ -47,6 +50,7 @@ public class CrazySpawner extends CrazyPlugin
 	private final Set<CustomCreature> creatures = new LinkedHashSet<CustomCreature>();
 	private final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	private final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
+	private boolean v146OrLater;
 
 	public static CrazySpawner getPlugin()
 	{
@@ -78,6 +82,8 @@ public class CrazySpawner extends CrazyPlugin
 	@Localized("CRAZYSPAWNER.CREATURES.AVAILABLE $Count$")
 	public void onEnable()
 	{
+		final String mcVersion = ChatHelper.getMinecraftVersion();
+		v146OrLater = (VersionComparator.compareVersions(mcVersion, "1.4.6") >= 0);
 		registerEnderCrystalType();
 		super.onEnable();
 		if (isUpdated)
@@ -85,7 +91,7 @@ public class CrazySpawner extends CrazyPlugin
 			{
 				final ConfigurationSection config = getConfig();
 				// ExampleCreature
-				CustomCreature.dummySave(config, "example.Creature.");
+				CustomCreature_146.dummySave(config, "example.Creature.");
 				// ExampleType
 				config.set("example.EntityType", CreatureParamitrisable.CREATURE_NAMES);
 				// ExampleColor
@@ -103,11 +109,11 @@ public class CrazySpawner extends CrazyPlugin
 				config.set("example.Item.meta.enchants.ENCHANTMENTx", "int (1-255)");
 				// DefaultCreatures
 				// - Spider_Skeleton
-				final CustomCreature spiderSkeleton = new CustomCreature("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
+				final CustomCreature spiderSkeleton = new CustomCreature_145("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
 				creatures.add(spiderSkeleton);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderSkeleton);
 				// - Diamont_Zombie
-				final CustomCreature diamondZombie = new CustomCreature("Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
+				final CustomCreature diamondZombie = new CustomCreature_145("Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
 				creatures.add(diamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(diamondZombie);
 				// - Healthy_Diamont_Zombie
@@ -117,7 +123,8 @@ public class CrazySpawner extends CrazyPlugin
 				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
 				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
 				chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
-				chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
+				if (v146OrLater)
+					chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
 				final ItemMeta meta = chestplate.getItemMeta();
 				meta.setDisplayName("Holy Chestplate of the Goddes");
 				final List<String> lore = new ArrayList<String>();
@@ -125,11 +132,15 @@ public class CrazySpawner extends CrazyPlugin
 				lore.add("Manufactured by the best dwarfs known");
 				meta.setLore(lore);
 				chestplate.setItemMeta(meta);
-				final CustomCreature healthyDiamondZombie = new CustomCreature("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
+				final CustomCreature healthyDiamondZombie;
+				if (v146OrLater)
+					healthyDiamondZombie = new CustomCreature_146("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
+				else
+					healthyDiamondZombie = new CustomCreature_145("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
 				creatures.add(healthyDiamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(healthyDiamondZombie);
 				// - Spider_Diamont_Zombie
-				final CustomCreature spiderDiamondZombie = new CustomCreature("Spider_Diamont_Zombie", EntityType.SPIDER, diamondZombie);
+				final CustomCreature spiderDiamondZombie = new CustomCreature_145("Spider_Diamont_Zombie", EntityType.SPIDER, diamondZombie);
 				creatures.add(spiderDiamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderDiamondZombie);
 				saveConfiguration();
@@ -199,7 +210,11 @@ public class CrazySpawner extends CrazyPlugin
 			for (final String key : creatureConfig.getKeys(false))
 				try
 				{
-					final CustomCreature creature = new CustomCreature(creatureConfig.getConfigurationSection(key));
+					final CustomCreature creature;
+					if (v146OrLater)
+						creature = new CustomCreature_146(creatureConfig.getConfigurationSection(key));
+					else
+						creature = new CustomCreature_145(creatureConfig.getConfigurationSection(key));
 					creatures.add(creature);
 					ExtendedCreatureParamitrisable.registerExtendedEntityType(creature);
 				}
