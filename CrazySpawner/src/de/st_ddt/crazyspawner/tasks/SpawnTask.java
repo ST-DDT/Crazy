@@ -74,6 +74,11 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.blockingRange = blockingRange;
 	}
 
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final double creatureRange)
+	{
+		this(plugin, type, location, 1, interval, -1, 1, creatureRange, 0, 0, 0);
+	}
+
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
 	{
 		super();
