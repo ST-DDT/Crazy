@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.anjocaido.groupmanager.GroupManager;
+import org.anjocaido.groupmanager.dataholder.worlds.WorldsHolder;
 import org.anjocaido.groupmanager.permissions.AnjoPermissionsHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,8 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 	{
 		super();
 		plugin = (GroupManager) Bukkit.getPluginManager().getPlugin("GroupManager");
+		if (plugin == null)
+			throw new IllegalArgumentException("GroupManager plugin cannot be null!");
 	}
 
 	@Override
@@ -43,7 +46,10 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 	public boolean hasPermission(final Player player, final String permission)
 	{
 		final AnjoPermissionsHandler handler = getHandler(player);
-		return handler != null && handler.has(player, permission);
+		if (handler == null)
+			return false;
+		else
+			return handler.has(player, permission);
 	}
 
 	@Override
@@ -100,7 +106,11 @@ public class PermissionGroupManagerSystem implements PermissionSystem
 
 	private AnjoPermissionsHandler getHandler(final Player player)
 	{
-		return plugin.getWorldsHolder().getWorldPermissions(player);
+		final WorldsHolder worldsHolder = plugin.getWorldsHolder();
+		if (worldsHolder == null)
+			return null;
+		else
+			return worldsHolder.getWorldPermissions(player);
 	}
 
 	public String[] getGroupArray(final Player player)

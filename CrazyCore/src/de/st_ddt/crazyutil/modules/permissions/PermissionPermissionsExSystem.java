@@ -23,6 +23,8 @@ public class PermissionPermissionsExSystem implements PermissionSystem
 	{
 		super();
 		plugin = PermissionsEx.getPermissionManager();
+		if (plugin == null)
+			throw new IllegalArgumentException("PermissionsEx plugin cannot be null!");
 	}
 
 	@Override

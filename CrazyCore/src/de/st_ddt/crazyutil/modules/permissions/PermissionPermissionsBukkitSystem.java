@@ -23,6 +23,8 @@ public class PermissionPermissionsBukkitSystem extends PermissionBukkitSystem
 	{
 		super();
 		plugin = (PermissionsPlugin) Bukkit.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+		if (plugin == null)
+			throw new IllegalArgumentException("PermissionsBukkit plugin cannot be null!");
 	}
 
 	@Override
