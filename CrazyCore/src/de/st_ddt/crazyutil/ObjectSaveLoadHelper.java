@@ -168,7 +168,17 @@ public class ObjectSaveLoadHelper
 		if (config == null)
 			return null;
 		else
-			return ItemStack.deserialize(config.getValues(true));
+			try
+			{
+				return ItemStack.deserialize(config.getValues(true));
+			}
+			catch (final Exception e)
+			{
+				System.err.println("The config is messed up! Have a look at " + config.getCurrentPath());
+				System.err.println("This error log may help you to find the plugin and more details what is wrong.");
+				e.printStackTrace();
+				return null;
+			}
 	}
 
 	public static void saveItemStack(final ConfigurationSection config, final String path, final ItemStack item)
