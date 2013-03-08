@@ -13,6 +13,7 @@ import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
@@ -164,6 +165,10 @@ public class CommandSpawn extends CommandExecutor
 		params.put("br", blockingRange);
 		params.put("brange", blockingRange);
 		params.put("blockingrange", blockingRange);
+		final BooleanParamitrisable allowDespawn = new BooleanParamitrisable(false);
+		params.put("ad", allowDespawn);
+		params.put("despawn", allowDespawn);
+		params.put("allowdespawning", allowDespawn);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");
@@ -172,7 +177,7 @@ public class CommandSpawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
 		if (location.getValue().getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue());
+		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), allowDespawn.getValue());
 		plugin.addSpawnTask(task);
 		task.start(delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);

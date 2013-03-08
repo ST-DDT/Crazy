@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
@@ -26,6 +27,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final int playerMinCount;
 	protected final double playerRange;
 	protected final double blockingRange;
+	protected final boolean allowDespawn;
 	protected int taskID = -1;
 
 	/**
@@ -52,7 +54,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final boolean allowDespawn)
 	{
 		super();
 		this.plugin = plugin;
@@ -72,11 +74,26 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.playerMinCount = playerMinCount;
 		this.playerRange = playerRange;
 		this.blockingRange = blockingRange;
+		this.allowDespawn = allowDespawn;
 	}
 
+	/**
+	 * Constructor for tear respawn tasks
+	 * 
+	 * @param plugin
+	 *            CrazySpawner
+	 * @param type
+	 *            The type to be spawned.
+	 * @param location
+	 *            The Location where to spawn the creature.
+	 * @param interval
+	 *            Repeat interval in ticks
+	 * @param creatureRange
+	 *            Search range for the given type.
+	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final double creatureRange)
 	{
-		this(plugin, type, location, 1, interval, -1, 1, creatureRange, 0, 0, 0);
+		this(plugin, type, location, 1, interval, -1, 1, creatureRange, 0, 0, 0, false);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -99,6 +116,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.playerMinCount = Math.max(config.getInt("playerMinCount", 0), 0);
 		this.playerRange = Math.max(config.getDouble("playerRange", 16), 0);
 		this.blockingRange = Math.max(config.getDouble("blockingRange", 0), 0);
+		this.allowDespawn = config.getBoolean("allowDespawn", false);
 	}
 
 	public final void start()
@@ -128,7 +146,11 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		{
 			final int amount = checkCreatures();
 			for (int i = 0; i < amount; i++)
-				type.spawn(location);
+			{
+				final Entity entity = type.spawn(location);
+				if (entity instanceof LivingEntity)
+					((LivingEntity) entity).setRemoveWhenFarAway(allowDespawn);
+			}
 			if (amount > 0)
 				if (repeat > 0)
 					repeat--;
@@ -181,6 +203,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		config.set(path + "playerMinCount", playerMinCount);
 		config.set(path + "playerRange", playerRange);
 		config.set(path + "blockingRange", blockingRange);
+		config.set(path + "allowDespawn", allowDespawn);
 	}
 
 	@Override
