@@ -9,8 +9,8 @@ public class CrazyPlayerDataPluginCommandPlayerTree<T extends PlayerDataInterfac
 	public CrazyPlayerDataPluginCommandPlayerTree(final CrazyPlayerDataPluginInterface<T, ? extends T> plugin)
 	{
 		super(plugin);
-		addSubCommand(new CrazyPlayerDataPluginCommandPlayerInfo<T>(plugin), "info");
-		addSubCommand(new CrazyPlayerDataPluginCommandPlayerList<T>(plugin), "list");
-		addSubCommand(new CrazyPlayerDataPluginCommandPlayerDelete<T>(plugin), "delete", "remove");
+		addSubCommand(new CrazyPlayerDataPluginCommandPlayerInfo<T>(plugin), "i", "info");
+		addSubCommand(new CrazyPlayerDataPluginCommandPlayerList<T>(plugin), "l", "list");
+		addSubCommand(new CrazyPlayerDataPluginCommandPlayerDelete<T>(plugin), "del", "delete", "rem", "remove");
 	}
 }

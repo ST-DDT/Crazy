@@ -265,7 +265,7 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	public void onEnable()
 	{
 		super.onEnable();
-		mainCommand.addSubCommand(playerCommand, "player", "players");
+		mainCommand.addSubCommand(playerCommand, "p", "plr", "player", "players");
 		mainCommand.addSubCommand(new CrazyPlayerDataPluginCommandMainReload<T>(this), "reload");
 	}
 

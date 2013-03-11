@@ -1,7 +1,7 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 10.2.1
+version: 10.2.2
 website: http://dev.bukkit.org/server-mods/crazycore/
 softdepend: [PermissionsEx,GroupManager,PermissionsBukkit]
 description: >
@@ -13,6 +13,7 @@ commands:
   crazycore:
     description: Some further information and commands.
     usage: /<command> [Subcommands...]
+    aliases: [cc,ccore]
   crazylanguage:
     description: Change languages
     usage: /<command> [Language]
