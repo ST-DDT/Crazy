@@ -2,44 +2,70 @@ package de.st_ddt.crazycore.tasks;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import de.st_ddt.crazycore.CrazyCore;
+import de.st_ddt.crazyutil.ChatHelper;
 
 public class PlayerWipeTask implements Runnable
 {
 
 	protected final String name;
 	protected final OfflinePlayer player;
-	protected final LinkedList<File> files = new LinkedList<File>();
+	protected final List<File> files = new LinkedList<File>();
 	private int run = 0;
 
-	public PlayerWipeTask(final String name)
+	public PlayerWipeTask(final String name, final Collection<File> files)
 	{
 		super();
 		this.name = name;
 		this.player = Bukkit.getOfflinePlayer(name);
-		for (final World world : Bukkit.getWorlds())
+		for (final File file : files)
+			addFile(file);
+	}
+
+	public PlayerWipeTask(final String name, final Collection<File> files, final boolean worlds)
+	{
+		this(name, files);
+		if (worlds)
+			for (final World world : Bukkit.getWorlds())
+				addFile(new File(world.getName() + File.separator + "players" + File.separator + name + ".dat"));
+	}
+
+	public PlayerWipeTask(final String name, final boolean foo, final Collection<String> paths)
+	{
+		super();
+		this.name = name;
+		this.player = Bukkit.getOfflinePlayer(name);
+		for (final String path : paths)
+			addFile(new File(ChatHelper.putArgs(path, name)));
+	}
+
+	public PlayerWipeTask(final String name, final boolean foo, final Collection<String> paths, final boolean worlds)
+	{
+		this(name, foo, paths);
+		if (worlds)
+			for (final World world : Bukkit.getWorlds())
+				addFile(new File(world.getName() + File.separator + "players" + File.separator + name + ".dat"));
+	}
+
+	public void addFile(final File file)
+	{
+		try
 		{
-			final File tempFile = new File(world.getName() + File.separator + "players" + File.separator + name + ".dat");
-			try
-			{
-				files.add(tempFile.getCanonicalFile());
-			}
-			catch (final IOException e)
-			{
-				files.add(tempFile);
-			}
+			files.add(file.getCanonicalFile());
 		}
-		final Iterator<File> it = files.iterator();
-		while (it.hasNext())
-			if (!it.next().exists())
-				it.remove();
+		catch (final IOException e)
+		{
+			files.add(file);
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -53,9 +79,6 @@ public class PlayerWipeTask implements Runnable
 	@Override
 	public void run()
 	{
-		if (player != null)
-			if (player.isOnline())
-				return;
 		run++;
 		if (!fileCheck())
 			Bukkit.getScheduler().scheduleAsyncDelayedTask(CrazyCore.getPlugin(), this, 20 * 10 * run * run);
@@ -63,6 +86,9 @@ public class PlayerWipeTask implements Runnable
 
 	public synchronized boolean fileCheck()
 	{
+		if (player != null)
+			if (player.isOnline())
+				return files.size() == 0;
 		final Iterator<File> it = files.iterator();
 		while (it.hasNext())
 		{

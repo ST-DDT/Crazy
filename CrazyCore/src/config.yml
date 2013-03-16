@@ -10,16 +10,23 @@ chatHeader: '&C[&ACrazyCore&C] &F'
 checkForUpdates: true
 # removes the players data file in "world/players" folder too. (true/false)
 # removes op and whitelist
-wipePlayerFiles: true
-# removes player name from the banned list (true/false)
-wipePlayerBans: false
+wipePlayerWorldFiles: true
+# a list of files which should be removed
+# (Example: delete other plugins data too)
+# wipePlayerFilePaths:
+# - plugins/Plugin1/$0$.dat
+# - plugins/Plugin2/players/$0$.yml
+# - backup/world/players.dat
+wipePlayerFilePaths: []
 # execute this commands when player is deleted 
 # (Example: delete other plugins data too)
-# playerWipeCommands:
+# wipePlayerCommands:
 # - say $0$ has been wiped!
 # - permissions player removegroup $0$ user
 # - money remove $0$
-playerWipeCommands: []
+wipePlayerCommands: []
+# removes player name from the banned list (true/false)
+wipePlayerBans: false
 # cancel deletion tasks for this player
 protectedPlayers: []
 # block usage of > (true/false)

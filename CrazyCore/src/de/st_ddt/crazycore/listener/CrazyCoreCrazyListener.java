@@ -128,7 +128,7 @@ public class CrazyCoreCrazyListener implements Listener
 			@Override
 			public void run()
 			{
-				for (final String command : plugin.getPlayerWipeCommands())
+				for (final String command : plugin.getWipePlayerCommands())
 					Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, name));
 			}
 		});
@@ -137,8 +137,7 @@ public class CrazyCoreCrazyListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void CrazyPlayerRemoveFileEvent(final CrazyPlayerRemoveEvent event)
 	{
-		if (plugin.isWipingPlayerFilesEnabled())
-			new PlayerWipeTask(event.getPlayer()).execute();
+		new PlayerWipeTask(event.getPlayer(), true, plugin.getWipePlayerFilePaths(), plugin.isWipingPlayerWorldFilesEnabled()).execute();
 		plugin.save();
 	}
 }

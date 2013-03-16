@@ -22,6 +22,7 @@ import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerDelete;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerIPSearch;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeCommands;
+import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeFilePaths;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandUpdateCheck;
 import de.st_ddt.crazycore.listener.CrazyCoreCrazyListener;
 import de.st_ddt.crazycore.listener.CrazyCoreMessageListener;
@@ -48,11 +49,12 @@ public final class CrazyCore extends CrazyPlugin
 	private static CrazyCore plugin;
 	private final Set<String> preloadedLanguages = new HashSet<String>();
 	private final Set<String> loadedLanguages = new HashSet<String>();
-	private final List<String> playerWipeCommands = new ArrayList<String>();
+	private final List<String> wipePlayerFilePaths = new ArrayList<String>();
+	private final List<String> wipePlayerCommands = new ArrayList<String>();
 	private final SortedSet<String> protectedPlayers = new TreeSet<String>();
 	private CrazyCoreMessageListener messageListener;
 	private CrazyCoreCrazyListener crazylistener;
-	private boolean wipePlayerFiles;
+	private boolean wipePlayerWorldFiles;
 	private boolean wipePlayerBans;
 	private boolean loadUserLanguages;
 	private boolean checkForUpdates;
@@ -124,6 +126,7 @@ public final class CrazyCore extends CrazyPlugin
 	{
 		final CrazyCommandTreeExecutor<CrazyCore> players = new CrazyCommandTreeExecutor<CrazyCore>(this);
 		mainCommand.addSubCommand(players, "player", "players");
+		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeFilePaths(plugin), "wipefilepaths", "wipepaths");
 		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
 		mainCommand.addSubCommand(new CrazyCoreCommandUpdateCheck(this), "updatecheck");
 		players.addSubCommand(new CrazyCoreCommandPlayerInfo(this), "info");
@@ -231,12 +234,16 @@ public final class CrazyCore extends CrazyPlugin
 		final ConfigurationSection config = getConfig();
 		checkForUpdates = config.getBoolean("checkForUpdates", true);
 		// PlayerWipe
-		wipePlayerFiles = config.getBoolean("wipePlayerFiles", true);
-		wipePlayerBans = config.getBoolean("wipePlayerBans", false);
-		playerWipeCommands.clear();
-		final List<String> commandList = config.getStringList("playerWipeCommands");
+		wipePlayerWorldFiles = config.getBoolean("wipePlayerWorldFiles", config.getBoolean("wipePlayerFiles", true));
+		wipePlayerFilePaths.clear();
+		final List<String> filePathList = config.getStringList("wipePlayerFilePaths");
+		if (filePathList != null)
+			wipePlayerFilePaths.addAll(filePathList);
+		wipePlayerCommands.clear();
+		final List<String> commandList = config.getStringList("wipePlayerCommands");
 		if (commandList != null)
-			playerWipeCommands.addAll(commandList);
+			wipePlayerCommands.addAll(commandList);
+		wipePlayerBans = config.getBoolean("wipePlayerBans", false);
 		final List<String> protectedList = config.getStringList("protectedPlayers");
 		if (protectedList != null)
 			for (final String name : protectedList)
@@ -290,9 +297,10 @@ public final class CrazyCore extends CrazyPlugin
 		final ConfigurationSection config = getConfig();
 		config.set("checkForUpdates", checkForUpdates);
 		// Player Wipe
-		config.set("wipePlayerFiles", wipePlayerFiles);
+		config.set("wipePlayerWorldFiles", wipePlayerWorldFiles);
+		config.set("wipePlayerFilePaths", wipePlayerFilePaths);
+		config.set("wipePlayerCommands", wipePlayerCommands);
 		config.set("wipePlayerBans", wipePlayerBans);
-		config.set("playerWipeCommands", playerWipeCommands);
 		config.set("protectedPlayers", new ArrayList<String>(protectedPlayers));
 		// Pipes
 		config.set("disablePipes", CrazyPipe.isDisabled());
@@ -313,19 +321,24 @@ public final class CrazyCore extends CrazyPlugin
 		return false;
 	}
 
-	public boolean isWipingPlayerFilesEnabled()
+	public boolean isWipingPlayerWorldFilesEnabled()
 	{
-		return wipePlayerFiles;
+		return wipePlayerWorldFiles;
+	}
+
+	public List<String> getWipePlayerFilePaths()
+	{
+		return wipePlayerFilePaths;
+	}
+
+	public List<String> getWipePlayerCommands()
+	{
+		return wipePlayerCommands;
 	}
 
 	public boolean isWipingPlayerBansEnabled()
 	{
 		return wipePlayerBans;
-	}
-
-	public List<String> getPlayerWipeCommands()
-	{
-		return playerWipeCommands;
 	}
 
 	public SortedSet<String> getProtectedPlayers()
