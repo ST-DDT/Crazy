@@ -172,7 +172,11 @@ public class CustomCreature_1_5 extends CustomCreature_1_4_6
 	{
 		final Entity entity = super.spawn(location);
 		if (customName != null)
-			((LivingEntity) entity).setCustomName(customName);
+		{
+			final LivingEntity living = (LivingEntity) entity;
+			living.setCustomName(customName);
+			living.setCustomNameVisible(showCustomName);
+		}
 		return entity;
 	}
 
