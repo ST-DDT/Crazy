@@ -121,7 +121,7 @@ public class CrazySpawner extends CrazyPlugin
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(diamondZombie);
 				// - Healthy_Diamont_Zombie
 				final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
-				chestplate.setAmount(3);
+				chestplate.setAmount(1);
 				chestplate.setDurability((short) 3);
 				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
 				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
