@@ -181,11 +181,11 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	{
 		if (creatureMaxCount == 0)
 			return amount;
-		int count = amount;
+		int count = creatureMaxCount;
 		for (final Entity entity : type.getEntities(location.getWorld()))
 			if (location.distance(entity.getLocation()) < creatureRange)
 				count--;
-		return count;
+		return Math.min(count, amount);
 	}
 
 	@Override
