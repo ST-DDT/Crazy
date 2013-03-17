@@ -16,6 +16,15 @@ public class CustomCreature_1_4_6 extends CustomCreature_1_4_5
 
 	protected final int maxHealth;
 
+	public CustomCreature_1_4_6(final String name, final EntityType type, final int maxHealth)
+	{
+		super(name, type);
+		if (Damageable.class.isAssignableFrom(type.getEntityClass()))
+			this.maxHealth = maxHealth;
+		else
+			this.maxHealth = 0;
+	}
+
 	public CustomCreature_1_4_6(final String name, final EntityType type, final int maxHealth, final String passenger)
 	{
 		super(name, type, passenger);

@@ -54,6 +54,11 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	protected final float itemInHandDropChance;
 	protected final ExtendedCreatureType passenger;
 
+	public CustomCreature_1_4_5(final String name, final EntityType type)
+	{
+		this(name, type, (ExtendedCreatureType) null);
+	}
+
 	public CustomCreature_1_4_5(final String name, final EntityType type, final String passenger)
 	{
 		this(name, type, ExtendedCreatureParamitrisable.getExtendedCreatureType(passenger));
