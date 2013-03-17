@@ -29,8 +29,9 @@ import de.st_ddt.crazyspawner.commands.CommandKill;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.data.CustomCreature;
-import de.st_ddt.crazyspawner.data.CustomCreature_145;
-import de.st_ddt.crazyspawner.data.CustomCreature_146;
+import de.st_ddt.crazyspawner.data.CustomCreature_1_4_5;
+import de.st_ddt.crazyspawner.data.CustomCreature_1_4_6;
+import de.st_ddt.crazyspawner.data.CustomCreature_1_5;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -51,6 +52,7 @@ public class CrazySpawner extends CrazyPlugin
 	private final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	private final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 	private boolean v146OrLater;
+	private boolean v15OrLater;
 
 	public static CrazySpawner getPlugin()
 	{
@@ -83,6 +85,7 @@ public class CrazySpawner extends CrazyPlugin
 	public void onEnable()
 	{
 		final String mcVersion = ChatHelper.getMinecraftVersion();
+		v15OrLater = (VersionComparator.compareVersions(mcVersion, "1.5") >= 0);
 		v146OrLater = (VersionComparator.compareVersions(mcVersion, "1.4.6") >= 0);
 		registerEnderCrystalType();
 		super.onEnable();
@@ -91,7 +94,7 @@ public class CrazySpawner extends CrazyPlugin
 			{
 				final ConfigurationSection config = getConfig();
 				// ExampleCreature
-				CustomCreature_146.dummySave(config, "example.Creature.");
+				CustomCreature_1_4_5.dummySave(config, "example.Creature.");
 				// ExampleType
 				config.set("example.EntityType", CreatureParamitrisable.CREATURE_NAMES);
 				// ExampleColor
@@ -109,11 +112,11 @@ public class CrazySpawner extends CrazyPlugin
 				config.set("example.Item.meta.enchants.ENCHANTMENTx", "int (1-255)");
 				// DefaultCreatures
 				// - Spider_Skeleton
-				final CustomCreature spiderSkeleton = new CustomCreature_145("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
+				final CustomCreature spiderSkeleton = new CustomCreature_1_4_5("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
 				creatures.add(spiderSkeleton);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderSkeleton);
 				// - Diamont_Zombie
-				final CustomCreature diamondZombie = new CustomCreature_145("Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
+				final CustomCreature diamondZombie = new CustomCreature_1_4_5("Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
 				creatures.add(diamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(diamondZombie);
 				// - Healthy_Diamont_Zombie
@@ -133,14 +136,16 @@ public class CrazySpawner extends CrazyPlugin
 				meta.setLore(lore);
 				chestplate.setItemMeta(meta);
 				final CustomCreature healthyDiamondZombie;
-				if (v146OrLater)
-					healthyDiamondZombie = new CustomCreature_146("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
+				if (v15OrLater)
+					healthyDiamondZombie = new CustomCreature_1_5("Healthy_Diamont_Zombie", "Diamond_Zombie", true, EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
+				else if (v146OrLater)
+					healthyDiamondZombie = new CustomCreature_1_4_6("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
 				else
-					healthyDiamondZombie = new CustomCreature_145("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
+					healthyDiamondZombie = new CustomCreature_1_4_5("Healthy_Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
 				creatures.add(healthyDiamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(healthyDiamondZombie);
 				// - Spider_Diamont_Zombie
-				final CustomCreature spiderDiamondZombie = new CustomCreature_145("Spider_Diamont_Zombie", EntityType.SPIDER, diamondZombie);
+				final CustomCreature spiderDiamondZombie = new CustomCreature_1_4_5("Spider_Diamont_Zombie", EntityType.SPIDER, diamondZombie);
 				creatures.add(spiderDiamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderDiamondZombie);
 				saveConfiguration();
@@ -211,10 +216,12 @@ public class CrazySpawner extends CrazyPlugin
 				try
 				{
 					final CustomCreature creature;
-					if (v146OrLater)
-						creature = new CustomCreature_146(creatureConfig.getConfigurationSection(key));
+					if (v15OrLater)
+						creature = new CustomCreature_1_5(creatureConfig.getConfigurationSection(key));
+					else if (v146OrLater)
+						creature = new CustomCreature_1_4_6(creatureConfig.getConfigurationSection(key));
 					else
-						creature = new CustomCreature_145(creatureConfig.getConfigurationSection(key));
+						creature = new CustomCreature_1_4_5(creatureConfig.getConfigurationSection(key));
 					creatures.add(creature);
 					ExtendedCreatureParamitrisable.registerExtendedEntityType(creature);
 				}

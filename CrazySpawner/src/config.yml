@@ -17,13 +17,13 @@ example:
 # WARNING: ONLY USE LIVING TYPES SUCH AS MONSTERS AND ANIMALS.
     type: EntityType
 # Spawn as baby (Villager and Animals)
-    baby: boolean
+    baby: boolean (true/false)
 # Spawn as Zombievillager (Zombie)
-    villager: boolean
+    villager: boolean (true/false)
 # Spawn as Witherskeleton (Skeleton) 
-    wither: boolean
+    wither: boolean (true/false)
 # Spawn as ChargedCreeper (Creeper)
-    charged: boolean
+    charged: boolean (true/false)
 # Spawn as colored sheep (Colorable (Sheep))
 # For a full list visit the javadocs page
 # http://jd.bukkit.org/rb/apidocs/org/bukkit/DyeColor.html#enum_constant_summary
@@ -31,13 +31,11 @@ example:
 # Spawn sized slime (Clime + Magma_Cube)
     size: int (1-4)
 # Spawn as angry wolf (Wolf)
-    angry: boolean
+    angry: boolean (true/false)
 # Spawn as tamed pet (Tameable (Wolf + Ocelot/Cat))
-    tamed: boolean
+    tamed: boolean (true/false)
 # Spawn as tamed pet owned by player (Tameable (Wolf + Ocelot/Cat))
     tamer: Player
-# Spawn with additional health
-    maxHealth: int
 # Spawn with boots
     boots: Item
     bootsDropChance: float (0-1)
@@ -57,6 +55,12 @@ example:
 # This can be all types listed in "/cms creature:" command
 # If you are using a custom type here you have to define it bevore this entry.
     passenger: ExtendedCreatureType
+# Spawn with additional health
+    maxHealth: int
+# Define a custom name
+    customName: String
+# Show custom name as tag above creature
+    showCustomName: boolean (true/false)
 # Items have to be defined this way
   Item:
 # Material Type
