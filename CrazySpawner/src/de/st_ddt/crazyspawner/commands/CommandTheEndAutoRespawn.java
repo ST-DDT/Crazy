@@ -25,6 +25,7 @@ import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WorldParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class CommandTheEndAutoRespawn extends CommandExecutor
 {
@@ -42,6 +43,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	}
 
 	@Override
+	@Localized("CRAZYSPAWNER.COMMAND.THEENDAUTORESPAWN.DONE $World$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
@@ -77,6 +79,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 			plugin.addSpawnTask(crystal);
 			crystal.start(20);
 		}
+		plugin.sendLocaleMessage("COMMAND.THEENDAUTORESPAWN.DONE", sender, world.getName());
 		plugin.saveConfiguration();
 	}
 

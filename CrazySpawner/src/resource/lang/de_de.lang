@@ -10,6 +10,7 @@ CRAZYSPAWNER.COMMAND.KILLED.MONSTERS=$0$ &4Monster &Fgetötet!
 CRAZYSPAWNER.COMMAND.KILLED.TYPE=$0$ &4$1$ &Fgetötet!
 CRAZYSPAWNER.COMMAND.KILLED.VILLAGER=$0$ &EDorfbewohner &Fgetötet!
 CRAZYSPAWNER.COMMAND.SPAWNED=$0$ &9$1$ &Fwurden gespawned!
+CRAZYSPAWNER.COMMAND.THEENDAUTORESPAWN.DONE=Die Welt $0$ wird nun automatisch mit Ender-Drachen und Ender-Kristallen ausgestattet.
 CRAZYSPAWNER.CREATURES.AVAILABLE=$0$ Typen von Kreaturen warten darauf gespawnt zu werden! 
 CRAZYSPAWNER.CREATURES.LOADED=$0$ benutzerdefinierte Typen von Kreaturen geladen!
 #CRAZYSPAWNER.MODE.CHANGE=
