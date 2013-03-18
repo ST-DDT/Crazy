@@ -265,7 +265,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 			{
 				res = "LOCALE IS MISSING!";
 				if (this != missing)
-					System.out.println("[CrazyLocale] " + getPath() + " is missing!");
+					System.err.println("[CrazyLocale] " + getPath() + " is missing!");
 			}
 		}
 		return res;
@@ -322,7 +322,7 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	{
 		final CrazyLocale locale = getEntry(path.toUpperCase());
 		if (locale == missing)
-			System.out.println("[CrazyLocale] " + getPath() + "." + path + " is missing!");
+			System.err.println("[CrazyLocale] " + getPath() + "." + path + " is missing!");
 		return locale;
 	}
 
