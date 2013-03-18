@@ -25,7 +25,7 @@ public abstract class ConditionList<T> extends ConditionBase<T>
 			}
 			catch (final Exception e)
 			{
-				System.out.println("Error loading condition: " + name);
+				System.err.println("Error loading condition: " + name + " (" + config.getCurrentPath() + ")");
 				e.printStackTrace();
 			}
 	}
