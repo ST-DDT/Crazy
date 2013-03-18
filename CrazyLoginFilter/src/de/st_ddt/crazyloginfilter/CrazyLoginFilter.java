@@ -213,7 +213,7 @@ public class CrazyLoginFilter extends CrazyPlayerDataPlugin<PlayerAccessFilter, 
 			}
 			catch (final Exception e)
 			{
-				System.out.println("Invalid Server Access Filter config!");
+				System.err.println("Invalid Server Access Filter config! Resetted!");
 				serverFilter = new PlayerAccessFilter("serverFilter");
 			}
 		// PlayerNames
