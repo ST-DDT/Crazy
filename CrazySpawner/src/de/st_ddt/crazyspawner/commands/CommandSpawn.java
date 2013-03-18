@@ -90,6 +90,19 @@ public class CommandSpawn extends CommandExecutor
 		};
 		params.put("r", repeat);
 		params.put("repeat", repeat);
+		final IntegerParamitrisable chunkLoadRange = new IntegerParamitrisable(-1)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				super.setParameter(parameter);
+				if (value < -1)
+					throw new CrazyCommandParameterException(0, "positive Number (Integer)", "0=unlimited");
+			}
+		};
+		params.put("clr", chunkLoadRange);
+		params.put("chunkloadrange", chunkLoadRange);
 		final IntegerParamitrisable creatureMaxCount = new IntegerParamitrisable(0)
 		{
 
@@ -177,7 +190,7 @@ public class CommandSpawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
 		if (location.getValue().getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), allowDespawn.getValue());
+		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), allowDespawn.getValue());
 		plugin.addSpawnTask(task);
 		task.start(delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);

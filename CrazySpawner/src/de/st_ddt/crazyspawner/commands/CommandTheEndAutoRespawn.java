@@ -23,6 +23,7 @@ import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WorldParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
@@ -63,6 +64,19 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 		final WorldParamitrisable worldParam = new WorldParamitrisable(sender);
 		params.put("w", worldParam);
 		params.put("world", worldParam);
+		final IntegerParamitrisable chunkloadrange = new IntegerParamitrisable(0)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				super.setParameter(parameter);
+				if (value < -1)
+					throw new CrazyCommandParameterException(0, "positive Number (Integer)", "0=unlimited");
+			}
+		};
+		params.put("clr", chunkloadrange);
+		params.put("chunkloadrange", chunkloadrange);
 		ChatHelperExtended.readParameters(args, params, interval);
 		final World world = worldParam.getValue();
 		if (world == null)
@@ -70,15 +84,22 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 		if (world.getEnvironment() != Environment.THE_END)
 			throw new CrazyCommandCircumstanceException("the world must be a The_End world!");
 		final Location location = new Location(world, 0, 0, 0);
-		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, location, interval.getValue() / 50, DRAGONRANGE);
+		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, location, interval.getValue() / 50, 5, DRAGONRANGE);
 		plugin.addSpawnTask(dragon);
 		dragon.start(20);
+		final int range = chunkloadrange.getValue();
+		for (int x = -range; x <= range; x++)
+			for (int z = -range; z <= range; z++)
+				world.loadChunk(x, z, false);
 		for (final Entity entity : CRYSTALTYPE.getEntities(world))
 		{
-			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), interval.getValue() / 50, CRYSTALERANGE);
+			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), interval.getValue() / 50, 1, CRYSTALERANGE);
 			plugin.addSpawnTask(crystal);
 			crystal.start(20);
 		}
+		for (int x = -range; x <= range; x++)
+			for (int z = -range; z <= range; z++)
+				world.unloadChunkRequest(x, z, true);
 		plugin.sendLocaleMessage("COMMAND.THEENDAUTORESPAWN.DONE", sender, world.getName());
 		plugin.saveConfiguration();
 	}

@@ -1,7 +1,9 @@
 package de.st_ddt.crazyspawner.tasks;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -22,6 +24,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final int amount;
 	protected final long interval;
 	protected int repeat;
+	protected final int chunkLoadRange;
 	protected final int creatureMaxCount;
 	protected final double creatureRange;
 	protected final int playerMinCount;
@@ -43,6 +46,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 *            Repeat interval in ticks
 	 * @param repeat
 	 *            Reapeat it repeat times. (-1 = infinite)
+	 * @param chunkLoadRange
+	 *            Load chunks before executing this task. Monsters may not spawn otherwise.
 	 * @param creatureMaxCount
 	 *            Maximum allowed creatures of the given type. (Cuts amount).
 	 * @param creatureRange
@@ -54,7 +59,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final boolean allowDespawn)
 	{
 		super();
 		this.plugin = plugin;
@@ -69,6 +74,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.amount = creatureMaxCount > 0 ? Math.min(amount, creatureMaxCount) : amount;
 		this.interval = Math.max(interval, 1);
 		this.repeat = repeat;
+		this.chunkLoadRange = chunkLoadRange;
 		this.creatureMaxCount = creatureMaxCount;
 		this.creatureRange = creatureRange;
 		this.playerMinCount = playerMinCount;
@@ -88,12 +94,14 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 *            The Location where to spawn the creature.
 	 * @param interval
 	 *            Repeat interval in ticks
+	 * @param chunkLoadRange
+	 *            Load chunks before executing this task. Monsters may not spawn otherwise.
 	 * @param creatureRange
 	 *            Search range for the given type.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final double creatureRange)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final double creatureRange)
 	{
-		this(plugin, type, location, 1, interval, -1, 1, creatureRange, 0, 0, 0, false);
+		this(plugin, type, location, 1, interval, -1, chunkLoadRange, 1, creatureRange, 0, 0, 0, false);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -111,6 +119,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.amount = Math.max(config.getInt("amount", 1), 1);
 		this.interval = Math.max(config.getLong("interval", 20), 1);
 		this.repeat = Math.max(config.getInt("repeat", 0), -1);
+		this.chunkLoadRange = config.getInt("chunkLoadRange", -1);
 		this.creatureMaxCount = Math.max(config.getInt("creatureMaxCount", 0), 0);
 		this.creatureRange = Math.max(config.getDouble("creatureRange", 16), 0);
 		this.playerMinCount = Math.max(config.getInt("playerMinCount", 0), 0);
@@ -144,6 +153,14 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	{
 		if (checkPlayers())
 		{
+			final World world = location.getWorld();
+			final Chunk chunk = world.getChunkAt(location);
+			final int cX = chunk.getX();
+			final int cZ = chunk.getZ();
+			if (chunkLoadRange >= 0)
+				for (int x = -chunkLoadRange; x <= chunkLoadRange; x++)
+					for (int z = -chunkLoadRange; z <= chunkLoadRange; z++)
+						world.loadChunk(cX + x, cZ + z, false);
 			final int amount = checkCreatures();
 			for (int i = 0; i < amount; i++)
 			{
@@ -159,6 +176,10 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 					plugin.removeSpawnTask(this);
 					cancel();
 				}
+			if (chunkLoadRange >= 0)
+				for (int x = -chunkLoadRange; x <= chunkLoadRange; x++)
+					for (int z = -chunkLoadRange; z <= chunkLoadRange; z++)
+						world.unloadChunkRequest(x, z, true);
 		}
 	}
 
@@ -198,6 +219,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		config.set(path + "amount", amount);
 		config.set(path + "interval", interval);
 		config.set(path + "repeat", repeat);
+		config.set(path + "chunkLoadRange", chunkLoadRange);
 		config.set(path + "creatureMaxCount", creatureMaxCount);
 		config.set(path + "creatureRange", creatureRange);
 		config.set(path + "playerMinCount", playerMinCount);
