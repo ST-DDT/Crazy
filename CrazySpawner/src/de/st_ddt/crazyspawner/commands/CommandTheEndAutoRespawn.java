@@ -33,6 +33,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 
 	private final static double DRAGONRANGE = 2500;
 	private final static double CRYSTALERANGE = 5;
+	private final static Long[] COUNTDOWNTIMES = new Long[] { 20L, 40L, 60L, 80L, 100L, 120L, 140L, 160L, 180L, 200L, 1200L, 6000L, 18000L };
 	private final ExtendedCreatureType DRAGONTYPE;
 	private final ExtendedCreatureType CRYSTALTYPE;
 
@@ -44,7 +45,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	}
 
 	@Override
-	@Localized("CRAZYSPAWNER.COMMAND.THEENDAUTORESPAWN.DONE $World$")
+	@Localized({ "CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE $World$ $Time$", "CRAZYSPAWNER.COMMAND.THEENDAUTORESPAWN.DONE $World$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
@@ -83,8 +84,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("World", "(none)");
 		if (world.getEnvironment() != Environment.THE_END)
 			throw new CrazyCommandCircumstanceException("the world must be a The_End world!");
-		final Location location = new Location(world, 0, 0, 0);
-		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, location, interval.getValue() / 50, 5, DRAGONRANGE);
+		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, new Location(world, 0, 0, 0), interval.getValue() / 50, 5, COUNTDOWNTIMES, plugin.getLocale().getDefaultLocaleMessage("THEENDAUTORESPAWN.COUNTDOWNMESSAGE", world.getName(), "$0$"), DRAGONRANGE);
 		plugin.addSpawnTask(dragon);
 		dragon.start(20);
 		final int range = chunkloadrange.getValue();
@@ -93,7 +93,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 				world.loadChunk(x, z, false);
 		for (final Entity entity : CRYSTALTYPE.getEntities(world))
 		{
-			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), interval.getValue() / 50, 1, CRYSTALERANGE);
+			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), interval.getValue() / 50, 1, null, null, CRYSTALERANGE);
 			plugin.addSpawnTask(crystal);
 			crystal.start(20);
 		}

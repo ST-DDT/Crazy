@@ -1,23 +1,34 @@
 package de.st_ddt.crazyspawner.tasks;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
 public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>
 {
 
+	protected final List<BukkitTask> tasks = new LinkedList<BukkitTask>();
 	protected final CrazySpawner plugin;
 	protected final ExtendedCreatureType type;
 	protected final Location location;
@@ -30,8 +41,10 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final int playerMinCount;
 	protected final double playerRange;
 	protected final double blockingRange;
+	protected final List<Long> countDownTimes;
+	protected final String countDownMessage;
+	protected final boolean countDownBroadcast;
 	protected final boolean allowDespawn;
-	protected int taskID = -1;
 
 	/**
 	 * @param plugin
@@ -59,7 +72,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
 	{
 		super();
 		this.plugin = plugin;
@@ -80,7 +93,22 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.playerMinCount = playerMinCount;
 		this.playerRange = playerRange;
 		this.blockingRange = blockingRange;
+		if (countDownTimes == null)
+			this.countDownTimes = new ArrayList<Long>(0);
+		else
+			this.countDownTimes = countDownTimes;
+		clearCountDownTimes();
+		this.countDownMessage = countDownMessage;
+		this.countDownBroadcast = countDownMessage != null && countDownBroadcast;
 		this.allowDespawn = allowDespawn;
+	}
+
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
+	{
+		this(plugin, type, location, amount, interval, repeat, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn);
+		for (final Long time : countDownTimes)
+			this.countDownTimes.add(time);
+		clearCountDownTimes();
 	}
 
 	/**
@@ -99,9 +127,9 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param creatureRange
 	 *            Search range for the given type.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final double creatureRange)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
-		this(plugin, type, location, 1, interval, -1, chunkLoadRange, 1, creatureRange, 0, 0, 0, false);
+		this(plugin, type, location, 1, interval, -1, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -125,7 +153,43 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.playerMinCount = Math.max(config.getInt("playerMinCount", 0), 0);
 		this.playerRange = Math.max(config.getDouble("playerRange", 16), 0);
 		this.blockingRange = Math.max(config.getDouble("blockingRange", 0), 0);
+		final List<Long> countDownTimes = config.getLongList("countDownTimes");
+		if (countDownTimes == null)
+			this.countDownTimes = new ArrayList<Long>(0);
+		else
+			this.countDownTimes = countDownTimes;
+		clearCountDownTimes();
+		this.countDownMessage = ChatHelper.colorise(config.getString("countDownMessage"));
+		this.countDownBroadcast = countDownMessage != null && this.countDownTimes.size() > 0 ? config.getBoolean("countDownBroadcast", false) : false;
 		this.allowDespawn = config.getBoolean("allowDespawn", false);
+	}
+
+	private void clearCountDownTimes()
+	{
+		final Iterator<Long> it = countDownTimes.iterator();
+		while (it.hasNext())
+			if (it.next() > interval)
+				it.remove();
+	}
+
+	private String timeConverter(long time)
+	{
+		final StringBuilder res = new StringBuilder();
+		if (time > 3600)
+		{
+			final long unit = time / 3600;
+			time %= 3600;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.HOURS", (CommandSender) null));
+		}
+		if (time > 60)
+		{
+			final long unit = time / 60;
+			time %= 60;
+			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.MINUTES", (CommandSender) null));
+		}
+		if (time > 0 || res.length() == 0)
+			res.append(" " + time + " " + CrazyLocale.getUnitText("TIME.SECONDS", (CommandSender) null));
+		return res.substring(1);
 	}
 
 	public final void start()
@@ -135,17 +199,22 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 
 	public void start(final long delay)
 	{
-		if (taskID == -1)
-			taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, delay, interval);
+		if (tasks.size() != 0)
+			return;
+		final BukkitScheduler scheduler = Bukkit.getScheduler();
+		for (final Long time : countDownTimes)
+			if (time > delay)
+				tasks.add(scheduler.runTaskTimer(plugin, new Messager(ChatHelper.putArgs(countDownMessage, timeConverter(time / 20))), delay - time + interval, interval));
+			else
+				tasks.add(scheduler.runTaskTimer(plugin, new Messager(ChatHelper.putArgs(countDownMessage, timeConverter(time / 20))), delay - time, interval));
+		tasks.add(scheduler.runTaskTimer(plugin, this, delay, interval));
 	}
 
 	public void cancel()
 	{
-		if (taskID != -1)
-		{
-			Bukkit.getScheduler().cancelTask(taskID);
-			taskID = -1;
-		}
+		for (final BukkitTask task : tasks)
+			task.cancel();
+		tasks.clear();
 	}
 
 	@Override
@@ -225,6 +294,9 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		config.set(path + "playerMinCount", playerMinCount);
 		config.set(path + "playerRange", playerRange);
 		config.set(path + "blockingRange", blockingRange);
+		config.set(path + "countDownTimes", countDownTimes);
+		config.set(path + "countDownMessage", ChatHelper.decolorise(countDownMessage));
+		config.set(path + "countDownBroadcast", countDownBroadcast);
 		config.set(path + "allowDespawn", allowDespawn);
 	}
 
@@ -243,5 +315,30 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		if (res == 0)
 			res = Integer.valueOf(super.hashCode()).compareTo(o.hashCode());
 		return res;
+	}
+
+	private class Messager implements Runnable
+	{
+
+		private final String message;
+
+		public Messager(final String message)
+		{
+			super();
+			this.message = message;
+		}
+
+		@Override
+		public void run()
+		{
+			if (countDownBroadcast)
+				for (final Player player : Bukkit.getOnlinePlayers())
+					player.sendMessage(message);
+			else
+				for (final Player player : Bukkit.getOnlinePlayers())
+					if (player.getWorld().equals(location.getWorld()))
+						if (location.distance(player.getLocation()) < playerRange)
+							player.sendMessage(message);
+		}
 	}
 }
