@@ -65,7 +65,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 		final WorldParamitrisable worldParam = new WorldParamitrisable(sender);
 		params.put("w", worldParam);
 		params.put("world", worldParam);
-		final IntegerParamitrisable chunkloadrange = new IntegerParamitrisable(0)
+		final IntegerParamitrisable chunkloadrange = new IntegerParamitrisable(7)
 		{
 
 			@Override
