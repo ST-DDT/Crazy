@@ -187,7 +187,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 			time %= 60;
 			res.append(" " + unit + " " + CrazyLocale.getUnitText("TIME.MINUTES", (CommandSender) null));
 		}
-		if (time >= 0 || res.length() == 0)
+		if (time > 0 || res.length() == 0)
 			res.append(" " + time + " " + CrazyLocale.getUnitText("TIME.SECONDS", (CommandSender) null));
 		return res.substring(1);
 	}
