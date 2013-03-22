@@ -259,7 +259,7 @@ public class ChatConverter
 	public static String timeConverter(long time, float shift, final CommandSender target, int units, final boolean showWeeks)
 	{
 		final StringBuilder res = new StringBuilder();
-		if (time > shift * 31536000)
+		if (time >= shift * 31536000)
 		{
 			final long unit = time / 31536000;
 			shift = 1;
@@ -269,7 +269,7 @@ public class ChatConverter
 			if (units == 0)
 				return res.substring(1);
 		}
-		if (time > shift * 2592000)
+		if (time >= shift * 2592000)
 		{
 			final long unit = time / 2592000;
 			shift = 1;
@@ -279,7 +279,7 @@ public class ChatConverter
 			if (units == 0)
 				return res.substring(1);
 		}
-		if (showWeeks && time > shift * 604800)
+		if (showWeeks && time >= shift * 604800)
 		{
 			final long unit = time / 604800;
 			shift = 1;
@@ -289,7 +289,7 @@ public class ChatConverter
 			if (units == 0)
 				return res.substring(1);
 		}
-		if (time > shift * 86400)
+		if (time >= shift * 86400)
 		{
 			final long unit = time / 86400;
 			shift = 1;
@@ -299,7 +299,7 @@ public class ChatConverter
 			if (units == 0)
 				return res.substring(1);
 		}
-		if (time > shift * 3600)
+		if (time >= shift * 3600)
 		{
 			final long unit = time / 3600;
 			shift = 1;
@@ -309,7 +309,7 @@ public class ChatConverter
 			if (units == 0)
 				return res.substring(1);
 		}
-		if (time > shift * 60)
+		if (time >= shift * 60)
 		{
 			final long unit = time / 60;
 			shift = 1;
