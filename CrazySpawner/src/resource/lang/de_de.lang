@@ -14,4 +14,4 @@ CRAZYSPAWNER.COMMAND.THEENDAUTORESPAWN.DONE=Die Welt $0$ wird nun automatisch mi
 CRAZYSPAWNER.CREATURES.AVAILABLE=$0$ Typen von Kreaturen warten darauf gespawnt zu werden! 
 CRAZYSPAWNER.CREATURES.LOADED=$0$ benutzerdefinierte Typen von Kreaturen geladen!
 #CRAZYSPAWNER.MODE.CHANGE=
-CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE=Der Ender-Drache wird in &4$1$&F nach &5$0$&F zurückkehren.
+CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE=Ein Ender-Drache wird in &4$1$&F nach &5$0$&F zurückkehren.

@@ -14,4 +14,4 @@ CRAZYSPAWNER.COMMAND.THEENDAUTORESPAWN.DONE=The world $0$ will spawn Ender-Drago
 CRAZYSPAWNER.CREATURES.AVAILABLE=$0$ types of creature are ready to be spawned!\n($1$ custom types)
 CRAZYSPAWNER.CREATURES.LOADED=Loaded $0$ custom types of creature!
 #CRAZYSPAWNER.MODE.CHANGE=
-CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE=The Ender-Dragon will return to &D$0$&F in &4$1$&F.
+CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE=An Ender-Dragon will return to &D$0$&F in &4$1$&F.
