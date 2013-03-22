@@ -313,7 +313,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		if (res == 0)
 			res = type.getName().compareTo(o.type.getName());
 		if (res == 0)
-			res = Integer.valueOf(super.hashCode()).compareTo(o.hashCode());
+			res = Integer.valueOf(hashCode()).compareTo(o.hashCode());
 		return res;
 	}
 
