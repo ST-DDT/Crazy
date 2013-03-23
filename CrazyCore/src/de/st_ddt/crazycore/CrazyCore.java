@@ -125,11 +125,11 @@ public final class CrazyCore extends CrazyPlugin
 	private void registerCommands()
 	{
 		final CrazyCommandTreeExecutor<CrazyCore> players = new CrazyCommandTreeExecutor<CrazyCore>(this);
-		mainCommand.addSubCommand(players, "player", "players");
+		mainCommand.addSubCommand(players, "p", "plr", "player", "players");
 		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeFilePaths(plugin), "wipefilepaths", "wipepaths");
 		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
 		mainCommand.addSubCommand(new CrazyCoreCommandUpdateCheck(this), "updatecheck");
-		players.addSubCommand(new CrazyCoreCommandPlayerInfo(this), "info");
+		players.addSubCommand(new CrazyCoreCommandPlayerInfo(this), "i", "info");
 		players.addSubCommand(new CrazyCoreCommandPlayerAssociates(this), "a", "associates");
 		players.addSubCommand(new CrazyCoreCommandPlayerIPSearch(this), "ip", "ipsearch");
 		players.addSubCommand(new CrazyCoreCommandPlayerDelete(this), "delete", "remove");
