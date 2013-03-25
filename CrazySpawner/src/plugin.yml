@@ -10,7 +10,7 @@ description: >
 commands:
   crazyspawn:
     description: Spawn living Creatures...
-    usage: /<command> <creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [chunkloadrange:Integer] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [blockingrange:Double] [allowdespawning:Boolean] [location:Location]
+    usage: /<command> <creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [synced:Boolean] [chunkloadrange:Integer] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [blockingrange:Double] [allowdespawning:Boolean] [location:Location]
     aliases: [crazymobs, cms]
   crazykill:
     description: Kill living Creatures...
@@ -22,7 +22,7 @@ commands:
     aliases: [spawner, crazyspawner, ccs]
   crazytheendautorespawn:
     description: Create auto respawn tasks for EnderDragons and EnderCrystals.
-    usage: /<command> <Creature>
+    usage: /<command> [interval:Duration] [world:World] [chunkloadrange:Integer]
     aliases: [theendautorespawn, ctearespawn, tearespawn,ctear,tear]
   crazyspawner:
     description: Plugin Mainmenu
