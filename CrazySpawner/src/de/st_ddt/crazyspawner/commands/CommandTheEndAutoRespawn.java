@@ -108,12 +108,15 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
-		final DurationParamitrisable interval = new DurationParamitrisable(5 * 60 * 1000L);
+		final DurationParamitrisable interval = new DurationParamitrisable(60 * 60 * 1000L);
 		params.put("i", interval);
 		params.put("interval", interval);
 		final WorldParamitrisable worldParam = new WorldParamitrisable(sender);
 		params.put("w", worldParam);
 		params.put("world", worldParam);
+		final IntegerParamitrisable chunkloadrange = new IntegerParamitrisable(7);
+		params.put("clr", chunkloadrange);
+		params.put("chunkloadrange", chunkloadrange);
 		return ChatHelperExtended.tabHelp(args, params, interval);
 	}
 
