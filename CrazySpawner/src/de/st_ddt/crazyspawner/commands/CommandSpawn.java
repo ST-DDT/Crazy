@@ -209,7 +209,10 @@ public class CommandSpawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("World", "(none)");
 		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue());
 		plugin.addSpawnTask(task);
-		task.start(delay.getValue() / 50);
+		if (synced.getValue())
+			task.start();
+		else
+			task.start(delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);
 	}
 

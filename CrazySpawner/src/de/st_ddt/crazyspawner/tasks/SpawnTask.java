@@ -202,15 +202,16 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 
 	public final void start()
 	{
-		start(1);
+		if (synced)
+			start(Math.max(interval - System.currentTimeMillis() / 50 % interval, 1));
+		else
+			start(Math.max(Math.round(Math.random() * interval), 1));
 	}
 
-	public void start(long delay)
+	public void start(final long delay)
 	{
 		if (tasks.size() != 0)
 			return;
-		if (synced)
-			delay = Math.max(interval - System.currentTimeMillis() / 50 % interval, 1);
 		final BukkitScheduler scheduler = Bukkit.getScheduler();
 		for (final Long time : countDownTimes)
 			if (time > delay)

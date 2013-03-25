@@ -86,7 +86,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 			throw new CrazyCommandCircumstanceException("the world must be a The_End world!");
 		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, new Location(world, 0, 0, 0), interval.getValue() / 50, 5, COUNTDOWNTIMES, plugin.getLocale().getDefaultLocaleMessage("THEENDAUTORESPAWN.COUNTDOWNMESSAGE", world.getName(), "$0$"), DRAGONRANGE);
 		plugin.addSpawnTask(dragon);
-		dragon.start(20);
+		dragon.start();
 		final int range = chunkloadrange.getValue();
 		for (int x = -range; x <= range; x++)
 			for (int z = -range; z <= range; z++)
@@ -95,7 +95,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 		{
 			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), interval.getValue() / 50, 1, null, null, CRYSTALERANGE);
 			plugin.addSpawnTask(crystal);
-			crystal.start(20);
+			crystal.start();
 		}
 		for (int x = -range; x <= range; x++)
 			for (int z = -range; z <= range; z++)
