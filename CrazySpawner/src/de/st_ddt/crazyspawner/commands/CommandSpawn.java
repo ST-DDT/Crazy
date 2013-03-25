@@ -92,6 +92,9 @@ public class CommandSpawn extends CommandExecutor
 		};
 		params.put("r", repeat);
 		params.put("repeat", repeat);
+		final BooleanParamitrisable synced = new BooleanParamitrisable(false);
+		params.put("s", synced);
+		params.put("synced", synced);
 		final IntegerParamitrisable chunkLoadRange = new IntegerParamitrisable(-1)
 		{
 
@@ -204,7 +207,7 @@ public class CommandSpawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
 		if (location.getValue().getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue());
+		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue());
 		plugin.addSpawnTask(task);
 		task.start(delay.getValue() / 50);
 		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);
@@ -229,6 +232,12 @@ public class CommandSpawn extends CommandExecutor
 		final IntegerParamitrisable repeat = new IntegerParamitrisable(0);
 		params.put("r", repeat);
 		params.put("repeat", repeat);
+		final BooleanParamitrisable synced = new BooleanParamitrisable(false);
+		params.put("s", synced);
+		params.put("synced", synced);
+		final IntegerParamitrisable chunkLoadRange = new IntegerParamitrisable(-1);
+		params.put("clr", chunkLoadRange);
+		params.put("chunkloadrange", chunkLoadRange);
 		final IntegerParamitrisable creatureMaxCount = new IntegerParamitrisable(0);
 		params.put("m", creatureMaxCount);
 		params.put("cm", creatureMaxCount);
@@ -250,10 +259,30 @@ public class CommandSpawn extends CommandExecutor
 		params.put("pr", playerRange);
 		params.put("prange", playerRange);
 		params.put("playerrange", playerRange);
+		final DoubleParamitrisable blockingRange = new DoubleParamitrisable(0D);
+		params.put("br", blockingRange);
+		params.put("brange", blockingRange);
+		params.put("blockingrange", blockingRange);
+		final MultiParamitrisable<Long> countDownTimes = new MultiParamitrisable<Long>(new DurationParamitrisable(null));
+		params.put("cdt", countDownTimes);
+		params.put("cdtime", countDownTimes);
+		params.put("countdowntime", countDownTimes);
+		final ColoredStringParamitrisable countDownMessage = new ColoredStringParamitrisable(null);
+		params.put("cdm", countDownMessage);
+		params.put("cdmessage", countDownMessage);
+		params.put("countdownmessage", countDownMessage);
+		final BooleanParamitrisable countDownBroadcast = new BooleanParamitrisable(false);
+		params.put("cdb", countDownBroadcast);
+		params.put("cdbroadcast", countDownBroadcast);
+		params.put("countdownbroadcast", countDownBroadcast);
+		final BooleanParamitrisable allowDespawn = new BooleanParamitrisable(false);
+		params.put("ad", allowDespawn);
+		params.put("despawn", allowDespawn);
+		params.put("allowdespawning", allowDespawn);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");
-		return ChatHelperExtended.tabHelp(args, params, creature, amount, repeat, interval);
+		return ChatHelperExtended.tabHelp(args, params, creature, amount, repeat, interval, delay);
 	}
 
 	@Override

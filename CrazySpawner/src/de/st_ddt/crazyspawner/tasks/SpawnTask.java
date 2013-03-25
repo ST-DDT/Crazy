@@ -34,6 +34,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final Location location;
 	protected final int amount;
 	protected final long interval;
+	protected final boolean synced;
 	protected int repeat;
 	protected final int chunkLoadRange;
 	protected final int creatureMaxCount;
@@ -72,7 +73,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
 	{
 		super();
 		this.plugin = plugin;
@@ -87,6 +88,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.amount = creatureMaxCount > 0 ? Math.min(amount, creatureMaxCount) : amount;
 		this.interval = Math.max(interval, 1);
 		this.repeat = repeat;
+		this.synced = synced;
 		this.chunkLoadRange = chunkLoadRange;
 		this.creatureMaxCount = creatureMaxCount;
 		this.creatureRange = creatureRange;
@@ -103,11 +105,12 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.allowDespawn = allowDespawn;
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
 	{
-		this(plugin, type, location, amount, interval, repeat, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn);
-		for (final Long time : countDownTimes)
-			this.countDownTimes.add(time);
+		this(plugin, type, location, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn);
+		if (countDownTimes != null)
+			for (final Long time : countDownTimes)
+				this.countDownTimes.add(time);
 		clearCountDownTimes();
 	}
 
@@ -129,7 +132,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
-		this(plugin, type, location, 1, interval, -1, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false);
+		this(plugin, type, location, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -147,6 +150,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.amount = Math.max(config.getInt("amount", 1), 1);
 		this.interval = Math.max(config.getLong("interval", 20), 1);
 		this.repeat = Math.max(config.getInt("repeat", 0), -1);
+		this.synced = config.getBoolean("synced", false);
 		this.chunkLoadRange = config.getInt("chunkLoadRange", -1);
 		this.creatureMaxCount = Math.max(config.getInt("creatureMaxCount", 0), 0);
 		this.creatureRange = Math.max(config.getDouble("creatureRange", 16), 0);
@@ -201,10 +205,12 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		start(1);
 	}
 
-	public void start(final long delay)
+	public void start(long delay)
 	{
 		if (tasks.size() != 0)
 			return;
+		if (synced)
+			delay = Math.max(interval - System.currentTimeMillis() / 50 % interval, 1);
 		final BukkitScheduler scheduler = Bukkit.getScheduler();
 		for (final Long time : countDownTimes)
 			if (time > delay)
@@ -292,6 +298,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		config.set(path + "amount", amount);
 		config.set(path + "interval", interval);
 		config.set(path + "repeat", repeat);
+		config.set(path + "synced", synced);
 		config.set(path + "chunkLoadRange", chunkLoadRange);
 		config.set(path + "creatureMaxCount", creatureMaxCount);
 		config.set(path + "creatureRange", creatureRange);
