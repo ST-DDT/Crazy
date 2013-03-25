@@ -39,7 +39,10 @@ public class ChatHelper
 	 */
 	public static String colorise(final String string)
 	{
-		return ChatColor.translateAlternateColorCodes('&', string);
+		if (string == null)
+			return null;
+		else
+			return ChatColor.translateAlternateColorCodes('&', string);
 	}
 
 	/**
@@ -51,6 +54,8 @@ public class ChatHelper
 	 */
 	public static String decolorise(final String string)
 	{
+		if (string == null)
+			return null;
 		final char[] b = string.toCharArray();
 		for (int i = 0; i < b.length - 1; i++)
 			if (b[i] == ChatColor.COLOR_CHAR && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1)
