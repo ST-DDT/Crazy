@@ -159,7 +159,11 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		else
 			this.countDownTimes = countDownTimes;
 		clearCountDownTimes();
-		this.countDownMessage = ChatHelper.colorise(config.getString("countDownMessage"));
+		final String message = config.getString("countDownMessage");
+		if (message == null)
+			this.countDownMessage = null;
+		else
+			this.countDownMessage = ChatHelper.colorise(message);
 		this.countDownBroadcast = countDownMessage != null && this.countDownTimes.size() > 0 ? config.getBoolean("countDownBroadcast", false) : false;
 		this.allowDespawn = config.getBoolean("allowDespawn", false);
 	}
@@ -295,7 +299,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		config.set(path + "playerRange", playerRange);
 		config.set(path + "blockingRange", blockingRange);
 		config.set(path + "countDownTimes", countDownTimes);
-		config.set(path + "countDownMessage", ChatHelper.decolorise(countDownMessage));
+		if (countDownMessage != null)
+			config.set(path + "countDownMessage", ChatHelper.decolorise(countDownMessage));
 		config.set(path + "countDownBroadcast", countDownBroadcast);
 		config.set(path + "allowDespawn", allowDespawn);
 	}
