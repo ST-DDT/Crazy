@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -28,10 +30,12 @@ import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>
 {
 
+	protected final static Random RANDOM = new Random();
 	protected final List<BukkitTask> tasks = new LinkedList<BukkitTask>();
 	protected final CrazySpawner plugin;
 	protected final ExtendedCreatureType type;
 	protected final Location location;
+	protected final double spawnRange;
 	protected final int amount;
 	protected final long interval;
 	protected final boolean synced;
@@ -73,18 +77,16 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
 	{
 		super();
 		this.plugin = plugin;
 		this.type = type;
-		if (type == null)
-			throw new IllegalArgumentException("Type cannot be null!");
 		this.location = location;
-		if (location == null)
-			throw new IllegalArgumentException("Location cannot be null!");
-		if (location.getWorld() == null)
-			throw new IllegalArgumentException("Location.world cannot be null!");
+		Validate.notNull(this.type, "Type cannot be null!");
+		Validate.notNull(this.location, "Location cannot be null!");
+		Validate.notNull(this.location.getWorld(), "Location.world cannot be null!");
+		this.spawnRange = Math.max(spawnRange, 0);
 		this.amount = creatureMaxCount > 0 ? Math.min(amount, creatureMaxCount) : amount;
 		this.interval = Math.max(interval, 1);
 		this.repeat = repeat;
@@ -105,9 +107,9 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.allowDespawn = allowDespawn;
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
 	{
-		this(plugin, type, location, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn);
+		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn);
 		if (countDownTimes != null)
 			for (final Long time : countDownTimes)
 				this.countDownTimes.add(time);
@@ -132,7 +134,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
-		this(plugin, type, location, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false);
+		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -140,13 +142,11 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		super();
 		this.plugin = plugin;
 		this.type = ExtendedCreatureParamitrisable.CREATURE_TYPES.get(config.getString("type").toUpperCase());
-		if (type == null)
-			throw new IllegalArgumentException("Type " + config.getString("type") + " wasn't found!");
 		this.location = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("location"), null);
-		if (location == null)
-			throw new IllegalArgumentException("Location cannot be null!");
-		if (location.getWorld() == null)
-			throw new IllegalArgumentException("Location.world cannot be null!");
+		Validate.notNull(this.type, "Type cannot be null!");
+		Validate.notNull(this.location, "Location cannot be null!");
+		Validate.notNull(this.location.getWorld(), "Location.world cannot be null!");
+		this.spawnRange = Math.max(0, config.getDouble("spawnRange", 0));
 		this.amount = Math.max(config.getInt("amount", 1), 1);
 		this.interval = Math.max(config.getLong("interval", 20), 1);
 		this.repeat = Math.max(config.getInt("repeat", 0), -1);
@@ -244,7 +244,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 			final int amount = checkCreatures();
 			for (int i = 0; i < amount; i++)
 			{
-				final Entity entity = type.spawn(location);
+				final Entity entity = type.spawn(randomizedLocation(location, spawnRange));
 				if (entity instanceof LivingEntity)
 					((LivingEntity) entity).setRemoveWhenFarAway(allowDespawn);
 			}
@@ -261,6 +261,16 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 					for (int z = -chunkLoadRange; z <= chunkLoadRange; z++)
 						world.unloadChunkRequest(x, z, true);
 		}
+	}
+
+	protected Location randomizedLocation(final Location location, final double offset)
+	{
+		if (offset == 0)
+			return location;
+		final Location res = location.clone();
+		res.setX(res.getX() + (RANDOM.nextBoolean() ? 1 : -1) * RANDOM.nextDouble() * offset);
+		res.setZ(res.getZ() + (RANDOM.nextBoolean() ? 1 : -1) * RANDOM.nextDouble() * offset);
+		return res;
 	}
 
 	protected boolean checkPlayers()
@@ -296,6 +306,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 			return;
 		config.set(path + "type", type.getName());
 		ObjectSaveLoadHelper.saveLocation(config, path + "location.", location, true, false);
+		config.set(path + "spawnRange", spawnRange);
 		config.set(path + "amount", amount);
 		config.set(path + "interval", interval);
 		config.set(path + "repeat", repeat);
