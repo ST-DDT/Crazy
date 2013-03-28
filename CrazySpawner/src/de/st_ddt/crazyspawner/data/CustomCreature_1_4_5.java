@@ -13,6 +13,7 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Slime;
@@ -115,7 +116,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		this.charged = charged && Creeper.class.isAssignableFrom(clazz);
 		this.color = Colorable.class.isAssignableFrom(clazz) ? color : null;
 		this.size = Slime.class.isAssignableFrom(clazz) ? size : 0;
-		this.angry = angry && Wolf.class.isAssignableFrom(clazz);
+		this.angry = (Wolf.class.isAssignableFrom(clazz) || PigZombie.class.isAssignableFrom(clazz)) && angry;
 		if (Tameable.class.isAssignableFrom(clazz))
 		{
 			this.tamer = tamer;
@@ -173,7 +174,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		this.charged = Creeper.class.isAssignableFrom(clazz) && config.getBoolean("charged");
 		this.color = Colorable.class.isAssignableFrom(clazz) ? DyeColor.valueOf(config.getString("color", "WHITE")) : null;
 		this.size = Slime.class.isAssignableFrom(clazz) ? config.getInt("size") : 0;
-		this.angry = Wolf.class.isAssignableFrom(clazz) && config.getBoolean("angry");
+		this.angry = (Wolf.class.isAssignableFrom(clazz) || PigZombie.class.isAssignableFrom(clazz)) && config.getBoolean("angry");
 		if (Tameable.class.isAssignableFrom(clazz))
 		{
 			final String tamer = config.getString("tamer");
@@ -257,7 +258,10 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			if (size > 0 && size < 5)
 				((Slime) entity).setSize(size);
 			if (angry)
-				((Wolf) entity).setAngry(true);
+				if (entity instanceof Wolf)
+					((Wolf) entity).setAngry(true);
+				else
+					((PigZombie) entity).setAngry(true);
 			if (tamed)
 			{
 				final Tameable tameable = (Tameable) entity;
