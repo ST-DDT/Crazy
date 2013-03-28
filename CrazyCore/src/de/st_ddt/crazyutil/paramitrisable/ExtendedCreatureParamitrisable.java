@@ -17,6 +17,7 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -277,7 +278,7 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			@Override
 			public String getName()
 			{
-				return "ANGRYWOLF";
+				return "ANGRY_WOLF";
 			}
 
 			@Override
@@ -298,7 +299,35 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 						it.remove();
 				return entities;
 			}
-		});
+		}, "ANGRYWOLF");
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.PIG_ZOMBIE)
+		{
+
+			@Override
+			public String getName()
+			{
+				return "ANGRY_PIG_ZOMBIE";
+			}
+
+			@Override
+			public PigZombie spawn(final Location location)
+			{
+				final PigZombie pigzombie = (PigZombie) super.spawn(location);
+				pigzombie.setAngry(true);
+				return pigzombie;
+			}
+
+			@Override
+			public Collection<? extends Entity> getEntities(final World world)
+			{
+				final Collection<? extends Entity> entities = super.getEntities(world);
+				final Iterator<? extends Entity> it = entities.iterator();
+				while (it.hasNext())
+					if (!((PigZombie) it.next()).isAngry())
+						it.remove();
+				return entities;
+			}
+		}, "ANGRY_PIGMEN", "ANGRYPIG_ZOMBIE", "ANGRYPIGMEN");
 		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
 		{
 
