@@ -3,6 +3,7 @@ package de.st_ddt.crazylogin;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazylogin.crypt.Encryptor;
@@ -59,6 +60,10 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 	public double getMoveRange();
 
 	public String getUniqueIDKey();
+
+	public void forceRelogin(OfflinePlayer player);
+
+	public void forceRelogin(String name);
 
 	public void requestLogin(Player player);
 
