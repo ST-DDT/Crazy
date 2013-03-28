@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,16 +21,20 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.data.CreatureMeta;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
 public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>
 {
 
+	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
+	protected final static boolean v15OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5") >= 0;
 	protected final static Random RANDOM = new Random();
 	protected final List<BukkitTask> tasks = new LinkedList<BukkitTask>();
 	protected final CrazySpawner plugin;
@@ -50,6 +55,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final String countDownMessage;
 	protected final boolean countDownBroadcast;
 	protected final boolean allowDespawn;
+	protected final int health;
+	protected final boolean showHealth;
 
 	/**
 	 * @param plugin
@@ -77,7 +84,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final int health, final boolean showHealth)
 	{
 		super();
 		this.plugin = plugin;
@@ -105,11 +112,13 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.countDownMessage = countDownMessage;
 		this.countDownBroadcast = countDownMessage != null && countDownBroadcast;
 		this.allowDespawn = allowDespawn;
+		this.health = v146OrLater ? health : -1;
+		this.showHealth = v15OrLater ? showHealth : false;
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final int health, final boolean showHealth)
 	{
-		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn);
+		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn, health, showHealth);
 		if (countDownTimes != null)
 			for (final Long time : countDownTimes)
 				this.countDownTimes.add(time);
@@ -134,7 +143,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
-		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false);
+		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false, -1, false);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -170,6 +179,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 			this.countDownMessage = ChatHelper.colorise(message);
 		this.countDownBroadcast = countDownMessage != null && this.countDownTimes.size() > 0 ? config.getBoolean("countDownBroadcast", false) : false;
 		this.allowDespawn = config.getBoolean("allowDespawn", false);
+		this.health = v146OrLater ? config.getInt("health", -1) : -1;
+		this.showHealth = v15OrLater ? config.getBoolean("showHealth", false) : false;
 	}
 
 	private void clearCountDownTimes()
@@ -243,11 +254,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 						world.loadChunk(cX + x, cZ + z, false);
 			final int amount = checkCreatures();
 			for (int i = 0; i < amount; i++)
-			{
-				final Entity entity = type.spawn(randomizedLocation(location, spawnRange));
-				if (entity instanceof LivingEntity)
-					((LivingEntity) entity).setRemoveWhenFarAway(allowDespawn);
-			}
+				postSpawnProcessing(type.spawn(randomizedLocation(location, spawnRange)));
 			if (amount > 0)
 				if (repeat > 0)
 					repeat--;
@@ -260,6 +267,43 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 				for (int x = -chunkLoadRange; x <= chunkLoadRange; x++)
 					for (int z = -chunkLoadRange; z <= chunkLoadRange; z++)
 						world.unloadChunkRequest(x, z, true);
+		}
+	}
+
+	protected void postSpawnProcessing(final Entity entity)
+	{
+		if (v146OrLater)
+		{
+			if (entity instanceof LivingEntity)
+			{
+				postSpawnProcessing((LivingEntity) entity);
+				postSpawnProcessing((Damageable) entity);
+			}
+			else if (entity instanceof Damageable)
+				postSpawnProcessing((Damageable) entity);
+		}
+		else if (entity instanceof LivingEntity)
+			postSpawnProcessing((LivingEntity) entity);
+	}
+
+	protected void postSpawnProcessing(final LivingEntity entity)
+	{
+		entity.setRemoveWhenFarAway(allowDespawn);
+		if (showHealth)
+		{
+			final String name = entity.getCustomName() == null ? entity.getType().getName() : entity.getCustomName();
+			entity.setMetadata("CreatureMeta", new CreatureMeta(name));
+			entity.setCustomName(name + " (" + entity.getHealth() + ")");
+			entity.setCustomNameVisible(true);
+		}
+	}
+
+	protected void postSpawnProcessing(final Damageable entity)
+	{
+		if (health != -1)
+		{
+			entity.setMaxHealth(health);
+			entity.setHealth(health);
 		}
 	}
 

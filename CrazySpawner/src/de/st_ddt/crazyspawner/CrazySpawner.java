@@ -32,6 +32,7 @@ import de.st_ddt.crazyspawner.data.CustomCreature;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_5;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_6;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_5;
+import de.st_ddt.crazyspawner.listener.CreatureListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -47,22 +48,23 @@ import de.st_ddt.crazyutil.source.LocalizedVariable;
 public class CrazySpawner extends CrazyPlugin
 {
 
+	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
+	protected final static boolean v15OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5") >= 0;
 	private static CrazySpawner plugin;
-	private final Set<CustomCreature> creatures = new LinkedHashSet<CustomCreature>();
-	private final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
-	private final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
-	private boolean v146OrLater;
-	private boolean v15OrLater;
+	protected final Set<CustomCreature> creatures = new LinkedHashSet<CustomCreature>();
+	protected final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
+	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 
 	public static CrazySpawner getPlugin()
 	{
 		return plugin;
 	}
 
-	public void registerHooks()
+	private void registerHooks()
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this, creatureSelection), this);
+		pm.registerEvents(new CreatureListener(this), this);
 	}
 
 	private void registerCommands()
@@ -84,9 +86,6 @@ public class CrazySpawner extends CrazyPlugin
 	@Localized("CRAZYSPAWNER.CREATURES.AVAILABLE $Count$")
 	public void onEnable()
 	{
-		final String mcVersion = ChatHelper.getMinecraftVersion();
-		v15OrLater = (VersionComparator.compareVersions(mcVersion, "1.5") >= 0);
-		v146OrLater = (VersionComparator.compareVersions(mcVersion, "1.4.6") >= 0);
 		registerEnderCrystalType();
 		super.onEnable();
 		if (isUpdated)
