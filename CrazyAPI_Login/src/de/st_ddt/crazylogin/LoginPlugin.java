@@ -65,7 +65,7 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 
 	public void forceRelogin(String name);
 
-	public void requestLogin(Player player);
+	public void sendLoginReminderMessage(Player player);
 
 	public void broadcastLocaleMessage(boolean console, String permission, boolean loggedInOnly, String localepath, Object... args);
 
