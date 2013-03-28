@@ -18,6 +18,8 @@ public interface LoginData extends PlayerDataInterface
 
 	public boolean hasIP(String ip);
 
+	public boolean isLatestIP(String ip);
+
 	public String getLatestIP();
 
 	public Date getLastActionTime();
