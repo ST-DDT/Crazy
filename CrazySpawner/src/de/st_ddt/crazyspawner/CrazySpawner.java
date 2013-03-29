@@ -109,6 +109,12 @@ public class CrazySpawner extends CrazyPlugin
 				config.set("example.Item.meta.enchants.ENCHANTMENT1", "int (1-255)");
 				config.set("example.Item.meta.enchants.ENCHANTMENT2", "int (1-255)");
 				config.set("example.Item.meta.enchants.ENCHANTMENTx", "int (1-255)");
+				// ExampleEnchantment
+				final List<String> exampleEnchantments = new ArrayList<String>();
+				for (final Enchantment type : Enchantment.values())
+					if (type != null)
+						exampleEnchantments.add(type.getName());
+				config.set("example.Enchantment", exampleEnchantments);
 				// DefaultCreatures
 				// - Spider_Skeleton
 				final CustomCreature spiderSkeleton = new CustomCreature_1_4_5("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
