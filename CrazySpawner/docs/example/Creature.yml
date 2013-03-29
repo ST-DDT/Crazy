@@ -1,3 +1,7 @@
+# CrazySpawner example Creature.yml
+# For more information visit
+# https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Creature.yml
+# Custom creatures have to be defined inside config.yml
 exampleCreature:
 # The Name of your creature type
   name: String

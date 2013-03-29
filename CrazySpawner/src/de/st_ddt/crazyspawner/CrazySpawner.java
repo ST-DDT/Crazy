@@ -1,5 +1,7 @@
 package de.st_ddt.crazyspawner;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -91,32 +94,9 @@ public class CrazySpawner extends CrazyPlugin
 		super.onEnable();
 		if (isUpdated)
 		{
-			final ConfigurationSection config = getConfig();
+			saveExamples();
 			if (VersionComparator.compareVersions(previousVersion, "3.7") == -1)
 			{
-				// ExampleCreature
-				CustomCreature_1_4_5.dummySave(config, "example.Creature.");
-				// ExampleType
-				config.set("example.EntityType", CreatureParamitrisable.CREATURE_NAMES);
-				// ExampleColor
-				config.set("example.DyeColor", EnumParamitrisable.getEnumNames(DyeColor.values()).toArray());
-				// ExampleItem
-				config.set("example.Item.type", "Material");
-				config.set("example.Item.damage", "short (0 (full) - 528 (broken, upper limit may differ (mostly below)))");
-				config.set("example.Item.amount", "int (1-64)");
-				config.set("example.Item.meta.==", "ItemMeta");
-				config.set("example.Item.meta.meta-type", "UNSPECIFIC");
-				config.set("example.Item.meta.display-name", "String");
-				config.set("example.Item.meta.lore", new String[] { "Line1", "Line2", "..." });
-				config.set("example.Item.meta.enchants.ENCHANTMENT1", "int (1-255)");
-				config.set("example.Item.meta.enchants.ENCHANTMENT2", "int (1-255)");
-				config.set("example.Item.meta.enchants.ENCHANTMENTx", "int (1-255)");
-				// ExampleEnchantment
-				final List<String> exampleEnchantments = new ArrayList<String>();
-				for (final Enchantment type : Enchantment.values())
-					if (type != null)
-						exampleEnchantments.add(type.getName());
-				config.set("example.Enchantment", exampleEnchantments);
 				// DefaultCreatures
 				// - Spider_Skeleton
 				final CustomCreature spiderSkeleton = new CustomCreature_1_4_5("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
@@ -170,15 +150,6 @@ public class CrazySpawner extends CrazyPlugin
 			}
 			if (VersionComparator.compareVersions(previousVersion, "3.11") == -1)
 			{
-				System.out.println("Test");
-				// ExampleCreature
-				CustomCreature_1_4_5.dummySave(config, "example.Creature.");
-				// ExamplePotionEffect
-				final List<String> examplePotionEffects = new ArrayList<String>();
-				for (final PotionEffectType type : PotionEffectType.values())
-					if (type != null)
-						examplePotionEffects.add(type.getName());
-				config.set("example.PotionEffect", examplePotionEffects);
 				// - Speedy_Baby_Zombie
 				final Map<PotionEffectType, Integer> potions = new HashMap<PotionEffectType, Integer>();
 				potions.put(PotionEffectType.SPEED, 5);
@@ -187,10 +158,112 @@ public class CrazySpawner extends CrazyPlugin
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(speedyZombie);
 				saveConfiguration();
 			}
+			if (VersionComparator.compareVersions(previousVersion, "3.11.1") == -1)
+			{
+				getConfig().set("example", null);
+				saveConfiguration();
+			}
 		}
 		registerHooks();
 		registerCommands();
 		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
+	}
+
+	private void saveExamples()
+	{
+		final File exampleFolder = new File(getDataFolder(), "example");
+		exampleFolder.mkdirs();
+		// ExampleCreature
+		final YamlConfiguration creature = new YamlConfiguration();
+		creature.options().header("CrazySpawner example Creature.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Creature.yml\n" + "Custom creatures have to be defined inside config.yml");
+		CustomCreature_1_4_5.dummySave(creature, "exampleCreature.");
+		try
+		{
+			creature.save(new File(exampleFolder, "Creature.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example Creature.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleType
+		final YamlConfiguration entityTypes = new YamlConfiguration();
+		entityTypes.set("exampleEntityType", CreatureParamitrisable.CREATURE_NAMES);
+		try
+		{
+			entityTypes.save(new File(exampleFolder, "EntityType.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example EntityType.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleColor
+		final YamlConfiguration dyeColors = new YamlConfiguration();
+		dyeColors.set("exampleDyeColor", EnumParamitrisable.getEnumNames(DyeColor.values()).toArray());
+		try
+		{
+			dyeColors.save(new File(exampleFolder, "DyeColor.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example DyeColor.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleItem
+		final YamlConfiguration item = new YamlConfiguration();
+		item.options().header("CrazySpawner example Item.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Item.yml\n" + "Items have to be defined inside config.yml (in the custom creature inventory slots)");
+		item.set("exampleItem.type", "Material");
+		item.set("exampleItem.damage", "short (0 (full) - 528 (broken, upper limit may differ (mostly below)))");
+		item.set("exampleItem.amount", "int (1-64)");
+		item.set("exampleItem.meta.==", "ItemMeta");
+		item.set("exampleItem.meta.meta-type", "UNSPECIFIC");
+		item.set("exampleItem.meta.display-name", "String");
+		item.set("exampleItem.meta.lore", new String[] { "Line1", "Line2", "..." });
+		item.set("exampleItem.meta.enchants.ENCHANTMENT1", "int (1-255)");
+		item.set("exampleItem.meta.enchants.ENCHANTMENT2", "int (1-255)");
+		item.set("exampleItem.meta.enchants.ENCHANTMENTx", "int (1-255)");
+		try
+		{
+			item.save(new File(exampleFolder, "Item.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example Item.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleEnchantment
+		final YamlConfiguration enchantments = new YamlConfiguration();
+		final List<String> exampleEnchantments = new ArrayList<String>();
+		for (final Enchantment enchantment : Enchantment.values())
+			if (enchantment != null)
+				exampleEnchantments.add(enchantment.getName());
+		enchantments.set("exampleEnchantment", exampleEnchantments);
+		try
+		{
+			enchantments.save(new File(exampleFolder, "Enchantment.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example Enchantment.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExamplePotionEffect
+		final YamlConfiguration potionEffects = new YamlConfiguration();
+		final List<String> examplePotionEffects = new ArrayList<String>();
+		for (final PotionEffectType potionEffect : PotionEffectType.values())
+			if (potionEffect != null)
+				examplePotionEffects.add(potionEffect.getName());
+		potionEffects.set("examplePotionEffect", examplePotionEffects);
+		try
+		{
+			potionEffects.save(new File(exampleFolder, "PotionEffect.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example PotionEffect.yml.");
+			System.err.println(e.getMessage());
+		}
 	}
 
 	private void registerEnderCrystalType()
@@ -291,13 +364,23 @@ public class CrazySpawner extends CrazyPlugin
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		config.set("creatures", null);
-		for (final CustomCreature creature : creatures)
-			creature.save(config, "creatures." + creature.getName() + ".");
-		config.set("tasks", null);
-		int i = 0;
-		for (final SpawnTask task : tasks)
-			task.save(config, "tasks.t" + i++ + ".");
+		if (creatures.size() == 0)
+			config.set("creatures", new HashMap<String, Object>(0));
+		else
+		{
+			config.set("creatures", null);
+			for (final CustomCreature creature : creatures)
+				creature.save(config, "creatures." + creature.getName() + ".");
+		}
+		if (tasks.size() == 0)
+			config.set("tasks", new HashMap<String, Object>(0));
+		else
+		{
+			config.set("tasks", null);
+			int i = 0;
+			for (final SpawnTask task : tasks)
+				task.save(config, "tasks.t" + i++ + ".");
+		}
 		super.saveConfiguration();
 	}
 
