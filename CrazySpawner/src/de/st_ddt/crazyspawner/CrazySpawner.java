@@ -42,6 +42,9 @@ import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.VersionComparator;
+import de.st_ddt.crazyutil.metrics.Metrics;
+import de.st_ddt.crazyutil.metrics.Metrics.Graph;
+import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.EnumParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
@@ -77,6 +80,57 @@ public class CrazySpawner extends CrazyPlugin
 		getCommand("crazykill").setExecutor(new CommandKill(this));
 		getCommand("crazycreaturespawner").setExecutor(new CommandCreatureSpawner(this, creatureSelection));
 		getCommand("crazytheendautorespawn").setExecutor(new CommandTheEndAutoRespawn(this));
+	}
+
+	private void registerMetrics()
+	{
+		final boolean metricsEnabled = getConfig().getBoolean("metrics.enabled", true);
+		getConfig().set("metrics.enabled", metricsEnabled);
+		if (!metricsEnabled)
+			return;
+		try
+		{
+			final Metrics metrics = new Metrics(this);
+			final Graph pluginStats = metrics.createGraph("Plugin stats");
+			pluginStats.addPlotter(new Plotter("CustomCreatures")
+			{
+
+				@Override
+				public int getValue()
+				{
+					return creatures.size();
+				}
+			});
+			pluginStats.addPlotter(new Plotter("SpawnTasks")
+			{
+
+				@Override
+				public int getValue()
+				{
+					return tasks.size();
+				}
+			});
+			final Graph creatureCount = metrics.createGraph("Custom creatures");
+			for (final EntityType type : CreatureParamitrisable.CREATURE_TYPES)
+				creatureCount.addPlotter(new Plotter(type.getName())
+				{
+
+					@Override
+					public int getValue()
+					{
+						int i = 0;
+						for (final CustomCreature creature : creatures)
+							if (creature.getType() == type)
+								i++;
+						return i;
+					}
+				});
+			metrics.start();
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -166,6 +220,7 @@ public class CrazySpawner extends CrazyPlugin
 		}
 		registerHooks();
 		registerCommands();
+		registerMetrics();
 		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
 	}
 
