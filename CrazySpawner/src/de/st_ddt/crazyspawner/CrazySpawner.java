@@ -156,6 +156,10 @@ public class CrazySpawner extends CrazyPlugin
 				final CustomCreature spiderSkeleton = new CustomCreature_1_4_5("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
 				creatures.add(spiderSkeleton);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderSkeleton);
+				// - Zombie_Skeleton
+				final CustomCreature spiderZombie = new CustomCreature_1_4_5("Spider_Zombie", EntityType.SPIDER, "ZOMBIE");
+				creatures.add(spiderZombie);
+				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderZombie);
 				// - Diamont_Zombie
 				final CustomCreature diamondZombie = new CustomCreature_1_4_5("Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
 				creatures.add(diamondZombie);
