@@ -1,0 +1,28 @@
+exampleItem:
+# Material Type
+# For a full list visit the javadocs page
+# http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html#enum_constant_summary
+  type: Material
+# damage value, the higher the more damaged
+# also known as durability
+  damage: short (0 (full) - 528 (broken, upper limit may differ (mostly below)))
+# the item count in this stack
+  amount: int (1-64)
+# optional meta section
+  meta:
+# If you keep the meta section, do not edit these lines unless you know what you are doing. (START).
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+# If you keep the meta section, do not edit these lines unless you know what you are doing. (END).
+# The items display name
+    display-name: String
+# The items description/lore
+    lore:
+    - Line1
+    - Line2
+    - '...'
+# All enchantments should be listed here
+    enchants:
+      ENCHANTMENT1: int (1-255)
+      ENCHANTMENT2: int (1-255)
+      ENCHANTMENTx: int (1-255)

@@ -1,0 +1,53 @@
+exampleCreature:
+# The Name of your creature type
+  name: String
+# The Type of your creature type
+  type: EntityType
+# Spawn as baby (Villager and Animals)
+  baby: boolean
+# Spawn as Zombievillager (Zombie)
+  villager: boolean
+# Spawn as Witherskeleton (Skeleton) 
+  wither: boolean
+# Spawn as ChargedCreeper (Creeper)
+  charged: boolean
+# Spawn as colored sheep (Colorable (Sheep))
+  color: DyeColor
+# Spawn sized slime (Slime + Magma_Cube)
+  size: int (1-4)
+# Spawn angry  (Wolf + Pig_Zombie)
+  angry: boolean
+# Spawn as tamed pet (Tameable (Wolf + Ocelot/Cat))
+  tamed: boolean
+# Spawn as tamed pet owned by player (Tameable (Wolf + Ocelot/Cat))
+  tamer: Player
+# Spawn with boots
+  boots: Item
+  bootsDropChance: float (0-1)
+# Spawn with leggings
+  leggings: Item
+  leggingsDropChance: float (0-1)
+# Spawn with chestplate
+  chestplate: Item
+  chestplateDropChance: float (0-1)
+# Spawn with helmet
+  helmet: Item
+  helmetDropChance: float (0-1)
+# Spawn with item in hand (ex: sword)
+  itemInHand: Item
+  itemInHandDropChance: float (0-1)
+# Spawn with passenger
+# This can be all types listed in "/cms creature:" command
+# If you are using a custom creature here you have to define it before that entry.
+  passenger: ExtendedCreatureType
+# Spawn with additional health
+  maxHealth: int
+# Define a custom name
+  customName: String
+# Show custom name as tag above creature
+  showCustomName: boolean
+# Spawn with persistent potion effects
+  potionEffects:
+    POTIONEFFECT1: int (1-x)
+    POTIONEFFECT2: int (1-x)
+    POTIONEFFECTx: int (1-x)
