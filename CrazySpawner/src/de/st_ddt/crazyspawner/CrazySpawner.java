@@ -145,6 +145,7 @@ public class CrazySpawner extends CrazyPlugin
 	public void onEnable()
 	{
 		registerEnderCrystalType();
+		registerHooks();
 		super.onEnable();
 		if (isUpdated)
 		{
@@ -222,7 +223,6 @@ public class CrazySpawner extends CrazyPlugin
 				saveConfiguration();
 			}
 		}
-		registerHooks();
 		registerCommands();
 		registerMetrics();
 		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
@@ -443,10 +443,33 @@ public class CrazySpawner extends CrazyPlugin
 		super.saveConfiguration();
 	}
 
+	public void addCustomCreature(final CustomCreature creature)
+	{
+		creatures.add(creature);
+		ExtendedCreatureParamitrisable.registerExtendedEntityType(creature);
+		saveConfiguration();
+	}
+
+	public Set<CustomCreature> getCreatures()
+	{
+		return creatures;
+	}
+
+	public void removeCustomCreature(final CustomCreature creature)
+	{
+		creatures.remove(creature);
+		saveConfiguration();
+	}
+
 	public void addSpawnTask(final SpawnTask task)
 	{
 		tasks.add(task);
 		saveConfiguration();
+	}
+
+	public Set<SpawnTask> getTasks()
+	{
+		return tasks;
 	}
 
 	public void removeSpawnTask(final SpawnTask task)
