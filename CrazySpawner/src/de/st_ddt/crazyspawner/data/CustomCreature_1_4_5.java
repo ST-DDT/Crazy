@@ -1,6 +1,10 @@
 package de.st_ddt.crazyspawner.data;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -23,6 +27,8 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
@@ -31,6 +37,16 @@ import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 public class CustomCreature_1_4_5 implements CustomCreature
 {
 
+	private final static int POTIONDURATION = 20 * 60 * 60 * 24;
+	private final static Comparator<PotionEffectType> POTIONEFFECTTYPE_COMCOMPARATOR = new Comparator<PotionEffectType>()
+	{
+
+		@Override
+		public int compare(final PotionEffectType o1, final PotionEffectType o2)
+		{
+			return o1.getName().compareTo(o2.getName());
+		}
+	};
 	protected final String name;
 	protected final EntityType type;
 	protected final boolean baby;
@@ -54,6 +70,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	protected final ItemStack itemInHand;
 	protected final float itemInHandDropChance;
 	protected final ExtendedCreatureType passenger;
+	protected final Map<PotionEffectType, Integer> potionEffects = new TreeMap<PotionEffectType, Integer>(POTIONEFFECTTYPE_COMCOMPARATOR);
 
 	public CustomCreature_1_4_5(final String name, final EntityType type)
 	{
@@ -102,6 +119,11 @@ public class CustomCreature_1_4_5 implements CustomCreature
 
 	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger)
 	{
+		this(name, type, baby, villager, wither, charged, color, size, angry, tamed, tamer, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger, null);
+	}
+
+	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger, final Map<? extends PotionEffectType, Integer> potionEffects)
+	{
 		super();
 		if (name == null)
 			throw new IllegalArgumentException("Name cannot be null!");
@@ -140,6 +162,8 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			this.helmetDropChance = helmetDropChance;
 			this.itemInHand = itemInHand;
 			this.itemInHandDropChance = itemInHandDropChance;
+			if (potionEffects != null)
+				this.potionEffects.putAll(potionEffects);
 		}
 		else
 		{
@@ -202,6 +226,15 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			this.itemInHand = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("itemInHand"));
 			this.itemInHandDropChance = (float) config.getDouble("itemInHandDropChance");
 			this.equiped = boots != null || leggings != null || chestplate != null || helmet != null || itemInHand != null;
+			final ConfigurationSection potionConfig = config.getConfigurationSection("potionEffects");
+			if (potionConfig != null)
+				for (final String key : potionConfig.getKeys(false))
+				{
+					final PotionEffectType type = PotionEffectType.getByName(key);
+					if (type == null)
+						continue;
+					potionEffects.put(type, potionConfig.getInt(key, 1));
+				}
 		}
 		else
 		{
@@ -284,6 +317,12 @@ public class CustomCreature_1_4_5 implements CustomCreature
 				equipment.setItemInHand(itemInHand.clone());
 				equipment.setItemInHandDropChance(itemInHandDropChance);
 			}
+			if (potionEffects.size() > 0)
+			{
+				final LivingEntity living = (LivingEntity) entity;
+				for (final Entry<PotionEffectType, Integer> entry : potionEffects.entrySet())
+					living.addPotionEffect(new PotionEffect(entry.getKey(), POTIONDURATION, entry.getValue()));
+			}
 		}
 		catch (final ClassCastException e)
 		{
@@ -345,6 +384,9 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		}
 		if (passenger != null)
 			config.set(path + "passenger", passenger.getName());
+		if (potionEffects.size() > 0)
+			for (final Entry<PotionEffectType, Integer> entry : potionEffects.entrySet())
+				config.set(path + "potionEffects." + entry.getKey().getName(), entry.getValue());
 	}
 
 	public static void dummySave(final ConfigurationSection config, final String path)
@@ -374,5 +416,8 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		config.set(path + "maxHealth", "int");
 		config.set(path + "customName", "String");
 		config.set(path + "showCustomName", "boolean");
+		config.set(path + "potionEffects.POTIONEFFECT1", "int (1-x)");
+		config.set(path + "potionEffects.POTIONEFFECT2", "int (1-x)");
+		config.set(path + "potionEffects.POTIONEFFECTx", "int (1-x)");
 	}
 }

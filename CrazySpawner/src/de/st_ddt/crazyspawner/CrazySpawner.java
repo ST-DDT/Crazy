@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.potion.PotionEffectType;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
@@ -89,9 +90,10 @@ public class CrazySpawner extends CrazyPlugin
 		registerEnderCrystalType();
 		super.onEnable();
 		if (isUpdated)
+		{
+			final ConfigurationSection config = getConfig();
 			if (VersionComparator.compareVersions(previousVersion, "3.7") == -1)
 			{
-				final ConfigurationSection config = getConfig();
 				// ExampleCreature
 				CustomCreature_1_4_5.dummySave(config, "example.Creature.");
 				// ExampleType
@@ -166,6 +168,26 @@ public class CrazySpawner extends CrazyPlugin
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderDiamondZombie);
 				saveConfiguration();
 			}
+			if (VersionComparator.compareVersions(previousVersion, "3.11") == -1)
+			{
+				System.out.println("Test");
+				// ExampleCreature
+				CustomCreature_1_4_5.dummySave(config, "example.Creature.");
+				// ExamplePotionEffect
+				final List<String> examplePotionEffects = new ArrayList<String>();
+				for (final PotionEffectType type : PotionEffectType.values())
+					if (type != null)
+						examplePotionEffects.add(type.getName());
+				config.set("example.PotionEffect", examplePotionEffects);
+				// - Speedy_Baby_Zombie
+				final Map<PotionEffectType, Integer> potions = new HashMap<PotionEffectType, Integer>();
+				potions.put(PotionEffectType.SPEED, 5);
+				final CustomCreature speedyZombie = new CustomCreature_1_4_5("Speedy_Baby_Zombie", EntityType.ZOMBIE, true, false, false, false, null, 0, false, false, null, null, 0, null, 0, null, 0, null, 0, null, 0, null, potions);
+				creatures.add(speedyZombie);
+				ExtendedCreatureParamitrisable.registerExtendedEntityType(speedyZombie);
+				saveConfiguration();
+			}
+		}
 		registerHooks();
 		registerCommands();
 		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
