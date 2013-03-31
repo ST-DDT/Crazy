@@ -1,9 +1,9 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 10.3.2
+version: 10.3.3
 website: http://dev.bukkit.org/server-mods/crazycore/
-softdepend: [PermissionsEx,GroupManager,PermissionsBukkit]
+softdepend: [PermissionsEx,GroupManager,PermissionsBukkit,bPermissions]
 description: >
             CrazyPlugin Core needed for all CrazyPlugins.
 commands:

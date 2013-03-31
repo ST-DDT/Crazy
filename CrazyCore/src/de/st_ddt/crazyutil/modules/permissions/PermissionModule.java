@@ -19,6 +19,7 @@ public class PermissionModule implements Module
 	{
 		PERMISSIONSYSTEMS.add(PermissionPermissionsExSystem.class);
 		PERMISSIONSYSTEMS.add(PermissionGroupManagerSystem.class);
+		PERMISSIONSYSTEMS.add(PermissionbPermissionsSystem.class);
 		PERMISSIONSYSTEMS.add(PermissionPermissionsBukkitSystem.class);
 		PERMISSIONSYSTEMS.add(PermissionBukkitSystem.class);
 	}
