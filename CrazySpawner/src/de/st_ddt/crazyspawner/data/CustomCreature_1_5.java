@@ -12,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 
 public class CustomCreature_1_5 extends CustomCreature_1_4_6
@@ -175,7 +176,7 @@ public class CustomCreature_1_5 extends CustomCreature_1_4_6
 		super(config);
 		if (LivingEntity.class.isAssignableFrom(type.getEntityClass()))
 		{
-			this.customName = config.getString("customName");
+			this.customName = ChatHelper.colorise(config.getString("customName"));
 			this.showCustomName = config.getBoolean("showCustomName");
 		}
 		else
@@ -204,7 +205,7 @@ public class CustomCreature_1_5 extends CustomCreature_1_4_6
 		super.save(config, path);
 		if (customName != null)
 		{
-			config.set(path + "customName", customName);
+			config.set(path + "customName", ChatHelper.decolorise(customName));
 			config.set(path + "showCustomName", showCustomName);
 		}
 	}

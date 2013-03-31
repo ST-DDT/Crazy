@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -183,7 +184,7 @@ public class CrazySpawner extends CrazyPlugin
 				chestplate.setItemMeta(meta);
 				final CustomCreature healthyDiamondZombie;
 				if (v15OrLater)
-					healthyDiamondZombie = new CustomCreature_1_5("Healthy_Diamont_Zombie", "Diamond_Zombie", true, EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
+					healthyDiamondZombie = new CustomCreature_1_5("Healthy_Diamont_Zombie", ChatColor.AQUA + "Diamond_Zombie", true, EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
 				else if (v146OrLater)
 					healthyDiamondZombie = new CustomCreature_1_4_6("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
 				else
