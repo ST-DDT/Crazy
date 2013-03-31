@@ -549,11 +549,6 @@ public class ChatHelperExtended extends ChatHelper
 			// searched values for this param?
 			if (i < length - 1)
 				continue;
-			// add remaining params
-			if (split.length == 1)
-				for (final String key : params.keySet())
-					if (key.startsWith(value.toLowerCase()))
-						res.add(key + ":");
 			// add possible values
 			if (param != null)
 				if (header.length() == 0)
@@ -561,6 +556,11 @@ public class ChatHelperExtended extends ChatHelper
 				else
 					for (final String entry : param.tab(value))
 						res.add(header + ":" + entry);
+			// add remaining params
+			if (split.length == 1)
+				for (final String key : params.keySet())
+					if (key.startsWith(value.toLowerCase()))
+						res.add(key + ":");
 		}
 		return res;
 	}
