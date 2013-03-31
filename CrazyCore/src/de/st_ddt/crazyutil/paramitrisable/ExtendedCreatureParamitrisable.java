@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.TreeMap;
 
 import org.bukkit.DyeColor;
@@ -582,6 +583,27 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 		});
 		for (final DyeColor color : DyeColor.values())
 			registerExtendedEntityType(new SheepExtendedEntityType(color));
+		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SHEEP)
+		{
+
+			private final Random random = new Random();
+			private final DyeColor[] colors = DyeColor.values();
+			private final int max = colors.length;
+
+			@Override
+			public String getName()
+			{
+				return "RANDOM_SHEEP";
+			}
+
+			@Override
+			public Sheep spawn(final Location location)
+			{
+				final Sheep sheep = (Sheep) super.spawn(location);
+				sheep.setColor(colors[random.nextInt(max)]);
+				return sheep;
+			}
+		});
 	}
 
 	public ExtendedCreatureParamitrisable()
