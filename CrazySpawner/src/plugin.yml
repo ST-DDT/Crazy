@@ -11,11 +11,11 @@ commands:
   crazyspawn:
     description: Spawn living Creatures...
     usage: /<command> <creature:Creature> [amount:Integer] [repeat:Integer] [interval:Duration] [delay:Duration] [synced:Boolean] [chunkloadrange:Integer] [creaturemaxcount:Integer [creaturerange:Double]] [playermincount:Integer [playerrange:Double]] [blockingrange:Double] [allowdespawning:Boolean] [location:Location]
-    aliases: [crazymobs, cms]
+    aliases: [crazymobs, cms, spawnmob]
   crazykill:
     description: Kill living Creatures...
     usage: /<command> <Range> [monster:Boolean] [animals:Boolean] [golems:Boolean] [villagers:Boolean] [bosses:Boolean] [location:Location]
-    aliases: [butcher, killall, cmk]
+    aliases: [butcher, killall, cmk, killmob]
   crazycreaturespawner:
     description: Change spawner types.
     usage: /<command> <Creature>
