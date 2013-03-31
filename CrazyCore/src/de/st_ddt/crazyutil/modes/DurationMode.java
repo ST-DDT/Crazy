@@ -20,7 +20,7 @@ public abstract class DurationMode extends LongMode
 	@Override
 	public void showValue(final CommandSender sender)
 	{
-		plugin.sendLocaleMessage("MODE.CHANGE", sender, name, ChatConverter.timeConverter(getValue() / 1000, 1, sender, 0, true));
+		plugin.sendLocaleMessage("MODE.CHANGE", sender, name, ChatConverter.timeConverter(getValue(), 1, sender, 0, true, true));
 	}
 
 	@Override
