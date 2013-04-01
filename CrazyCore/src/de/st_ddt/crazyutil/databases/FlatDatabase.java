@@ -282,7 +282,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@SuppressWarnings("deprecation")
 	public void asyncSaveDatabase()
 	{
-		if (!requireSave)
+		if (!requireSave && plugin.isEnabled())
 		{
 			requireSave = true;
 			Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, delayedSave, 1);
