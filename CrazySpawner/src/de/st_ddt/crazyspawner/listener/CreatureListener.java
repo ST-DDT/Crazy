@@ -8,10 +8,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.NameMeta;
+import de.st_ddt.crazyspawner.data.PeacefulMeta;
 
 public class CreatureListener implements Listener
 {
@@ -30,6 +32,7 @@ public class CreatureListener implements Listener
 		if (!(event.getEntity() instanceof LivingEntity))
 			return;
 		final LivingEntity entity = (LivingEntity) event.getEntity();
+		entity.removeMetadata(PeacefulMeta.METAHEADER, plugin);
 		final List<MetadataValue> metas = entity.getMetadata(NameMeta.METAHEADER);
 		for (final MetadataValue meta : metas)
 			if (meta.getOwningPlugin() == plugin)
@@ -37,6 +40,18 @@ public class CreatureListener implements Listener
 				final NameMeta name = (NameMeta) meta;
 				entity.setCustomName(name.asString() + " (" + entity.getHealth() + ")");
 			}
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	public void EntityTargetEvent(final EntityTargetEvent event)
+	{
+		if (event.getTarget() == null)
+			return;
+		if (!(event.getEntity() instanceof LivingEntity))
+			return;
+		final LivingEntity entity = (LivingEntity) event.getEntity();
+		if (entity.hasMetadata(PeacefulMeta.METAHEADER))
+			event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)

@@ -199,6 +199,9 @@ public class CommandSpawn extends CommandExecutor
 		params.put("ad", allowDespawn);
 		params.put("despawn", allowDespawn);
 		params.put("allowdespawning", allowDespawn);
+		final BooleanParamitrisable peaceful = new BooleanParamitrisable(false);
+		params.put("p", peaceful);
+		params.put("peaceful", peaceful);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");
@@ -237,7 +240,7 @@ public class CommandSpawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
 		if (location.getValue().getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), health.getValue(), showHealth.getValue());
+		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), peaceful.getValue(), health.getValue(), showHealth.getValue());
 		plugin.addSpawnTask(task);
 		if (synced.getValue())
 			task.start();

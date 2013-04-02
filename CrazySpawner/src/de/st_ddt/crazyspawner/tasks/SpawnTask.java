@@ -22,6 +22,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.NameMeta;
+import de.st_ddt.crazyspawner.data.PeacefulMeta;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
@@ -55,6 +56,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final String countDownMessage;
 	protected final boolean countDownBroadcast;
 	protected final boolean allowDespawn;
+	protected final boolean peaceful;
 	protected final int health;
 	protected final boolean showHealth;
 
@@ -84,7 +86,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final int health, final boolean showHealth)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final int health, final boolean showHealth)
 	{
 		super();
 		this.plugin = plugin;
@@ -112,13 +114,14 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.countDownMessage = countDownMessage;
 		this.countDownBroadcast = countDownMessage != null && countDownBroadcast;
 		this.allowDespawn = allowDespawn;
+		this.peaceful = peaceful;
 		this.health = v146OrLater ? health : -1;
 		this.showHealth = v15OrLater ? showHealth : false;
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final int health, final boolean showHealth)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final int health, final boolean showHealth)
 	{
-		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn, health, showHealth);
+		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn, peaceful, health, showHealth);
 		if (countDownTimes != null)
 			for (final Long time : countDownTimes)
 				this.countDownTimes.add(time);
@@ -143,7 +146,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
-		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false, -1, false);
+		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false, false, -1, false);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -179,6 +182,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 			this.countDownMessage = ChatHelper.colorise(message);
 		this.countDownBroadcast = countDownMessage != null && this.countDownTimes.size() > 0 ? config.getBoolean("countDownBroadcast", false) : false;
 		this.allowDespawn = config.getBoolean("allowDespawn", false);
+		this.peaceful = config.getBoolean("peaceful", false);
 		this.health = v146OrLater ? config.getInt("health", -1) : -1;
 		this.showHealth = v15OrLater ? config.getBoolean("showHealth", false) : false;
 	}
@@ -289,6 +293,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected void postSpawnProcessing(final LivingEntity entity)
 	{
 		entity.setRemoveWhenFarAway(allowDespawn);
+		if (peaceful)
+			entity.setMetadata(PeacefulMeta.METAHEADER, PeacefulMeta.INSTANCE);
 		if (showHealth)
 		{
 			final String name = entity.getCustomName() == null ? entity.getType().getName() : entity.getCustomName();
@@ -366,6 +372,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 			config.set(path + "countDownMessage", ChatHelper.decolorise(countDownMessage));
 		config.set(path + "countDownBroadcast", countDownBroadcast);
 		config.set(path + "allowDespawn", allowDespawn);
+		config.set(path + "peaceful", peaceful);
 		config.set(path + "health", health);
 		config.set(path + "showHealth", showHealth);
 	}
