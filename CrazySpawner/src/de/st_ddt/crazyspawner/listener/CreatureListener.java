@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.CreatureMeta;
+import de.st_ddt.crazyspawner.data.NameMeta;
 
 public class CreatureListener implements Listener
 {
@@ -30,11 +30,11 @@ public class CreatureListener implements Listener
 		if (!(event.getEntity() instanceof LivingEntity))
 			return;
 		final LivingEntity entity = (LivingEntity) event.getEntity();
-		final List<MetadataValue> metas = entity.getMetadata("CreatureMeta");
+		final List<MetadataValue> metas = entity.getMetadata(NameMeta.METAHEADER);
 		for (final MetadataValue meta : metas)
 			if (meta.getOwningPlugin() == plugin)
 			{
-				final CreatureMeta name = (CreatureMeta) meta;
+				final NameMeta name = (NameMeta) meta;
 				entity.setCustomName(name.asString() + " (" + entity.getHealth() + ")");
 			}
 	}
@@ -47,7 +47,7 @@ public class CreatureListener implements Listener
 		for (final MetadataValue meta : metas)
 			if (meta.getOwningPlugin() == plugin)
 			{
-				final CreatureMeta name = (CreatureMeta) meta;
+				final NameMeta name = (NameMeta) meta;
 				entity.setCustomName(name.asString());
 			}
 	}
