@@ -21,7 +21,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.CreatureMeta;
+import de.st_ddt.crazyspawner.data.NameMeta;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
@@ -292,7 +292,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		if (showHealth)
 		{
 			final String name = entity.getCustomName() == null ? entity.getType().getName() : entity.getCustomName();
-			entity.setMetadata("CreatureMeta", new CreatureMeta(name));
+			entity.setMetadata(NameMeta.METAHEADER, new NameMeta(name));
 			entity.setCustomName(name + " (" + entity.getHealth() + ")");
 			entity.setCustomNameVisible(true);
 		}

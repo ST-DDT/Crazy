@@ -4,12 +4,13 @@ import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 
-public class CreatureMeta implements MetadataValue
+public class NameMeta implements MetadataValue
 {
 
+	public static final String METAHEADER = "NameMeta";
 	private final String name;
 
-	public CreatureMeta(final String name)
+	public NameMeta(final String name)
 	{
 		super();
 		this.name = name;
