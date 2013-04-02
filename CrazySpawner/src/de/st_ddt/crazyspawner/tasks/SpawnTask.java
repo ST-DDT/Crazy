@@ -366,6 +366,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 			config.set(path + "countDownMessage", ChatHelper.decolorise(countDownMessage));
 		config.set(path + "countDownBroadcast", countDownBroadcast);
 		config.set(path + "allowDespawn", allowDespawn);
+		config.set(path + "health", health);
+		config.set(path + "showHealth", showHealth);
 	}
 
 	@Override
