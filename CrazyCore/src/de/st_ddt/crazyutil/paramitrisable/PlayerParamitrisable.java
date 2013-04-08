@@ -32,7 +32,7 @@ public class PlayerParamitrisable extends TypedParamitrisable<Player>
 	{
 		final List<Player> players = getMatchingPlayers(parameter, 20);
 		if (players.size() == 0)
-			return getPlayerNames();
+			return getPlayerNames(20);
 		else
 			return getPlayerNames(20, players);
 	}
