@@ -16,6 +16,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.VisiblePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsCommandTell extends CrazyChatsCommandExecutor
@@ -58,7 +59,7 @@ public class CrazyChatsCommandTell extends CrazyChatsCommandExecutor
 			plugin.sendLocaleMessage("CHANNEL.CHANGED", player, channel.getName());
 		}
 		final Player target = Bukkit.getPlayer(args[0]);
-		if (target == null)
+		if (target == null || !player.canSee(target))
 			throw new CrazyCommandNoSuchException("Player", args[0]);
 		channel.getTargets(null).clear();
 		channel.getTargets(null).add(target);
@@ -68,6 +69,11 @@ public class CrazyChatsCommandTell extends CrazyChatsCommandExecutor
 	@Override
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
-		return PlayerParamitrisable.tabHelp(args[args.length - 1]);
+		if (args.length != 1)
+			return null;
+		if (sender instanceof Player)
+			return VisiblePlayerParamitrisable.tabHelp((Player) sender, args[0]);
+		else
+			return PlayerParamitrisable.tabHelp(args[0]);
 	}
 }

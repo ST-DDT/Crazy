@@ -1,7 +1,5 @@
 package de.st_ddt.crazychats.commands;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazychats.CrazyChats;
@@ -11,7 +9,6 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandCircumstanceException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
-import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsPlayerCommandAnswer extends CrazyChatsPlayerCommandExecutor
@@ -39,11 +36,5 @@ public class CrazyChatsPlayerCommandAnswer extends CrazyChatsPlayerCommandExecut
 		channel.getTargets(null).clear();
 		channel.getTargets(null).add(target);
 		player.chat(ChatHelper.listingString(" ", ChatHelperExtended.shiftArray(args, 1)));
-	}
-
-	@Override
-	public List<String> tab(final Player player, final String[] args)
-	{
-		return PlayerParamitrisable.tabHelp(args[args.length - 1]);
 	}
 }

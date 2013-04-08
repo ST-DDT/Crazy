@@ -45,9 +45,9 @@ public class CrazyChatsPlayerCommandUnmutePlayer extends CrazyChatsPlayerCommand
 	{
 		final String last = args[args.length - 1].toLowerCase();
 		final List<String> res = new LinkedList<String>();
-		for (final String channel : plugin.getPlayerData(player).getChannelMap().keySet())
-			if (channel.toLowerCase().startsWith(last))
-				res.add(channel);
+		for (final String name : plugin.getPlayerData(player).getMutedPlayers())
+			if (name.toLowerCase().startsWith(last))
+				res.add(name);
 		return res;
 	}
 }

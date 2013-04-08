@@ -15,7 +15,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.VisiblePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyChatsPlayerCommandChatTo extends CrazyChatsPlayerCommandExecutor
@@ -50,7 +50,7 @@ public class CrazyChatsPlayerCommandChatTo extends CrazyChatsPlayerCommandExecut
 			for (final String arg : args)
 			{
 				final Player target = Bukkit.getPlayerExact(arg);
-				if (target == null)
+				if (target == null || !player.canSee(target))
 					throw new CrazyCommandNoSuchException("Player", arg);
 				targetList.add(target);
 			}
@@ -68,6 +68,6 @@ public class CrazyChatsPlayerCommandChatTo extends CrazyChatsPlayerCommandExecut
 	@Override
 	public List<String> tab(final Player player, final String[] args)
 	{
-		return PlayerParamitrisable.tabHelp(args[args.length - 1]);
+		return VisiblePlayerParamitrisable.tabHelp(player, args[args.length - 1]);
 	}
 }

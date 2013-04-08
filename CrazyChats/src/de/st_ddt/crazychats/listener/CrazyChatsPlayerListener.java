@@ -266,7 +266,7 @@ public class CrazyChatsPlayerListener implements Listener
 				for (final String targetName : playerSplit)
 				{
 					final Player target = Bukkit.getPlayerExact(targetName);
-					if (target == null)
+					if (target == null || !player.canSee(target))
 					{
 						if (playerSplit.length == 1)
 							plugin.sendLocaleMessage("CHAT.BLOCKED.NOCHANNEL", player, ChatHelper.listingString(data.getChannelMap().keySet()) + ", <Player,...>");
