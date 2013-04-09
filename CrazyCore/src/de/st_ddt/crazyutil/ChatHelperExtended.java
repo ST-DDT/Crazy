@@ -180,7 +180,8 @@ public class ChatHelperExtended extends ChatHelper
 		// Filter
 		if (filters != null)
 			for (final FilterInstanceInterface<S> filter : filters)
-				filter.filter(datas);
+				if (filter.isActive())
+					filter.filter(datas);
 		// Sort
 		if (sort.getValue() != null)
 			Collections.sort(datas, sort.getValue());

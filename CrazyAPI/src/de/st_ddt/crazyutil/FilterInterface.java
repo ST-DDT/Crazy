@@ -21,13 +21,15 @@ public interface FilterInterface<S> extends Named, Tabbed
 		@Override
 		public String getName();
 
-		public abstract String[] getAliases();
+		public String[] getAliases();
 
 		@Override
-		public abstract void setParameter(String parameter) throws CrazyException;
+		public void setParameter(String parameter) throws CrazyException;
+
+		public boolean isActive();
 
 		public void filter(Collection<? extends S> datas);
 
-		public abstract boolean filter(S data);
+		public boolean filter(S data);
 	}
 }

@@ -84,7 +84,7 @@ public abstract class Filter<S> implements FilterInterface<S>
 		return new ArrayList<String>();
 	}
 
-	protected abstract class FilterInstance implements FilterInstanceInterface<S>
+	protected abstract class FilterInstance extends AbstractFilterInstance<S>
 	{
 
 		@Override
@@ -103,6 +103,19 @@ public abstract class Filter<S> implements FilterInterface<S>
 		public abstract void setParameter(String parameter) throws CrazyException;
 
 		@Override
+		public abstract boolean filter(S data);
+	}
+
+	public abstract static class AbstractFilterInstance<S> implements FilterInstanceInterface<S>
+	{
+
+		@Override
+		public boolean isActive()
+		{
+			return true;
+		}
+
+		@Override
 		public void filter(final Collection<? extends S> datas)
 		{
 			final Iterator<? extends S> it = datas.iterator();
@@ -110,8 +123,28 @@ public abstract class Filter<S> implements FilterInterface<S>
 				if (!filter(it.next()))
 					it.remove();
 		}
+	}
+
+	public abstract static class DeafFilterInterface<S> extends AbstractFilterInstance<S>
+	{
+
+		private final static String[] DEAFALIASES = new String[0];
 
 		@Override
-		public abstract boolean filter(S data);
+		public String getName()
+		{
+			return null;
+		}
+
+		@Override
+		public String[] getAliases()
+		{
+			return DEAFALIASES;
+		}
+
+		@Override
+		public void setParameter(String parameter) throws CrazyException
+		{
+		}
 	}
 }
