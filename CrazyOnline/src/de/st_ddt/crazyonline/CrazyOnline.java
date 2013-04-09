@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -250,10 +249,9 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					}
 
 					@Override
-					public void filter(final Collection<? extends OnlineData> datas)
+					public boolean isActive()
 					{
-						if (ip != null)
-							super.filter(datas);
+						return ip != null;
 					}
 
 					@Override
@@ -302,10 +300,9 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					}
 
 					@Override
-					public void filter(final Collection<? extends OnlineData> datas)
+					public boolean isActive()
 					{
-						if (online != null)
-							super.filter(datas);
+						return online != null;
 					}
 
 					@Override
@@ -346,10 +343,9 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					}
 
 					@Override
-					public void filter(final Collection<? extends OnlineData> datas)
+					public boolean isActive()
 					{
-						if (date != null)
-							super.filter(datas);
+						return date != null;
 					}
 
 					@Override
@@ -390,10 +386,9 @@ public class CrazyOnline extends CrazyPlayerDataPlugin<OnlineData, OnlinePlayerD
 					}
 
 					@Override
-					public void filter(final Collection<? extends OnlineData> datas)
+					public boolean isActive()
 					{
-						if (date != null)
-							super.filter(datas);
+						return date != null;
 					}
 
 					@Override

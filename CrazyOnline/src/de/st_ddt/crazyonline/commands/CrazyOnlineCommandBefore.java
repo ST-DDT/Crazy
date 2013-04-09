@@ -2,9 +2,7 @@ package de.st_ddt.crazyonline.commands;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
@@ -17,6 +15,7 @@ import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.Filter;
 import de.st_ddt.crazyutil.FilterInterface;
 import de.st_ddt.crazyutil.FilterInterface.FilterInstanceInterface;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
@@ -46,31 +45,10 @@ public class CrazyOnlineCommandBefore extends CrazyOnlineCommandExecutor
 			if (plugin.hasPlayerData((Player) sender))
 				date = plugin.getPlayerData((Player) sender).getLastLogin();
 		final Date defaultDate = date;
-		final FilterInstanceInterface<OnlineData> filter = new FilterInstanceInterface<OnlineData>()
+		final FilterInstanceInterface<OnlineData> filter = new Filter.DeafFilterInstance<OnlineData>()
 		{
 
 			private Date date = defaultDate;
-
-			@Override
-			public String getName()
-			{
-				return "";
-			}
-
-			@Override
-			public String[] getAliases()
-			{
-				return new String[0];
-			}
-
-			@Override
-			public void filter(final Collection<? extends OnlineData> datas)
-			{
-				final Iterator<? extends OnlineData> it = datas.iterator();
-				while (it.hasNext())
-					if (!filter(it.next()))
-						it.remove();
-			}
 
 			@Override
 			public void setParameter(final String parameter) throws CrazyException
@@ -88,6 +66,12 @@ public class CrazyOnlineCommandBefore extends CrazyOnlineCommandExecutor
 				{
 					throw new CrazyCommandParameterException(0, "Date <JJJJ.MM.DD> [hh:mm:ss]/TODAY");
 				}
+			}
+
+			@Override
+			public boolean isActive()
+			{
+				return date != null;
 			}
 
 			@Override

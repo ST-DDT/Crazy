@@ -1,9 +1,9 @@
 name: CrazyOnline
 main: de.st_ddt.crazyonline.CrazyOnline
 author: ST-DDT
-version: 7.1.1
+version: 7.1.2
 website: http://dev.bukkit.org/server-mods/crazyonline/
-# requires CrazyCore v10 or later
+# requires CrazyCore v10.4 or later
 depend: [CrazyCore]
 commands:
   pinfo:
