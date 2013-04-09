@@ -24,6 +24,11 @@ public abstract class TypedParamitrisable<S> implements TabbedParamitrisable
 		return value;
 	}
 
+	public final void setValue(final S value)
+	{
+		this.value = value;
+	}
+
 	@Override
 	public List<String> tab(final String parameter)
 	{
