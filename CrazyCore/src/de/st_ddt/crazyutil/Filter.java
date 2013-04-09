@@ -125,7 +125,7 @@ public abstract class Filter<S> implements FilterInterface<S>
 		}
 	}
 
-	public abstract static class DeafFilterInterface<S> extends AbstractFilterInstance<S>
+	public abstract static class DeafFilterInstance<S> extends AbstractFilterInstance<S>
 	{
 
 		private final static String[] DEAFALIASES = new String[0];
@@ -143,7 +143,7 @@ public abstract class Filter<S> implements FilterInterface<S>
 		}
 
 		@Override
-		public void setParameter(String parameter) throws CrazyException
+		public void setParameter(final String parameter) throws CrazyException
 		{
 		}
 	}
