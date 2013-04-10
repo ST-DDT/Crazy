@@ -39,14 +39,14 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 		value = ChatConverter.stringToLocation(sender, PATTERN_SPACE.split(parameter));
 	}
 
-	public void addFullParams(final Map<String, TabbedParamitrisable> params, final String... prefixes)
+	public void addFullParams(final Map<String, ? super TabbedParamitrisable> params, final String... prefixes)
 	{
 		for (final String prefix : prefixes)
 			params.put(prefix, this);
 		addAdvancedParams(params, prefixes);
 	}
 
-	public void addAdvancedParams(final Map<String, TabbedParamitrisable> params, final String... prefixes)
+	public void addAdvancedParams(final Map<String, ? super TabbedParamitrisable> params, final String... prefixes)
 	{
 		final TabbedParamitrisable xParam = new TabbedParamitrisable()
 		{
@@ -140,6 +140,7 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 			params.put(prefix + "x", xParam);
 			params.put(prefix + "y", yParam);
 			params.put(prefix + "z", zParam);
+			params.put(prefix + "w", worldParam);
 			params.put(prefix + "world", worldParam);
 		}
 	}
