@@ -418,4 +418,19 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 							player.sendMessage(message);
 		}
 	}
+
+	public ExtendedCreatureType getType()
+	{
+		return type;
+	}
+
+	public Location getLocation()
+	{
+		return location;
+	}
+
+	public boolean isSynced()
+	{
+		return synced;
+	}
 }
