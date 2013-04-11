@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import de.st_ddt.crazyutil.modules.Module.Named;
 
 @Named(name = "Bukkit")
-public class PermissionBukkitSystem implements PermissionSystem
+class PermissionBukkitSystem implements PermissionSystem
 {
 
 	public PermissionBukkitSystem()

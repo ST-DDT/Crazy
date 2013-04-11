@@ -15,7 +15,7 @@ import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "GroupManager")
 @PluginDepency(depend = "GroupManager")
-public class PermissionGroupManagerSystem implements PermissionSystem
+class PermissionGroupManagerSystem implements PermissionSystem
 {
 
 	private final GroupManager plugin;

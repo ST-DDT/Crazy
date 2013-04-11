@@ -15,7 +15,7 @@ import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "Vault")
 @PluginDepency(depend = "Vault")
-public class PermissionVaultSystem implements PermissionSystem
+class PermissionVaultSystem implements PermissionSystem
 {
 
 	private final Permission permission;

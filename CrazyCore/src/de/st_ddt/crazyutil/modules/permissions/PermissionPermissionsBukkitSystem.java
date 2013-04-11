@@ -14,7 +14,7 @@ import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "PermissionsBukkit")
 @PluginDepency(depend = "PermissionsBukkit")
-public class PermissionPermissionsBukkitSystem extends PermissionBukkitSystem
+class PermissionPermissionsBukkitSystem extends PermissionBukkitSystem
 {
 
 	private final PermissionsPlugin plugin;

@@ -13,7 +13,7 @@ import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "bPermissions")
 @PluginDepency(depend = "bPermissions")
-public class PermissionbPermissionsSystem implements PermissionSystem
+class PermissionbPermissionsSystem implements PermissionSystem
 {
 
 	public PermissionbPermissionsSystem()

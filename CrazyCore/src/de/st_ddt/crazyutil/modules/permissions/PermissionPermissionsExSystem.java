@@ -14,7 +14,7 @@ import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "PermissionsEx")
 @PluginDepency(depend = "PermissionsEx")
-public class PermissionPermissionsExSystem implements PermissionSystem
+class PermissionPermissionsExSystem implements PermissionSystem
 {
 
 	private final PermissionManager plugin;
