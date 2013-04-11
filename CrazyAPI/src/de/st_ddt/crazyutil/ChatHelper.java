@@ -142,6 +142,15 @@ public class ChatHelper
 		return res;
 	}
 
+	public static String[] putArgsPara(final CommandSender sender, final String[] args, final ParameterData data)
+	{
+		final int length = args.length;
+		final String[] res = new String[length];
+		for (int i = 0; i < length; i++)
+			res[i] = putArgsPara(sender, args[i], data);
+		return res;
+	}
+
 	public static String putArgsExtended(final CommandSender target, final Object message, final Object... args)
 	{
 		return putArgsExtended(0, target, message, args);
