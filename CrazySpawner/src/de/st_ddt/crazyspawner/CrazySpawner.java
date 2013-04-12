@@ -17,6 +17,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -29,9 +30,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffectType;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.data.ParameterData;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
 import de.st_ddt.crazyspawner.commands.CommandKill;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
+import de.st_ddt.crazyspawner.commands.CommandSpawnList;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.data.CustomCreature;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_5;
@@ -41,6 +46,8 @@ import de.st_ddt.crazyspawner.listener.CreatureListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelper;
+import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.metrics.Metrics;
@@ -49,6 +56,8 @@ import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.EnumParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
 
@@ -62,6 +71,30 @@ public class CrazySpawner extends CrazyPlugin
 	protected final Set<CustomCreature> creatures = new LinkedHashSet<CustomCreature>();
 	protected final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
+	static
+	{
+		CrazyPipe.registerPipe(new CrazyPipe()
+		{
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
+			{
+				for (final ParameterData data : datas)
+					strikeTarget(sender, data, ChatHelper.putArgsPara(sender, pipeArgs, data));
+			}
+
+			private void strikeTarget(final CommandSender sender, final ParameterData data, final String[] pipeArgs) throws CrazyException
+			{
+				final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+				final LocationParamitrisable location = new LocationParamitrisable(sender);
+				location.addFullParams(params, "", "l", "loc", "location");
+				ChatHelperExtended.readParameters(pipeArgs, params, location);
+				if (location.getValue() == null || location.getValue().getWorld() == null)
+					throw new CrazyCommandUsageException("<x:Double> <y:Double> <z:Double> <w:World>");
+				location.getValue().getWorld().strikeLightning(location.getValue());
+			}
+		}, "thunder", "strike");
+	}
 
 	public static CrazySpawner getPlugin()
 	{
@@ -81,6 +114,7 @@ public class CrazySpawner extends CrazyPlugin
 		getCommand("crazykill").setExecutor(new CommandKill(this));
 		getCommand("crazycreaturespawner").setExecutor(new CommandCreatureSpawner(this, creatureSelection));
 		getCommand("crazytheendautorespawn").setExecutor(new CommandTheEndAutoRespawn(this));
+		mainCommand.addSubCommand(new CommandSpawnList(this), "l", "list");
 	}
 
 	private void registerMetrics()

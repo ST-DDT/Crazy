@@ -20,9 +20,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.NameMeta;
 import de.st_ddt.crazyspawner.data.PeacefulMeta;
+import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
@@ -31,7 +33,7 @@ import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
-public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>
+public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>, ParameterData
 {
 
 	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
@@ -432,5 +434,69 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	public boolean isSynced()
 	{
 		return synced;
+	}
+
+	@Override
+	public void show(final CommandSender target)
+	{
+		show(target, plugin.getChatHeader(), false);
+	}
+
+	@Override
+	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
+	{
+		// EDIT Implementiere SpawnTask.show
+		target.sendMessage("Feature not implemeted yet!");
+	}
+
+	@Override
+	public String getShortInfo()
+	{
+		return toString();
+	}
+
+	@Override
+	public String getParameter(final CommandSender sender, final int index)
+	{
+		switch (index)
+		{
+			case 0:
+				return type.getName();
+			case 1:
+				return location.getWorld().getName();
+			case 2:
+				return Double.toString(location.getX());
+			case 3:
+				return Double.toString(location.getY());
+			case 4:
+				return Double.toString(location.getZ());
+			case 5:
+				if (sender instanceof Player)
+				{
+					final Location pLocation = ((Player) sender).getLocation();
+					if (location.getWorld() == pLocation.getWorld())
+						return Double.toString(Math.round(location.distance(pLocation) * 100) / 100D);
+					else
+						return "-1";
+				}
+				else
+					return "-1";
+			case 6:
+				return Long.toString(interval);
+			case 7:
+				return ChatConverter.timeConverter(interval * 50, 2, sender, 0, true, true);
+			case 8:
+				return Integer.toString(repeat);
+			case 9:
+				return Integer.toString(amount);
+			default:
+				return "";
+		}
+	}
+
+	@Override
+	public int getParameterCount()
+	{
+		return 10;
 	}
 }
