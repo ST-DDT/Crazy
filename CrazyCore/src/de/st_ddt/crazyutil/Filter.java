@@ -133,7 +133,7 @@ public abstract class Filter<S> implements FilterInterface<S>
 		@Override
 		public String getName()
 		{
-			return null;
+			return "";
 		}
 
 		@Override
