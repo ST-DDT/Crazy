@@ -354,9 +354,9 @@ public class ChatConverter
 				if (units == 0)
 					return res.substring(1);
 			}
-			if (time >= shift * 20 || res.length() == 0)
+			if (time >= shift * 50 || res.length() == 0)
 			{
-				final long unit = time / 20;
+				final long unit = time / 50;
 				// shift = 1;
 				// units--;
 				// time %= 20;
