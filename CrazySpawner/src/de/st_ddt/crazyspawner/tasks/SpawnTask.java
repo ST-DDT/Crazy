@@ -296,6 +296,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 
 	protected void postSpawnProcessing(final Entity entity)
 	{
+		if (entity == null)
+			return;
 		if (v146OrLater)
 		{
 			if (entity instanceof LivingEntity)
