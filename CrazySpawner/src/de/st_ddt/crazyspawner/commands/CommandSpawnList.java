@@ -23,6 +23,7 @@ import de.st_ddt.crazyutil.FilterInterface.FilterInstanceInterface;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.Tabbed;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
@@ -95,8 +96,7 @@ public class CommandSpawnList extends CommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		// EDIT Implementiere CommandSpawnList.hasAccessPermission()
-		return super.hasAccessPermission(sender);
+		return PermissionModule.hasPermission(sender, "crazyspawner.list");
 	}
 
 	private final class SpawnTaskRangeComparator implements Comparator<SpawnTask>
