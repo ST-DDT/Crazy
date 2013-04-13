@@ -10,6 +10,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.data.Thunder;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
@@ -17,6 +18,7 @@ import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ColoredStringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.EnumParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
@@ -235,12 +237,22 @@ public class CommandSpawn extends CommandExecutor
 		final BooleanParamitrisable showHealth = new BooleanParamitrisable(false);
 		params.put("sh", showHealth);
 		params.put("showhealth", showHealth);
+		final IntegerParamitrisable fire = new IntegerParamitrisable(-1);
+		params.put("f", fire);
+		params.put("fire", fire);
+		params.put("burn", fire);
+		params.put("burning", fire);
+		final EnumParamitrisable<Thunder> thunder = new EnumParamitrisable<Thunder>("Thunder", Thunder.DISABLED, Thunder.values());
+		params.put("t", thunder);
+		params.put("thunder", thunder);
+		params.put("strike", thunder);
+		params.put("lightning", thunder);
 		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval, delay);
 		if (creature.getValue() == null)
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
 		if (location.getValue().getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), peaceful.getValue(), health.getValue(), showHealth.getValue());
+		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), peaceful.getValue(), health.getValue(), showHealth.getValue(), fire.getValue(), thunder.getValue());
 		plugin.addSpawnTask(task);
 		if (synced.getValue())
 			task.start();
@@ -328,6 +340,16 @@ public class CommandSpawn extends CommandExecutor
 		final BooleanParamitrisable showHealth = new BooleanParamitrisable(false);
 		params.put("sh", showHealth);
 		params.put("showhealth", showHealth);
+		final IntegerParamitrisable fire = new IntegerParamitrisable(-1);
+		params.put("f", fire);
+		params.put("fire", fire);
+		params.put("burn", fire);
+		params.put("burning", fire);
+		final EnumParamitrisable<Thunder> thunder = new EnumParamitrisable<Thunder>("Thunder", Thunder.DISABLED, Thunder.values());
+		params.put("t", thunder);
+		params.put("thunder", thunder);
+		params.put("strike", thunder);
+		params.put("lightning", thunder);
 		return ChatHelperExtended.tabHelp(args, params, creature, amount, repeat, interval, delay);
 	}
 
