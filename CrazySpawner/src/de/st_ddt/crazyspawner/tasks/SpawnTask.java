@@ -69,12 +69,16 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 *            The type to be spawned.
 	 * @param location
 	 *            The Location where to spawn the creature.
+	 * @param spawnRange
+	 *            Randomize spawn location within the given range.
 	 * @param amount
 	 *            The maximum amount of creatures spawned at once per execution.
 	 * @param interval
 	 *            Repeat interval in ticks
 	 * @param repeat
-	 *            Reapeat it repeat times. (-1 = infinite)
+	 *            Reapeat it x times. (-1 = infinite)
+	 * @param synced
+	 *            Will be executed always at the same time, no matter when task was created/started or the server loaded.
 	 * @param chunkLoadRange
 	 *            Load chunks before executing this task. Monsters may not spawn otherwise.
 	 * @param creatureMaxCount
@@ -87,6 +91,20 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 *            The range where to search for nearby players for playerMinCount.
 	 * @param blockingRange
 	 *            This task won't be executed if a player is within this range.
+	 * @param countDownTimes
+	 *            Show countDownMessage x ticks before spawning the creature
+	 * @param countDownMessage
+	 *            The message shown as warning/info.
+	 * @param countDownBroadcast
+	 *            If true the message is broadcasted to every online player
+	 * @param allowDespawn
+	 *            Allow despawning of when far away.
+	 * @param peaceful
+	 *            Creatures do not attack until attacked.
+	 * @param health
+	 *            Custom health
+	 * @param showHealth
+	 *            Show health above the head.
 	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final int health, final boolean showHealth)
 	{
