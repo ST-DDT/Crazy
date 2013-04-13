@@ -8,7 +8,7 @@ public enum Thunder
 	EFFECT,
 	DISABLED;
 
-	public void trigger(Location location)
+	public void trigger(final Location location)
 	{
 		switch (this)
 		{
