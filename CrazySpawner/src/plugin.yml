@@ -34,6 +34,9 @@ permissions:
     children:
       crazyspawner.spawn: true
       crazyspawner.kill: true
+      crazyspawner.creaturespawner: true
+      crazyspawner.theendautorespawn: true
+      crazyspawner.list: true
   crazyspawner.spawn:
     description: Allow spawning of creatures
     default: op
