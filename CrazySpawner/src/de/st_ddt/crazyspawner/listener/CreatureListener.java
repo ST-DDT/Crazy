@@ -38,7 +38,7 @@ public class CreatureListener implements Listener
 			if (meta.getOwningPlugin() == plugin)
 			{
 				final NameMeta name = (NameMeta) meta;
-				entity.setCustomName(name.asString() + " (" + entity.getHealth() + ")");
+				entity.setCustomName(name.asString() + " (" + (entity.getHealth() - event.getDamage()) + ")");
 			}
 	}
 
