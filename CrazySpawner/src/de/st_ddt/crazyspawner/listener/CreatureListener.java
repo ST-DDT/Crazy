@@ -47,10 +47,7 @@ public class CreatureListener implements Listener
 	{
 		if (event.getTarget() == null)
 			return;
-		if (!(event.getEntity() instanceof LivingEntity))
-			return;
-		final LivingEntity entity = (LivingEntity) event.getEntity();
-		if (entity.hasMetadata(PeacefulMeta.METAHEADER))
+		if (event.getEntity().hasMetadata(PeacefulMeta.METAHEADER))
 			event.setCancelled(true);
 	}
 
