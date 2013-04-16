@@ -10,8 +10,8 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class MapParamitrisable<S> extends TypedParamitrisable<S>
 {
 
-	private final String type;
-	private final Map<String, ? extends S> values;
+	protected final String type;
+	protected final Map<String, ? extends S> values;
 	private final boolean lowercase;
 
 	public MapParamitrisable(final String type, final Map<String, ? extends S> values, final S defaultValue)
