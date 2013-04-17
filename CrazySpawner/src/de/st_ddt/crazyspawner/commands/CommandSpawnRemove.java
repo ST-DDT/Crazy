@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.comparator.SpawnTaskRangeComparator;
@@ -68,6 +70,9 @@ public class CommandSpawnRemove extends CommandExecutor
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
+		if (sender instanceof ConsoleCommandSender)
+			if (args.length == 0)
+				throw new CrazyCommandUsageException("[creature:EntityType] [type:ExtendedCreatureType] [location:Location [range:Double]]");
 		final SpawnTaskListOptionsModder modder = new SpawnTaskListOptionsModder(rangeSort, 2D, sender);
 		final List<SpawnTask> list = new ArrayList<SpawnTask>(plugin.getTasks());
 		ChatHelperExtended.processListCommand(sender, args, plugin.getChatHeader(), listFormat, modder.getFilters(), sorters, rangeSort, modder, list);
