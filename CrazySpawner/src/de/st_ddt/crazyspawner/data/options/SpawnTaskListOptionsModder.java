@@ -90,7 +90,7 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 			@Override
 			public boolean isActive()
 			{
-				return location.getValue() != null && location.getValue().getWorld() == null;
+				return location.getValue() != null && location.getValue().getWorld() != null;
 			}
 
 			@Override
