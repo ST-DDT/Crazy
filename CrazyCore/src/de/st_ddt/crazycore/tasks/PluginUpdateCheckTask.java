@@ -21,11 +21,11 @@ public class PluginUpdateCheckTask implements Runnable
 	}
 
 	@Override
-	@Localized("CRAZYPLUGIN.PLUGININFO.UPDATE $NewVersion$")
+	@Localized("CRAZYPLUGIN.PLUGININFO.UPDATE $NewVersion$ $UpdateURL$")
 	public void run()
 	{
 		for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 			if (plugin.checkForUpdate(force))
-				plugin.broadcastLocaleMessage(true, "crazycore.updatecheck", "PLUGININFO.UPDATE", plugin.getUpdateVersion());
+				plugin.broadcastLocaleMessage(true, "crazycore.updatecheck", "PLUGININFO.UPDATE", plugin.getUpdateVersion(), plugin.getUpdateURL());
 	}
 }

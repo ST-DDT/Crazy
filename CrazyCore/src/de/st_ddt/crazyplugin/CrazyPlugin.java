@@ -48,6 +48,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	protected String updateVersion = "0";
 	protected boolean isUpdated = false;
 	protected boolean isInstalled = false;
+	protected String updateURL = null;
 
 	public final static Collection<CrazyPlugin> getCrazyPlugins()
 	{
@@ -514,6 +515,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		return updateVersion;
 	}
 
+	public final String getUpdateURL()
+	{
+		return updateURL;
+	}
+
 	@Override
 	public boolean checkForUpdate(final boolean force)
 	{
@@ -547,15 +553,21 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 				while ((zeile = bufreader.readLine()) != null)
 				{
 					zeile = zeile.trim();
-					if (active && zeile.startsWith("<title>"))
-					{
-						updateVersion = zeile.substring(7 + getName().length() + 2).split("<")[0];
-						break;
-					}
+					if (active)
+						if (zeile.startsWith("<title>"))
+							updateVersion = zeile.substring(7 + getName().length() + 2).split("<")[0];
+						else if (zeile.startsWith("<link>"))
+							updateURL = zeile.substring(6).split("<")[0];
+						else if (zeile.equals("<item>"))
+							break;
+						else
+							continue;
 					else if (zeile.equals("<item>"))
 						active = true;
 					else
 						continue;
+					if (updateVersion != null && updateURL != null)
+						break;
 				}
 			}
 			finally
