@@ -37,6 +37,7 @@ import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
 import de.st_ddt.crazyspawner.commands.CommandKill;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.commands.CommandSpawnList;
+import de.st_ddt.crazyspawner.commands.CommandSpawnRemove;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.data.CustomCreature;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_5;
@@ -115,6 +116,7 @@ public class CrazySpawner extends CrazyPlugin
 		getCommand("crazycreaturespawner").setExecutor(new CommandCreatureSpawner(this, creatureSelection));
 		getCommand("crazytheendautorespawn").setExecutor(new CommandTheEndAutoRespawn(this));
 		mainCommand.addSubCommand(new CommandSpawnList(this), "l", "list");
+		mainCommand.addSubCommand(new CommandSpawnRemove(this), "rem", "remove");
 	}
 
 	private void registerMetrics()

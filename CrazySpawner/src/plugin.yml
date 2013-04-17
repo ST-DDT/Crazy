@@ -1,7 +1,7 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-version: 3.12.1
+version: 3.13
 website: http://dev.bukkit.org/server-mods/crazyspawner/
 # requires CrazyCore v10.2.1 or later
 depend: [CrazyCore]
@@ -19,7 +19,7 @@ commands:
   crazycreaturespawner:
     description: Change spawner types.
     usage: /<command> <Creature>
-    aliases: [spawner, crazyspawner, ccs]
+    aliases: [spawner, creaturespawner, ccs]
   crazytheendautorespawn:
     description: Create auto respawn tasks for EnderDragons and EnderCrystals.
     usage: /<command> [interval:Duration] [world:World] [chunkloadrange:Integer]
@@ -27,6 +27,7 @@ commands:
   crazyspawner:
     description: Plugin Mainmenu
     usage: /<command> [Subcommands...]
+    aliases: [cspawner]
 permissions:
   crazyspawner.*:
     description: Access to all commands
@@ -37,6 +38,7 @@ permissions:
       crazyspawner.creaturespawner: true
       crazyspawner.theendautorespawn: true
       crazyspawner.list: true
+      crazyspawner.remove: true
   crazyspawner.spawn:
     description: Allow spawning of creatures
     default: op
@@ -50,5 +52,8 @@ permissions:
     description: Allow creating auto respawn tasks for EnderDragons and EnderCrystals.
     default: op
   crazyspawner.list:
-    description: List all spawn task.
+    description: Allow listing spawn tasks.
+    default: op
+  crazyspawner.list:
+    description: Allow removing spawn tasks.
     default: op
