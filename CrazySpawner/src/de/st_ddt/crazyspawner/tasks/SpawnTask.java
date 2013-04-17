@@ -22,9 +22,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.NameMeta;
-import de.st_ddt.crazyspawner.data.PeacefulMeta;
-import de.st_ddt.crazyspawner.data.Thunder;
+import de.st_ddt.crazyspawner.data.meta.NameMeta;
+import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
+import de.st_ddt.crazyspawner.data.options.Thunder;
 import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;

@@ -12,8 +12,8 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.NameMeta;
-import de.st_ddt.crazyspawner.data.PeacefulMeta;
+import de.st_ddt.crazyspawner.data.meta.NameMeta;
+import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
 
 public class CreatureListener implements Listener
 {

@@ -1,24 +1,25 @@
-package de.st_ddt.crazyspawner.data;
+package de.st_ddt.crazyspawner.data.meta;
 
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 
-public class PeacefulMeta implements MetadataValue
+public class NameMeta implements MetadataValue
 {
 
-	public final static String METAHEADER = "PeacefulMeta";
-	public final static PeacefulMeta INSTANCE = new PeacefulMeta();
+	public static final String METAHEADER = "NameMeta";
+	private final String name;
 
-	public PeacefulMeta()
+	public NameMeta(final String name)
 	{
 		super();
+		this.name = name;
 	}
 
 	@Override
 	public Object value()
 	{
-		return Boolean.TRUE;
+		return name;
 	}
 
 	@Override
@@ -60,13 +61,13 @@ public class PeacefulMeta implements MetadataValue
 	@Override
 	public boolean asBoolean()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
 	public String asString()
 	{
-		return null;
+		return name;
 	}
 
 	@Override
