@@ -43,6 +43,7 @@ import de.st_ddt.crazyspawner.data.CustomCreature;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_5;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_6;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_5;
+import de.st_ddt.crazyspawner.data.options.Thunder;
 import de.st_ddt.crazyspawner.listener.CreatureListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
@@ -358,6 +359,18 @@ public class CrazySpawner extends CrazyPlugin
 		catch (final IOException e)
 		{
 			System.err.println("[CrazySpawner] Could not save example PotionEffect.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleThunder
+		final YamlConfiguration thunder = new YamlConfiguration();
+		thunder.set("exampleThunder", EnumParamitrisable.getEnumNames(Thunder.values()).toArray());
+		try
+		{
+			thunder.save(new File(exampleFolder, "Thunder.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example Thunder.yml.");
 			System.err.println(e.getMessage());
 		}
 	}
