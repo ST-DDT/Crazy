@@ -56,7 +56,13 @@ public abstract class CrazyCommandExecutor<S extends ChatHeaderProvider> impleme
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
 	{
 		if (hasAccessPermission(sender))
-			return tab(sender, args);
+		{
+			final List<String> list = tab(sender, args);
+			if (list == null)
+				return null;
+			else
+				return list.subList(0, Math.min(30, list.size()));
+		}
 		else
 			return null;
 	}
