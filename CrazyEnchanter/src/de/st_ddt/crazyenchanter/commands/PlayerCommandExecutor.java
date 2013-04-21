@@ -9,10 +9,10 @@ import de.st_ddt.crazyenchanter.CrazyEnchanter;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandExecutorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public abstract class CrazyEnchanterPlayerCommandExecutor extends CrazyEnchanterCommandExecutor
+public abstract class PlayerCommandExecutor extends CommandExecutor
 {
 
-	public CrazyEnchanterPlayerCommandExecutor(final CrazyEnchanter plugin)
+	public PlayerCommandExecutor(final CrazyEnchanter plugin)
 	{
 		super(plugin);
 	}

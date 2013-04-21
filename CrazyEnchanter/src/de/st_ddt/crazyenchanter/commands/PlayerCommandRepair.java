@@ -11,10 +11,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyEnchanterPlayerCommandRepair extends CrazyEnchanterPlayerCommandExecutor
+public class PlayerCommandRepair extends PlayerCommandExecutor
 {
 
-	public CrazyEnchanterPlayerCommandRepair(final CrazyEnchanter plugin)
+	public PlayerCommandRepair(final CrazyEnchanter plugin)
 	{
 		super(plugin);
 	}

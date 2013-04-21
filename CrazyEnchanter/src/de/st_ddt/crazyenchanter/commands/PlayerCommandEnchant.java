@@ -22,10 +22,10 @@ import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyEnchanterPlayerCommandEnchant extends CrazyEnchanterPlayerCommandExecutor
+public class PlayerCommandEnchant extends PlayerCommandExecutor
 {
 
-	public CrazyEnchanterPlayerCommandEnchant(final CrazyEnchanter plugin)
+	public PlayerCommandEnchant(final CrazyEnchanter plugin)
 	{
 		super(plugin);
 	}

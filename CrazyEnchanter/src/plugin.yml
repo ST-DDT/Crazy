@@ -1,7 +1,7 @@
 name: CrazyEnchanter
 main: de.st_ddt.crazyenchanter.CrazyEnchanter
 author: ST-DDT
-version: 1.2.1
+version: 1.2.2
 website: http://dev.bukkit.org/server-mods/crazyenchanter/
 # requires CrazyCore v10 or later
 depend: [CrazyCore]
