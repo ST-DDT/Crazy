@@ -17,7 +17,7 @@ public class CrazyChatsChatHelper extends ChatHelperExtended
 {
 
 	public final static List<ChatFormatParameters> CHATFORMATPARAMETERS = new ArrayList<ChatFormatParameters>();
-	protected final static DateFormat CHATTIMEFORMAT = new SimpleDateFormat("mm:ss");
+	protected final static DateFormat CHATTIMEFORMAT = new SimpleDateFormat("hh:mm");
 
 	protected CrazyChatsChatHelper()
 	{
