@@ -70,9 +70,9 @@ public class RealRoom<S extends Room> implements ConfigurationSaveable
 	{
 		if (!location.getWorld().equals(basis.getWorld()))
 			return false;
-		final Location clone = basis.clone();
-		clone.subtract(location);
-		return room.isInsideRel(-clone.getX(), -clone.getY(), -clone.getZ());
+		final Location clone = location.clone();
+		clone.subtract(basis);
+		return room.isInsideRel(clone.getX(), clone.getY(), clone.getZ());
 	}
 
 	public final void save(final ConfigurationSection config, final String path, final boolean includeType)
