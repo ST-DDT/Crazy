@@ -7,15 +7,15 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import de.st_ddt.crazyutil.modules.Module.Named;
 import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
 @Named(name = "Vault")
 @PluginDepency(depend = "Vault")
-class PermissionVaultSystem implements PermissionSystem
+class PermissionVaultSystem extends PermissionBukkitSystem
 {
 
 	private final Permission permission;
@@ -24,20 +24,22 @@ class PermissionVaultSystem implements PermissionSystem
 	public PermissionVaultSystem()
 	{
 		super();
-		permission = Bukkit.getServicesManager().getRegistration(Permission.class).getProvider();
-		chat = Bukkit.getServicesManager().getRegistration(Chat.class).getProvider();
+		final RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServicesManager().getRegistration(Permission.class);
+		if (permissionProvider == null)
+			permission = null;
+		else
+			permission = Bukkit.getServicesManager().getRegistration(Permission.class).getProvider();
+		final RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServicesManager().getRegistration(Chat.class);
+		if (chatProvider == null)
+			chat = null;
+		else
+			chat = chatProvider.getProvider();
 	}
 
 	@Override
 	public String getName()
 	{
 		return "Vault";
-	}
-
-	@Override
-	public boolean hasPermission(final CommandSender sender, final String permission)
-	{
-		return sender.hasPermission(permission);
 	}
 
 	@Override
