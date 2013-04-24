@@ -26,7 +26,7 @@ public abstract class MultiRoom extends PseudoRoom
 
 	public MultiRoom(final ConfigurationSection config)
 	{
-		super(config);
+		super();
 		final ConfigurationSection roomConfig = config.getConfigurationSection("rooms");
 		for (final String key : roomConfig.getKeys(false))
 			rooms.add(PseudoRoom.load(roomConfig.getConfigurationSection(key)));

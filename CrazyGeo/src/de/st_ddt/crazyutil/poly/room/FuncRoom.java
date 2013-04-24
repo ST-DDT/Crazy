@@ -75,7 +75,7 @@ public class FuncRoom extends BasicRoom
 	public void contract(final double x, final double y, final double z)
 	{
 		region.contract(x, z);
-		height -= y;
+		height -= Math.abs(y);
 	}
 
 	@Override

@@ -4,22 +4,16 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
+/**
+ * All Subclasses have to implement this constructor: <br>
+ * public PseudoRoom(final ConfigurationSection config);
+ */
 public abstract class PseudoRoom implements Room
 {
 
 	public static Room load(final ConfigurationSection config)
 	{
 		return ObjectSaveLoadHelper.load(config, Room.class, new Class[] { ConfigurationSection.class }, new Object[] { config });
-	}
-
-	public PseudoRoom()
-	{
-		super();
-	}
-
-	public PseudoRoom(final ConfigurationSection config)
-	{
-		super();
 	}
 
 	@Override
