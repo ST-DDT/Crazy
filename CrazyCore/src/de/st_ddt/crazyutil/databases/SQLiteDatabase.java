@@ -74,9 +74,9 @@ public class SQLiteDatabase<S extends SQLiteDatabaseEntry> extends SQLDatabase<S
 			for (final SQLColumn column : columns)
 			{
 				// Prüfen ob Spalte vorhanden ist
-				if (columnsNames.contains(column.getName()))
+				if (columnsNames.contains(column.getRealName()))
 					continue;
-				System.out.println("ADDED COLUMN " + column.getName() + " TO TABLE " + tableName);
+				System.out.println("ADDED COLUMN " + column.getRealName() + " TO TABLE " + tableName);
 				query = null;
 				// Spalte hinzufügen
 				query = connection.createStatement();
