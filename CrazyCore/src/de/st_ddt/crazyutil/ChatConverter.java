@@ -41,7 +41,7 @@ public class ChatConverter
 		{
 			case 0:
 				if (location == null)
-					throw new CrazyCommandUsageException("... <World> <X> <Y> <Z>");
+					throw new CrazyCommandUsageException("<World> <X> <Y> <Z>");
 				break;
 			// <World> <X> <Y> <Z>
 			case 3:
@@ -73,7 +73,7 @@ public class ChatConverter
 					throw new CrazyCommandParameterException(2, "Number (Double)");
 				}
 				if (world == null)
-					throw new CrazyCommandUsageException("... <World> <X> <Y> <Z>");
+					throw new CrazyCommandUsageException("<World> <X> <Y> <Z>");
 				location = new Location(world, x, y, z);
 				break;
 			// <World> <X> <Y> <Z>
@@ -158,7 +158,7 @@ public class ChatConverter
 					throw new CrazyCommandParameterException(4, "Number (Double)");
 				}
 				if (world == null)
-					throw new CrazyCommandUsageException("... <World> <X> <Y> <Z> <Yaw> <Pitch>");
+					throw new CrazyCommandUsageException("<World> <X> <Y> <Z> <Yaw> <Pitch>");
 				location = new Location(world, x, y, z, yaw, pitch);
 				break;
 			// <World> <X> <Y> <Z> <Yaw> <Pitch>
@@ -214,7 +214,7 @@ public class ChatConverter
 				location = new Location(world, x, y, z, yaw, pitch);
 				break;
 			default:
-				throw new CrazyCommandUsageException("... [[World] <X> <Y> <Z>]", "... [World] <X> <Y> <Z> <Yaw> <Pitch>");
+				throw new CrazyCommandUsageException("[[World] <X> <Y> <Z>]", "[World] <X> <Y> <Z> <Yaw> <Pitch>");
 		}
 		return location;
 	}
