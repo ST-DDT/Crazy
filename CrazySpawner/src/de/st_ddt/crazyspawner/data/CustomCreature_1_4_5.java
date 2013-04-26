@@ -420,4 +420,16 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		config.set(path + "potionEffects.POTIONEFFECT2", "int (1-x)");
 		config.set(path + "potionEffects.POTIONEFFECTx", "int (1-x)");
 	}
+
+	@Override
+	public final int hashCode()
+	{
+		return name.hashCode();
+	}
+
+	@Override
+	public final String toString()
+	{
+		return "CustomCreature{Name: " + name + ", Type: " + type.getName() + "}";
+	}
 }
