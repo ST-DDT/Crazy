@@ -91,8 +91,10 @@ public class CrazySpawner extends CrazyPlugin
 				final LocationParamitrisable location = new LocationParamitrisable(sender);
 				location.addFullParams(params, "", "l", "loc", "location");
 				ChatHelperExtended.readParameters(pipeArgs, params, location);
-				if (location.getValue() == null || location.getValue().getWorld() == null)
-					throw new CrazyCommandUsageException("<x:Double> <y:Double> <z:Double> <w:World>");
+				if (location.getValue() == null)
+					throw new CrazyCommandUsageException("[World] <X> <Y> <Z>");
+				if (location.getValue().getWorld() == null)
+					throw new CrazyCommandUsageException("<World> <X> <Y> <Z>");
 				location.getValue().getWorld().strikeLightning(location.getValue());
 			}
 		}, "thunder", "strike");
