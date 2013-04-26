@@ -21,6 +21,7 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 
 	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
 	protected final CommandSender sender;
+	protected TabbedParamitrisable[] subParam;
 
 	public LocationParamitrisable(final CommandSender sender)
 	{
@@ -48,7 +49,50 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 
 	public void addAdvancedParams(final Map<String, ? super TabbedParamitrisable> params, final String... prefixes)
 	{
-		final TabbedParamitrisable xParam = new TabbedParamitrisable()
+		if (subParam == null)
+			subParam = createSubParams();
+		for (final String prefix : prefixes)
+		{
+			params.put(prefix + "w", subParam[0]);
+			params.put(prefix + "world", subParam[0]);
+			params.put(prefix + "x", subParam[1]);
+			params.put(prefix + "y", subParam[2]);
+			params.put(prefix + "z", subParam[3]);
+		}
+	}
+
+	public TabbedParamitrisable[] getSubParams()
+	{
+		if (subParam == null)
+			subParam = createSubParams();
+		return subParam;
+	}
+
+	public TabbedParamitrisable[] createSubParams()
+	{
+		final TabbedParamitrisable[] res = new TabbedParamitrisable[4];
+		res[0] = new TabbedParamitrisable()
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				value.setWorld(Bukkit.getWorld(parameter));
+				if (value == null)
+					throw new CrazyCommandNoSuchException("World", parameter, getWorldNames());
+			}
+
+			@Override
+			public List<String> tab(final String parameter)
+			{
+				final List<String> res = new LinkedList<String>();
+				for (final World world : Bukkit.getWorlds())
+					if (world.getName().startsWith(parameter))
+						res.add(world.getName());
+				return res;
+			}
+		};
+		res[1] = new TabbedParamitrisable()
 		{
 
 			@Override
@@ -70,7 +114,7 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 				return new LinkedList<String>();
 			}
 		};
-		final TabbedParamitrisable yParam = new TabbedParamitrisable()
+		res[2] = new TabbedParamitrisable()
 		{
 
 			@Override
@@ -92,7 +136,7 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 				return new LinkedList<String>();
 			}
 		};
-		final TabbedParamitrisable zParam = new TabbedParamitrisable()
+		res[3] = new TabbedParamitrisable()
 		{
 
 			@Override
@@ -114,35 +158,7 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 				return new LinkedList<String>();
 			}
 		};
-		final TabbedParamitrisable worldParam = new TabbedParamitrisable()
-		{
-
-			@Override
-			public void setParameter(final String parameter) throws CrazyException
-			{
-				value.setWorld(Bukkit.getWorld(parameter));
-				if (value == null)
-					throw new CrazyCommandNoSuchException("World", parameter, getWorldNames());
-			}
-
-			@Override
-			public List<String> tab(final String parameter)
-			{
-				final List<String> res = new LinkedList<String>();
-				for (final World world : Bukkit.getWorlds())
-					if (world.getName().startsWith(parameter))
-						res.add(world.getName());
-				return res;
-			}
-		};
-		for (final String prefix : prefixes)
-		{
-			params.put(prefix + "x", xParam);
-			params.put(prefix + "y", yParam);
-			params.put(prefix + "z", zParam);
-			params.put(prefix + "w", worldParam);
-			params.put(prefix + "world", worldParam);
-		}
+		return res;
 	}
 
 	private String[] getWorldNames()
