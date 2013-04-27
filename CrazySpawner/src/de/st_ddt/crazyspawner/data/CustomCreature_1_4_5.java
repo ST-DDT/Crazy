@@ -288,7 +288,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 				((Creeper) entity).setPowered(true);
 			if (color != null)
 				((Colorable) entity).setColor(color);
-			if (size > 0 && size < 5)
+			if (size > 0)
 				((Slime) entity).setSize(size);
 			if (angry)
 				if (entity instanceof Wolf)
@@ -355,7 +355,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			config.set(path + "charged", true);
 		if (color != null)
 			config.set(path + "color", color.name());
-		if (size > 0 && size < 5)
+		if (size > 0)
 			config.set(path + "size", size);
 		if (angry)
 			config.set(path + "angry", true);
@@ -398,7 +398,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		config.set(path + "wither", "boolean");
 		config.set(path + "charged", "boolean");
 		config.set(path + "color", "DyeColor");
-		config.set(path + "size", "int (1-4)");
+		config.set(path + "size", "int (1-x)");
 		config.set(path + "angry", "boolean");
 		config.set(path + "tamed", "boolean");
 		config.set(path + "tamer", "Player");
