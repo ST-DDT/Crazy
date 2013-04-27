@@ -329,230 +329,14 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 				return entities;
 			}
 		}, "ANGRY_PIGMEN", "ANGRYPIG_ZOMBIE", "ANGRYPIGMEN");
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
+		for (int i = 1; i <= SlimeExtendedEntityType.SIZECOUNT; i++)
 		{
-
-			@Override
-			public String getName()
-			{
-				return "TINYSLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(1);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 1)
-						it.remove();
-				return entities;
-			}
-		});
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
-		{
-
-			@Override
-			public String getName()
-			{
-				return "TINYMAGMASLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(1);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 1)
-						it.remove();
-				return entities;
-			}
-		});
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
-		{
-
-			@Override
-			public String getName()
-			{
-				return "SMALLSLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(2);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 2)
-						it.remove();
-				return entities;
-			}
-		});
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
-		{
-
-			@Override
-			public String getName()
-			{
-				return "SMALLMAGMASLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(2);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 2)
-						it.remove();
-				return entities;
-			}
-		});
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
-		{
-
-			@Override
-			public String getName()
-			{
-				return "BIGSLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(3);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 3)
-						it.remove();
-				return entities;
-			}
-		});
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
-		{
-
-			@Override
-			public String getName()
-			{
-				return "BIGMAGMASLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(3);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 3)
-						it.remove();
-				return entities;
-			}
-		});
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.SLIME)
-		{
-
-			@Override
-			public String getName()
-			{
-				return "HUGESLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(4);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 4)
-						it.remove();
-				return entities;
-			}
-		});
-		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.MAGMA_CUBE)
-		{
-
-			@Override
-			public String getName()
-			{
-				return "HUGEMAGMASLIME";
-			}
-
-			@Override
-			public Slime spawn(final Location location)
-			{
-				final Slime slime = (Slime) super.spawn(location);
-				slime.setSize(4);
-				return slime;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				final Collection<? extends Entity> entities = super.getEntities(world);
-				final Iterator<? extends Entity> it = entities.iterator();
-				while (it.hasNext())
-					if (((Slime) it.next()).getSize() != 4)
-						it.remove();
-				return entities;
-			}
-		});
+			final String sizeText = SlimeExtendedEntityType.getSizeText(i);
+			final SlimeExtendedEntityType slimeType = new SlimeExtendedEntityType(EntityType.SLIME, i);
+			registerExtendedEntityType(slimeType, sizeText + "SLIME");
+			final SlimeExtendedEntityType magmaType = new SlimeExtendedEntityType(EntityType.MAGMA_CUBE, i);
+			registerExtendedEntityType(magmaType, sizeText + "MAGMASLIME", sizeText + "_MAGMASLIME");
+		}
 		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.OCELOT)
 		{
 
@@ -802,6 +586,55 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			final Iterator<? extends Entity> it = entities.iterator();
 			while (it.hasNext())
 				if (((Sheep) it.next()).getColor() != color)
+					it.remove();
+			return entities;
+		}
+	}
+
+	private static class SlimeExtendedEntityType extends DefaultExtendedEntityType
+	{
+
+		private final static String[] SIZES = new String[] { "TINY", "SMALL", "DEFAULT", "LARGE", "HUGE", "TINYGIANT", "SMALLGIANT", "GIANT", "LARGEGIANT", "HUGEGIANT" };
+		private final static int SIZECOUNT = SIZES.length;
+		private final int size;
+
+		public static String getSizeText(final int size)
+		{
+			return SIZES[size - 1];
+		}
+
+		public SlimeExtendedEntityType(final EntityType slimeType, final int size)
+		{
+			super(slimeType);
+			this.size = size;
+		}
+
+		@Override
+		public String getName()
+		{
+			return getSizeText() + "_" + super.getName();
+		}
+
+		public final String getSizeText()
+		{
+			return getSizeText(size);
+		}
+
+		@Override
+		public Slime spawn(final Location location)
+		{
+			final Slime slime = (Slime) super.spawn(location);
+			slime.setSize(size);
+			return slime;
+		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = super.getEntities(world);
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+				if (((Slime) it.next()).getSize() != size)
 					it.remove();
 			return entities;
 		}
