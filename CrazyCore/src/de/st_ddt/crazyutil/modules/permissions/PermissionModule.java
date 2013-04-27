@@ -44,32 +44,74 @@ public class PermissionModule implements Module
 
 	public static boolean hasPermission(final CommandSender sender, final String permission)
 	{
-		return permissionModule.hasPermission(sender, permission);
+		try
+		{
+			return permissionModule.hasPermission(sender, permission);
+		}
+		catch (final Exception e)
+		{
+			return false;
+		}
 	}
 
 	public static boolean hasGroup(final Player player, final String name)
 	{
-		return permissionModule.hasGroup(player, name);
+		try
+		{
+			return permissionModule.hasGroup(player, name);
+		}
+		catch (final Exception e)
+		{
+			return false;
+		}
 	}
 
 	public static String getGroup(final Player player)
 	{
-		return permissionModule.getGroup(player);
+		try
+		{
+			return permissionModule.getGroup(player);
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
 	}
 
 	public static String getGroupPrefix(final Player player)
 	{
-		return permissionModule.getGroupPrefix(player);
+		try
+		{
+			return permissionModule.getGroupPrefix(player);
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
 	}
 
 	public static String getGroupSuffix(final Player player)
 	{
-		return permissionModule.getGroupSuffix(player);
+		try
+		{
+			return permissionModule.getGroupSuffix(player);
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
 	}
 
 	public static Set<String> getGroups(final Player player)
 	{
-		return permissionModule.getGroups(player);
+		try
+		{
+			return permissionModule.getGroups(player);
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
 	}
 
 	public PermissionModule()
