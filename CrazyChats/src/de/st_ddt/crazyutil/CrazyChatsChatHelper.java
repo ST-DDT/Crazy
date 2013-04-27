@@ -44,7 +44,16 @@ public class CrazyChatsChatHelper extends ChatHelperExtended
 	{
 		String res = putArgs(2, format, plugin.getGroupPrefix(player), plugin.getGroupSuffix(player), player.getWorld().getName(), CHATTIMEFORMAT.format(new Date()));
 		for (final ChatFormatParameters parameter : CHATFORMATPARAMETERS)
-			res = putPrefixedArgs(parameter.getParameterPrefix(), res, parameter.getParameters(player));
+			try
+			{
+				res = putPrefixedArgs(parameter.getParameterPrefix(), res, parameter.getParameters(player));
+			}
+			catch (final Exception e)
+			{
+				res = putPrefixedArgs(parameter.getParameterPrefix(), res, parameter.getExampleParameters());
+				System.err.println("Warning: Chat Parameter failure in " + parameter.getParameterPrefix() + "!");
+				e.printStackTrace();
+			}
 		return res;
 	}
 
