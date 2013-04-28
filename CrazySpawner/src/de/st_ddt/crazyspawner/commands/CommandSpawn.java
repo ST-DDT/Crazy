@@ -327,6 +327,9 @@ public class CommandSpawn extends CommandExecutor
 		params.put("ad", allowDespawn);
 		params.put("despawn", allowDespawn);
 		params.put("allowdespawning", allowDespawn);
+		final BooleanParamitrisable peaceful = new BooleanParamitrisable(false);
+		params.put("p", peaceful);
+		params.put("peaceful", peaceful);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");
