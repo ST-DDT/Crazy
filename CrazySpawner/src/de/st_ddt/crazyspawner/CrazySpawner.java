@@ -73,6 +73,7 @@ public class CrazySpawner extends CrazyPlugin
 	protected final Set<CustomCreature> creatures = new LinkedHashSet<CustomCreature>();
 	protected final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
+	protected double defaultAlarmRange;
 	static
 	{
 		CrazyPipe.registerPipe(new CrazyPipe()
@@ -469,6 +470,7 @@ public class CrazySpawner extends CrazyPlugin
 				}
 		for (final SpawnTask task : tasks)
 			task.start(100);
+		defaultAlarmRange = config.getDouble("defaultAlarmRange", 10);
 	}
 
 	@Override
@@ -492,6 +494,7 @@ public class CrazySpawner extends CrazyPlugin
 			for (final SpawnTask task : tasks)
 				task.save(config, "tasks.t" + i++ + ".");
 		}
+		config.set("defaultAlarmRange", defaultAlarmRange);
 		super.saveConfiguration();
 	}
 
@@ -528,5 +531,10 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		tasks.remove(task);
 		saveConfiguration();
+	}
+
+	public double getDefaultAlarmRange()
+	{
+		return defaultAlarmRange;
 	}
 }

@@ -2,6 +2,7 @@ package de.st_ddt.crazyspawner.listener;
 
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,6 +34,11 @@ public class CreatureListener implements Listener
 			return;
 		final LivingEntity entity = (LivingEntity) event.getEntity();
 		entity.removeMetadata(PeacefulMeta.METAHEADER, plugin);
+		final double alarmRange = plugin.getDefaultAlarmRange();
+		final Location location = entity.getLocation();
+		for (final LivingEntity nearby : entity.getWorld().getEntitiesByClass(LivingEntity.class))
+			if (location.distance(nearby.getLocation()) < alarmRange)
+				nearby.removeMetadata(PeacefulMeta.METAHEADER, plugin);
 		final List<MetadataValue> metas = entity.getMetadata(NameMeta.METAHEADER);
 		for (final MetadataValue meta : metas)
 			if (meta.getOwningPlugin() == plugin)
