@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
@@ -28,6 +32,18 @@ public class CreatureListener implements Listener
 		super();
 		this.plugin = plugin;
 		this.health = new HealthTask(plugin);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void CreatureExplosion(final EntityDamageByEntityEvent event)
+	{
+		if (plugin.isMonsterExplosionDamageEnabled() || event.getCause() != DamageCause.ENTITY_EXPLOSION)
+			return;
+		if (!(event.getEntity() instanceof Monster))
+			return;
+		if (event.getDamager() instanceof TNTPrimed)
+			return;
+		event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

@@ -55,6 +55,8 @@ import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.metrics.Metrics;
 import de.st_ddt.crazyutil.metrics.Metrics.Graph;
 import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
+import de.st_ddt.crazyutil.modes.BooleanFalseMode;
+import de.st_ddt.crazyutil.modes.DoubleMode;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.EnumParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
@@ -74,6 +76,7 @@ public class CrazySpawner extends CrazyPlugin
 	protected final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 	protected double defaultAlarmRange;
+	protected boolean monsterExplosionDamageEnabled;
 	static
 	{
 		CrazyPipe.registerPipe(new CrazyPipe()
@@ -128,6 +131,22 @@ public class CrazySpawner extends CrazyPlugin
 			public void setValue(final Double newValue) throws CrazyException
 			{
 				defaultAlarmRange = newValue;
+				saveConfiguration();
+			}
+		});
+		modeCommand.addMode(new BooleanFalseMode(this, "monsterExplosionDamageEnabled")
+		{
+
+			@Override
+			public Boolean getValue()
+			{
+				return monsterExplosionDamageEnabled;
+			}
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				monsterExplosionDamageEnabled = newValue;
 				saveConfiguration();
 			}
 		});
@@ -498,6 +517,7 @@ public class CrazySpawner extends CrazyPlugin
 		for (final SpawnTask task : tasks)
 			task.start(100);
 		defaultAlarmRange = config.getDouble("defaultAlarmRange", 10);
+		monsterExplosionDamageEnabled = config.getBoolean("monsterExplosionDamageEnabled", true);
 	}
 
 	@Override
@@ -522,6 +542,7 @@ public class CrazySpawner extends CrazyPlugin
 				task.save(config, "tasks.t" + i++ + ".");
 		}
 		config.set("defaultAlarmRange", defaultAlarmRange);
+		config.set("monsterExplosionDamageEnabled", monsterExplosionDamageEnabled);
 		super.saveConfiguration();
 	}
 
@@ -563,5 +584,10 @@ public class CrazySpawner extends CrazyPlugin
 	public final double getDefaultAlarmRange()
 	{
 		return defaultAlarmRange;
+	}
+
+	public final boolean isMonsterExplosionDamageEnabled()
+	{
+		return monsterExplosionDamageEnabled;
 	}
 }
