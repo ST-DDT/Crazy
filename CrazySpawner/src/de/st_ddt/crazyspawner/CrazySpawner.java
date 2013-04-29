@@ -106,6 +106,33 @@ public class CrazySpawner extends CrazyPlugin
 		return plugin;
 	}
 
+	public CrazySpawner()
+	{
+		super();
+		registerModes();
+	}
+
+	@Localized("CRAZYSPAWNER.MODE.CHANGE $Name$ $Value$")
+	private void registerModes()
+	{
+		modeCommand.addMode(new DoubleMode(this, "defaultAlarmRange")
+		{
+
+			@Override
+			public Double getValue()
+			{
+				return defaultAlarmRange;
+			}
+
+			@Override
+			public void setValue(final Double newValue) throws CrazyException
+			{
+				defaultAlarmRange = newValue;
+				saveConfiguration();
+			}
+		});
+	}
+
 	private void registerHooks()
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
@@ -533,7 +560,7 @@ public class CrazySpawner extends CrazyPlugin
 		saveConfiguration();
 	}
 
-	public double getDefaultAlarmRange()
+	public final double getDefaultAlarmRange()
 	{
 		return defaultAlarmRange;
 	}
