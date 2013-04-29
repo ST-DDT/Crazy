@@ -36,14 +36,15 @@ public class HealthTask implements Runnable
 	{
 		for (final LivingEntity entity : entities)
 		{
-			if (entity.isDead())
-				continue;
 			final List<MetadataValue> metas = entity.getMetadata(NameMeta.METAHEADER);
 			for (final MetadataValue meta : metas)
 				if (meta.getOwningPlugin() == plugin)
 				{
 					final NameMeta name = (NameMeta) meta;
-					entity.setCustomName(name.asString() + " (" + entity.getHealth() + ")");
+					if (entity.isValid())
+						entity.setCustomName(name.asString() + " (" + entity.getHealth() + ")");
+					else
+						entity.setCustomName(name.asString());
 				}
 		}
 		entities.clear();
