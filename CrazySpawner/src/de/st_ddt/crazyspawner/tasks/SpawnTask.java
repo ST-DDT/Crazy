@@ -22,6 +22,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
 import de.st_ddt.crazyspawner.data.meta.NameMeta;
 import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.data.options.Thunder;
@@ -60,6 +61,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final boolean countDownBroadcast;
 	protected final boolean allowDespawn;
 	protected final boolean peaceful;
+	protected final AlarmMeta alarm;
 	protected final int health;
 	protected final boolean showHealth;
 	protected final int fire;
@@ -113,7 +115,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param thunder
 	 *            Cast thunder (effects) when spawning a creature.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final int health, final boolean showHealth, final int fire, final Thunder thunder)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
 	{
 		super();
 		this.plugin = plugin;
@@ -142,15 +144,19 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.countDownBroadcast = countDownMessage != null && countDownBroadcast;
 		this.allowDespawn = allowDespawn;
 		this.peaceful = peaceful;
+		if (alarmRange < 0)
+			this.alarm = null;
+		else
+			this.alarm = new AlarmMeta(alarmRange);
 		this.health = v146OrLater ? health : -1;
 		this.showHealth = v15OrLater ? showHealth : false;
 		this.fire = Math.max(fire, -1);
 		this.thunder = thunder;
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final int health, final boolean showHealth, final int fire, final Thunder thunder)
+	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
 	{
-		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn, peaceful, health, showHealth, fire, thunder);
+		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn, peaceful, alarmRange, health, showHealth, fire, thunder);
 		if (countDownTimes != null)
 			for (final Long time : countDownTimes)
 				this.countDownTimes.add(time);
@@ -175,7 +181,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 */
 	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
-		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false, false, -1, false, -1, Thunder.EFFECT);
+		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false, false, -1, -1, false, -1, Thunder.EFFECT);
 	}
 
 	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
@@ -212,6 +218,11 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.countDownBroadcast = countDownMessage != null && this.countDownTimes.size() > 0 ? config.getBoolean("countDownBroadcast", false) : false;
 		this.allowDespawn = config.getBoolean("allowDespawn", false);
 		this.peaceful = config.getBoolean("peaceful", false);
+		final double alarmRange = config.getDouble("alarmRange", -1);
+		if (alarmRange < 0)
+			this.alarm = null;
+		else
+			this.alarm = new AlarmMeta(alarmRange);
 		this.health = v146OrLater ? config.getInt("health", -1) : -1;
 		this.showHealth = v15OrLater ? config.getBoolean("showHealth", false) : false;
 		this.fire = Math.max(config.getInt("fire", -1), -1);
@@ -410,6 +421,10 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		config.set(path + "countDownBroadcast", countDownBroadcast);
 		config.set(path + "allowDespawn", allowDespawn);
 		config.set(path + "peaceful", peaceful);
+		if (alarm == null)
+			config.set(path + "alarmRange", -1);
+		else
+			config.set(path + "alarmRange", alarm.asDouble());
 		config.set(path + "health", health);
 		config.set(path + "showHealth", showHealth);
 		config.set(path + "fire", fire);

@@ -204,6 +204,20 @@ public class CommandSpawn extends CommandExecutor
 		final BooleanParamitrisable peaceful = new BooleanParamitrisable(false);
 		params.put("p", peaceful);
 		params.put("peaceful", peaceful);
+		final DoubleParamitrisable alarmRange = new DoubleParamitrisable(-1D)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				super.setParameter(parameter);
+				if (value < 0)
+					throw new CrazyCommandParameterException(0, "positive Number (Double)");
+			}
+		};
+		params.put("ar", alarmRange);
+		params.put("arange", alarmRange);
+		params.put("alarmrange", alarmRange);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");
@@ -252,7 +266,7 @@ public class CommandSpawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
 		if (location.getValue().getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), peaceful.getValue(), health.getValue(), showHealth.getValue(), fire.getValue(), thunder.getValue());
+		final SpawnTask task = new SpawnTask(plugin, creature.getValue(), location.getValue(), spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), peaceful.getValue(), alarmRange.getValue(), health.getValue(), showHealth.getValue(), fire.getValue(), thunder.getValue());
 		plugin.addSpawnTask(task);
 		if (synced.getValue())
 			task.start();
@@ -330,6 +344,10 @@ public class CommandSpawn extends CommandExecutor
 		final BooleanParamitrisable peaceful = new BooleanParamitrisable(false);
 		params.put("p", peaceful);
 		params.put("peaceful", peaceful);
+		final DoubleParamitrisable alarmRange = new DoubleParamitrisable(-1D);
+		params.put("ar", alarmRange);
+		params.put("arange", alarmRange);
+		params.put("alarmrange", alarmRange);
 		final LocationParamitrisable location = new LocationParamitrisable(sender);
 		location.addFullParams(params, "l", "loc", "location");
 		location.addAdvancedParams(params, "");

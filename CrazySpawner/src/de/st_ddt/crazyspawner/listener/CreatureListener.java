@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
 import de.st_ddt.crazyspawner.data.meta.NameMeta;
 import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.tasks.HealthTask;
@@ -53,7 +54,15 @@ public class CreatureListener implements Listener
 			return;
 		final LivingEntity entity = (LivingEntity) event.getEntity();
 		entity.removeMetadata(PeacefulMeta.METAHEADER, plugin);
-		final double alarmRange = plugin.getDefaultAlarmRange();
+		double alarmRange = plugin.getDefaultAlarmRange();
+		final List<MetadataValue> metas = entity.getMetadata(AlarmMeta.METAHEADER);
+		for (final MetadataValue meta : metas)
+			if (meta.getOwningPlugin() == plugin)
+			{
+				final AlarmMeta alarm = (AlarmMeta) meta;
+				alarmRange = alarm.asDouble();
+				break;
+			}
 		final Location location = entity.getLocation();
 		for (final LivingEntity nearby : entity.getWorld().getEntitiesByClass(LivingEntity.class))
 			if (location.distance(nearby.getLocation()) < alarmRange)
