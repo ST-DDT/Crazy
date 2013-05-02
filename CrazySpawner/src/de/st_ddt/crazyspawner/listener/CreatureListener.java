@@ -74,12 +74,13 @@ public class CreatureListener implements Listener
 	public void CreatureDeath(final EntityDeathEvent event)
 	{
 		final LivingEntity entity = event.getEntity();
-		final List<MetadataValue> metas = entity.getMetadata("CreatureMeta");
+		final List<MetadataValue> metas = entity.getMetadata(NameMeta.METAHEADER);
 		for (final MetadataValue meta : metas)
 			if (meta.getOwningPlugin() == plugin)
 			{
 				final NameMeta name = (NameMeta) meta;
 				entity.setCustomName(name.asString());
+				break;
 			}
 	}
 }
