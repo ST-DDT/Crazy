@@ -4,7 +4,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 
-public class NameMeta implements MetadataValue
+public final class NameMeta implements MetadataValue
 {
 
 	public static final String METAHEADER = "NameMeta";

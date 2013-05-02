@@ -4,7 +4,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 
-public class PeacefulMeta implements MetadataValue
+public final class PeacefulMeta implements MetadataValue
 {
 
 	public final static String METAHEADER = "PeacefulMeta";
