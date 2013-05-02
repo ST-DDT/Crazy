@@ -334,6 +334,8 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		}
 		else if (entity instanceof LivingEntity)
 			postSpawnProcessing((LivingEntity) entity);
+		if (alarm != null)
+			entity.setMetadata(AlarmMeta.METAHEADER, alarm);
 		if (fire > -1)
 			entity.setFireTicks(fire);
 	}
