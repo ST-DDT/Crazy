@@ -18,7 +18,7 @@ exampleCreature:
 # Spawn as colored sheep (Colorable (Sheep))
   color: DyeColor
 # Spawn sized slime (Slime + Magma_Cube)
-  size: int (1-4)
+  size: int (1-x)
 # Spawn angry  (Wolf + Pig_Zombie)
   angry: boolean
 # Spawn as tamed pet (Tameable (Wolf + Ocelot/Cat))
@@ -44,7 +44,7 @@ exampleCreature:
 # This can be all types listed in "/cms creature:" command
 # If you are using a custom creature here you have to define it before that entry.
   passenger: ExtendedCreatureType
-# Spawn with additional health
+# Spawn with additional/custom health
   maxHealth: int
 # Define a custom name
   customName: String
