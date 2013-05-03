@@ -17,7 +17,7 @@ public final class NameMeta implements MetadataValue
 	}
 
 	@Override
-	public Object value()
+	public String value()
 	{
 		return name;
 	}

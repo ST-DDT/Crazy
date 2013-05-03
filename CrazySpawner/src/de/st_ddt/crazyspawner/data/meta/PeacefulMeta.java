@@ -16,7 +16,7 @@ public final class PeacefulMeta implements MetadataValue
 	}
 
 	@Override
-	public Object value()
+	public Boolean value()
 	{
 		return Boolean.TRUE;
 	}

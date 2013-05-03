@@ -17,7 +17,7 @@ public final class AlarmMeta implements MetadataValue
 	}
 
 	@Override
-	public Object value()
+	public Double value()
 	{
 		return alarmRange;
 	}
