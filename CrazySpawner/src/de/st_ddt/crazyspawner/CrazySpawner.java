@@ -344,6 +344,18 @@ public class CrazySpawner extends CrazyPlugin
 			System.err.println("[CrazySpawner] Could not save example EntityType.yml.");
 			System.err.println(e.getMessage());
 		}
+		// ExampleCustomType
+		final YamlConfiguration customTypes = new YamlConfiguration();
+		customTypes.set("exampleCustomCreatureType", new ArrayList<String>(ExtendedCreatureParamitrisable.CREATURE_TYPES.keySet()));
+		try
+		{
+			customTypes.save(new File(exampleFolder, "CustomCreatureType.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example CustomCreatureType.yml.");
+			System.err.println(e.getMessage());
+		}
 		// ExampleColor
 		final YamlConfiguration dyeColors = new YamlConfiguration();
 		dyeColors.set("exampleDyeColor", EnumParamitrisable.getEnumNames(DyeColor.values()).toArray());
