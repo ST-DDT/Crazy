@@ -1,7 +1,10 @@
 package de.st_ddt.crazyspawner.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -30,6 +33,9 @@ import org.bukkit.material.Colorable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import de.st_ddt.crazyspawner.data.drops.Drop;
+import de.st_ddt.crazyspawner.data.meta.CustomCreatureMeta;
+import de.st_ddt.crazyspawner.data.meta.DropsMeta;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
@@ -47,6 +53,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			return o1.getName().compareTo(o2.getName());
 		}
 	};
+	protected final CustomCreatureMeta meta = new CustomCreatureMeta(this);
 	protected final String name;
 	protected final EntityType type;
 	protected final boolean baby;
@@ -58,6 +65,8 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	protected final boolean angry;
 	protected final boolean tamed;
 	protected final OfflinePlayer tamer;
+	protected final DropsMeta dropsMeta = new DropsMeta(this);
+	protected final List<Drop> drops = new ArrayList<Drop>();
 	protected final boolean equiped;
 	protected final ItemStack boots;
 	protected final float bootsDropChance;
@@ -124,6 +133,11 @@ public class CustomCreature_1_4_5 implements CustomCreature
 
 	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger, final Map<? extends PotionEffectType, Integer> potionEffects)
 	{
+		this(name, type, baby, villager, wither, charged, color, size, angry, tamed, tamer, null, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger, potionEffects);
+	}
+
+	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final Collection<Drop> drops, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger, final Map<? extends PotionEffectType, Integer> potionEffects)
+	{
 		super();
 		if (name == null)
 			throw new IllegalArgumentException("Name cannot be null!");
@@ -151,22 +165,27 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		}
 		if (LivingEntity.class.isAssignableFrom(clazz))
 		{
+			if (drops == null || drops.contains(null))
+				this.drops.add(null);
+			else
+				this.drops.addAll(drops);
 			this.equiped = boots != null || leggings != null || chestplate != null || helmet != null || itemInHand != null;
 			this.boots = boots;
-			this.bootsDropChance = bootsDropChance;
+			this.bootsDropChance = this.drops.contains(null) ? bootsDropChance : 0;
 			this.leggings = leggings;
-			this.leggingsDropChance = leggingsDropChance;
+			this.leggingsDropChance = this.drops.contains(null) ? leggingsDropChance : 0;
 			this.chestplate = chestplate;
-			this.chestplateDropChance = chestplateDropChance;
+			this.chestplateDropChance = this.drops.contains(null) ? chestplateDropChance : 0;
 			this.helmet = helmet;
-			this.helmetDropChance = helmetDropChance;
+			this.helmetDropChance = this.drops.contains(null) ? helmetDropChance : 0;
 			this.itemInHand = itemInHand;
-			this.itemInHandDropChance = itemInHandDropChance;
+			this.itemInHandDropChance = this.drops.contains(null) ? itemInHandDropChance : 0;
 			if (potionEffects != null)
 				this.potionEffects.putAll(potionEffects);
 		}
 		else
 		{
+			this.drops.add(null);
 			this.equiped = false;
 			this.boots = null;
 			this.bootsDropChance = 0;
@@ -215,16 +234,29 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		}
 		if (LivingEntity.class.isAssignableFrom(clazz))
 		{
+			final ConfigurationSection dropsConfig = config.getConfigurationSection("drops");
+			if (dropsConfig == null)
+				this.drops.add(null);
+			else
+				for (final String key : dropsConfig.getKeys(false))
+					try
+					{
+						this.drops.add(new Drop(dropsConfig.getConfigurationSection(key)));
+					}
+					catch (final Exception e)
+					{
+						System.err.println(name + "'s costum drop " + key + " was corrupted and has been removed!");
+					}
 			this.boots = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("boots"));
-			this.bootsDropChance = (float) config.getDouble("bootsDropChance");
+			this.bootsDropChance = this.drops.contains(null) ? ((float) config.getDouble("bootsDropChance")) : 0;
 			this.leggings = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("leggings"));
-			this.leggingsDropChance = (float) config.getDouble("leggingsDropChance");
+			this.leggingsDropChance = this.drops.contains(null) ? ((float) config.getDouble("leggingsDropChance")) : 0;
 			this.chestplate = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("chestplate"));
-			this.chestplateDropChance = (float) config.getDouble("chestplateDropChance");
+			this.chestplateDropChance = this.drops.contains(null) ? ((float) config.getDouble("chestplateDropChance")) : 0;
 			this.helmet = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("helmet"));
-			this.helmetDropChance = (float) config.getDouble("helmetDropChance");
+			this.helmetDropChance = this.drops.contains(null) ? ((float) config.getDouble("helmetDropChance")) : 0;
 			this.itemInHand = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("itemInHand"));
-			this.itemInHandDropChance = (float) config.getDouble("itemInHandDropChance");
+			this.itemInHandDropChance = this.drops.contains(null) ? ((float) config.getDouble("itemInHandDropChance")) : 0;
 			this.equiped = boots != null || leggings != null || chestplate != null || helmet != null || itemInHand != null;
 			final ConfigurationSection potionConfig = config.getConfigurationSection("potionEffects");
 			if (potionConfig != null)
@@ -249,6 +281,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			this.helmetDropChance = 0;
 			this.itemInHand = null;
 			this.itemInHandDropChance = 0;
+			this.drops.add(null);
 		}
 		final String passenger = config.getString("passenger");
 		if (passenger == null)
@@ -273,6 +306,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	public Entity spawn(final Location location)
 	{
 		final Entity entity = location.getWorld().spawnEntity(location, type);
+		entity.setMetadata(CustomCreatureMeta.METAHEADER, meta);
 		try
 		{
 			if (baby)
@@ -317,6 +351,8 @@ public class CustomCreature_1_4_5 implements CustomCreature
 				equipment.setItemInHand(itemInHand.clone());
 				equipment.setItemInHandDropChance(itemInHandDropChance);
 			}
+			if (!drops.contains(null))
+				entity.setMetadata(CustomCreatureMeta.METAHEADER, meta);
 			if (potionEffects.size() > 0)
 			{
 				final LivingEntity living = (LivingEntity) entity;
@@ -382,6 +418,14 @@ public class CustomCreature_1_4_5 implements CustomCreature
 				config.set(path + "itemInHand", itemInHand.serialize());
 			config.set(path + "itemInHandDropChance", itemInHandDropChance);
 		}
+		if (drops.isEmpty())
+			config.set(path + "drops", new HashMap<String, Drop>());
+		else if (!drops.contains(null))
+		{
+			int i = 1;
+			for (final Drop drop : drops)
+				drop.save(config, path + "drops." + drop.getItem().getType().name() + i++ + ".");
+		}
 		if (passenger != null)
 			config.set(path + "passenger", passenger.getName());
 		if (potionEffects.size() > 0)
@@ -412,6 +456,12 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		config.set(path + "helmetDropChance", "float (0-1)");
 		config.set(path + "itemInHand", "Item");
 		config.set(path + "itemInHandDropChance", "float (0-1)");
+		config.set(path + "drops.DROP1.item", "Item");
+		config.set(path + "drops.DROP1.chance", "float (0-1)");
+		config.set(path + "drops.DROP2.item", "Item");
+		config.set(path + "drops.DROP2.chance", "float (0-1)");
+		config.set(path + "drops.DROPx.item", "Item");
+		config.set(path + "drops.DROPx.chance", "float (0-1)");
 		config.set(path + "passenger", "ExtendedCreatureType");
 		config.set(path + "maxHealth", "int");
 		config.set(path + "customName", "String");
@@ -419,6 +469,29 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		config.set(path + "potionEffects.POTIONEFFECT1", "int (1-x)");
 		config.set(path + "potionEffects.POTIONEFFECT2", "int (1-x)");
 		config.set(path + "potionEffects.POTIONEFFECTx", "int (1-x)");
+	}
+
+	@Override
+	public List<ItemStack> getDrops()
+	{
+		return updateDrops(new ArrayList<ItemStack>());
+	}
+
+	@Override
+	public <S extends Collection<ItemStack>> S updateDrops(final S collection)
+	{
+		if (drops.contains(null))
+			return collection;
+		try
+		{
+			collection.clear();
+			for (final Drop drop : drops)
+				if (drop.checkChance())
+					collection.add(drop.getItemClone());
+		}
+		catch (final UnsupportedOperationException e)
+		{}
+		return collection;
 	}
 
 	@Override

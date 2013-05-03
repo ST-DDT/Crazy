@@ -18,6 +18,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
+import de.st_ddt.crazyspawner.data.meta.DropsMeta;
 import de.st_ddt.crazyspawner.data.meta.NameMeta;
 import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.tasks.HealthTask;
@@ -83,12 +84,20 @@ public class CreatureListener implements Listener
 	public void CreatureDeath(final EntityDeathEvent event)
 	{
 		final LivingEntity entity = event.getEntity();
-		final List<MetadataValue> metas = entity.getMetadata(NameMeta.METAHEADER);
-		for (final MetadataValue meta : metas)
+		final List<MetadataValue> nameMetas = entity.getMetadata(NameMeta.METAHEADER);
+		for (final MetadataValue meta : nameMetas)
 			if (meta.getOwningPlugin() == plugin)
 			{
 				final NameMeta name = (NameMeta) meta;
 				entity.setCustomName(name.asString());
+				break;
+			}
+		final List<MetadataValue> dropsMeta = entity.getMetadata(DropsMeta.METAHEADER);
+		for (final MetadataValue meta : dropsMeta)
+			if (meta.getOwningPlugin() == plugin)
+			{
+				final DropsMeta drops = (DropsMeta) meta;
+				drops.updateDrops(event.getDrops());
 				break;
 			}
 	}

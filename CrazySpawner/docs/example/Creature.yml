@@ -40,6 +40,21 @@ exampleCreature:
 # Spawn with item in hand (ex: sword)
   itemInHand: Item
   itemInHandDropChance: float (0-1)
+# Overwrites ALL drops, including armor and weapon.
+# Use this to drop nothing
+# drops: {}
+# Remove the drops section to use default drops.
+# Use this for custom drops
+  drops:
+    DROP1:
+      item: Item
+      chance: float (0-1)
+    DROP2:
+      item: Item
+      chance: float (0-1)
+    DROPx:
+      item: Item
+      chance: float (0-1)
 # Spawn with passenger
 # This can be all types listed in "/cms creature:" command
 # If you are using a custom creature here you have to define it before that entry.

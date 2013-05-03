@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
@@ -28,4 +29,8 @@ public interface CustomCreature extends ExtendedCreatureType, ConfigurationSavea
 
 	@Override
 	public void save(ConfigurationSection config, String path);
+
+	public Collection<ItemStack> getDrops();
+
+	public <S extends Collection<ItemStack>> S updateDrops(S collection);
 }
