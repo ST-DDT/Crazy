@@ -55,7 +55,7 @@ public class Drop implements ConfigurationSaveable
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		ObjectSaveLoadHelper.saveItemStack(config, path + "item.", item);
+		ObjectSaveLoadHelper.saveItemStack(config, path + "item", item);
 		config.set(path + "chance", chance);
 	}
 
