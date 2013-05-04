@@ -36,6 +36,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomCreatureMeta;
+import de.st_ddt.crazyspawner.data.CustomCreature.CustomDamage;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomDrops;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomXP;
 import de.st_ddt.crazyspawner.data.drops.Drop;
@@ -43,7 +44,7 @@ import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
-public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta, CustomDrops, CustomXP
+public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta, CustomDrops, CustomXP, CustomDamage
 {
 
 	private final static Random RANDOM = new Random();
@@ -82,6 +83,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 	protected final float helmetDropChance;
 	protected final ItemStack itemInHand;
 	protected final float itemInHandDropChance;
+	protected final int minDamage;
+	protected final int maxDamage;
 	protected final ExtendedCreatureType passenger;
 	protected final Map<PotionEffectType, Integer> potionEffects = new TreeMap<PotionEffectType, Integer>(POTIONEFFECTTYPE_COMCOMPARATOR);
 
@@ -306,6 +309,9 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			this.helmetDropChance = this.drops.contains(null) ? helmetDropChance : 0;
 			this.itemInHand = itemInHand;
 			this.itemInHandDropChance = this.drops.contains(null) ? itemInHandDropChance : 0;
+			this.minDamage = Math.max(Math.min(minDamage, maxDamage), -1);
+			this.maxDamage = this.minDamage == -1 ? -1 : Math.max(Math.max(minDamage, maxDamage), -1);
+			;
 			if (potionEffects != null)
 				this.potionEffects.putAll(potionEffects);
 		}
@@ -325,6 +331,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			this.helmetDropChance = 0;
 			this.itemInHand = null;
 			this.itemInHandDropChance = 0;
+			this.minDamage = -1;
+			this.maxDamage = -1;
 		}
 		this.passenger = passenger;
 	}
@@ -388,6 +396,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			this.itemInHand = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("itemInHand"));
 			this.itemInHandDropChance = this.drops.contains(null) ? ((float) config.getDouble("itemInHandDropChance")) : 0;
 			this.equiped = boots != null || leggings != null || chestplate != null || helmet != null || itemInHand != null;
+			this.minDamage = Math.max(Math.min(config.getInt("minDamage", -1), config.getInt("maxDamage", -1)), -1);
+			this.maxDamage = this.minDamage == -1 ? -1 : Math.max(Math.max(config.getInt("minDamage", -1), config.getInt("maxDamage", -1)), -1);
 			final ConfigurationSection potionConfig = config.getConfigurationSection("potionEffects");
 			if (potionConfig != null)
 				for (final String key : potionConfig.getKeys(false))
@@ -414,6 +424,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			this.helmetDropChance = 0;
 			this.itemInHand = null;
 			this.itemInHandDropChance = 0;
+			this.minDamage = -1;
+			this.maxDamage = -1;
 		}
 		final String passenger = config.getString("passenger");
 		if (passenger == null)
@@ -487,6 +499,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 				equipment.setItemInHand(itemInHand.clone());
 				equipment.setItemInHandDropChance(itemInHandDropChance);
 			}
+			if (minDamage >= 0)
+				entity.setMetadata(CustomDamage.METAHEADER, this);
 			if (potionEffects.size() > 0)
 			{
 				final LivingEntity living = (LivingEntity) entity;
@@ -565,6 +579,11 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 				config.set(path + "itemInHand", itemInHand.serialize());
 			config.set(path + "itemInHandDropChance", itemInHandDropChance);
 		}
+		if (minDamage >= 0)
+		{
+			config.set(path + "minDamage", minDamage);
+			config.set(path + "maxDamage", maxDamage);
+		}
 		if (passenger != null)
 			config.set(path + "passenger", passenger.getName());
 		if (potionEffects.size() > 0)
@@ -603,6 +622,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 		config.set(path + "helmetDropChance", "float (0-1)");
 		config.set(path + "itemInHand", "Item");
 		config.set(path + "itemInHandDropChance", "float (0-1)");
+		config.set(path + "minDamage", "int (0-x)");
+		config.set(path + "maxDamage", "int (0-x)");
 		config.set(path + "passenger", "ExtendedCreatureType");
 		config.set(path + "potionEffects.POTIONEFFECT1", "int (1-x)");
 		config.set(path + "potionEffects.POTIONEFFECT2", "int (1-x)");
@@ -656,6 +677,29 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			return minXP;
 		else
 			return RANDOM.nextInt(maxXP - minXP + 1) + minXP;
+	}
+
+	@Override
+	public int getMinDamage()
+	{
+		return minDamage;
+	}
+
+	@Override
+	public int getMaxDamage()
+	{
+		return maxDamage;
+	}
+
+	@Override
+	public int getDamage()
+	{
+		if (minDamage == -1)
+			return -1;
+		else if (minDamage == maxDamage)
+			return minXP;
+		else
+			return RANDOM.nextInt(maxDamage - minDamage + 1) + minDamage;
 	}
 
 	@Override

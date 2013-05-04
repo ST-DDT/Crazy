@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.data.CustomCreature.CustomDamage;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomDrops;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomXP;
 import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
@@ -50,7 +51,7 @@ public class CreatureListener implements Listener
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void CreatureDamage(final EntityDamageEvent event)
+	public void CreatureDamaged(final EntityDamageEvent event)
 	{
 		if (!(event.getEntity() instanceof LivingEntity))
 			return;
@@ -70,6 +71,22 @@ public class CreatureListener implements Listener
 			if (location.distance(nearby.getLocation()) < alarmRange)
 				nearby.removeMetadata(PeacefulMeta.METAHEADER, plugin);
 		health.queue(entity);
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+	public void CreatureDamager(final EntityDamageByEntityEvent event)
+	{
+		if (!(event.getDamager() instanceof LivingEntity))
+			return;
+		final LivingEntity entity = (LivingEntity) event.getEntity();
+		final List<MetadataValue> damageMetas = entity.getMetadata(CustomDamage.METAHEADER);
+		for (final MetadataValue meta : damageMetas)
+			if (meta instanceof CustomDamage)
+			{
+				final CustomDamage damage = (CustomDamage) meta;
+				event.setDamage(damage.getDamage());
+				break;
+			}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)

@@ -53,6 +53,18 @@ public interface CustomCreature extends ExtendedCreatureType, ConfigurationSavea
 		public int getXP();
 	}
 
+	public interface CustomDamage
+	{
+
+		public static final String METAHEADER = "DamageMeta";
+
+		public int getMinDamage();
+
+		public int getMaxDamage();
+
+		public int getDamage();
+	}
+
 	public interface CustomCreatureMeta extends MetadataValue
 	{
 
