@@ -399,6 +399,14 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 				config.set(path + "tamed", true);
 			else
 				config.set(path + "tamer", tamer.getName());
+		if (drops.isEmpty())
+			config.set(path + "drops", new HashMap<String, Drop>());
+		else if (!drops.contains(null))
+		{
+			int i = 1;
+			for (final Drop drop : drops)
+				drop.save(config, path + "drops." + drop.getItem().getType().name() + i++ + ".");
+		}
 		if (equiped)
 		{
 			if (boots != null)
@@ -416,14 +424,6 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			if (itemInHand != null)
 				config.set(path + "itemInHand", itemInHand.serialize());
 			config.set(path + "itemInHandDropChance", itemInHandDropChance);
-		}
-		if (drops.isEmpty())
-			config.set(path + "drops", new HashMap<String, Drop>());
-		else if (!drops.contains(null))
-		{
-			int i = 1;
-			for (final Drop drop : drops)
-				drop.save(config, path + "drops." + drop.getItem().getType().name() + i++ + ".");
 		}
 		if (passenger != null)
 			config.set(path + "passenger", passenger.getName());
