@@ -585,6 +585,14 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 		config.set(path + "angry", "boolean");
 		config.set(path + "tamed", "boolean");
 		config.set(path + "tamer", "Player");
+		config.set(path + "drops.DROP1.item", "Item");
+		config.set(path + "drops.DROP1.chance", "float (0-1)");
+		config.set(path + "drops.DROP2.item", "Item");
+		config.set(path + "drops.DROP2.chance", "float (0-1)");
+		config.set(path + "drops.DROPx.item", "Item");
+		config.set(path + "drops.DROPx.chance", "float (0-1)");
+		config.set(path + "minXP", "int (0-x)");
+		config.set(path + "maxXP", "int (0-x)");
 		config.set(path + "boots", "Item");
 		config.set(path + "bootsDropChance", "float (0-1)");
 		config.set(path + "leggings", "Item");
@@ -595,21 +603,13 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 		config.set(path + "helmetDropChance", "float (0-1)");
 		config.set(path + "itemInHand", "Item");
 		config.set(path + "itemInHandDropChance", "float (0-1)");
-		config.set(path + "drops.DROP1.item", "Item");
-		config.set(path + "drops.DROP1.chance", "float (0-1)");
-		config.set(path + "drops.DROP2.item", "Item");
-		config.set(path + "drops.DROP2.chance", "float (0-1)");
-		config.set(path + "drops.DROPx.item", "Item");
-		config.set(path + "drops.DROPx.chance", "float (0-1)");
-		config.set(path + "minXP", "int (0-x)");
-		config.set(path + "maxXP", "int (0-x)");
 		config.set(path + "passenger", "ExtendedCreatureType");
-		config.set(path + "maxHealth", "int");
-		config.set(path + "customName", "String");
-		config.set(path + "showCustomName", "boolean");
 		config.set(path + "potionEffects.POTIONEFFECT1", "int (1-x)");
 		config.set(path + "potionEffects.POTIONEFFECT2", "int (1-x)");
 		config.set(path + "potionEffects.POTIONEFFECTx", "int (1-x)");
+		config.set(path + "maxHealth", "int");
+		config.set(path + "customName", "String");
+		config.set(path + "showCustomName", "boolean");
 	}
 
 	@Override
