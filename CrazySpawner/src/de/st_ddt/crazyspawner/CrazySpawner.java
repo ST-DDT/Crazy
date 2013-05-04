@@ -43,6 +43,7 @@ import de.st_ddt.crazyspawner.data.CustomCreature;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_5;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_4_6;
 import de.st_ddt.crazyspawner.data.CustomCreature_1_5;
+import de.st_ddt.crazyspawner.data.drops.Drop;
 import de.st_ddt.crazyspawner.data.options.Thunder;
 import de.st_ddt.crazyspawner.listener.CreatureListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
@@ -249,34 +250,9 @@ public class CrazySpawner extends CrazyPlugin
 				creatures.add(spiderZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderZombie);
 				// - Diamont_Zombie
-				final CustomCreature diamondZombie = new CustomCreature_1_4_5("Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
+				final CustomCreature diamondZombie = new CustomCreature_1_4_5("Diamont_Zombie", EntityType.ZOMBIE, null, -1, -1, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F);
 				creatures.add(diamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(diamondZombie);
-				// - Healthy_Diamont_Zombie
-				final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
-				chestplate.setAmount(1);
-				chestplate.setDurability((short) 3);
-				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
-				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
-				chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
-				if (v146OrLater)
-					chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
-				final ItemMeta meta = chestplate.getItemMeta();
-				meta.setDisplayName("Holy Chestplate of the Goddes");
-				final List<String> lore = new ArrayList<String>();
-				lore.add("Blessed by the goddess kiss");
-				lore.add("Manufactured by the best dwarfs known");
-				meta.setLore(lore);
-				chestplate.setItemMeta(meta);
-				final CustomCreature healthyDiamondZombie;
-				if (v15OrLater)
-					healthyDiamondZombie = new CustomCreature_1_5("Healthy_Diamont_Zombie", ChatColor.AQUA + "Diamond_Zombie", true, EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
-				else if (v146OrLater)
-					healthyDiamondZombie = new CustomCreature_1_4_6("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
-				else
-					healthyDiamondZombie = new CustomCreature_1_4_5("Healthy_Diamont_Zombie", EntityType.ZOMBIE, new ItemStack(Material.DIAMOND_BOOTS), 1F, new ItemStack(Material.DIAMOND_LEGGINGS), 1F, chestplate, 1F, new ItemStack(Material.DIAMOND_HELMET), 1F, new ItemStack(Material.DIAMOND_SWORD), 1F);
-				creatures.add(healthyDiamondZombie);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(healthyDiamondZombie);
 				// - Giant
 				final CustomCreature giant = new CustomCreature_1_4_5("Giant", EntityType.GIANT);
 				creatures.add(giant);
@@ -299,7 +275,7 @@ public class CrazySpawner extends CrazyPlugin
 				// - Speedy_Baby_Zombie
 				final Map<PotionEffectType, Integer> potions = new HashMap<PotionEffectType, Integer>();
 				potions.put(PotionEffectType.SPEED, 5);
-				final CustomCreature speedyZombie = new CustomCreature_1_4_5("Speedy_Baby_Zombie", EntityType.ZOMBIE, true, false, false, false, null, 0, false, false, null, null, 0, null, 0, null, 0, null, 0, null, 0, null, potions);
+				final CustomCreature speedyZombie = new CustomCreature_1_4_5("Speedy_Baby_Zombie", EntityType.ZOMBIE, true, false, false, false, null, 0, false, false, null, null, -1, -1, null, 0, null, 0, null, 0, null, 0, null, 0, null, potions);
 				creatures.add(speedyZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(speedyZombie);
 				saveConfiguration();
@@ -308,6 +284,48 @@ public class CrazySpawner extends CrazyPlugin
 			{
 				getConfig().set("example", null);
 				saveConfiguration();
+			}
+			if (VersionComparator.compareVersions(previousVersion, "3.15") == -1)
+			{
+				// - Healthy_Diamont_Zombie
+				final ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS);
+				final ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
+				final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
+				chestplate.setDurability((short) 3);
+				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
+				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
+				chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
+				if (v146OrLater)
+					chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
+				final ItemMeta meta = chestplate.getItemMeta();
+				meta.setDisplayName("Holy Chestplate of the Goddes");
+				final List<String> lore = new ArrayList<String>();
+				lore.add("Blessed by the goddess kiss");
+				lore.add("Manufactured by the best dwarfs known");
+				meta.setLore(lore);
+				chestplate.setItemMeta(meta);
+				final ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
+				final ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
+				final List<Drop> drops = new ArrayList<Drop>();
+				drops.add(new Drop(new ItemStack(Material.DIAMOND, 2), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.DIAMOND, 3), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 2), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 3), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.EMERALD, 2), 0.5F));
+				drops.add(new Drop(boots, 1F));
+				drops.add(new Drop(leggings, 1F));
+				drops.add(new Drop(chestplate, 1F));
+				drops.add(new Drop(helmet, 1F));
+				drops.add(new Drop(sword, 1F));
+				final CustomCreature healthyDiamondZombie;
+				if (v15OrLater)
+					healthyDiamondZombie = new CustomCreature_1_5("Healthy_Diamont_Zombie", ChatColor.AQUA + "Diamond_Zombie", true, EntityType.ZOMBIE, 100, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F);
+				else if (v146OrLater)
+					healthyDiamondZombie = new CustomCreature_1_4_6("Healthy_Diamont_Zombie", EntityType.ZOMBIE, 100, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F);
+				else
+					healthyDiamondZombie = new CustomCreature_1_4_5("Healthy_Diamont_Zombie", EntityType.ZOMBIE, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F);
+				creatures.add(healthyDiamondZombie);
+				ExtendedCreatureParamitrisable.registerExtendedEntityType(healthyDiamondZombie);
 			}
 		}
 		registerCommands();

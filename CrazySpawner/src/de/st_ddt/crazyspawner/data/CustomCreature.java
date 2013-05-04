@@ -41,6 +41,18 @@ public interface CustomCreature extends ExtendedCreatureType, ConfigurationSavea
 		public <S extends Collection<ItemStack>> S updateDrops(final S collection);
 	}
 
+	public interface CustomXP
+	{
+
+		public static final String METAHEADER = "XPMeta";
+
+		public int getMinXP();
+
+		public int getMaxXP();
+
+		public int getXP();
+	}
+
 	public interface CustomCreatureMeta extends MetadataValue
 	{
 

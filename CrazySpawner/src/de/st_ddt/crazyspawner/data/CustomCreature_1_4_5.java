@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
@@ -36,14 +37,16 @@ import org.bukkit.potion.PotionEffectType;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomCreatureMeta;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomDrops;
+import de.st_ddt.crazyspawner.data.CustomCreature.CustomXP;
 import de.st_ddt.crazyspawner.data.drops.Drop;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
-public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta, CustomDrops
+public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta, CustomDrops, CustomXP
 {
 
+	private final static Random RANDOM = new Random();
 	private final static int POTIONDURATION = 20 * 60 * 60 * 24;
 	private final static Comparator<PotionEffectType> POTIONEFFECTTYPE_COMCOMPARATOR = new Comparator<PotionEffectType>()
 	{
@@ -66,6 +69,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 	protected final boolean tamed;
 	protected final OfflinePlayer tamer;
 	protected final List<Drop> drops = new ArrayList<Drop>();
+	protected final int minXP;
+	protected final int maxXP;
 	protected final boolean equiped;
 	protected final ItemStack boots;
 	protected final float bootsDropChance;
@@ -92,50 +97,45 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 
 	public CustomCreature_1_4_5(final String name, final EntityType type, final ExtendedCreatureType passenger)
 	{
-		this(name, type, null, 0, null, 0, null, 0, null, 0, null, 0, passenger);
+		this(name, type, null, -1, -1, null, 0, null, 0, null, 0, null, 0, null, 0, passenger);
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance)
 	{
-		this(name, type, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, (ExtendedCreatureType) null);
+		this(name, type, drops, minXP, maxXP, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, (ExtendedCreatureType) null);
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final String passenger)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final String passenger)
 	{
-		this(name, type, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, ExtendedCreatureParamitrisable.getExtendedCreatureType(passenger));
+		this(name, type, drops, minXP, maxXP, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, ExtendedCreatureParamitrisable.getExtendedCreatureType(passenger));
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger)
 	{
-		this(name, type, false, false, false, false, null, 0, false, false, (OfflinePlayer) null, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger);
+		this(name, type, false, false, false, false, null, 0, false, false, (OfflinePlayer) null, drops, minXP, maxXP, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger);
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final String tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final String passenger)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final String tamer, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final String passenger)
 	{
-		this(name, type, baby, villager, wither, charged, color, 0, angry, tamed, tamer, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, ExtendedCreatureParamitrisable.getExtendedCreatureType(passenger));
+		this(name, type, baby, villager, wither, charged, color, 0, angry, tamed, tamer, drops, minXP, maxXP, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, ExtendedCreatureParamitrisable.getExtendedCreatureType(passenger));
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final String tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final String tamer, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger)
 	{
-		this(name, type, baby, villager, wither, charged, color, 0, angry, tamed, tamer == null ? null : Bukkit.getOfflinePlayer(tamer), boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger);
+		this(name, type, baby, villager, wither, charged, color, 0, angry, tamed, tamer == null ? null : Bukkit.getOfflinePlayer(tamer), drops, minXP, maxXP, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger);
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final String passenger)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final String passenger)
 	{
-		this(name, type, baby, villager, wither, charged, color, 0, angry, tamed, tamer, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, ExtendedCreatureParamitrisable.getExtendedCreatureType(passenger));
+		this(name, type, baby, villager, wither, charged, color, 0, angry, tamed, tamer, drops, minXP, maxXP, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, ExtendedCreatureParamitrisable.getExtendedCreatureType(passenger));
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger)
 	{
-		this(name, type, baby, villager, wither, charged, color, size, angry, tamed, tamer, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger, null);
+		this(name, type, baby, villager, wither, charged, color, size, angry, tamed, tamer, drops, minXP, maxXP, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger, null);
 	}
 
-	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger, final Map<? extends PotionEffectType, Integer> potionEffects)
-	{
-		this(name, type, baby, villager, wither, charged, color, size, angry, tamed, tamer, null, boots, bootsDropChance, leggings, leggingsDropChance, chestplate, chestplateDropChance, helmet, helmetDropChance, itemInHand, itemInHandDropChance, passenger, potionEffects);
-	}
-
-	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final Collection<Drop> drops, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger, final Map<? extends PotionEffectType, Integer> potionEffects)
+	public CustomCreature_1_4_5(final String name, final EntityType type, final boolean baby, final boolean villager, final boolean wither, final boolean charged, final DyeColor color, final int size, final boolean angry, final boolean tamed, final OfflinePlayer tamer, final Collection<Drop> drops, final int minXP, final int maxXP, final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final ExtendedCreatureType passenger, final Map<? extends PotionEffectType, Integer> potionEffects)
 	{
 		super();
 		if (name == null)
@@ -168,6 +168,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 				this.drops.add(null);
 			else
 				this.drops.addAll(drops);
+			this.minXP = Math.max(Math.min(minXP, maxXP), -1);
+			this.maxXP = this.minXP == -1 ? -1 : Math.max(Math.max(minXP, maxXP), -1);
 			this.equiped = boots != null || leggings != null || chestplate != null || helmet != null || itemInHand != null;
 			this.boots = boots;
 			this.bootsDropChance = this.drops.contains(null) ? bootsDropChance : 0;
@@ -185,6 +187,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 		else
 		{
 			this.drops.add(null);
+			this.minXP = -1;
+			this.maxXP = -1;
 			this.equiped = false;
 			this.boots = null;
 			this.bootsDropChance = 0;
@@ -246,6 +250,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 					{
 						System.err.println(name + "'s costum drop " + key + " was corrupted and has been removed!");
 					}
+			this.minXP = Math.max(Math.min(config.getInt("minXP", -1), config.getInt("maxXP", -1)), -1);
+			this.maxXP = this.minXP == -1 ? -1 : Math.max(Math.max(config.getInt("minXP", -1), config.getInt("maxXP", -1)), -1);
 			this.boots = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("boots"));
 			this.bootsDropChance = this.drops.contains(null) ? ((float) config.getDouble("bootsDropChance")) : 0;
 			this.leggings = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("leggings"));
@@ -270,6 +276,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 		else
 		{
 			this.drops.add(null);
+			this.minXP = -1;
+			this.maxXP = -1;
 			this.equiped = false;
 			this.boots = null;
 			this.bootsDropChance = 0;
@@ -338,6 +346,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			}
 			if (!drops.contains(null))
 				entity.setMetadata(CustomDrops.METAHEADER, this);
+			if (minXP >= 0)
+				entity.setMetadata(CustomXP.METAHEADER, this);
 			if (equiped)
 			{
 				final EntityEquipment equipment = ((LivingEntity) entity).getEquipment();
@@ -407,6 +417,11 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			for (final Drop drop : drops)
 				drop.save(config, path + "drops." + drop.getItem().getType().name() + i++ + ".");
 		}
+		if (minXP >= 0)
+		{
+			config.set(path + "minXP", minXP);
+			config.set(path + "maxXP", maxXP);
+		}
 		if (equiped)
 		{
 			if (boots != null)
@@ -461,6 +476,8 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 		config.set(path + "drops.DROP2.chance", "float (0-1)");
 		config.set(path + "drops.DROPx.item", "Item");
 		config.set(path + "drops.DROPx.chance", "float (0-1)");
+		config.set(path + "minXP", "int (0-x)");
+		config.set(path + "maxXP", "int (0-x)");
 		config.set(path + "passenger", "ExtendedCreatureType");
 		config.set(path + "maxHealth", "int");
 		config.set(path + "customName", "String");

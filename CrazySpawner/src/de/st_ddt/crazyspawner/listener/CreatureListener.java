@@ -18,6 +18,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.data.CustomCreature.CustomDrops;
+import de.st_ddt.crazyspawner.data.CustomCreature.CustomXP;
 import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
 import de.st_ddt.crazyspawner.data.meta.NameMeta;
 import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
@@ -97,6 +98,13 @@ public class CreatureListener implements Listener
 			if (meta instanceof CustomDrops)
 			{
 				((CustomDrops) meta).updateDrops(event.getDrops());
+				break;
+			}
+		final List<MetadataValue> xpMeta = entity.getMetadata(CustomXP.METAHEADER);
+		for (final MetadataValue meta : xpMeta)
+			if (meta instanceof CustomXP)
+			{
+				event.setDroppedExp(((CustomXP) meta).getXP());
 				break;
 			}
 	}
