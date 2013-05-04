@@ -33,14 +33,15 @@ import org.bukkit.material.Colorable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.data.CustomCreature.CustomCreatureMeta;
+import de.st_ddt.crazyspawner.data.CustomCreature.CustomDrops;
 import de.st_ddt.crazyspawner.data.drops.Drop;
-import de.st_ddt.crazyspawner.data.meta.CustomCreatureMeta;
-import de.st_ddt.crazyspawner.data.meta.DropsMeta;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 
-public class CustomCreature_1_4_5 implements CustomCreature
+public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta, CustomDrops
 {
 
 	private final static int POTIONDURATION = 20 * 60 * 60 * 24;
@@ -53,7 +54,6 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			return o1.getName().compareTo(o2.getName());
 		}
 	};
-	protected final CustomCreatureMeta meta = new CustomCreatureMeta(this);
 	protected final String name;
 	protected final EntityType type;
 	protected final boolean baby;
@@ -65,7 +65,6 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	protected final boolean angry;
 	protected final boolean tamed;
 	protected final OfflinePlayer tamer;
-	protected final DropsMeta dropsMeta = new DropsMeta(this);
 	protected final List<Drop> drops = new ArrayList<Drop>();
 	protected final boolean equiped;
 	protected final ItemStack boots;
@@ -270,6 +269,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 		}
 		else
 		{
+			this.drops.add(null);
 			this.equiped = false;
 			this.boots = null;
 			this.bootsDropChance = 0;
@@ -281,7 +281,6 @@ public class CustomCreature_1_4_5 implements CustomCreature
 			this.helmetDropChance = 0;
 			this.itemInHand = null;
 			this.itemInHandDropChance = 0;
-			this.drops.add(null);
 		}
 		final String passenger = config.getString("passenger");
 		if (passenger == null)
@@ -306,7 +305,7 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	public Entity spawn(final Location location)
 	{
 		final Entity entity = location.getWorld().spawnEntity(location, type);
-		entity.setMetadata(CustomCreatureMeta.METAHEADER, meta);
+		entity.setMetadata(CustomCreatureMeta.METAHEADER, this);
 		try
 		{
 			if (baby)
@@ -337,6 +336,8 @@ public class CustomCreature_1_4_5 implements CustomCreature
 				else
 					tameable.setOwner(tamer);
 			}
+			if (!drops.contains(null))
+				entity.setMetadata(CustomDrops.METAHEADER, this);
 			if (equiped)
 			{
 				final EntityEquipment equipment = ((LivingEntity) entity).getEquipment();
@@ -351,8 +352,6 @@ public class CustomCreature_1_4_5 implements CustomCreature
 				equipment.setItemInHand(itemInHand.clone());
 				equipment.setItemInHandDropChance(itemInHandDropChance);
 			}
-			if (!drops.contains(null))
-				entity.setMetadata(CustomCreatureMeta.METAHEADER, meta);
 			if (potionEffects.size() > 0)
 			{
 				final LivingEntity living = (LivingEntity) entity;
@@ -495,6 +494,29 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	}
 
 	@Override
+	public int getMinXP()
+	{
+		return minXP;
+	}
+
+	@Override
+	public int getMaxXP()
+	{
+		return maxXP;
+	}
+
+	@Override
+	public int getXP()
+	{
+		if (minXP == -1)
+			return -1;
+		else if (minXP == maxXP)
+			return minXP;
+		else
+			return RANDOM.nextInt(maxXP - minXP + 1) + minXP;
+	}
+
+	@Override
 	public final int hashCode()
 	{
 		return name.hashCode();
@@ -504,5 +526,70 @@ public class CustomCreature_1_4_5 implements CustomCreature
 	public final String toString()
 	{
 		return "CustomCreature{Name: " + name + ", Type: " + type.getName() + "}";
+	}
+
+	@Override
+	public final CustomCreature_1_4_5 value()
+	{
+		return this;
+	}
+
+	@Override
+	public final int asInt()
+	{
+		return 0;
+	}
+
+	@Override
+	public final float asFloat()
+	{
+		return 0;
+	}
+
+	@Override
+	public final double asDouble()
+	{
+		return 0;
+	}
+
+	@Override
+	public final long asLong()
+	{
+		return 0;
+	}
+
+	@Override
+	public final short asShort()
+	{
+		return 0;
+	}
+
+	@Override
+	public final byte asByte()
+	{
+		return 0;
+	}
+
+	@Override
+	public final boolean asBoolean()
+	{
+		return false;
+	}
+
+	@Override
+	public final String asString()
+	{
+		return null;
+	}
+
+	@Override
+	public final CrazySpawner getOwningPlugin()
+	{
+		return CrazySpawner.getPlugin();
+	}
+
+	@Override
+	public final void invalidate()
+	{
 	}
 }

@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.ExtendedCreatureType;
@@ -30,7 +31,22 @@ public interface CustomCreature extends ExtendedCreatureType, ConfigurationSavea
 	@Override
 	public void save(ConfigurationSection config, String path);
 
-	public Collection<ItemStack> getDrops();
+	public interface CustomDrops
+	{
 
-	public <S extends Collection<ItemStack>> S updateDrops(S collection);
+		public static final String METAHEADER = "DropsMeta";
+
+		public Collection<ItemStack> getDrops();
+
+		public <S extends Collection<ItemStack>> S updateDrops(final S collection);
+	}
+
+	public interface CustomCreatureMeta extends MetadataValue
+	{
+
+		public static final String METAHEADER = "CustomCreatureMeta";
+
+		@Override
+		public CustomCreature value();
+	}
 }

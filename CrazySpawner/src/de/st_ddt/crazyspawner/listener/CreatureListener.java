@@ -17,8 +17,8 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.data.CustomCreature.CustomDrops;
 import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
-import de.st_ddt.crazyspawner.data.meta.DropsMeta;
 import de.st_ddt.crazyspawner.data.meta.NameMeta;
 import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.tasks.HealthTask;
@@ -92,12 +92,11 @@ public class CreatureListener implements Listener
 				entity.setCustomName(name.asString());
 				break;
 			}
-		final List<MetadataValue> dropsMeta = entity.getMetadata(DropsMeta.METAHEADER);
+		final List<MetadataValue> dropsMeta = entity.getMetadata(CustomDrops.METAHEADER);
 		for (final MetadataValue meta : dropsMeta)
-			if (meta.getOwningPlugin() == plugin)
+			if (meta instanceof CustomDrops)
 			{
-				final DropsMeta drops = (DropsMeta) meta;
-				drops.updateDrops(event.getDrops());
+				((CustomDrops) meta).updateDrops(event.getDrops());
 				break;
 			}
 	}
