@@ -488,15 +488,15 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 			if (equiped)
 			{
 				final EntityEquipment equipment = ((LivingEntity) entity).getEquipment();
-				equipment.setBoots(boots.clone());
+				equipment.setBoots(saveClone(boots));
 				equipment.setBootsDropChance(bootsDropChance);
-				equipment.setLeggings(leggings.clone());
+				equipment.setLeggings(saveClone(leggings));
 				equipment.setLeggingsDropChance(leggingsDropChance);
-				equipment.setChestplate(chestplate.clone());
+				equipment.setChestplate(saveClone(chestplate));
 				equipment.setChestplateDropChance(chestplateDropChance);
-				equipment.setHelmet(helmet.clone());
+				equipment.setHelmet(saveClone(helmet));
 				equipment.setHelmetDropChance(helmetDropChance);
-				equipment.setItemInHand(itemInHand.clone());
+				equipment.setItemInHand(saveClone(itemInHand));
 				equipment.setItemInHandDropChance(itemInHandDropChance);
 			}
 			if (minDamage >= 0)
@@ -564,20 +564,30 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 		if (equiped)
 		{
 			if (boots != null)
+			{
 				config.set(path + "boots", boots.serialize());
-			config.set(path + "bootsDropChance", bootsDropChance);
+				config.set(path + "bootsDropChance", bootsDropChance);
+			}
 			if (leggings != null)
+			{
 				config.set(path + "leggings", leggings.serialize());
-			config.set(path + "leggingsDropChance", leggingsDropChance);
+				config.set(path + "leggingsDropChance", leggingsDropChance);
+			}
 			if (chestplate != null)
+			{
 				config.set(path + "chestplate", chestplate.serialize());
-			config.set(path + "chestplateDropChance", chestplateDropChance);
+				config.set(path + "chestplateDropChance", chestplateDropChance);
+			}
 			if (helmet != null)
+			{
 				config.set(path + "helmet", helmet.serialize());
-			config.set(path + "helmetDropChance", helmetDropChance);
+				config.set(path + "helmetDropChance", helmetDropChance);
+			}
 			if (itemInHand != null)
+			{
 				config.set(path + "itemInHand", itemInHand.serialize());
-			config.set(path + "itemInHandDropChance", itemInHandDropChance);
+				config.set(path + "itemInHandDropChance", itemInHandDropChance);
+			}
 		}
 		if (minDamage >= 0)
 		{
@@ -777,5 +787,13 @@ public class CustomCreature_1_4_5 implements CustomCreature, CustomCreatureMeta,
 	@Override
 	public final void invalidate()
 	{
+	}
+
+	protected final ItemStack saveClone(final ItemStack item)
+	{
+		if (item == null)
+			return null;
+		else
+			return item.clone();
 	}
 }
