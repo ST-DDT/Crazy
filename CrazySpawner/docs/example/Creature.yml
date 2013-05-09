@@ -25,21 +25,6 @@ exampleCreature:
   tamed: boolean
 # Spawn as tamed pet owned by player (Tameable (Wolf + Ocelot/Cat))
   tamer: Player
-# Spawn with boots
-  boots: Item
-  bootsDropChance: float (0-1)
-# Spawn with leggings
-  leggings: Item
-  leggingsDropChance: float (0-1)
-# Spawn with chestplate
-  chestplate: Item
-  chestplateDropChance: float (0-1)
-# Spawn with helmet
-  helmet: Item
-  helmetDropChance: float (0-1)
-# Spawn with item in hand (ex: sword)
-  itemInHand: Item
-  itemInHandDropChance: float (0-1)
 # Overwrites ALL drops, including armor and weapon.
 # Use this to drop nothing
 # drops: {}
@@ -55,18 +40,43 @@ exampleCreature:
     DROPx:
       item: Item
       chance: float (0-1)
+# minimum/maximum xp dropped on death
+# remove both to use default xp
+  minXP: int (0-x)
+  maxXP: int (0-x)
+# Spawn with boots
+  boots: Item
+  bootsDropChance: float (0-1)
+# Spawn with leggings
+  leggings: Item
+  leggingsDropChance: float (0-1)
+# Spawn with chestplate
+  chestplate: Item
+  chestplateDropChance: float (0-1)
+# Spawn with helmet
+  helmet: Item
+  helmetDropChance: float (0-1)
+# Spawn with item in hand (ex: sword)
+  itemInHand: Item
+  itemInHandDropChance: float (0-1)
+# minimum/maximum damage dealt
+# remove both to use default damage
+# INFO: Zombies with more than 20 health should use custom damage, otherwise they deal less or no damage. (Bukkit Bug)
+  minDamage: int (0-x)
+  maxDamage: int (0-x)
 # Spawn with passenger
 # This can be all types listed in "/cms creature:" command
 # If you are using a custom creature here you have to define it before that entry.
   passenger: ExtendedCreatureType
-# Spawn with additional/custom health
-  maxHealth: int
-# Define a custom name
-  customName: String
-# Show custom name as tag above creature
-  showCustomName: boolean
 # Spawn with persistent potion effects
   potionEffects:
     POTIONEFFECT1: int (1-x)
     POTIONEFFECT2: int (1-x)
     POTIONEFFECTx: int (1-x)
+# Spawn with additional/custom health
+# INFO: Zombies with more than 20 health should use custom damage, otherwise they deal less or no damage. (Bukkit Bug)
+  maxHealth: int
+# Define a custom name
+  customName: String
+# Show custom name as tag above creature
+  showCustomName: boolean
