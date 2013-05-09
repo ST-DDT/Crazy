@@ -327,6 +327,7 @@ public class CrazySpawner extends CrazyPlugin
 					healthyDiamondZombie = new CustomCreature_1_4_5("Healthy_Diamont_Zombie", EntityType.ZOMBIE, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, 3, 7);
 				creatures.add(healthyDiamondZombie);
 				ExtendedCreatureParamitrisable.registerExtendedEntityType(healthyDiamondZombie);
+				saveConfiguration();
 			}
 		}
 		registerCommands();
