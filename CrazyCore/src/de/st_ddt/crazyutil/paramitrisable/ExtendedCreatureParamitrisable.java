@@ -335,7 +335,7 @@ public class ExtendedCreatureParamitrisable extends TypedParamitrisable<Extended
 			final SlimeExtendedEntityType slimeType = new SlimeExtendedEntityType(EntityType.SLIME, i);
 			registerExtendedEntityType(slimeType, sizeText + "SLIME");
 			final SlimeExtendedEntityType magmaType = new SlimeExtendedEntityType(EntityType.MAGMA_CUBE, i);
-			registerExtendedEntityType(magmaType, sizeText + "MAGMASLIME", sizeText + "_MAGMASLIME");
+			registerExtendedEntityType(magmaType, sizeText + "LAVASLIME", sizeText + "MAGMACUBE", sizeText + "_MAGMACUBE");
 		}
 		registerExtendedEntityType(new DefaultExtendedEntityType(EntityType.OCELOT)
 		{
