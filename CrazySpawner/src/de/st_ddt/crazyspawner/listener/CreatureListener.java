@@ -78,7 +78,7 @@ public class CreatureListener implements Listener
 	{
 		if (!(event.getDamager() instanceof LivingEntity))
 			return;
-		final LivingEntity entity = (LivingEntity) event.getEntity();
+		final LivingEntity entity = (LivingEntity) event.getDamager();
 		final List<MetadataValue> damageMetas = entity.getMetadata(CustomDamage.METAHEADER);
 		for (final MetadataValue meta : damageMetas)
 			if (meta instanceof CustomDamage)
