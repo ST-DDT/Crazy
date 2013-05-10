@@ -3,6 +3,7 @@ package de.st_ddt.crazyspawner.listener;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.TNTPrimed;
@@ -76,9 +77,7 @@ public class CreatureListener implements Listener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
 	public void CreatureDamager(final EntityDamageByEntityEvent event)
 	{
-		if (!(event.getDamager() instanceof LivingEntity))
-			return;
-		final LivingEntity entity = (LivingEntity) event.getDamager();
+		final Entity entity = event.getDamager();
 		final List<MetadataValue> damageMetas = entity.getMetadata(CustomDamage.METAHEADER);
 		for (final MetadataValue meta : damageMetas)
 			if (meta instanceof CustomDamage)
