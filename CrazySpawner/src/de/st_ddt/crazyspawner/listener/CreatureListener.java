@@ -66,7 +66,7 @@ public class CreatureListener implements Listener
 		double alarmRange = plugin.getDefaultAlarmRange();
 		final List<MetadataValue> metas = entity.getMetadata(AlarmMeta.METAHEADER);
 		for (final MetadataValue meta : metas)
-			if (meta.getOwningPlugin() == plugin)
+			if (meta instanceof AlarmMeta)
 			{
 				final AlarmMeta alarm = (AlarmMeta) meta;
 				alarmRange = alarm.asDouble();
