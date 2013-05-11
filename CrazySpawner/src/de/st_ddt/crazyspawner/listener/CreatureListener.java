@@ -54,6 +54,13 @@ public class CreatureListener implements Listener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void CreatureDamaged(final EntityDamageEvent event)
 	{
+		if (event.getEntity() instanceof LivingEntity)
+			health.queue((LivingEntity) event.getEntity());
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void CreatureDamagedbyEntity(final EntityDamageByEntityEvent event)
+	{
 		final Entity entity = event.getEntity();
 		entity.removeMetadata(PeacefulMeta.METAHEADER, plugin);
 		double alarmRange = plugin.getDefaultAlarmRange();
@@ -69,8 +76,6 @@ public class CreatureListener implements Listener
 		for (final LivingEntity nearby : entity.getWorld().getEntitiesByClass(LivingEntity.class))
 			if (location.distance(nearby.getLocation()) < alarmRange)
 				nearby.removeMetadata(PeacefulMeta.METAHEADER, plugin);
-		if (event.getEntity() instanceof LivingEntity)
-			health.queue((LivingEntity) entity);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
