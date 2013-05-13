@@ -49,13 +49,13 @@ public final class CrazyCore extends CrazyPlugin
 {
 
 	private static CrazyCore plugin;
-	private final Set<String> preloadedLanguages = new HashSet<String>();
-	private final Set<String> loadedLanguages = new HashSet<String>();
 	private final List<String> wipePlayerFilePaths = new ArrayList<String>();
 	private final List<String> wipePlayerCommands = new ArrayList<String>();
-	private final SortedSet<String> protectedPlayers = new TreeSet<String>();
 	private boolean wipePlayerWorldFiles;
 	private boolean wipePlayerBans;
+	private final SortedSet<String> protectedPlayers = new TreeSet<String>();
+	private final Set<String> preloadedLanguages = new HashSet<String>();
+	private final Set<String> loadedLanguages = new HashSet<String>();
 	private boolean loadUserLanguages;
 	private boolean checkForUpdates;
 
@@ -72,20 +72,20 @@ public final class CrazyCore extends CrazyPlugin
 
 	private void registerModes()
 	{
-		modeCommand.addMode(new BooleanFalseMode(this, "loadUserLanguages")
+		modeCommand.addMode(new BooleanFalseMode(this, "wipePlayerWorldFiles")
 		{
 
 			@Override
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
-				loadUserLanguages = newValue;
+				wipePlayerWorldFiles = newValue;
 				saveConfiguration();
 			}
 
 			@Override
 			public Boolean getValue()
 			{
-				return loadUserLanguages;
+				return wipePlayerWorldFiles;
 			}
 		});
 		modeCommand.addMode(new BooleanFalseMode(this, "wipePlayerBans")
@@ -102,6 +102,22 @@ public final class CrazyCore extends CrazyPlugin
 			public Boolean getValue()
 			{
 				return wipePlayerBans;
+			}
+		});
+		modeCommand.addMode(new BooleanFalseMode(this, "loadUserLanguages")
+		{
+
+			@Override
+			public void setValue(final Boolean newValue) throws CrazyException
+			{
+				loadUserLanguages = newValue;
+				saveConfiguration();
+			}
+
+			@Override
+			public Boolean getValue()
+			{
+				return loadUserLanguages;
 			}
 		});
 		modeCommand.addMode(new BooleanFalseMode(this, "checkForUpdates")
@@ -243,10 +259,9 @@ public final class CrazyCore extends CrazyPlugin
 		if (commandList != null)
 			wipePlayerCommands.addAll(commandList);
 		wipePlayerBans = config.getBoolean("wipePlayerBans", false);
-		final List<String> protectedList = config.getStringList("protectedPlayers");
-		if (protectedList != null)
-			for (final String name : protectedList)
-				protectedPlayers.add(name.toLowerCase());
+		// Protected Players
+		for (final String name : config.getStringList("protectedPlayers"))
+			protectedPlayers.add(name.toLowerCase());
 		// Pipes
 		CrazyPipe.setDisabled(config.getBoolean("disablePipes", false));
 		// ChatHeader
@@ -300,6 +315,7 @@ public final class CrazyCore extends CrazyPlugin
 		config.set("wipePlayerFilePaths", wipePlayerFilePaths);
 		config.set("wipePlayerCommands", wipePlayerCommands);
 		config.set("wipePlayerBans", wipePlayerBans);
+		// Protected Players
 		config.set("protectedPlayers", new ArrayList<String>(protectedPlayers));
 		// Pipes
 		config.set("disablePipes", CrazyPipe.isDisabled());
