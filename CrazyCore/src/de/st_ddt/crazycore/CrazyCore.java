@@ -52,8 +52,6 @@ public final class CrazyCore extends CrazyPlugin
 	private final List<String> wipePlayerFilePaths = new ArrayList<String>();
 	private final List<String> wipePlayerCommands = new ArrayList<String>();
 	private final SortedSet<String> protectedPlayers = new TreeSet<String>();
-	private MessageListener messageListener;
-	private CrazyListener crazylistener;
 	private boolean wipePlayerWorldFiles;
 	private boolean wipePlayerBans;
 	private boolean loadUserLanguages;
@@ -143,12 +141,10 @@ public final class CrazyCore extends CrazyPlugin
 
 	private void registerHooks()
 	{
-		crazylistener = new CrazyListener(this);
-		final PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvents(crazylistener, this);
-		messageListener = new MessageListener(this);
-		final Messenger ms = getServer().getMessenger();
-		ms.registerIncomingPluginChannel(this, "CrazyCore", messageListener);
+		final PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(new CrazyListener(this), this);
+		final Messenger ms = Bukkit.getMessenger();
+		ms.registerIncomingPluginChannel(this, "CrazyCore", new MessageListener(this));
 	}
 
 	private void registerMetrics()
