@@ -43,7 +43,10 @@ public abstract class PlayerData<S extends PlayerDataInterface> implements Playe
 		else
 		{
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("USERNAME"), player.getName());
-			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DISPLAYNAME"), player.getDisplayName());
+			if (player.getDisplayName() == null)
+				ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DISPLAYNAME"), player.getName());
+			else
+				ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("DISPLAYNAME"), player.getDisplayName());
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("IPADDRESS"), player.getAddress().getAddress().getHostAddress());
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("CONNECTION"), player.getAddress().getHostName());
 			ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("URL"), player.getAddress().getAddress().getHostAddress());
