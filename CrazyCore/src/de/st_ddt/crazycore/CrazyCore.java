@@ -24,8 +24,8 @@ import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeCommands;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeFilePaths;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandUpdateCheck;
-import de.st_ddt.crazycore.listener.CrazyCoreCrazyListener;
-import de.st_ddt.crazycore.listener.CrazyCoreMessageListener;
+import de.st_ddt.crazycore.listener.CrazyListener;
+import de.st_ddt.crazycore.listener.MessageListener;
 import de.st_ddt.crazycore.tasks.PluginUpdateCheckTask;
 import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
 import de.st_ddt.crazyplugin.CrazyLightPlugin;
@@ -52,8 +52,8 @@ public final class CrazyCore extends CrazyPlugin
 	private final List<String> wipePlayerFilePaths = new ArrayList<String>();
 	private final List<String> wipePlayerCommands = new ArrayList<String>();
 	private final SortedSet<String> protectedPlayers = new TreeSet<String>();
-	private CrazyCoreMessageListener messageListener;
-	private CrazyCoreCrazyListener crazylistener;
+	private MessageListener messageListener;
+	private CrazyListener crazylistener;
 	private boolean wipePlayerWorldFiles;
 	private boolean wipePlayerBans;
 	private boolean loadUserLanguages;
@@ -143,10 +143,10 @@ public final class CrazyCore extends CrazyPlugin
 
 	private void registerHooks()
 	{
-		crazylistener = new CrazyCoreCrazyListener(this);
+		crazylistener = new CrazyListener(this);
 		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(crazylistener, this);
-		messageListener = new CrazyCoreMessageListener(this);
+		messageListener = new MessageListener(this);
 		final Messenger ms = getServer().getMessenger();
 		ms.registerIncomingPluginChannel(this, "CrazyCore", messageListener);
 	}

@@ -7,10 +7,10 @@ import de.st_ddt.crazyplugin.listener.CrazyPluginMessageListener;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
-public class CrazyCoreMessageListener extends CrazyPluginMessageListener<CrazyCore>
+public class MessageListener extends CrazyPluginMessageListener<CrazyCore>
 {
 
-	public CrazyCoreMessageListener(final CrazyCore plugin)
+	public MessageListener(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

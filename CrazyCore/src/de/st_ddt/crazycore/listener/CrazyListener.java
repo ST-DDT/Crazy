@@ -21,12 +21,12 @@ import de.st_ddt.crazyutil.Named;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCrazyListener implements Listener
+public class CrazyListener implements Listener
 {
 
 	protected final CrazyCore plugin;
 
-	public CrazyCoreCrazyListener(final CrazyCore plugin)
+	public CrazyListener(final CrazyCore plugin)
 	{
 		super();
 		this.plugin = plugin;
