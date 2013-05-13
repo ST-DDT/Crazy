@@ -1,7 +1,7 @@
 name: CrazyCore
 main: de.st_ddt.crazycore.CrazyCore
 author: ST-DDT
-version: 10.4.3
+version: 10.5
 website: http://dev.bukkit.org/server-mods/crazycore/
 softdepend: [PermissionsEx,GroupManager,PermissionsBukkit,bPermissions,Vault]
 description: >
@@ -31,12 +31,14 @@ permissions:
     description: Access to all crazyplugin commands
     default: false
     children:
+      crazycore.protectedplayer: true
       crazylanguage.advanced: true
       crazypipe.use: true
   crazycore.*:
     description: Access to all commands
     default: false
     children:
+      crazycore.protectedplayer: true
       crazycore.list: true
       crazycore.updatecheck: true
       crazycore.player.info: true
@@ -47,6 +49,9 @@ permissions:
       crazycore.save: true
       crazylanguage.advanced: true
       crazypipe.use: true
+  crazycore.protectedplayer:
+    description: Forces additional protection to this player.
+    default: op
   crazycore.list:
     description: Allow showing all enabled CrazyPlugins.
     default: op

@@ -57,7 +57,7 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 	}
 
 	@Override
-	@Localized({ "CRAZYCORE.PLAYERINFO.LANGUAGE $Language$", "CRAZYCORE.PLAYERINFO.ASSOCIATES $Associates$", "CRAZYCORE.PLAYERINFO.GROUPS $Groups$" })
+	@Localized({ "CRAZYCORE.PLAYERINFO.LANGUAGE $Language$", "CRAZYCORE.PLAYERINFO.ASSOCIATES $Associates$", "CRAZYCORE.PLAYERINFO.GROUPS $Groups$", "CRAZYCORE.PLAYERINFO.PROTECTEDPLAYER $Protected$" })
 	public void showDetailed(final CommandSender target, final String chatHeader)
 	{
 		final CrazyLocale locale = getPlugin().getLocale().getSecureLanguageEntry("PLAYERINFO");
@@ -78,5 +78,6 @@ public class PseudoPlayerData extends PlayerData<PseudoPlayerData>
 			else
 				ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("GROUPS"), ChatHelper.listingString(groups));
 		}
+		ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("PROTECTEDPLAYER"), getPlugin().isProtectedPlayer(name) ? "True" : "False");
 	}
 }

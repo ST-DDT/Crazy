@@ -9,6 +9,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.messaging.Messenger;
@@ -26,6 +27,7 @@ import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeFilePaths;
 import de.st_ddt.crazycore.commands.CrazyCoreCommandUpdateCheck;
 import de.st_ddt.crazycore.listener.CrazyListener;
 import de.st_ddt.crazycore.listener.MessageListener;
+import de.st_ddt.crazycore.listener.PlayerListener;
 import de.st_ddt.crazycore.tasks.PluginUpdateCheckTask;
 import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
 import de.st_ddt.crazyplugin.CrazyLightPlugin;
@@ -143,6 +145,7 @@ public final class CrazyCore extends CrazyPlugin
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new CrazyListener(this), this);
+		pm.registerEvents(new PlayerListener(this), this);
 		final Messenger ms = Bukkit.getMessenger();
 		ms.registerIncomingPluginChannel(this, "CrazyCore", new MessageListener(this));
 	}
@@ -340,6 +343,16 @@ public final class CrazyCore extends CrazyPlugin
 	public SortedSet<String> getProtectedPlayers()
 	{
 		return protectedPlayers;
+	}
+
+	public boolean isProtectedPlayer(final OfflinePlayer player)
+	{
+		return isProtectedPlayer(player.getName());
+	}
+
+	public boolean isProtectedPlayer(final String name)
+	{
+		return protectedPlayers.contains(name);
 	}
 
 	public Set<String> getPreloadedLanguages()
