@@ -368,7 +368,7 @@ public final class CrazyCore extends CrazyPlugin
 
 	public boolean isProtectedPlayer(final String name)
 	{
-		return protectedPlayers.contains(name);
+		return protectedPlayers.contains(name.toLowerCase());
 	}
 
 	public Set<String> getPreloadedLanguages()

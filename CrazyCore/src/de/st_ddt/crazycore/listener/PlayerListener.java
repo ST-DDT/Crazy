@@ -25,7 +25,7 @@ public class PlayerListener implements Listener
 	{
 		final Player player = event.getPlayer();
 		if (PermissionModule.hasPermission(player, "crazycore.protectedplayer"))
-			if (plugin.getProtectedPlayers().add(player.getName()))
+			if (plugin.getProtectedPlayers().add(player.getName().toLowerCase()))
 				plugin.saveConfiguration();
 	}
 }
