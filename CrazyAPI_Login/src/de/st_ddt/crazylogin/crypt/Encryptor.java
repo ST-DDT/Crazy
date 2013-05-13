@@ -1,5 +1,6 @@
 package de.st_ddt.crazylogin.crypt;
 
+import de.st_ddt.crazylogin.exceptions.PasswordRejectedException;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
 
 public interface Encryptor extends ConfigurationSaveable
@@ -38,7 +39,7 @@ public interface Encryptor extends ConfigurationSaveable
 	 *            The password that should be encrypted.
 	 * @return The encrypted password
 	 */
-	public String encrypt(String name, String salt, String password);
+	public String encrypt(String name, String salt, String password) throws PasswordRejectedException;
 
 	/**
 	 * Check whether the password is correct.

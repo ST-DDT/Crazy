@@ -2,13 +2,13 @@ package de.st_ddt.crazylogin.data;
 
 import java.util.Date;
 
+import de.st_ddt.crazylogin.exceptions.PasswordRejectedException;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 
 public interface LoginData extends PlayerDataInterface
 {
 
-	public void setPassword(String password) throws CrazyCommandException;
+	public void setPassword(String password) throws PasswordRejectedException;
 
 	public boolean isPassword(String password);
 

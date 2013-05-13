@@ -1,5 +1,7 @@
 package de.st_ddt.crazylogin.crypt;
 
+import de.st_ddt.crazylogin.exceptions.PasswordRejectedException;
+
 public interface UpdatingEncryptor extends Encryptor
 {
 
@@ -15,5 +17,5 @@ public interface UpdatingEncryptor extends Encryptor
 	 * @return The encrypted password
 	 */
 	@Override
-	public String encrypt(String name, String salt, String password);
+	public String encrypt(String name, String salt, String password) throws PasswordRejectedException;
 }
