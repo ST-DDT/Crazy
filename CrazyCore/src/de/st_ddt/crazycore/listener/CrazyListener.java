@@ -44,7 +44,7 @@ public class CrazyListener implements Listener
 	public void PlayerNames(final CrazyPlayerNamesConnectedToIPEvent event)
 	{
 		for (final Player player : Bukkit.getOnlinePlayers())
-			if (event.getSearchedIP().equals(player.getAddress().getAddress().getHostAddress()))
+			if (event.getSearchedIP().startsWith(player.getAddress().getAddress().getHostAddress()))
 				event.getNames().add(player.getName());
 	}
 
