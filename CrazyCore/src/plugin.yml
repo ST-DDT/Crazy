@@ -52,11 +52,14 @@ permissions:
   crazycore.protectedplayer:
     description: Forces additional protection to this player.
     default: op
-  crazycore.protectedplayer.illegalaccesswarn:
-    description: Player will be warned if a player tried to illegally access a protected player.
+  crazycore.protectedplayer.illegalaccesswarn.user:
+    description: Player will be warned if a player tries to illegally access a protected player.
+    default: true
+  crazycore.protectedplayer.illegalaccesswarn.staff:
+    description: Player will be warned with detailed information if a player tries to illegally access a protected player. 
     default: true
   crazycore.protectedplayer.accesswarn:
-    description: Player will be warned if a player tried to access a protected player.
+    description: Player will be informed if a player tries to access a protected player.
     default: op
   crazycore.list:
     description: Allow showing all enabled CrazyPlugins.

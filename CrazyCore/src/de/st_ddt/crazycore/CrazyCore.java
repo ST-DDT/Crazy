@@ -390,7 +390,7 @@ public final class CrazyCore extends CrazyPlugin
 			checkProtectedPlayer(player, (Player) accessor, permission, plugin, task);
 	}
 
-	@Localized({ "CRAZYCORE.PROTECTEDPLAYER.ACCESSWARN $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$" })
+	@Localized({ "CRAZYCORE.PROTECTEDPLAYER.ACCESSWARN $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN.USER $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$" })
 	public void checkProtectedPlayer(final String accessedPlayer, final Player accessingPlayer, final String permission, final String plugin, final String task) throws CrazyCommandPermissionProtectedPlayerException
 	{
 		if (isProtectedPlayer(accessedPlayer))
@@ -404,7 +404,8 @@ public final class CrazyCore extends CrazyPlugin
 			else
 			{
 				logger.log("ProtectedPlayer", "WARNING: " + accessingPlayer.getName() + " @ " + accessingPlayerIP + "tried to access a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
-				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarn", "PROTECTEDPLAYER.ILLEGALACCESSWARN", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
+				broadcastLocaleMessage(false, "crazycore.protectedplayer.illegalaccesswarnuser", "PROTECTEDPLAYER.ILLEGALACCESSWARN.USER", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
+				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarnstaff", "PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
 				final ConsoleCommandSender console = Bukkit.getConsoleSender();
 				final Object[] args = new String[] { accessedPlayer, accessingPlayer.getName(), accessingPlayerIP, plugin, task };
 				for (final String command : protectedPlayersIllegalAccessCommands)
