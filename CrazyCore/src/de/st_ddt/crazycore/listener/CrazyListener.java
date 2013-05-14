@@ -89,7 +89,6 @@ public class CrazyListener implements Listener
 		if (player != null)
 			if (player.isOnline())
 			{
-				player.setBanned(false);
 				player.setOp(false);
 				player.setWhitelisted(false);
 				player.leaveVehicle();
