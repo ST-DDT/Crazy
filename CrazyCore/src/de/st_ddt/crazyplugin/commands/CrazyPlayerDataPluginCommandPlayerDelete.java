@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
@@ -26,6 +27,7 @@ public class CrazyPlayerDataPluginCommandPlayerDelete<T extends PlayerDataInterf
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final String name = ChatHelper.listingString(" ", args);
+		CrazyCore.getPlugin().checkProtectedPlayer(name, sender, plugin.getName() + ".player.delete.protected", plugin.getName(), "deleting plugin's player data");
 		if (!plugin.deletePlayerData(name))
 			throw new CrazyCommandNoSuchException("PlayerData", name);
 		plugin.sendLocaleMessage("COMMAND.PLAYER.DELETE.SUCCESS", sender, name);

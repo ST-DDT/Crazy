@@ -10,7 +10,10 @@ import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.messaging.Messenger;
 
@@ -33,6 +36,7 @@ import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
 import de.st_ddt.crazyplugin.CrazyLightPlugin;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionProtectedPlayerException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyPipe;
@@ -42,6 +46,7 @@ import de.st_ddt.crazyutil.metrics.Metrics.Graph;
 import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
 import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
 
 @LocalizedVariable(variables = "CRAZYPLUGIN", values = "CRAZYCORE")
@@ -53,7 +58,9 @@ public final class CrazyCore extends CrazyPlugin
 	private final List<String> wipePlayerCommands = new ArrayList<String>();
 	private boolean wipePlayerWorldFiles;
 	private boolean wipePlayerBans;
+	private boolean protectedPlayersEnabled;
 	private final SortedSet<String> protectedPlayers = new TreeSet<String>();
+	private final List<String> protectedPlayersIllegalAccessCommands = new ArrayList<String>();
 	private final Set<String> preloadedLanguages = new HashSet<String>();
 	private final Set<String> loadedLanguages = new HashSet<String>();
 	private boolean loadUserLanguages;
@@ -260,8 +267,10 @@ public final class CrazyCore extends CrazyPlugin
 			wipePlayerCommands.addAll(commandList);
 		wipePlayerBans = config.getBoolean("wipePlayerBans", false);
 		// Protected Players
+		protectedPlayersEnabled = config.getBoolean("protectedPlayersEnabled", false);
 		for (final String name : config.getStringList("protectedPlayers"))
 			protectedPlayers.add(name.toLowerCase());
+		protectedPlayersIllegalAccessCommands.addAll(config.getStringList("protectedPlayersIllegalAccessCommands"));
 		// Pipes
 		CrazyPipe.setDisabled(config.getBoolean("disablePipes", false));
 		// ChatHeader
@@ -291,6 +300,8 @@ public final class CrazyCore extends CrazyPlugin
 		if (loadUserLanguages)
 			for (final String language : userLanguages)
 				loadLanguageFiles(language, false);
+		// Logger
+		logger.createLogChannels(config.getConfigurationSection("logs"), "ProtectedPlayer");
 	}
 
 	public void loadLanguageFiles(final String language, final boolean forceUpdate)
@@ -316,7 +327,9 @@ public final class CrazyCore extends CrazyPlugin
 		config.set("wipePlayerCommands", wipePlayerCommands);
 		config.set("wipePlayerBans", wipePlayerBans);
 		// Protected Players
+		config.set("protectedPlayersEnabled", protectedPlayersEnabled);
 		config.set("protectedPlayers", new ArrayList<String>(protectedPlayers));
+		config.set("protectedPlayersIllegalAccessCommands", protectedPlayersIllegalAccessCommands);
 		// Pipes
 		config.set("disablePipes", CrazyPipe.isDisabled());
 		// ChatHeader
@@ -369,6 +382,36 @@ public final class CrazyCore extends CrazyPlugin
 	public boolean isProtectedPlayer(final String name)
 	{
 		return protectedPlayers.contains(name.toLowerCase());
+	}
+
+	public void checkProtectedPlayer(final String player, final CommandSender accessor, final String permission, final String plugin, final String task) throws CrazyCommandPermissionProtectedPlayerException
+	{
+		if (accessor instanceof Player)
+			checkProtectedPlayer(player, (Player) accessor, permission, plugin, task);
+	}
+
+	@Localized({ "CRAZYCORE.PROTECTEDPLAYER.ACCESSWARN $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$" })
+	public void checkProtectedPlayer(final String accessedPlayer, final Player accessingPlayer, final String permission, final String plugin, final String task) throws CrazyCommandPermissionProtectedPlayerException
+	{
+		if (isProtectedPlayer(accessedPlayer))
+		{
+			final String accessingPlayerIP = accessingPlayer.getAddress().getAddress().getHostAddress();
+			if (PermissionModule.hasPermission(accessingPlayer, permission))
+			{
+				logger.log("ProtectedPlayer", accessingPlayer.getName() + " @ " + accessingPlayerIP + "accessed a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
+				broadcastLocaleMessage(true, "crazycore.protectedplayer.accesswarn", "PROTECTEDPLAYER.ACCESSWARN", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
+			}
+			else
+			{
+				logger.log("ProtectedPlayer", "WARNING: " + accessingPlayer.getName() + " @ " + accessingPlayerIP + "tried to access a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
+				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarn", "PROTECTEDPLAYER.ILLEGALACCESSWARN", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
+				final ConsoleCommandSender console = Bukkit.getConsoleSender();
+				final Object[] args = new String[] { accessedPlayer, accessingPlayer.getName(), accessingPlayerIP, plugin, task };
+				for (final String command : protectedPlayersIllegalAccessCommands)
+					Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, args));
+				throw new CrazyCommandPermissionProtectedPlayerException(accessedPlayer);
+			}
+		}
 	}
 
 	public Set<String> getPreloadedLanguages()

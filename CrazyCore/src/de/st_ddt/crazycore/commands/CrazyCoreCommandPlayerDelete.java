@@ -29,6 +29,7 @@ public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		String name = ChatHelper.listingString(" ", args);
+		plugin.checkProtectedPlayer(name, sender, "crazycore.player.delete.protected", plugin.getName(), "deleting all player data");
 		final Player player = Bukkit.getPlayer(name);
 		if (player != null)
 			name = player.getName();
