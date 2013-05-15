@@ -1,10 +1,14 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -34,26 +38,88 @@ public class WorldParamitrisable extends TypedParamitrisable<World>
 	{
 		value = Bukkit.getWorld(parameter);
 		if (value == null)
-			throw new CrazyCommandNoSuchException("World", parameter, getWorldNames());
-	}
-
-	private String[] getWorldNames()
-	{
-		final List<World> worlds = Bukkit.getWorlds();
-		final int length = worlds.size();
-		final String[] res = new String[length];
-		for (int i = 0; i < length; i++)
-			res[i] = worlds.get(i).getName();
-		return res;
+			throw new CrazyCommandNoSuchException("World", parameter, tab(parameter));
 	}
 
 	@Override
 	public List<String> tab(final String parameter)
 	{
+		return tabHelp(parameter);
+	}
+
+	public static List<String> tabHelp(String parameter)
+	{
+		parameter = parameter.toLowerCase();
+		final List<String> res = getWorldNames();
+		final Iterator<String> it = res.iterator();
+		while (it.hasNext())
+			if (!it.next().toLowerCase().startsWith(parameter))
+				it.remove();
+		return res;
+	}
+
+	public static List<String> getWorldNames()
+	{
+		return getWorldNames(Bukkit.getWorlds());
+	}
+
+	public static List<String> getWorldNames(final World... worlds)
+	{
 		final List<String> res = new LinkedList<String>();
 		for (final World world : Bukkit.getWorlds())
-			if (world.getName().startsWith(parameter))
-				res.add(world.getName());
+			res.add(world.getName());
+		return res;
+	}
+
+	public static List<String> getWorldNames(final Collection<World> worlds)
+	{
+		final List<String> res = new LinkedList<String>();
+		for (final World world : Bukkit.getWorlds())
+			res.add(world.getName());
+		return res;
+	}
+
+	public static List<World> getWorldsByEnvironment(final Environment... environments)
+	{
+		final List<World> res = new LinkedList<World>();
+		final List<World> worlds = Bukkit.getWorlds();
+		for (final Environment environment : environments)
+			for (final World world : worlds)
+				if (world.getEnvironment() == environment)
+					res.add(world);
+		return res;
+	}
+
+	public static List<World> getWorldsByEnvironment(final Collection<Environment> environments)
+	{
+		final List<World> res = new LinkedList<World>();
+		final List<World> worlds = Bukkit.getWorlds();
+		for (final Environment environment : environments)
+			for (final World world : worlds)
+				if (world.getEnvironment() == environment)
+					res.add(world);
+		return res;
+	}
+
+	public static List<World> getWorldsByType(final WorldType... types)
+	{
+		final List<World> res = new LinkedList<World>();
+		final List<World> worlds = Bukkit.getWorlds();
+		for (final WorldType type : types)
+			for (final World world : worlds)
+				if (world.getWorldType() == type)
+					res.add(world);
+		return res;
+	}
+
+	public static List<World> getWorldsByType(final Collection<WorldType> types)
+	{
+		final List<World> res = new LinkedList<World>();
+		final List<World> worlds = Bukkit.getWorlds();
+		for (final WorldType type : types)
+			for (final World world : worlds)
+				if (world.getWorldType() == type)
+					res.add(world);
 		return res;
 	}
 }
