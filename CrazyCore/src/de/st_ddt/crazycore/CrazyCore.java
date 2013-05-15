@@ -384,10 +384,10 @@ public final class CrazyCore extends CrazyPlugin
 		return protectedPlayers.contains(name.toLowerCase());
 	}
 
-	public void checkProtectedPlayer(final String player, final CommandSender accessor, final String permission, final String plugin, final String task) throws CrazyCommandPermissionProtectedPlayerException
+	public void checkProtectedPlayer(final String accessedPlayer, final CommandSender accessor, final String permission, final String plugin, final String task) throws CrazyCommandPermissionProtectedPlayerException
 	{
 		if (accessor instanceof Player)
-			checkProtectedPlayer(player, (Player) accessor, permission, plugin, task);
+			checkProtectedPlayer(accessedPlayer, (Player) accessor, permission, plugin, task);
 	}
 
 	@Localized({ "CRAZYCORE.PROTECTEDPLAYER.ACCESSWARN $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN.USER $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$" })
