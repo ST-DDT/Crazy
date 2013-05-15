@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.OfflinePlayer;
 
 import de.st_ddt.crazyplugin.CrazyPlayerDataPlugin;
+import de.st_ddt.crazyplugin.CrazyPlayerDataPluginInterface;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -21,15 +22,15 @@ public class PlayerDataParamitrisable<S extends PlayerDataInterface> extends Typ
 		this.plugin = plugin;
 	}
 
-	public PlayerDataParamitrisable(final CrazyPlayerDataPlugin<S, ? extends S> plugin, final String name)
+	public PlayerDataParamitrisable(final CrazyPlayerDataPlugin<S, ? extends S> plugin, final String defaultName)
 	{
-		super(plugin.getPlayerData(name));
+		super(plugin.getPlayerData(defaultName));
 		this.plugin = plugin;
 	}
 
-	public PlayerDataParamitrisable(final CrazyPlayerDataPlugin<S, ? extends S> plugin, final OfflinePlayer player)
+	public PlayerDataParamitrisable(final CrazyPlayerDataPlugin<S, ? extends S> plugin, final OfflinePlayer defaultPlayer)
 	{
-		super(plugin.getPlayerData(player));
+		super(plugin.getPlayerData(defaultPlayer));
 		this.plugin = plugin;
 	}
 
@@ -47,7 +48,7 @@ public class PlayerDataParamitrisable<S extends PlayerDataInterface> extends Typ
 		return tabHelp(plugin, parameter);
 	}
 
-	public static List<String> tabHelp(final CrazyPlayerDataPlugin<?, ?> plugin, String parameter)
+	public static List<String> tabHelp(final CrazyPlayerDataPluginInterface<?, ?> plugin, String parameter)
 	{
 		parameter = parameter.toLowerCase();
 		final List<String> res = new LinkedList<String>();

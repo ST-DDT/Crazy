@@ -15,6 +15,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.PlayerDataParamitrisable;
 
 public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterface> extends CrazyPlayerDataCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
 {
@@ -50,7 +51,12 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 	{
 		if (args.length != 1)
 			return null;
-		return OfflinePlayerParamitrisable.tabHelp(args[0]);
+		else
+		{
+			final List<String> res = PlayerDataParamitrisable.tabHelp(plugin, args[0]);
+			res.addAll(OfflinePlayerParamitrisable.tabHelp(args[0]));
+			return res;
+		}
 	}
 
 	@Override

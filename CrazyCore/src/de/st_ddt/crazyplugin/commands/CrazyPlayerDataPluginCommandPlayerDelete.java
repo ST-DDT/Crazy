@@ -11,7 +11,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
-import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.PlayerDataParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
 public class CrazyPlayerDataPluginCommandPlayerDelete<T extends PlayerDataInterface> extends CrazyPlayerDataCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
@@ -38,7 +38,8 @@ public class CrazyPlayerDataPluginCommandPlayerDelete<T extends PlayerDataInterf
 	{
 		if (args.length != 1)
 			return null;
-		return OfflinePlayerParamitrisable.tabHelp(args[0]);
+		else
+			return PlayerDataParamitrisable.tabHelp(plugin, args[0]);
 	}
 
 	@Override
