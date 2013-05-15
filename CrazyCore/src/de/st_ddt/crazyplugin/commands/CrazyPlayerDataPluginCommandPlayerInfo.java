@@ -54,7 +54,9 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 		else
 		{
 			final List<String> res = PlayerDataParamitrisable.tabHelp(plugin, args[0]);
-			res.addAll(OfflinePlayerParamitrisable.tabHelp(args[0]));
+			final List<String> players = OfflinePlayerParamitrisable.tabHelp(args[0]);
+			players.removeAll(res);
+			res.addAll(players);
 			return res;
 		}
 	}
