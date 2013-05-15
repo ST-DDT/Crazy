@@ -396,18 +396,18 @@ public final class CrazyCore extends CrazyPlugin
 		if (isProtectedPlayer(accessedPlayer))
 		{
 			final String accessingPlayerIP = accessingPlayer.getAddress().getAddress().getHostAddress();
+			final Object[] args = new String[] { accessedPlayer, accessingPlayer.getName(), accessingPlayerIP, plugin, task };
 			if (PermissionModule.hasPermission(accessingPlayer, permission))
 			{
 				logger.log("ProtectedPlayer", accessingPlayer.getName() + " @ " + accessingPlayerIP + "accessed a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
-				broadcastLocaleMessage(true, "crazycore.protectedplayer.accesswarn", "PROTECTEDPLAYER.ACCESSWARN", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
+				broadcastLocaleMessage(true, "crazycore.protectedplayer.accesswarn", "PROTECTEDPLAYER.ACCESSWARN", args);
 			}
 			else
 			{
 				logger.log("ProtectedPlayer", "WARNING: " + accessingPlayer.getName() + " @ " + accessingPlayerIP + "tried to access a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
-				broadcastLocaleMessage(false, "crazycore.protectedplayer.illegalaccesswarnuser", "PROTECTEDPLAYER.ILLEGALACCESSWARN.USER", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
-				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarnstaff", "PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF", accessedPlayer, accessingPlayer, accessingPlayerIP, plugin, task);
+				broadcastLocaleMessage(false, "crazycore.protectedplayer.illegalaccesswarnuser", "PROTECTEDPLAYER.ILLEGALACCESSWARN.USER", args);
+				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarnstaff", "PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF", args);
 				final ConsoleCommandSender console = Bukkit.getConsoleSender();
-				final Object[] args = new String[] { accessedPlayer, accessingPlayer.getName(), accessingPlayerIP, plugin, task };
 				for (final String command : protectedPlayersIllegalAccessCommands)
 					Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, args));
 				throw new CrazyCommandPermissionProtectedPlayerException(accessedPlayer);
