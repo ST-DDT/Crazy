@@ -1,7 +1,7 @@
 package de.st_ddt.crazyutil.paramitrisable;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,12 +50,15 @@ public class WorldParamitrisable extends TypedParamitrisable<World>
 	public static List<String> tabHelp(String parameter)
 	{
 		parameter = parameter.toLowerCase();
-		final List<String> res = getWorldNames();
-		final Iterator<String> it = res.iterator();
-		while (it.hasNext())
-			if (!it.next().toLowerCase().startsWith(parameter))
-				it.remove();
-		return res;
+		final List<String> worlds = getWorldNames();
+		final List<String> res = new ArrayList<String>(worlds.size());
+		for (final String world : worlds)
+			if (world.toLowerCase().startsWith(parameter))
+				res.add(world);
+		if (res.isEmpty())
+			return worlds;
+		else
+			return res;
 	}
 
 	public static List<String> getWorldNames()
