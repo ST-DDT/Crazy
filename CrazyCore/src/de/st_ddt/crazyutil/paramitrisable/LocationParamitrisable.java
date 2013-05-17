@@ -40,6 +40,11 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 		value = ChatConverter.stringToLocation(sender, PATTERN_SPACE.split(parameter));
 	}
 
+	public void setParameter(final String[] parameters) throws CrazyException
+	{
+		value = ChatConverter.stringToLocation(sender, parameters);
+	}
+
 	public void addFullParams(final Map<String, ? super TabbedParamitrisable> params, final String... prefixes)
 	{
 		for (final String prefix : prefixes)
