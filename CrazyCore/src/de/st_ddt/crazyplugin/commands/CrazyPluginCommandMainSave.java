@@ -8,7 +8,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyPluginCommandMainSave extends CrazyCommandExecutor<CrazyPluginInterface>
+public class CrazyPluginCommandMainSave extends CrazyPluginCommandExecutor<CrazyPluginInterface>
 {
 
 	public CrazyPluginCommandMainSave(final CrazyPluginInterface plugin)

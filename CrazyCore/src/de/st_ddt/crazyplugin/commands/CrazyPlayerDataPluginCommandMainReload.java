@@ -18,7 +18,7 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterface> extends CrazyPlayerDataCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
+public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterface> extends CrazyPlayerDataPluginCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
 {
 
 	public CrazyPlayerDataPluginCommandMainReload(final CrazyPlayerDataPluginInterface<T, ? extends T> plugin)

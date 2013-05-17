@@ -18,7 +18,7 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyPluginCommandMainLogger extends CrazyCommandExecutor<CrazyPluginInterface>
+public class CrazyPluginCommandMainLogger extends CrazyPluginCommandExecutor<CrazyPluginInterface>
 {
 
 	public CrazyPluginCommandMainLogger(final CrazyPluginInterface plugin)

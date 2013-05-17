@@ -113,7 +113,7 @@ public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends Craz
 		if (executor == null)
 		{
 			List<String> res = null;
-			if (defaultExecutor.hasAccessPermission(sender))
+			if (defaultExecutor.isAccessible(sender))
 				res = defaultExecutor.tab(sender, args);
 			if (defaultExecutor instanceof CrazyCommandTreeDefaultExecutorInterface || args.length > 1)
 				return res;
@@ -122,7 +122,7 @@ public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends Craz
 			final String arg = args[0].toLowerCase();
 			for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
 				if (subCommand.getKey().toLowerCase().startsWith(arg))
-					if (subCommand.getValue().hasAccessPermission(sender))
+					if (subCommand.getValue().isAccessible(sender))
 						res.add(subCommand.getKey());
 			return res;
 		}
@@ -132,11 +132,11 @@ public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends Craz
 			final String arg = args[0].toLowerCase();
 			for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
 				if (subCommand.getKey().toLowerCase().startsWith(arg))
-					if (subCommand.getValue().hasAccessPermission(sender))
+					if (subCommand.getValue().isAccessible(sender))
 						res.add(subCommand.getKey());
 			return res;
 		}
-		else if (executor.hasAccessPermission(sender))
+		else if (executor.isAccessible(sender))
 			return executor.tab(sender, ChatHelperExtended.shiftArray(args, 1));
 		else
 			return null;
@@ -147,6 +147,15 @@ public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends Craz
 	{
 		for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
 			if (subCommand.getValue().hasAccessPermission(sender))
+				return true;
+		return false;
+	}
+
+	@Override
+	public boolean isAccessible(final CommandSender sender)
+	{
+		for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
+			if (subCommand.getValue().isAccessible(sender))
 				return true;
 		return false;
 	}
@@ -179,7 +188,7 @@ public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends Craz
 			{
 				final List<String> res = new ArrayList<String>();
 				for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
-					if (subCommand.getValue().hasAccessPermission(sender))
+					if (subCommand.getValue().isAccessible(sender))
 						res.add(subCommand.getKey());
 				return res;
 			}
@@ -189,7 +198,7 @@ public class CrazyCommandTreeExecutor<S extends ChatHeaderProvider> extends Craz
 				final String arg = args[0].toLowerCase();
 				for (final Entry<String, CrazyCommandExecutorInterface> subCommand : subExecutor.entrySet())
 					if (subCommand.getKey().toLowerCase().startsWith(arg))
-						if (subCommand.getValue().hasAccessPermission(sender))
+						if (subCommand.getValue().isAccessible(sender))
 							res.add(subCommand.getKey());
 				return res;
 			}

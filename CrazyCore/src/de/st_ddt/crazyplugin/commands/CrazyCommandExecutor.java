@@ -55,7 +55,7 @@ public abstract class CrazyCommandExecutor<S extends ChatHeaderProvider> impleme
 	@Override
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
 	{
-		if (hasAccessPermission(sender))
+		if (isAccessible(sender))
 		{
 			final List<String> list = tab(sender, args);
 			if (list == null)
@@ -77,5 +77,11 @@ public abstract class CrazyCommandExecutor<S extends ChatHeaderProvider> impleme
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return true;
+	}
+
+	@Override
+	public boolean isAccessible(final CommandSender sender)
+	{
+		return hasAccessPermission(sender);
 	}
 }

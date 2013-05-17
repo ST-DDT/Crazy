@@ -22,4 +22,6 @@ public interface CrazyCommandExecutorInterface extends TabExecutor
 	public List<String> tab(CommandSender sender, String[] args);
 
 	public boolean hasAccessPermission(CommandSender sender);
+
+	public boolean isAccessible(CommandSender sender);
 }

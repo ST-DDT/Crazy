@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import de.st_ddt.crazyplugin.CrazyPluginInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class CrazyPluginCommandMainInfo extends CrazyCommandExecutor<CrazyPluginInterface>
+public class CrazyPluginCommandMainInfo extends CrazyPluginCommandExecutor<CrazyPluginInterface>
 {
 
 	public CrazyPluginCommandMainInfo(final CrazyPluginInterface plugin)

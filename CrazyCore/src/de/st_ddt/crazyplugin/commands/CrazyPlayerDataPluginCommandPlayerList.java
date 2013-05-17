@@ -19,7 +19,7 @@ import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 
-public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterface> extends CrazyPlayerDataCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
+public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterface> extends CrazyPlayerDataPluginCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
 {
 
 	private final Collection<? extends PlayerDataFilterInterface<T>> availableFilters;
