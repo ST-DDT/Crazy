@@ -64,7 +64,7 @@ public class CrazyListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void CrazyPlayerPreRemoveEvent(final CrazyPlayerPreRemoveEvent event)
 	{
-		if (plugin.getProtectedPlayers().contains(event.getPlayer().toLowerCase()))
+		if (plugin.isProtectedPlayer(event.getPlayer()))
 			event.setCancelled(true);
 	}
 
