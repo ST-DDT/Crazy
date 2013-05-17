@@ -20,29 +20,33 @@ public class LocationParamitrisable extends TypedParamitrisable<Location>
 {
 
 	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
-	protected final CommandSender sender;
 	protected TabbedParamitrisable[] subParam;
 
 	public LocationParamitrisable(final CommandSender sender)
 	{
-		this(sender instanceof Player ? simplyfyLocation(((Player) sender).getLocation()) : null, sender);
+		this(sender instanceof Player ? simplyfyLocation(((Player) sender).getLocation()) : null);
 	}
 
-	public LocationParamitrisable(final Location defaultValue, final CommandSender sender)
+	public LocationParamitrisable(final Location defaultValue)
 	{
 		super(defaultValue == null ? new Location(null, 0, 0, 0) : defaultValue);
-		this.sender = sender;
+	}
+
+	@Deprecated
+	public LocationParamitrisable(final Location defaultValue, final CommandSender sender)
+	{
+		this(defaultValue);
 	}
 
 	@Override
 	public void setParameter(final String parameter) throws CrazyException
 	{
-		value = ChatConverter.stringToLocation(sender, PATTERN_SPACE.split(parameter));
+		value = ChatConverter.stringToLocation(value, PATTERN_SPACE.split(parameter));
 	}
 
 	public void setParameter(final String[] parameters) throws CrazyException
 	{
-		value = ChatConverter.stringToLocation(sender, parameters);
+		value = ChatConverter.stringToLocation(value, parameters);
 	}
 
 	public void addFullParams(final Map<String, ? super TabbedParamitrisable> params, final String... prefixes)
