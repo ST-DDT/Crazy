@@ -29,14 +29,24 @@ public class ChatConverter
 
 	public static Location stringToLocation(final CommandSender sender, final String[] args) throws CrazyCommandException
 	{
-		Location location = null;
-		World world = null;
-		if (sender != null)
-			if (sender instanceof Player)
-			{
-				location = ((Player) sender).getLocation();
-				world = ((Player) sender).getWorld();
-			}
+		if (sender instanceof Player)
+			return stringToLocation(((Player) sender).getLocation(), args);
+		else
+			return stringToLocation(null, null, args);
+	}
+
+	public static Location stringToLocation(final Location defaultLocation, final String[] args) throws CrazyCommandException
+	{
+		if (defaultLocation == null)
+			return stringToLocation(null, null, args);
+		else
+			return stringToLocation(defaultLocation, defaultLocation.getWorld(), args);
+	}
+
+	public static Location stringToLocation(final Location defaultLocation, final World defaultworld, final String[] args) throws CrazyCommandException
+	{
+		Location location = defaultLocation;
+		World world = defaultworld;
 		switch (args.length)
 		{
 			case 0:
