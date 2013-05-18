@@ -11,10 +11,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsPlayerCommandUnmutePlayer extends CrazyChatsPlayerCommandExecutor
+public class PlayerCommandUnmutePlayer extends PlayerCommandExecutor
 {
 
-	public CrazyChatsPlayerCommandUnmutePlayer(final CrazyChats plugin)
+	public PlayerCommandUnmutePlayer(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

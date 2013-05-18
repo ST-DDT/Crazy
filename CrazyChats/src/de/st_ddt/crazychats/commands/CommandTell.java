@@ -19,10 +19,10 @@ import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.VisiblePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandTell extends CrazyChatsCommandExecutor
+public class CommandTell extends CommandExecutor
 {
 
-	public CrazyChatsCommandTell(final CrazyChats plugin)
+	public CommandTell(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

@@ -12,28 +12,28 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandGroupListnamePrefix extends CrazyChatsCommandExecutor
+public class CommandGroupSuffix extends CommandExecutor
 {
 
-	public CrazyChatsCommandGroupListnamePrefix(final CrazyChats plugin)
+	public CommandGroupSuffix(final CrazyChats plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized({ "CRAZYCHATS.COMMAND.GROUP.LISTNAMEPREFIX.DELETED $Group$", "CRAZYCHATS.COMMAND.GROUP.LISTNAMEPREFIX.SET $Group$ $ListnamePrefix$" })
+	@Localized({ "CRAZYCHATS.COMMAND.GROUP.SUFFIX.DELETED $Group$", "CRAZYCHATS.COMMAND.GROUP.SUFFIX.SET $Group$ $Suffix$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length == 1)
 		{
-			plugin.getGroupListnamePrefixes().remove(args[0]);
-			plugin.sendLocaleMessage("COMMAND.GROUP.LISTNAMEPREFIX.DELETED", sender, args[0]);
+			plugin.getGroupSuffixes().remove(args[0]);
+			plugin.sendLocaleMessage("COMMAND.GROUP.SUFFIX.DELETED", sender, args[0]);
 			plugin.saveConfiguration();
 		}
 		else if (args.length == 2)
 		{
-			plugin.getGroupListnamePrefixes().put(args[0], ChatHelper.colorise(args[1]));
-			plugin.sendLocaleMessage("COMMAND.GROUP.LISTNAMEPREFIX.SET", sender, args[0], ChatHelper.colorise(args[1]) + sender.getName());
+			plugin.getGroupSuffixes().put(args[0], ChatHelper.colorise(args[1]));
+			plugin.sendLocaleMessage("COMMAND.GROUP.SUFFIX.SET", sender, args[0], ChatHelper.colorise(sender.getName() + args[1]));
 			plugin.saveConfiguration();
 		}
 		else
@@ -47,7 +47,7 @@ public class CrazyChatsCommandGroupListnamePrefix extends CrazyChatsCommandExecu
 			return null;
 		final String name = args[0].toLowerCase();
 		final List<String> res = new LinkedList<String>();
-		for (final String group : plugin.getGroupListnamePrefixes().keySet())
+		for (final String group : plugin.getGroupSuffixes().keySet())
 			if (group.toLowerCase().startsWith(name))
 				res.add(group);
 		return res;
@@ -56,6 +56,6 @@ public class CrazyChatsCommandGroupListnamePrefix extends CrazyChatsCommandExecu
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazychats.group.listnameprefix");
+		return PermissionModule.hasPermission(sender, "crazychats.group.suffix");
 	}
 }

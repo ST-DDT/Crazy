@@ -24,10 +24,10 @@ import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TargetDateParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandPlayerSilence extends CrazyChatsCommandExecutor
+public class CommandPlayerSilence extends CommandExecutor
 {
 
-	public CrazyChatsCommandPlayerSilence(final CrazyChats plugin)
+	public CommandPlayerSilence(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

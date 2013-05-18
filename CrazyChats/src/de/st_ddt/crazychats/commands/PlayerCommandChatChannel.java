@@ -15,10 +15,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.paramitrisable.MapParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsPlayerCommandChatChannel extends CrazyChatsPlayerCommandExecutor
+public class PlayerCommandChatChannel extends PlayerCommandExecutor
 {
 
-	public CrazyChatsPlayerCommandChatChannel(final CrazyChats plugin)
+	public PlayerCommandChatChannel(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

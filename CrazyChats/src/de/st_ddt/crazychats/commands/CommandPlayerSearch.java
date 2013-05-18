@@ -18,10 +18,10 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandPlayerSearch extends CrazyChatsCommandExecutor
+public class CommandPlayerSearch extends CommandExecutor
 {
 
-	public CrazyChatsCommandPlayerSearch(final CrazyChats plugin)
+	public CommandPlayerSearch(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

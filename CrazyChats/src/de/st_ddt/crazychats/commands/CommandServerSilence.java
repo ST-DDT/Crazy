@@ -17,10 +17,10 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TargetDateParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandServerSilence extends CrazyChatsCommandExecutor
+public class CommandServerSilence extends CommandExecutor
 {
 
-	public CrazyChatsCommandServerSilence(final CrazyChats plugin)
+	public CommandServerSilence(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

@@ -17,10 +17,10 @@ import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
-public class CrazyChatsCommandMainReload extends CrazyPlayerDataPluginCommandMainReload<ChatPlayerData>
+public class CommandMainReload extends CrazyPlayerDataPluginCommandMainReload<ChatPlayerData>
 {
 
-	public CrazyChatsCommandMainReload(final CrazyChats plugin)
+	public CommandMainReload(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

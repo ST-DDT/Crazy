@@ -17,45 +17,43 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandPlayerListName extends CrazyChatsCommandExecutor
+public class CommandPlayerDisplayName extends CommandExecutor
 {
 
-	public CrazyChatsCommandPlayerListName(final CrazyChats plugin)
+	public CommandPlayerDisplayName(final CrazyChats plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized({ "CRAZYCHATS.COMMAND.PLAYER.LISTNAME.WARNLENGTH $ListName$ $Length$", "CRAZYCHATS.COMMAND.PLAYER.LISTNAME.DONE $Player$ $ListName$", "CRAZYCHATS.COMMAND.PLAYER.LISTNAME.REMOVED $Player$" })
+	@Localized({ "CRAZYCHATS.COMMAND.PLAYER.DISPLAYNAME.WARNLENGTH $DisplayName$ $Length$", "CRAZYCHATS.COMMAND.PLAYER.DISPLAYNAME.DONE $Player$ $Displayname$", "CRAZYCHATS.COMMAND.PLAYER.DISPLAYNAME.REMOVED $Player$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length < 1 || args.length > 2)
-			throw new CrazyCommandUsageException("<Player> [ListName]");
+			throw new CrazyCommandUsageException("<Player> [DisplayName]");
 		final String name = args[0];
 		final ChatPlayerData data = plugin.getPlayerData(name);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("Player", name);
 		final Player player = data.getPlayer();
-		if (!PermissionModule.hasPermission(sender, "crazychats.player.listname." + (player != null && player.equals(sender) ? "self" : "other")))
+		if (!PermissionModule.hasPermission(sender, "crazychats.player.displayname." + (player != null && player.equals(sender) ? "self" : "other")))
 			throw new CrazyCommandPermissionException();
-		if (args.length == 2)
+		if (args.length == 2 && !args[1].equals(name))
 		{
-			String listName = ChatHelper.colorise(args[1]);
-			if (listName.length() < 3 || listName.length() > 16)
-				plugin.sendLocaleMessage("COMMAND.PLAYER.LISTNAME.WARNLENGTH", sender, listName, listName.length());
-			if (listName.length() > 16)
-				listName = listName.substring(0, 16);
-			data.setListName(listName);
+			final String displayName = ChatHelper.colorise(args[1]);
+			if (displayName.length() < 3 || displayName.length() > 16)
+				plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.WARNLENGTH", sender, displayName, displayName.length());
+			data.setDisplayName(displayName);
 			if (player != null)
-				player.setPlayerListName(listName);
-			plugin.sendLocaleMessage("COMMAND.PLAYER.LISTNAME.DONE", sender, data.getName(), listName);
+				player.setDisplayName(displayName);
+			plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.DONE", sender, data.getName(), displayName);
 		}
 		else
 		{
-			data.setListName(null);
+			data.setDisplayName(null);
 			if (player != null)
-				player.setPlayerListName(null);
-			plugin.sendLocaleMessage("COMMAND.PLAYER.LISTNAME.REMOVED", sender, data.getName());
+				player.setDisplayName(null);
+			plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.REMOVED", sender, data.getName());
 		}
 		plugin.getCrazyDatabase().save(data);
 	}
@@ -76,6 +74,6 @@ public class CrazyChatsCommandPlayerListName extends CrazyChatsCommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazychats.player.listname.self") || PermissionModule.hasPermission(sender, "crazychats.player.listname.other");
+		return PermissionModule.hasPermission(sender, "crazychats.player.displayname.self") || PermissionModule.hasPermission(sender, "crazychats.player.displayname.other");
 	}
 }

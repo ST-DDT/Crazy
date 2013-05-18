@@ -18,10 +18,10 @@ import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.VisiblePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsPlayerCommandChatRemove extends CrazyChatsPlayerCommandExecutor
+public class PlayerCommandChatRemove extends PlayerCommandExecutor
 {
 
-	public CrazyChatsPlayerCommandChatRemove(final CrazyChats plugin)
+	public PlayerCommandChatRemove(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

@@ -18,10 +18,10 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandClearChat extends CrazyChatsCommandExecutor
+public class CommandClearChat extends CommandExecutor
 {
 
-	public CrazyChatsCommandClearChat(final CrazyChats plugin)
+	public CommandClearChat(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

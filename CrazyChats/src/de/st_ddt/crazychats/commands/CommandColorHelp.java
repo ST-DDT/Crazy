@@ -8,10 +8,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandColorHelp extends CrazyChatsCommandExecutor
+public class CommandColorHelp extends CommandExecutor
 {
 
-	public CrazyChatsCommandColorHelp(final CrazyChats plugin)
+	public CommandColorHelp(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

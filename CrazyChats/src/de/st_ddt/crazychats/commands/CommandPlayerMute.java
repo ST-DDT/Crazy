@@ -17,16 +17,16 @@ import de.st_ddt.crazyutil.paramitrisable.PlayerDataParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandPlayerUnmute extends CrazyChatsCommandExecutor
+public class CommandPlayerMute extends CommandExecutor
 {
 
-	public CrazyChatsCommandPlayerUnmute(final CrazyChats plugin)
+	public CommandPlayerMute(final CrazyChats plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized("CRAZYCHATS.COMMAND.PLAYER.UNMUTED $Player$ $MutedPlayer$")
+	@Localized("CRAZYCHATS.COMMAND.PLAYER.MUTED $Player$ $MutedPlayer$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
@@ -34,14 +34,14 @@ public class CrazyChatsCommandPlayerUnmute extends CrazyChatsCommandExecutor
 		params.put("p", playerData);
 		params.put("player", playerData);
 		final OfflinePlayerParamitrisable muted = new OfflinePlayerParamitrisable(null);
-		params.put("u", muted);
-		params.put("unmuted", muted);
+		params.put("m", muted);
+		params.put("muted", muted);
 		ChatHelperExtended.readParameters(args, params, playerData, muted);
 		final ChatPlayerData data = playerData.getValue();
 		if (data == null || muted.getValue() == null)
-			throw new CrazyCommandUsageException("<player:Player> <unmuted:Player>");
-		data.unmute(muted.getValue());
-		plugin.sendLocaleMessage("COMMAND.PLAYER.UNMUTED", sender, data.getName(), muted.getValue().getName());
+			throw new CrazyCommandUsageException("<player:Player> <muted:Player>");
+		data.mute(muted.getValue());
+		plugin.sendLocaleMessage("COMMAND.PLAYER.MUTED", sender, data.getName(), muted.getValue().getName());
 		plugin.getCrazyDatabase().save(data);
 	}
 
@@ -53,14 +53,14 @@ public class CrazyChatsCommandPlayerUnmute extends CrazyChatsCommandExecutor
 		params.put("p", playerData);
 		params.put("player", playerData);
 		final OfflinePlayerParamitrisable muted = new OfflinePlayerParamitrisable(null);
-		params.put("u", muted);
-		params.put("unmuted", muted);
+		params.put("m", muted);
+		params.put("muted", muted);
 		return ChatHelperExtended.tabHelp(args, params, playerData, muted);
 	}
 
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazychats.player.unmute");
+		return PermissionModule.hasPermission(sender, "crazychats.player.mute");
 	}
 }

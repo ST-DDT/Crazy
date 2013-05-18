@@ -11,10 +11,10 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsPlayerCommandAnswer extends CrazyChatsPlayerCommandExecutor
+public class PlayerCommandAnswer extends PlayerCommandExecutor
 {
 
-	public CrazyChatsPlayerCommandAnswer(final CrazyChats plugin)
+	public PlayerCommandAnswer(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

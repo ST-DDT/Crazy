@@ -11,10 +11,10 @@ import de.st_ddt.crazychats.data.ChatPlayerData;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsPlayerCommandMuteAll extends CrazyChatsPlayerCommandExecutor
+public class PlayerCommandMuteAll extends PlayerCommandExecutor
 {
 
-	public CrazyChatsPlayerCommandMuteAll(final CrazyChats plugin)
+	public PlayerCommandMuteAll(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

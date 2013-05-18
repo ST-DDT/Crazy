@@ -8,10 +8,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsPlayerCommandMutePlayer extends CrazyChatsPlayerCommandExecutor
+public class PlayerCommandMutePlayer extends PlayerCommandExecutor
 {
 
-	public CrazyChatsPlayerCommandMutePlayer(final CrazyChats plugin)
+	public PlayerCommandMutePlayer(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

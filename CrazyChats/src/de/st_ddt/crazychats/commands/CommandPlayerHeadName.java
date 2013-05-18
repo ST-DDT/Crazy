@@ -6,9 +6,11 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.kitteh.tag.TagAPI;
 
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.data.ChatPlayerData;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
@@ -17,44 +19,52 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandPlayerDisplayName extends CrazyChatsCommandExecutor
+public class CommandPlayerHeadName extends CommandExecutor
 {
 
-	public CrazyChatsCommandPlayerDisplayName(final CrazyChats plugin)
+	public CommandPlayerHeadName(final CrazyChats plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized({ "CRAZYCHATS.COMMAND.PLAYER.DISPLAYNAME.WARNLENGTH $DisplayName$ $Length$", "CRAZYCHATS.COMMAND.PLAYER.DISPLAYNAME.DONE $Player$ $Displayname$", "CRAZYCHATS.COMMAND.PLAYER.DISPLAYNAME.REMOVED $Player$" })
+	@Localized({ "CRAZYCHATS.COMMAND.PLAYER.HEADNAME.WARNLENGTH $ListName$ $Length$", "CRAZYCHATS.COMMAND.PLAYER.HEADNAME.DONE $Player$ $ListName$", "CRAZYCHATS.COMMAND.PLAYER.HEADNAME.REMOVED $Player$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length < 1 || args.length > 2)
-			throw new CrazyCommandUsageException("<Player> [DisplayName]");
+			throw new CrazyCommandUsageException("<Player> [HeadName]");
 		final String name = args[0];
 		final ChatPlayerData data = plugin.getPlayerData(name);
 		if (data == null)
 			throw new CrazyCommandNoSuchException("Player", name);
 		final Player player = data.getPlayer();
-		if (!PermissionModule.hasPermission(sender, "crazychats.player.displayname." + (player != null && player.equals(sender) ? "self" : "other")))
+		if (!PermissionModule.hasPermission(sender, "crazychats.player.headname." + (player != null && player.equals(sender) ? "self" : "other")))
 			throw new CrazyCommandPermissionException();
-		if (args.length == 2 && !args[1].equals(name))
+		if (args.length == 2)
 		{
-			final String displayName = ChatHelper.colorise(args[1]);
-			if (displayName.length() < 3 || displayName.length() > 16)
-				plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.WARNLENGTH", sender, displayName, displayName.length());
-			data.setDisplayName(displayName);
-			if (player != null)
-				player.setDisplayName(displayName);
-			plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.DONE", sender, data.getName(), displayName);
+			String headName = ChatHelper.colorise(args[1]);
+			if (headName.length() < 3 || headName.length() > 16)
+				plugin.sendLocaleMessage("COMMAND.PLAYER.HEADNAME.WARNLENGTH", sender, headName, headName.length());
+			if (headName.length() > 16)
+				headName = headName.substring(0, 16);
+			data.setHeadName(headName);
+			plugin.sendLocaleMessage("COMMAND.PLAYER.HEADNAME.DONE", sender, data.getName(), headName);
 		}
 		else
 		{
-			data.setDisplayName(null);
-			if (player != null)
-				player.setDisplayName(null);
-			plugin.sendLocaleMessage("COMMAND.PLAYER.DISPLAYNAME.REMOVED", sender, data.getName());
+			data.setHeadName(null);
+			plugin.sendLocaleMessage("COMMAND.PLAYER.HEADNAME.REMOVED", sender, data.getName());
 		}
+		if (player != null)
+			if (player.isOnline())
+				try
+				{
+					TagAPI.refreshPlayer(player);
+				}
+				catch (final Exception e)
+				{
+					throw new CrazyCommandErrorException(e);
+				}
 		plugin.getCrazyDatabase().save(data);
 	}
 
@@ -74,6 +84,6 @@ public class CrazyChatsCommandPlayerDisplayName extends CrazyChatsCommandExecuto
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazychats.player.displayname.self") || PermissionModule.hasPermission(sender, "crazychats.player.displayname.other");
+		return PermissionModule.hasPermission(sender, "crazychats.player.headname.self") || PermissionModule.hasPermission(sender, "crazychats.player.headname.other");
 	}
 }

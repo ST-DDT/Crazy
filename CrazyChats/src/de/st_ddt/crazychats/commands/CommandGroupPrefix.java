@@ -12,10 +12,10 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandGroupPrefix extends CrazyChatsCommandExecutor
+public class CommandGroupPrefix extends CommandExecutor
 {
 
-	public CrazyChatsCommandGroupPrefix(final CrazyChats plugin)
+	public CommandGroupPrefix(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

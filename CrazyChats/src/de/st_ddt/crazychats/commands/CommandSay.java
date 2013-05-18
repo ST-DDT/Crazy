@@ -17,10 +17,10 @@ import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyChatsCommandSay extends CrazyChatsCommandExecutor
+public class CommandSay extends CommandExecutor
 {
 
-	public CrazyChatsCommandSay(final CrazyChats plugin)
+	public CommandSay(final CrazyChats plugin)
 	{
 		super(plugin);
 	}
