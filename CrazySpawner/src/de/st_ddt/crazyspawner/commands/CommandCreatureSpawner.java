@@ -63,4 +63,13 @@ public class CommandCreatureSpawner extends CommandExecutor
 	{
 		return PermissionModule.hasPermission(sender, "crazyspawner.creaturespawner");
 	}
+
+	@Override
+	public boolean isAccessible(final CommandSender sender)
+	{
+		if (sender instanceof Player)
+			return super.isAccessible(sender);
+		else
+			return false;
+	}
 }
