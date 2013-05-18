@@ -75,7 +75,9 @@ import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.DoubleMode;
 import de.st_ddt.crazyutil.modes.DurationMode;
 import de.st_ddt.crazyutil.modes.Mode;
+import de.st_ddt.crazyutil.modules.permissions.PermissionCrazyChatsSystem;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.modules.permissions.PermissionSystem;
 import de.st_ddt.crazyutil.source.Localized;
 
 public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, ChatPlayerData>
@@ -113,6 +115,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private boolean cleanCaps;
 	private int clearChatLength;
 	private boolean tagAPIenabled;
+	static
+	{
+		final List<Class<? extends PermissionSystem>> PERMISSIONSYSTEMS = PermissionModule.PERMISSIONSYSTEMS;
+		PERMISSIONSYSTEMS.add(PERMISSIONSYSTEMS.size() - 1, PermissionCrazyChatsSystem.class);
+	}
 
 	public static CrazyChats getPlugin()
 	{
