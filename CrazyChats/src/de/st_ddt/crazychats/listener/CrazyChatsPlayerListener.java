@@ -296,11 +296,12 @@ public class CrazyChatsPlayerListener implements Listener
 			return CANCELLED;
 		}
 		if (plugin.isServerSilenced())
-			if (channel.isAffectedByServerSilence())
-			{
-				plugin.sendLocaleMessage("CHAT.BLOCKED.SERVERSILENCED", player);
-				return CANCELLED;
-			}
+			if (!PermissionModule.hasPermission(player, "crazychats.serversilence.bypass"))
+				if (channel.isAffectedByServerSilence())
+				{
+					plugin.sendLocaleMessage("CHAT.BLOCKED.SERVERSILENCED", player);
+					return CANCELLED;
+				}
 		data.setCurrentChannel(channel);
 		final Set<Player> targets = new HashSet<Player>();
 		final Set<Player> channelTargets = channel.getTargets(player);

@@ -91,6 +91,7 @@ permissions:
       crazychats.nocleaning: true
       crazychats.clearchat: true
       crazychats.serversilence: true
+      crazychats.serversilence.bypass: true
       crazychats.customchannel.admin: true
   crazychats.mode:
     description: Allow changing plugin options.
@@ -179,6 +180,9 @@ permissions:
     default: op
   crazychats.serversilence:
     description: Allow silencing all public chat for a certain amount of time.
+    default: op
+  crazychats.serversilence.bypass:
+    description: Allow public chatting while server is silenced.
     default: op
   crazychats.customchannel.admin:
     description: Allow modifing all custom channels.
