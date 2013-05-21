@@ -227,7 +227,7 @@ public class CommandRaceStages extends CrazyCommandListEditor<RaceArena, RaceSta
 				if (args.length > 1)
 				{
 					final Map<String, TabbedParamitrisable> params = new HashMap<String, TabbedParamitrisable>();
-					final LocationParamitrisable location = new LocationParamitrisable(stage.getZone().getBasis(), sender);
+					final LocationParamitrisable location = new LocationParamitrisable(stage.getZone().getBasis());
 					location.addAdvancedParams(params, "");
 					ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), params, location);
 					stage.getZone().setBasis(location.getValue());
