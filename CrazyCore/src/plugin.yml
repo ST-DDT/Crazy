@@ -57,7 +57,7 @@ permissions:
     default: true
   crazycore.protectedplayer.illegalaccesswarn.staff:
     description: Player will be warned with detailed information if a player tries to illegally access a protected player. 
-    default: true
+    default: op
   crazycore.protectedplayer.accesswarn:
     description: Player will be informed if a player tries to access a protected player.
     default: op
