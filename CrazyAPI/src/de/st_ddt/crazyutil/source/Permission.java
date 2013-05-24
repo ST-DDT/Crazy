@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 public @interface Permission {
 
-	String[] permissions();
+	String[] value();
 }
