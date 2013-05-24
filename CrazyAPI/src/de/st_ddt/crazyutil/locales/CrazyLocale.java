@@ -268,6 +268,11 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		return getLanguageText(getUserLanguage(sender));
 	}
 
+	public String getFormatedLanguageText(final CommandSender sender)
+	{
+		return getFormatedLanguageText(getUserLanguage(sender));
+	}
+
 	public String getLanguageText(final String language)
 	{
 		String res = localeTexts.get(language);
@@ -286,6 +291,11 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 			}
 		}
 		return res;
+	}
+
+	public String getFormatedLanguageText(final String language)
+	{
+		return StringUtils.replace(getLanguageText(language), "\\n", "\n");
 	}
 
 	public String getExactLanguageText(final String language)
