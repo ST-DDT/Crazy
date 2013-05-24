@@ -448,7 +448,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language, getName());
 			}
 			final File customFile = new File(getDataFolder().getPath() + "/lang/custom_" + language + ".lang");
-			if (file.exists())
+			if (customFile.exists())
 				try
 				{
 					loadLanguageFile(language, customFile);
