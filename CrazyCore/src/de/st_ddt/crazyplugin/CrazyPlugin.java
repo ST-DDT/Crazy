@@ -438,6 +438,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			}
 		}
 		if (reload)
+		{
 			try
 			{
 				loadLanguageFile(language, file);
@@ -446,6 +447,17 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			{
 				sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language, getName());
 			}
+			final File customFile = new File(getDataFolder().getPath() + "/lang/custom_" + language + ".lang");
+			if (file.exists())
+				try
+				{
+					loadLanguageFile(language, customFile);
+				}
+				catch (final IOException e)
+				{
+					sendLocaleMessage("LANGUAGE.ERROR.READ", sender, language + " (Custom)", getName());
+				}
+		}
 	}
 
 	public final void unpackLanguage(final String language)
