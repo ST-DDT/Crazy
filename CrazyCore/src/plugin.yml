@@ -45,6 +45,8 @@ permissions:
       crazycore.player.associates: true
       crazycore.player.ipsearch: true
       crazycore.player.delete: true
+      crazycore.mode: true
+      crazycore.mode.*: true
       crazycore.reload: true
       crazycore.save: true
       crazylanguage.advanced: true
@@ -78,6 +80,29 @@ permissions:
     default: op
   crazycore.player.delete:
     description: Allow deleting a player and all his stored information (CrazyPlugins+Commands).
+    default: op
+  crazycore.mode:
+    description: Allow changing plugin modes.
+    default: op
+  crazycore.mode.*:
+    description: Allow changing all plugin modes.
+    default: op
+    children:
+      crazycore.mode.wipePlayerWorldFiles: true
+      crazycore.mode.wipePlayerBans: true
+      crazycore.mode.loadUserLanguages: true
+      crazycore.mode.checkForUpdates: true
+  crazycore.mode.wipePlayerWorldFiles:
+    description: Allow changing wipePlayerWorldFiles mode.
+    default: op
+  crazycore.mode.wipePlayerBans:
+    description: Allow changing wipePlayerBans mode.
+    default: op
+  crazycore.mode.loadUserLanguages:
+    description: Allow changing loadUserLanguages mode.
+    default: op
+  crazycore.mode.checkForUpdates:
+    description: Allow changing all mode.
     default: op
   crazycore.reload:
     description: Allow reload plugin.

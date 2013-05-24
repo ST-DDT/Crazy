@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHeaderProvider;
@@ -50,23 +51,27 @@ public class CrazyCommandModeEditor<S extends ChatHeaderProvider> extends CrazyC
 		{
 			final TreeSet<String> alternatives = new TreeSet<String>();
 			final Pattern pattern = Pattern.compile(".*" + name + ".*");
-			for (final String temp : modes.keySet())
-				if (pattern.matcher(temp).matches())
-					alternatives.add(temp);
+			for (final Entry<String, Mode<?>> temp : modes.entrySet())
+				if (hasAccessPermission(sender, temp.getValue()))
+					if (pattern.matcher(temp.getKey()).matches())
+						alternatives.add(temp.getKey());
 			throw new CrazyCommandNoSuchException("Mode", args[0], alternatives);
 		}
-		else if (args.length == 1)
-			mode.showValue(sender);
+		else if (hasAccessPermission(sender, mode))
+			if (args.length == 1)
+				mode.showValue(sender);
+			else
+				try
+				{
+					mode.setValue(sender, ChatHelperExtended.shiftArray(args, 1));
+				}
+				catch (final CrazyCommandException e)
+				{
+					e.addCommandPrefix(args[0]);
+					throw e;
+				}
 		else
-			try
-			{
-				mode.setValue(sender, ChatHelperExtended.shiftArray(args, 1));
-			}
-			catch (final CrazyCommandException e)
-			{
-				e.addCommandPrefix(args[0]);
-				throw e;
-			}
+			throw new CrazyCommandPermissionException();
 	}
 
 	@Override
@@ -76,19 +81,21 @@ public class CrazyCommandModeEditor<S extends ChatHeaderProvider> extends CrazyC
 		if (args.length == 1)
 		{
 			final String last = args[args.length - 1].toLowerCase();
-			for (final String mode : modes.keySet())
-				if (mode.startsWith(last))
-					res.add(mode);
+			for (final Entry<String, Mode<?>> mode : modes.entrySet())
+				if (hasAccessPermission(sender, mode.getValue()))
+					if (mode.getKey().startsWith(last))
+						res.add(mode.getKey());
 		}
 		else
 		{
 			final Mode<?> mode = modes.get(args[0].toLowerCase());
 			if (mode != null)
-			{
-				final List<String> temp = mode.tab(ChatHelperExtended.shiftArray(args, 1));
-				if (temp != null)
-					res.addAll(temp);
-			}
+				if (hasAccessPermission(sender, mode))
+				{
+					final List<String> temp = mode.tab(ChatHelperExtended.shiftArray(args, 1));
+					if (temp != null)
+						res.addAll(temp);
+				}
 		}
 		return res;
 	}
@@ -96,5 +103,10 @@ public class CrazyCommandModeEditor<S extends ChatHeaderProvider> extends CrazyC
 	public void addMode(final Mode<?> mode)
 	{
 		modes.put(mode.getName().toLowerCase(), mode);
+	}
+
+	public boolean hasAccessPermission(final CommandSender sender, final Mode<?> mode)
+	{
+		return true;
 	}
 }

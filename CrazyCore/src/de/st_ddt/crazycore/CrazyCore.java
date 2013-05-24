@@ -48,8 +48,10 @@ import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
+import de.st_ddt.crazyutil.source.PermissionVariable;
 
 @LocalizedVariable(variables = "CRAZYPLUGIN", values = "CRAZYCORE")
+@PermissionVariable(variables = "CRAZYPLUGIN", values = "CRAZYCORE")
 public final class CrazyCore extends CrazyPlugin
 {
 
