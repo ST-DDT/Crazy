@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -234,6 +235,22 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 	public String getLocaleMessage(final CommandSender target, final String localePath, final Object... args)
 	{
 		return ChatHelper.putArgsExtended(target, getLanguageEntry(localePath), args);
+	}
+
+	/**
+	 * Helper method for kick messages and other messages, that have to be fully formated.
+	 * 
+	 * @param target
+	 *            The CommandSender who will recieve this message.
+	 * @param localePath
+	 *            The path to the given message.
+	 * @param args
+	 *            Message args to be inserted in this message.
+	 * @return Returns a formated locale message.
+	 */
+	public String getFormatedLocaleMessage(final CommandSender target, final String localePath, final Object... args)
+	{
+		return StringUtils.replace(getLocaleMessage(target, localePath, args), "\\n", "\n");
 	}
 
 	public String getDefaultLocaleMessage(final String localePath, final Object... args)

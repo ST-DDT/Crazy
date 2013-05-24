@@ -104,7 +104,7 @@ public class CrazyListener implements Listener
 				player.teleport(spawn);
 				player.setBedSpawnLocation(spawn);
 				player.saveData();
-				player.kickPlayer(plugin.getLocale().getLocaleMessage(player, "COMMAND.PLAYER.DELETE.KICK"));
+				player.kickPlayer(plugin.getLocale().getFormatedLocaleMessage(player, "COMMAND.PLAYER.DELETE.KICK"));
 			}
 	}
 
