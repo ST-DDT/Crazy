@@ -123,6 +123,6 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazyspawner.theendautoregenerate");
+		return PermissionModule.hasPermission(sender, "crazyspawner.theendautorespawn");
 	}
 }
