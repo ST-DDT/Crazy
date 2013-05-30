@@ -11,7 +11,7 @@ public class CrazyPluginCommandMainTree extends CrazyCommandTreeExecutor<CrazyPl
 		addSubCommand(new CrazyPluginCommandMainInfo(plugin), "info");
 		addSubCommand(new CrazyPluginCommandMainLogger(plugin), "logger", "log");
 		addSubCommand(new CrazyPluginCommandMainHelp(plugin), "help");
-		addSubCommand(new CrazyPluginCommandMainReload(plugin), "reload");
+		addSubCommand(new CrazyPluginCommandMainReload<CrazyPluginInterface>(plugin), "reload");
 		addSubCommand(new CrazyPluginCommandMainSave(plugin), "save");
 	}
 
