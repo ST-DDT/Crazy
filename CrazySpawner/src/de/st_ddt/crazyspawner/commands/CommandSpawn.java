@@ -25,6 +25,7 @@ import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.MultiParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandSpawn extends CommandExecutor
 {
@@ -375,6 +376,7 @@ public class CommandSpawn extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazyspawner.spawn")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazyspawner.spawn");
