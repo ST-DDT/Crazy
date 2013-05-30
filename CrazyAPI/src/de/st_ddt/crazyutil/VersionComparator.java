@@ -4,6 +4,9 @@ import java.util.Comparator;
 
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
+/**
+ * Helper Class to compare versions.
+ */
 public class VersionComparator implements Comparator<String>
 {
 
@@ -11,12 +14,34 @@ public class VersionComparator implements Comparator<String>
 	{
 	}
 
+	/**
+	 * Compares to version Strings and returns 1, 0, -1 based on comparision.
+	 * 
+	 * @param version1
+	 *            The first version to be compared with.
+	 * @param version2
+	 *            The second version to be compared with.
+	 * @return -1 if version1 < version2<br>
+	 *         0 if version1 = version2 <br>
+	 *         1 if version1 > version2
+	 */
 	@Override
 	public int compare(final String version1, final String version2)
 	{
 		return compareVersions(version1, version2);
 	}
 
+	/**
+	 * Compares to version Strings and returns 1, 0, -1 based on comparision.
+	 * 
+	 * @param version1
+	 *            The first version to be compared with.
+	 * @param version2
+	 *            The second version to be compared with.
+	 * @return -1 if version1 < version2<br>
+	 *         0 if version1 = version2 <br>
+	 *         1 if version1 > version2
+	 */
 	public static int compareVersions(final String version1, final String version2)
 	{
 		final String[] split1 = version1.split("\\.");
@@ -44,11 +69,29 @@ public class VersionComparator implements Comparator<String>
 		return res;
 	}
 
+	/**
+	 * Compares to version Strings and returns 1, 0, -1 based on comparision.
+	 * 
+	 * @param version1
+	 *            The plugin to be compared with.
+	 * @param version2
+	 *            The version to be compared with.
+	 * @return -1 if version1 < version2<br>
+	 *         0 if version1 = version2 <br>
+	 *         1 if version1 > version2
+	 */
 	public static int compareVersions(final CrazyLightPluginInterface plugin, final String version)
 	{
 		return compareVersions(plugin.getVersion(), version);
 	}
 
+	/**
+	 * Converts a String to a Integer but drops every character after a none numeric one.
+	 * 
+	 * @param version
+	 *            The partial version string to be converted.
+	 * @return The version number represented by <b>version</b>
+	 */
 	private static int cleanVersion(final String version)
 	{
 		try

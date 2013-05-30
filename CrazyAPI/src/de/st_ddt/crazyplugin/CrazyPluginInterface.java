@@ -10,11 +10,20 @@ import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.Logger;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 
+/**
+ * This object represents a CrazyPlugin.
+ */
 public interface CrazyPluginInterface extends CrazyLightPluginInterface
 {
 
+	/**
+	 * @return True if this plugin has been (re-)installed.
+	 */
 	public boolean isInstalled();
 
+	/**
+	 * @return True if this plugin has been installed or updated.
+	 */
 	public boolean isUpdated();
 
 	public Logger getCrazyLogger();
@@ -63,7 +72,19 @@ public interface CrazyPluginInterface extends CrazyLightPluginInterface
 
 	public void broadcastLocaleMessage(boolean console, String[] permissions, CrazyLocale locale, Object... args);
 
+	/**
+	 * Check for updates.
+	 * 
+	 * @param force
+	 *            Force checking for updates, if false this method does nothing if executed for the second time.
+	 * @return true, if an update is available, false otherwise .
+	 */
 	public boolean checkForUpdate(boolean force);
 
+	/**
+	 * @return The latest version number available,<br>
+	 *         0 - if {@link #checkForUpdate(boolean force)} hasn't executed yet.<br>
+	 *         null - if {@link #checkForUpdate(boolean force)} caused an error.
+	 */
 	public String getUpdateVersion();
 }
