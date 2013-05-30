@@ -2,10 +2,14 @@ package de.st_ddt.crazyutil;
 
 import java.util.Comparator;
 
-import de.st_ddt.crazyplugin.CrazyPluginInterface;
+import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 
 public class VersionComparator implements Comparator<String>
 {
+
+	private VersionComparator()
+	{
+	}
 
 	@Override
 	public int compare(final String version1, final String version2)
@@ -40,60 +44,60 @@ public class VersionComparator implements Comparator<String>
 		return res;
 	}
 
-	public static int compareVersions(final CrazyPluginInterface plugin, final String version)
+	public static int compareVersions(final CrazyLightPluginInterface plugin, final String version)
 	{
 		return compareVersions(plugin.getVersion(), version);
 	}
 
-	private static int cleanVersion(final String string)
+	private static int cleanVersion(final String version)
 	{
 		try
 		{
-			return Integer.valueOf(string);
+			return Integer.valueOf(version);
 		}
 		catch (final NumberFormatException e)
 		{
-			int version = 0;
-			for (final char cha : string.toCharArray())
+			int res = 0;
+			for (final char cha : version.toCharArray())
 			{
-				version *= 10;
 				switch (cha)
 				{
 					case 0:
-						version += 0;
+						res += 0;
 						break;
 					case 1:
-						version += 1;
+						res += 1;
 						break;
 					case 2:
-						version += 2;
+						res += 2;
 						break;
 					case 3:
-						version += 3;
+						res += 3;
 						break;
 					case 4:
-						version += 4;
+						res += 4;
 						break;
 					case 5:
-						version += 5;
+						res += 5;
 						break;
 					case 6:
-						version += 6;
+						res += 6;
 						break;
 					case 7:
-						version += 7;
+						res += 7;
 						break;
 					case 8:
-						version += 8;
+						res += 8;
 						break;
 					case 9:
-						version += 9;
+						res += 9;
 						break;
 					default:
-						return version;
+						return res;
 				}
+				res *= 10;
 			}
-			return version;
+			return res;
 		}
 	}
 }
