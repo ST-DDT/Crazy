@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.ChatHelper;
 
 public class MultiParamitrisable<S> extends TypedParamitrisable<List<S>> implements InfiniteParamitrisableInterface
 {
@@ -36,5 +37,17 @@ public class MultiParamitrisable<S> extends TypedParamitrisable<List<S>> impleme
 	{
 		param.setParameter(parameter);
 		value.add(param.getValue());
+	}
+
+	@Override
+	public List<String> tab(final String parameter)
+	{
+		return param.tab(parameter);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "[" + ChatHelper.listingString(value) + "]";
 	}
 }
