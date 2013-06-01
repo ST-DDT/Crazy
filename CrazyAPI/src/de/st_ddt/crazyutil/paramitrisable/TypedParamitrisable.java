@@ -38,9 +38,9 @@ public abstract class TypedParamitrisable<S> implements TabbedParamitrisable
 	@Override
 	public String toString()
 	{
-		if (getValue() == null)
+		if (value == null)
 			return "null";
 		else
-			return getValue().toString();
+			return value.toString();
 	}
 }
