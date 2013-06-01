@@ -27,6 +27,8 @@ public interface LoginPlugin<S extends LoginData> extends CrazyPlayerDataPluginI
 
 	public Set<S> getPlayerDatasPerIP(String IP);
 
+	public Set<S> getPlayerDatasPerPartialIP(String partialIP);
+
 	public boolean isAlwaysNeedPassword();
 
 	public boolean isAutoLogoutEnabled();
