@@ -113,11 +113,17 @@ public class CrazyPlayerAssociatesEvent extends CrazyEvent
 	public void callEvent()
 	{
 		super.callEvent();
+		if (!queue.isEmpty())
+			queue.add(null);
 		while (!queue.isEmpty() && recursionDepth > 0)
 		{
 			final String name = queue.poll();
 			if (name == null)
+			{
 				recursionDepth--;
+				if (!queue.isEmpty())
+					queue.add(null);
+			}
 			else
 			{
 				final CrazyPlayerAssociatesEvent event = new CrazyPlayerAssociatesEvent(name);
