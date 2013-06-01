@@ -36,6 +36,10 @@ import de.st_ddt.crazycore.tasks.ScheduledPermissionAllTask;
 import de.st_ddt.crazyplugin.CrazyLightPlugin;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
+import de.st_ddt.crazyplugin.events.CrazyProtectedPlayerAccessEvent;
+import de.st_ddt.crazyplugin.events.CrazyProtectedPlayerIllegalAccessEvent;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionProtectedPlayerException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
@@ -386,14 +390,14 @@ public final class CrazyCore extends CrazyPlugin
 		return protectedPlayers.contains(name.toLowerCase());
 	}
 
-	public void checkProtectedPlayer(final String accessedPlayer, final CommandSender accessor, final String permission, final String plugin, final String task) throws CrazyCommandPermissionProtectedPlayerException
+	public void checkProtectedPlayer(final String accessedPlayer, final CommandSender accessor, final String permission, final String plugin, final String task) throws CrazyCommandException
 	{
 		if (accessor instanceof Player)
 			checkProtectedPlayer(accessedPlayer, (Player) accessor, permission, plugin, task);
 	}
 
 	@Localized({ "CRAZYCORE.PROTECTEDPLAYER.ACCESSWARN $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN.USER $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$", "CRAZYCORE.PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF $ProtectedPlayer$ $AccessingPlayer$ $AccessingPlayerIP$ $Plugin$ $Task$" })
-	public void checkProtectedPlayer(final String accessedPlayer, final Player accessingPlayer, final String permission, final String plugin, final String task) throws CrazyCommandPermissionProtectedPlayerException
+	public void checkProtectedPlayer(final String accessedPlayer, final Player accessingPlayer, final String permission, final String plugin, final String task) throws CrazyCommandException
 	{
 		if (isProtectedPlayer(accessedPlayer))
 		{
@@ -401,11 +405,16 @@ public final class CrazyCore extends CrazyPlugin
 			final Object[] args = new String[] { accessedPlayer, accessingPlayer.getName(), accessingPlayerIP, plugin, task };
 			if (PermissionModule.hasPermission(accessingPlayer, permission))
 			{
+				final CrazyProtectedPlayerAccessEvent event = new CrazyProtectedPlayerAccessEvent(accessedPlayer, accessingPlayer, plugin, task);
+				event.callEvent();
+				if (event.isCancelled())
+					throw new CrazyCommandPermissionException();
 				logger.log("ProtectedPlayer", accessingPlayer.getName() + " @ " + accessingPlayerIP + "accessed a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
 				broadcastLocaleMessage(true, "crazycore.protectedplayer.accesswarn", "PROTECTEDPLAYER.ACCESSWARN", args);
 			}
 			else
 			{
+				new CrazyProtectedPlayerIllegalAccessEvent(accessedPlayer, accessingPlayer, plugin, task).callEvent();
 				logger.log("ProtectedPlayer", "WARNING: " + accessingPlayer.getName() + " @ " + accessingPlayerIP + "tried to access a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
 				broadcastLocaleMessage(false, "crazycore.protectedplayer.illegalaccesswarnuser", "PROTECTEDPLAYER.ILLEGALACCESSWARN.USER", args);
 				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarnstaff", "PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF", args);
