@@ -18,6 +18,7 @@ import de.st_ddt.crazyutil.Filter;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterface> extends CrazyPlayerDataPluginCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
 {
@@ -56,6 +57,7 @@ public class CrazyPlayerDataPluginCommandPlayerList<T extends PlayerDataInterfac
 	}
 
 	@Override
+	@Permission("$CRAZYPLAYERDATAPLUGIN$.player.list")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.list");

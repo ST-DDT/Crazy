@@ -16,6 +16,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.PlayerDataParamitrisable;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterface> extends CrazyPlayerDataPluginCommandExecutor<T, CrazyPlayerDataPluginInterface<T, ? extends T>>
 {
@@ -62,6 +63,7 @@ public class CrazyPlayerDataPluginCommandPlayerInfo<T extends PlayerDataInterfac
 	}
 
 	@Override
+	@Permission({ "$CRAZYPLAYERDATAPLUGIN$.player.info.self", "$CRAZYPLAYERDATAPLUGIN$.player.info.other" })
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info.self") || PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".player.info.other");

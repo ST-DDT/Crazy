@@ -23,7 +23,7 @@ public class CrazyPluginCommandMainInfo extends CrazyPluginCommandExecutor<Crazy
 
 	@Override
 	@Permission("$CRAZYPLUGIN$.info")
-	public boolean hasAccessPermission(CommandSender sender)
+	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".info");
 	}

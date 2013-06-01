@@ -17,6 +17,7 @@ import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CrazyPluginCommandMainLogger extends CrazyPluginCommandExecutor<CrazyPluginInterface>
 {
@@ -116,6 +117,7 @@ public class CrazyPluginCommandMainLogger extends CrazyPluginCommandExecutor<Cra
 	}
 
 	@Override
+	@Permission("$CRAZYPLUGIN$.logger")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".logger");

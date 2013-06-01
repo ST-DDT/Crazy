@@ -7,6 +7,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CrazyPluginCommandMainSave extends CrazyPluginCommandExecutor<CrazyPluginInterface>
 {
@@ -27,6 +28,7 @@ public class CrazyPluginCommandMainSave extends CrazyPluginCommandExecutor<Crazy
 	}
 
 	@Override
+	@Permission("$CRAZYPLUGIN$.save")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".save");
