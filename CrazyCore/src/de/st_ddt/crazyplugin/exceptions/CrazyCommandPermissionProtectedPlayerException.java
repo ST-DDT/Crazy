@@ -27,7 +27,7 @@ public class CrazyCommandPermissionProtectedPlayerException extends CrazyCommand
 	@Override
 	public String getLangPath()
 	{
-		return super.getLangPath() + ".PERMISSION.PROTECTEDPLAYER";
+		return super.getLangPath() + ".PROTECTEDPLAYER";
 	}
 
 	@Override
