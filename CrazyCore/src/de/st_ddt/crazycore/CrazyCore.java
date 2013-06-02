@@ -416,8 +416,8 @@ public final class CrazyCore extends CrazyPlugin
 			{
 				new CrazyProtectedPlayerIllegalAccessEvent(accessedPlayer, accessingPlayer, plugin, task).callEvent();
 				logger.log("ProtectedPlayer", "WARNING: " + accessingPlayer.getName() + " @ " + accessingPlayerIP + "tried to access a protected player (" + accessedPlayer + ")", plugin + " Task: " + task);
-				broadcastLocaleMessage(false, "crazycore.protectedplayer.illegalaccesswarnuser", "PROTECTEDPLAYER.ILLEGALACCESSWARN.USER", args);
-				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarnstaff", "PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF", args);
+				broadcastLocaleMessage(false, "crazycore.protectedplayer.illegalaccesswarn.user", "PROTECTEDPLAYER.ILLEGALACCESSWARN.USER", args);
+				broadcastLocaleMessage(true, "crazycore.protectedplayer.illegalaccesswarn.staff", "PROTECTEDPLAYER.ILLEGALACCESSWARN.STAFF", args);
 				final ConsoleCommandSender console = Bukkit.getConsoleSender();
 				for (final String command : protectedPlayersIllegalAccessCommands)
 					Bukkit.dispatchCommand(console, ChatHelper.putArgs(command, args));
