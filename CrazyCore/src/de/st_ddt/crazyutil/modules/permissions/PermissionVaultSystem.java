@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.Module.Named;
 import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
@@ -71,7 +72,7 @@ class PermissionVaultSystem extends PermissionBukkitSystem
 		if (chat == null)
 			return null;
 		else
-			return chat.getPlayerPrefix(player);
+			return ChatHelper.colorise(chat.getPlayerPrefix(player));
 	}
 
 	@Override
@@ -80,7 +81,7 @@ class PermissionVaultSystem extends PermissionBukkitSystem
 		if (chat == null)
 			return null;
 		else
-			return chat.getPlayerSuffix(player);
+			return ChatHelper.colorise(chat.getPlayerSuffix(player));
 	}
 
 	@Override

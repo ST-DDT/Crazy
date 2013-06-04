@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.Module.Named;
 import de.st_ddt.crazyutil.modules.Module.PluginDepency;
 
@@ -79,7 +80,7 @@ class PermissionGroupManagerSystem implements PermissionSystem
 		if (handler == null)
 			return null;
 		else
-			return handler.getGroupPrefix(handler.getGroup(player.getName()));
+			return ChatHelper.colorise(handler.getGroupPrefix(handler.getGroup(player.getName())));
 	}
 
 	@Override
@@ -89,7 +90,7 @@ class PermissionGroupManagerSystem implements PermissionSystem
 		if (handler == null)
 			return null;
 		else
-			return handler.getGroupSuffix(handler.getGroup(player.getName()));
+			return ChatHelper.colorise(handler.getGroupSuffix(handler.getGroup(player.getName())));
 	}
 
 	@Override
