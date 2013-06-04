@@ -1,5 +1,7 @@
 package de.st_ddt.crazyloginfilter.data;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import org.bukkit.OfflinePlayer;
@@ -81,7 +83,15 @@ public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implement
 		if (!checkIP)
 			return true;
 		for (final String regex : IPs)
-			if (IP.matches(regex))
+			if (regex.startsWith("#"))
+				try
+				{
+					if (IP.substring(1).matches(InetAddress.getByName(regex).getHostAddress()))
+						return whitelistIP;
+				}
+				catch (final UnknownHostException e)
+				{}
+			else if (IP.matches(regex))
 				return whitelistIP;
 		return !whitelistIP;
 	}

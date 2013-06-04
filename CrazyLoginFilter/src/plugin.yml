@@ -1,7 +1,7 @@
 name: CrazyLoginFilter
 main: de.st_ddt.crazyloginfilter.CrazyLoginFilter
 author: ST-DDT
-version: 0.7.4
+version: 0.8
 website: http://dev.bukkit.org/server-mods/crazyloginfilter/
 # requires CrazyCore v10.5 or later
 depend: [CrazyCore]
