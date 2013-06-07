@@ -86,7 +86,7 @@ public class PlayerAccessFilter extends PlayerData<PlayerAccessFilter> implement
 			if (regex.startsWith("#"))
 				try
 				{
-					if (IP.substring(1).matches(InetAddress.getByName(regex).getHostAddress()))
+					if (IP.matches(InetAddress.getByName(regex.substring(1)).getHostAddress()))
 						return whitelistIP;
 				}
 				catch (final UnknownHostException e)
