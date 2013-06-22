@@ -55,4 +55,9 @@ public class MapParamitrisable<S> extends TypedParamitrisable<S>
 				res.add(entry);
 		return res;
 	}
+
+	public final Map<String, ? extends S> getValues()
+	{
+		return values;
+	}
 }
