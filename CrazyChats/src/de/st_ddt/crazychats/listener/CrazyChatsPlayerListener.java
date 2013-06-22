@@ -75,7 +75,7 @@ public class CrazyChatsPlayerListener implements Listener
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void PlayerJoinComplete(final PlayerJoinEvent event)
 	{
 		PlayerJoinComplete(event.getPlayer());

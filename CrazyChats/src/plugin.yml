@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.99.5
+version: 1.199
 website: http://dev.bukkit.org/server-mods/crazychats/
 # requires CrazyCore v10.5 or later
 depend: [CrazyCore]

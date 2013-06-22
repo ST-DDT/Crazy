@@ -1,5 +1,6 @@
 package de.st_ddt.crazychats.listener;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,11 +23,25 @@ public class CrazyChatsTagAPIListener implements Listener
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void PlayerNameTag(final PlayerReceiveNameTagEvent event)
 	{
-		final ChatPlayerData data = plugin.getPlayerData(event.getNamedPlayer());
-		if (data == null)
-			return;
-		final String name = data.getHeadName();
-		if (name != null)
+		final Player player = event.getNamedPlayer();
+		final String name = getCustomHeadName(player);
+		if (name == null)
+			event.setTag(getDefaultHeadName(player));
+		else
 			event.setTag(name);
+	}
+
+	private String getDefaultHeadName(final Player player)
+	{
+		return plugin.getGroupHeadnamePrefix(player) + player.getName();
+	}
+
+	private String getCustomHeadName(final Player player)
+	{
+		final ChatPlayerData data = plugin.getPlayerData(player);
+		if (data == null)
+			return null;
+		else
+			return data.getHeadName();
 	}
 }

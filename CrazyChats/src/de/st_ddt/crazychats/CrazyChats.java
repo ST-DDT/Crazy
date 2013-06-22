@@ -88,6 +88,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	private final Map<String, String> groupPrefixes = new LinkedHashMap<String, String>();
 	private final Map<String, String> groupSuffixes = new LinkedHashMap<String, String>();
 	private final Map<String, String> groupListnamePrefixes = new LinkedHashMap<String, String>();
+	private final Map<String, String> groupHeadnamePrefixes = new LinkedHashMap<String, String>();
 	private final BroadcastChannel broadcastChannel = new BroadcastChannel();
 	private final GlobalChannel globalChannel = new GlobalChannel();
 	private final Map<String, WorldChannel> worldChannels = Collections.synchronizedMap(new HashMap<String, WorldChannel>());
@@ -580,6 +581,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		else
 			for (final String key : groupSuffixConfig.getKeys(false))
 				groupSuffixes.put(key, ChatHelper.colorise(groupSuffixConfig.getString(key, "")));
+		// DefaultListnamePrefixes
 		groupListnamePrefixes.clear();
 		groupListnamePrefixes.put("nogroup", "");
 		final ConfigurationSection groupListnamePrefixConfig = config.getConfigurationSection("groupListnamePrefix");
@@ -591,6 +593,21 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		else
 			for (final String key : groupListnamePrefixConfig.getKeys(false))
 				groupListnamePrefixes.put(key, ChatHelper.colorise(groupListnamePrefixConfig.getString(key, "")));
+		// DefaultHeadnames
+		if (tagAPIenabled)
+		{
+			groupHeadnamePrefixes.clear();
+			groupHeadnamePrefixes.put("nogroup", "");
+			final ConfigurationSection groupHeadnamePrefixConfig = config.getConfigurationSection("groupHeadnamePrefix");
+			if (groupHeadnamePrefixConfig == null)
+			{
+				groupHeadnamePrefixes.put("op", "");
+				groupHeadnamePrefixes.put("default", "");
+			}
+			else
+				for (final String key : groupHeadnamePrefixConfig.getKeys(false))
+					groupHeadnamePrefixes.put(key, ChatHelper.colorise(groupHeadnamePrefixConfig.getString(key, "")));
+		}
 		newChannelID = config.getInt("newChannelID", config.getInt("newID", 0));
 		final ConfigurationSection customChannelConfig = config.getConfigurationSection("customChannels");
 		customChannels.clear();
@@ -740,6 +757,26 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 	}
 
 	public String getGroupListnamePrefix(final Player player)
+	{
+		final Set<String> groups = PermissionModule.getGroups(player);
+		if (groups == null)
+		{
+			for (final Entry<String, String> entry : groupListnamePrefixes.entrySet())
+				if (!entry.getKey().equals("nogroup"))
+					if (PermissionModule.hasGroup(player, entry.getKey()))
+						return entry.getValue();
+		}
+		else
+			for (final String group : groups)
+			{
+				final String infix = groupListnamePrefixes.get(group);
+				if (infix != null)
+					return infix;
+			}
+		return groupListnamePrefixes.get("nogroup");
+	}
+
+	public String getGroupHeadnamePrefix(final Player player)
 	{
 		final Set<String> groups = PermissionModule.getGroups(player);
 		if (groups == null)
