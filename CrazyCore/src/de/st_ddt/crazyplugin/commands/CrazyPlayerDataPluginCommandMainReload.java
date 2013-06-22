@@ -16,7 +16,7 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 	{
 
 		@Override
-		@Localized("$CRAZYPLUGIN$.COMMAND.DATABASE.RELOADED")
+		@Localized("$CRAZYPLAYERDATAPLUGIN$.COMMAND.DATABASE.RELOADED")
 		public void reload(final CommandSender sender) throws CrazyException
 		{
 			plugin.loadDatabase();
@@ -25,7 +25,7 @@ public class CrazyPlayerDataPluginCommandMainReload<T extends PlayerDataInterfac
 		}
 
 		@Override
-		@Permission("$CRAZYPLUGIN$.reload.database")
+		@Permission("$CRAZYPLAYERDATAPLUGIN$.reload.database")
 		public boolean hasAccessPermission(final CommandSender sender)
 		{
 			return PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".reload.database") || PermissionModule.hasPermission(sender, plugin.getName().toLowerCase() + ".reload.*");
