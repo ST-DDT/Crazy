@@ -44,6 +44,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionProtectedPlayerExc
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyPipe;
+import de.st_ddt.crazyutil.PreSetList;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.metrics.Metrics;
 import de.st_ddt.crazyutil.metrics.Metrics.Graph;
@@ -80,7 +81,60 @@ public final class CrazyCore extends CrazyPlugin
 	public CrazyCore()
 	{
 		super();
+		registerPreSetLists();
 		registerModes();
+	}
+
+	private void registerPreSetLists()
+	{
+		new PreSetList("core_protectedPlayersOnline")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getOnlinePlayers())
+					if (protectedPlayers.contains(player.getName()))
+						list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("core_protectedPlayers")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				return new ArrayList<String>(protectedPlayers);
+			}
+		};
+		new PreSetList("core_unprotectedPlayersOnline")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getOnlinePlayers())
+					if (!protectedPlayers.contains(player.getName()))
+						list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("core_unprotectedPlayers")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getOfflinePlayers())
+					if (!protectedPlayers.contains(player.getName()))
+						list.add(player.getName());
+				return list;
+			}
+		};
 	}
 
 	private void registerModes()
