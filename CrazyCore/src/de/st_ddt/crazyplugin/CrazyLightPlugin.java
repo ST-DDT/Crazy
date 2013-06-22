@@ -7,8 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -83,7 +85,9 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 
 	public final void consoleLog(final String message)
 	{
-		getServer().getConsoleSender().sendMessage(getChatHeader() + message);
+		final ConsoleCommandSender console = Bukkit.getConsoleSender();
+		if (console != null)
+			console.sendMessage(getChatHeader() + message);
 	}
 
 	@Override
