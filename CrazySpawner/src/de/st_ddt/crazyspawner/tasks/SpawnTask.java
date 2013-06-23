@@ -22,18 +22,20 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
-import de.st_ddt.crazyspawner.data.meta.NameMeta;
-import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
-import de.st_ddt.crazyspawner.data.options.Thunder;
+import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
+import de.st_ddt.crazyspawner.entities.meta.AlarmMeta.FixedAlarmMeta;
+import de.st_ddt.crazyspawner.entities.meta.NameMeta;
+import de.st_ddt.crazyspawner.entities.meta.NameMeta.FixedNameMeta;
+import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
+import de.st_ddt.crazyspawner.tasks.options.Thunder;
 import de.st_ddt.crazyutil.ChatConverter;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
-import de.st_ddt.crazyutil.ExtendedCreatureType;
+import de.st_ddt.crazyutil.NamedEntitySpawner;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 
 public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>, ParameterData
 {
@@ -43,7 +45,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	protected final static Random RANDOM = new Random();
 	protected final List<BukkitTask> tasks = new LinkedList<BukkitTask>();
 	protected final CrazySpawner plugin;
-	protected final ExtendedCreatureType type;
+	protected final NamedEntitySpawner type;
 	protected final Location location;
 	protected final double spawnRange;
 	protected final int amount;
@@ -115,7 +117,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param thunder
 	 *            Cast thunder (effects) when spawning a creature.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
+	public SpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
 	{
 		super();
 		this.plugin = plugin;
@@ -147,14 +149,14 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		if (alarmRange < 0)
 			this.alarm = null;
 		else
-			this.alarm = new AlarmMeta(alarmRange);
+			this.alarm = new FixedAlarmMeta(alarmRange);
 		this.health = v146OrLater ? health : -1;
 		this.showHealth = v15OrLater ? showHealth : false;
 		this.fire = Math.max(fire, -1);
 		this.thunder = thunder;
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
+	public SpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
 	{
 		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn, peaceful, alarmRange, health, showHealth, fire, thunder);
 		if (countDownTimes != null)
@@ -179,7 +181,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param creatureRange
 	 *            Search range for the given type.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final ExtendedCreatureType type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
+	public SpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
 		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false, false, -1, -1, false, -1, Thunder.EFFECT);
 	}
@@ -188,7 +190,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	{
 		super();
 		this.plugin = plugin;
-		this.type = ExtendedCreatureParamitrisable.CREATURE_TYPES.get(config.getString("type").toUpperCase());
+		this.type = NamedEntitySpawnerParamitrisable.ENTITY_TYPES.get(config.getString("type").toUpperCase());
 		this.location = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("location"), null);
 		Validate.notNull(this.type, "Type cannot be null!");
 		Validate.notNull(this.location, "Location cannot be null!");
@@ -222,7 +224,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		if (alarmRange < 0)
 			this.alarm = null;
 		else
-			this.alarm = new AlarmMeta(alarmRange);
+			this.alarm = new FixedAlarmMeta(alarmRange);
 		this.health = v146OrLater ? config.getInt("health", -1) : -1;
 		this.showHealth = v15OrLater ? config.getBoolean("showHealth", false) : false;
 		this.fire = Math.max(config.getInt("fire", -1), -1);
@@ -348,7 +350,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		if (showHealth)
 		{
 			final String name = entity.getCustomName() == null ? entity.getType().getName() : entity.getCustomName();
-			entity.setMetadata(NameMeta.METAHEADER, new NameMeta(name));
+			entity.setMetadata(NameMeta.METAHEADER, new FixedNameMeta(name));
 			entity.setCustomName(name + " (" + entity.getHealth() + ")");
 			entity.setCustomNameVisible(true);
 		}
@@ -426,7 +428,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		if (alarm == null)
 			config.set(path + "alarmRange", -1);
 		else
-			config.set(path + "alarmRange", alarm.asDouble());
+			config.set(path + "alarmRange", alarm.getAlarmRange());
 		config.set(path + "health", health);
 		config.set(path + "showHealth", showHealth);
 		config.set(path + "fire", fire);
@@ -475,7 +477,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		}
 	}
 
-	public ExtendedCreatureType getType()
+	public NamedEntitySpawner getType()
 	{
 		return type;
 	}

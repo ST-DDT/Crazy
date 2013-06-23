@@ -18,12 +18,12 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
 import de.st_ddt.crazyutil.ChatHelperExtended;
-import de.st_ddt.crazyutil.ExtendedCreatureType;
+import de.st_ddt.crazyutil.NamedEntitySpawner;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.DurationParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WorldParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
@@ -34,14 +34,14 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	private final static double DRAGONRANGE = 2500;
 	private final static double CRYSTALERANGE = 5;
 	private final static Long[] COUNTDOWNTIMES = new Long[] { 20L, 40L, 60L, 80L, 100L, 120L, 140L, 160L, 180L, 200L, 1200L, 6000L, 18000L };
-	private final ExtendedCreatureType DRAGONTYPE;
-	private final ExtendedCreatureType CRYSTALTYPE;
+	private final NamedEntitySpawner DRAGONTYPE;
+	private final NamedEntitySpawner CRYSTALTYPE;
 
 	public CommandTheEndAutoRespawn(final CrazySpawner plugin)
 	{
 		super(plugin);
-		DRAGONTYPE = ExtendedCreatureParamitrisable.getExtendedCreatureType(EntityType.ENDER_DRAGON.getName());
-		CRYSTALTYPE = ExtendedCreatureParamitrisable.getExtendedCreatureType(EntityType.ENDER_CRYSTAL.getName());
+		DRAGONTYPE = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(EntityType.ENDER_DRAGON.getName());
+		CRYSTALTYPE = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(EntityType.ENDER_CRYSTAL.getName());
 	}
 
 	@Override

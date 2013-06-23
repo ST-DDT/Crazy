@@ -1,73 +1,72 @@
-package de.st_ddt.crazyspawner.data.meta;
+package de.st_ddt.crazyspawner.entities.meta;
 
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 
-public final class AlarmMeta implements MetadataValue
+public final class PeacefulMeta implements MetadataValue
 {
 
-	public static final String METAHEADER = "AlarmMeta";
-	private final double alarmRange;
+	public final static String METAHEADER = "PeacefulMeta";
+	public final static PeacefulMeta INSTANCE = new PeacefulMeta();
 
-	public AlarmMeta(final double alarmRange)
+	private PeacefulMeta()
 	{
 		super();
-		this.alarmRange = alarmRange;
 	}
 
 	@Override
-	public Double value()
+	public Boolean value()
 	{
-		return alarmRange;
+		return Boolean.TRUE;
 	}
 
 	@Override
 	public int asInt()
 	{
-		return (int) Math.round(alarmRange);
+		return 0;
 	}
 
 	@Override
 	public float asFloat()
 	{
-		return (float) alarmRange;
+		return 0;
 	}
 
 	@Override
 	public double asDouble()
 	{
-		return alarmRange;
+		return 0;
 	}
 
 	@Override
 	public long asLong()
 	{
-		return Math.round(alarmRange);
+		return 0;
 	}
 
 	@Override
 	public short asShort()
 	{
-		return (short) Math.round(alarmRange);
+		return 0;
 	}
 
 	@Override
 	public byte asByte()
 	{
-		return (byte) Math.round(alarmRange);
+		return 0;
 	}
 
 	@Override
 	public boolean asBoolean()
 	{
-		return alarmRange > 0;
+		return true;
 	}
 
 	@Override
 	public String asString()
 	{
-		return Double.toString(alarmRange);
+		return null;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package de.st_ddt.crazyspawner.data.comparator;
+package de.st_ddt.crazyspawner.tasks.comparator;
 
 import java.util.Comparator;
 

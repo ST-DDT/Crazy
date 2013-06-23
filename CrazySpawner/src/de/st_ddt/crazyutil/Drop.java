@@ -1,13 +1,10 @@
-package de.st_ddt.crazyspawner.data.drops;
+package de.st_ddt.crazyutil;
 
 import java.util.Random;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-
-import de.st_ddt.crazyutil.ConfigurationSaveable;
-import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 
 public class Drop implements ConfigurationSaveable
 {

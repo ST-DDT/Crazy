@@ -1,0 +1,107 @@
+# CrazySpawner example Entity.yml
+# For more information visit
+# https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml
+# Custom entities have to be defined inside config.yml
+exampleEntity:
+# The Name of your creature type
+  name: String
+# The Type of your creature type
+  type: EntityType
+# Define a custom name
+  customName: Colored String
+# Show custom name as tag above creature
+  showNameAboveHead: boolean (true/false)
+# Show health
+# Almost useless if showNameAboveHead is disabled
+  showHealth: boolean (true/false)
+# Spawn with additional/custom health
+  maxHealth: int (-1 = default)
+# Spawn with persistent potion effects
+  potionEffects:
+    PotionEffectType1: int
+    PotionEffectType2: int
+    PotionEffectTypeX: int
+# minimum/maximum xp dropped on death
+  minXP: int (-1 = default)
+  maxXP: int (-1 = default)
+  equipment:
+# Spawn with boots
+    boots: Item
+    bootsDropChance: float (0-1)
+# Spawn with leggings
+    leggings: Item
+    leggingsDropChance: float (0-1)
+# Spawn with chestplate
+    chestplate: Item
+    chestplateDropChance: float (0-1)
+# Spawn with helmet
+    helmet: Item
+    helmetDropChance: float (0-1)
+# Spawn with item in hand (ex: sword)
+    itemInHand: Item
+    itemInHandDropChance: float (0-1)
+# Overwrites ALL drops, including armor and weapon.
+# Use this to drop nothing
+# drops: {}
+# Remove the drops section to use default drops.
+# Use this for custom drops
+    drops:
+      d1:
+        item: Item
+        chance: float (0-1)
+      d2:
+        item: Item
+        chance: float (0-1)
+      dX:
+        item: Item
+        chance: float (0-1)
+    allowItemPickUp: Boolean (true/false/default)
+# minimum/maximum damage dealt
+  minDamage: int (-1 = default)
+  maxDamage: int (-1 = default)
+# remove the peaceful status from all entities within range
+  alarmRange: int (-1=default)
+# do not attack other entities if they aren't within range
+  detectionRange: int (-1=default)
+# Set entity on fire for x ticks
+  burning: int (-1 = default)
+# Spawn with passenger
+# This can be all types listed in "/cms creature:" command
+# If you are using a custom creature here you have to define it before that entry.
+  passenger: NamedEntitySpawner
+# Allow despawning (Animals default to false, Monsters default to true)
+  allowDespawn: Boolean (true/false/default)
+# Spawn as baby (Animals, Villager and Zombie)
+  baby: boolean (true/false)
+# Spawn with saddle (Pig)
+  saddle: boolean (true/false)
+# Set things on fire (Explosive)
+  incendary: boolean (true/false)
+# Explosion range (Explosive)
+  yield: float (0.0-x.y)
+# Spawn as PoweredCreeper (Creeper)
+  powered: boolean (true/false)
+# Spawn with custom size (Slime + Magma_Cube)
+  size: int (1-x)
+# Spawn as colored (Colorable (Sheep) and Wolf (Collar))
+  color: DyeColor
+# Spawn as shorn sheep (Sheep)
+  sheared: boolean (true/false)
+# Spawn with carried material (Enderman)
+  carriedMaterial: Material
+# Select a skeleton type (Skeleton)
+  skeletonType: SkeletonType
+# Select a profession (Villager)
+  profession: Profession
+# Spawn agressive  (Wolf + Pig_Zombie)
+  angry: boolean (true/false)
+# Spawn as Zombievillager (Zombie)
+  villager: boolean (true/false)
+# Select a cat type (Ocelot)
+  catType: CatType
+# Spawn a sitting pet (Wolf + Ocelot/Cat)
+  sitting: boolean (true/false)
+# Spawn as tamed pet owned by player (Tameable (Wolf + Ocelot/Cat))
+  tamer: Player
+# Spawn as tamed pet (Tameable (Wolf + Ocelot/Cat))
+  tamed: boolean (true/false)

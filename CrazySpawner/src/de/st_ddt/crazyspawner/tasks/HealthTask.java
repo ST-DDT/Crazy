@@ -9,7 +9,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.meta.NameMeta;
+import de.st_ddt.crazyspawner.entities.meta.NameMeta;
 
 public class HealthTask implements Runnable
 {

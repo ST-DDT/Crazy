@@ -12,21 +12,18 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.entity.Skeleton.SkeletonType;
+import org.bukkit.entity.Villager.Profession;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffectType;
 
@@ -40,19 +37,15 @@ import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.commands.CommandSpawnList;
 import de.st_ddt.crazyspawner.commands.CommandSpawnRemove;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
-import de.st_ddt.crazyspawner.data.CustomCreature;
-import de.st_ddt.crazyspawner.data.CustomCreature_1_4_5;
-import de.st_ddt.crazyspawner.data.CustomCreature_1_4_6;
-import de.st_ddt.crazyspawner.data.CustomCreature_1_5;
-import de.st_ddt.crazyspawner.data.drops.Drop;
-import de.st_ddt.crazyspawner.data.options.Thunder;
+import de.st_ddt.crazyspawner.entities.CustomEntitySpawner;
 import de.st_ddt.crazyspawner.listener.CreatureListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.options.Thunder;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.CrazyPipe;
-import de.st_ddt.crazyutil.ExtendedCreatureType;
+import de.st_ddt.crazyutil.NamedEntitySpawner;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.metrics.Metrics;
 import de.st_ddt.crazyutil.metrics.Metrics.Graph;
@@ -61,8 +54,8 @@ import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modes.DoubleMode;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.EnumParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
@@ -74,7 +67,8 @@ public class CrazySpawner extends CrazyPlugin
 	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
 	protected final static boolean v15OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5") >= 0;
 	private static CrazySpawner plugin;
-	protected final Set<CustomCreature> creatures = new LinkedHashSet<CustomCreature>();
+	protected final Set<CustomEntitySpawner> customEntities = new LinkedHashSet<CustomEntitySpawner>();
+	protected final CustomEntitySpawner[] overwriteEntities = new CustomEntitySpawner[EntityType.values().length];
 	protected final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
 	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 	protected double defaultAlarmRange;
@@ -158,7 +152,7 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this, creatureSelection), this);
-		pm.registerEvents(new CreatureListener(this), this);
+		pm.registerEvents(new CreatureListener(this, overwriteEntities), this);
 	}
 
 	private void registerCommands()
@@ -181,13 +175,13 @@ public class CrazySpawner extends CrazyPlugin
 		{
 			final Metrics metrics = new Metrics(this);
 			final Graph pluginStats = metrics.createGraph("Plugin stats");
-			pluginStats.addPlotter(new Plotter("CustomCreatures")
+			pluginStats.addPlotter(new Plotter("CustomEntities")
 			{
 
 				@Override
 				public int getValue()
 				{
-					return creatures.size();
+					return customEntities.size();
 				}
 			});
 			pluginStats.addPlotter(new Plotter("SpawnTasks")
@@ -199,17 +193,17 @@ public class CrazySpawner extends CrazyPlugin
 					return tasks.size();
 				}
 			});
-			final Graph creatureCount = metrics.createGraph("Custom creatures");
+			final Graph customEntityCount = metrics.createGraph("Custom Entities");
 			for (final EntityType type : CreatureParamitrisable.CREATURE_TYPES)
-				creatureCount.addPlotter(new Plotter(type.getName())
+				customEntityCount.addPlotter(new Plotter(type.getName())
 				{
 
 					@Override
 					public int getValue()
 					{
 						int i = 0;
-						for (final CustomCreature creature : creatures)
-							if (creature.getType() == type)
+						for (final CustomEntitySpawner customEntity : customEntities)
+							if (customEntity.getType() == type)
 								i++;
 						return i;
 					}
@@ -233,7 +227,6 @@ public class CrazySpawner extends CrazyPlugin
 	@Localized("CRAZYSPAWNER.CREATURES.AVAILABLE $Count$")
 	public void onEnable()
 	{
-		registerEnderCrystalType();
 		registerHooks();
 		super.onEnable();
 		if (isUpdated)
@@ -243,96 +236,97 @@ public class CrazySpawner extends CrazyPlugin
 			{
 				// DefaultCreatures
 				// - Spider_Skeleton
-				final CustomCreature spiderSkeleton = new CustomCreature_1_4_5("Spider_Skeleton", EntityType.SPIDER, "SKELETON");
-				creatures.add(spiderSkeleton);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderSkeleton);
+				final CustomEntitySpawner spiderSkeleton = new CustomEntitySpawner("Spider_Skeleton", EntityType.SPIDER, "passenger:SKELETON");
+				customEntities.add(spiderSkeleton);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderSkeleton);
 				// - Zombie_Skeleton
-				final CustomCreature spiderZombie = new CustomCreature_1_4_5("Spider_Zombie", EntityType.SPIDER, "ZOMBIE");
-				creatures.add(spiderZombie);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderZombie);
+				final CustomEntitySpawner spiderZombie = new CustomEntitySpawner("Spider_Zombie", EntityType.SPIDER, "ZOMBIE");
+				customEntities.add(spiderZombie);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderZombie);
 				// - Diamont_Zombie
-				final CustomCreature diamondZombie = new CustomCreature_1_4_5("Diamont_Zombie", EntityType.ZOMBIE, null, -1, -1, new ItemStack(Material.DIAMOND_BOOTS), 0.01F, new ItemStack(Material.DIAMOND_LEGGINGS), 0.01F, new ItemStack(Material.DIAMOND_CHESTPLATE), 0.01F, new ItemStack(Material.DIAMOND_HELMET), 0.01F, new ItemStack(Material.DIAMOND_SWORD), 0.01F, -1, -1);
-				creatures.add(diamondZombie);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(diamondZombie);
+				final CustomEntitySpawner diamondZombie = new CustomEntitySpawner("Diamont_Zombie", EntityType.ZOMBIE, "boots:DIAMOND_BOOTS", "bootsdropchance:0.01", "leggings:DIAMOND_LEGGINGS", "leggingsdropchance:0.01", "chestplate:DIAMOND_CHESTPLATE", "chestplatedropchance:0.01", "helmet:DIAMOND_HELMET", "helmetdropchance:0.01", "iteminhand:DIAMOND_SWORD", "iteminhanddropchance:0.01");
+				customEntities.add(diamondZombie);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(diamondZombie);
 				// - Giant
-				final CustomCreature giant = new CustomCreature_1_4_5("Giant", EntityType.GIANT);
-				creatures.add(giant);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(giant);
+				final CustomEntitySpawner giant = new CustomEntitySpawner("Giant", EntityType.GIANT);
+				customEntities.add(giant);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(giant);
 				// - Healthy_Giant
 				if (v146OrLater)
 				{
-					final CustomCreature healthyGiant = new CustomCreature_1_4_6("Healthy_Giant", EntityType.GIANT, 200);
-					creatures.add(healthyGiant);
-					ExtendedCreatureParamitrisable.registerExtendedEntityType(healthyGiant);
+					final CustomEntitySpawner healthyGiant = new CustomEntitySpawner("Healthy_Giant", EntityType.GIANT, "maxhealth:200");
+					customEntities.add(healthyGiant);
+					NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyGiant);
 				}
 				// - Spider_Diamont_Zombie
-				final CustomCreature spiderDiamondZombie = new CustomCreature_1_4_5("Spider_Diamont_Zombie", EntityType.SPIDER, diamondZombie);
-				creatures.add(spiderDiamondZombie);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(spiderDiamondZombie);
+				final CustomEntitySpawner spiderDiamondZombie = new CustomEntitySpawner("Spider_Diamont_Zombie", EntityType.SPIDER, "passenger:Diamont_Zombie");
+				customEntities.add(spiderDiamondZombie);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderDiamondZombie);
 				saveConfiguration();
 			}
-			if (VersionComparator.compareVersions(previousVersion, "3.11") == -1)
-			{
-				// - Speedy_Baby_Zombie
-				final Map<PotionEffectType, Integer> potions = new HashMap<PotionEffectType, Integer>();
-				potions.put(PotionEffectType.SPEED, 5);
-				final CustomCreature speedyZombie = new CustomCreature_1_4_5("Speedy_Baby_Zombie", EntityType.ZOMBIE, true, false, false, false, null, 0, false, false, (OfflinePlayer) null, potions);
-				creatures.add(speedyZombie);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(speedyZombie);
-				saveConfiguration();
-			}
+			// EDIT readd this
+			// if (VersionComparator.compareVersions(previousVersion, "3.11") == -1)
+			// {
+			// // - Speedy_Baby_Zombie
+			// final Map<PotionEffectType, Integer> potions = new HashMap<PotionEffectType, Integer>();
+			// potions.put(PotionEffectType.SPEED, 5);
+			// final ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+			// boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+			// final LeatherArmorMeta meta = (LeatherArmorMeta) boots.getItemMeta();
+			// meta.setColor(Color.RED);
+			// boots.setItemMeta(meta);
+			// final CustomEntitySpawner speedyZombie = null;// new CustomEntity("Speedy_Baby_Zombie", EntityType.ZOMBIE, "baby:true", boots, "bootsdropchance:0.5", potions);
+			// customEntities.add(speedyZombie);
+			// NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(speedyZombie);
+			// saveConfiguration();
+			// }
 			if (VersionComparator.compareVersions(previousVersion, "3.11.1") == -1)
 			{
 				getConfig().set("example", null);
 				saveConfiguration();
 			}
-			if (VersionComparator.compareVersions(previousVersion, "3.15") == -1)
-			{
-				// - Healthy_Diamont_Zombie
-				final ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS);
-				final ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
-				final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
-				chestplate.setDurability((short) 3);
-				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
-				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
-				chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
-				if (v146OrLater)
-					chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
-				final ItemMeta meta = chestplate.getItemMeta();
-				meta.setDisplayName("Holy Chestplate of the Goddes");
-				final List<String> lore = new ArrayList<String>();
-				lore.add("Blessed by the goddess kiss");
-				lore.add("Manufactured by the best dwarfs known");
-				meta.setLore(lore);
-				chestplate.setItemMeta(meta);
-				final ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
-				final ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
-				final List<Drop> drops = new ArrayList<Drop>();
-				drops.add(new Drop(new ItemStack(Material.DIAMOND, 2), 0.5F));
-				drops.add(new Drop(new ItemStack(Material.DIAMOND, 3), 0.5F));
-				drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 2), 0.5F));
-				drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 3), 0.5F));
-				drops.add(new Drop(new ItemStack(Material.EMERALD, 2), 0.5F));
-				drops.add(new Drop(boots, 1F));
-				drops.add(new Drop(leggings, 1F));
-				drops.add(new Drop(chestplate, 1F));
-				drops.add(new Drop(helmet, 1F));
-				drops.add(new Drop(sword, 1F));
-				final CustomCreature healthyDiamondZombie;
-				if (v15OrLater)
-					healthyDiamondZombie = new CustomCreature_1_5("Healthy_Diamont_Zombie", EntityType.ZOMBIE, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, 3, 7, 100, ChatColor.AQUA + "Diamond_Zombie", true);
-				else if (v146OrLater)
-					healthyDiamondZombie = new CustomCreature_1_4_6("Healthy_Diamont_Zombie", EntityType.ZOMBIE, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, 3, 7, 100);
-				else
-					healthyDiamondZombie = new CustomCreature_1_4_5("Healthy_Diamont_Zombie", EntityType.ZOMBIE, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, 3, 7);
-				creatures.add(healthyDiamondZombie);
-				ExtendedCreatureParamitrisable.registerExtendedEntityType(healthyDiamondZombie);
-				saveConfiguration();
-			}
+			// EDIT readd this
+			// if (VersionComparator.compareVersions(previousVersion, "3.15") == -1)
+			// {
+			// // - Healthy_Diamont_Zombie
+			// final ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS);
+			// final ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
+			// final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
+			// chestplate.setDurability((short) 3);
+			// chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
+			// chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
+			// chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
+			// if (v146OrLater)
+			// chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
+			// final ItemMeta meta = chestplate.getItemMeta();
+			// meta.setDisplayName("Holy Chestplate of the Goddes");
+			// final List<String> lore = new ArrayList<String>();
+			// lore.add(ChatColor.RED + "Blessed by the goddess kiss");
+			// lore.add("Manufactured by the best dwarfs known");
+			// meta.setLore(lore);
+			// chestplate.setItemMeta(meta);
+			// final ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
+			// final ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
+			// final List<Drop> drops = new ArrayList<Drop>();
+			// drops.add(new Drop(new ItemStack(Material.DIAMOND, 2), 0.5F));
+			// drops.add(new Drop(new ItemStack(Material.DIAMOND, 3), 0.5F));
+			// drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 2), 0.5F));
+			// drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 3), 0.5F));
+			// drops.add(new Drop(new ItemStack(Material.EMERALD, 2), 0.5F));
+			// drops.add(new Drop(boots, 1F));
+			// drops.add(new Drop(leggings, 1F));
+			// drops.add(new Drop(chestplate, 1F));
+			// drops.add(new Drop(helmet, 1F));
+			// drops.add(new Drop(sword, 1F));
+			// final CustomEntitySpawner healthyDiamondZombie = null;// new CustomEntity("Healthy_Diamont_Zombie", EntityType.ZOMBIE, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, 3, 7, 100, ChatColor.AQUA + "Diamond_Zombie", true);
+			// customEntities.add(healthyDiamondZombie);
+			// NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyDiamondZombie);
+			// saveConfiguration();
+			// }
 		}
 		registerCommands();
 		registerMetrics();
-		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), ExtendedCreatureParamitrisable.CREATURE_TYPES.size());
+		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), NamedEntitySpawnerParamitrisable.ENTITY_TYPES.size());
 	}
 
 	private void saveExamples()
@@ -340,21 +334,22 @@ public class CrazySpawner extends CrazyPlugin
 		final File exampleFolder = new File(getDataFolder(), "example");
 		exampleFolder.mkdirs();
 		// ExampleCreature
-		final YamlConfiguration creature = new YamlConfiguration();
-		creature.options().header("CrazySpawner example Creature.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Creature.yml\n" + "Custom creatures have to be defined inside config.yml");
-		CustomCreature_1_4_5.dummySave(creature, "exampleCreature.");
+		final YamlConfiguration customEntity = new YamlConfiguration();
+		customEntity.options().header("CrazySpawner example Entity.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
+		for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
+			new CustomEntitySpawner(type).dummySave(customEntity, "exampleEntity.");
 		try
 		{
-			creature.save(new File(exampleFolder, "Creature.yml"));
+			customEntity.save(new File(exampleFolder, "Entity.yml"));
 		}
 		catch (final IOException e)
 		{
-			System.err.println("[CrazySpawner] Could not save example Creature.yml.");
+			System.err.println("[CrazySpawner] Could not save example Entity.yml.");
 			System.err.println(e.getMessage());
 		}
 		// ExampleType
 		final YamlConfiguration entityTypes = new YamlConfiguration();
-		entityTypes.set("exampleEntityType", CreatureParamitrisable.CREATURE_NAMES);
+		entityTypes.set("exampleEntityType", EnumParamitrisable.getEnumNames(CustomEntitySpawner.getSpawnableEntityTypes()));
 		try
 		{
 			entityTypes.save(new File(exampleFolder, "EntityType.yml"));
@@ -364,16 +359,16 @@ public class CrazySpawner extends CrazyPlugin
 			System.err.println("[CrazySpawner] Could not save example EntityType.yml.");
 			System.err.println(e.getMessage());
 		}
-		// ExampleCustomType
+		// CustomEntityNames
 		final YamlConfiguration customTypes = new YamlConfiguration();
-		customTypes.set("exampleCustomCreatureType", new ArrayList<String>(ExtendedCreatureParamitrisable.CREATURE_TYPES.keySet()));
+		customTypes.set("exampleCustomEntityNames", new ArrayList<String>(NamedEntitySpawnerParamitrisable.ENTITY_TYPES.keySet()));
 		try
 		{
-			customTypes.save(new File(exampleFolder, "CustomCreatureType.yml"));
+			customTypes.save(new File(exampleFolder, "CustomEntityNames.yml"));
 		}
 		catch (final IOException e)
 		{
-			System.err.println("[CrazySpawner] Could not save example CustomCreatureType.yml.");
+			System.err.println("[CrazySpawner] Could not save example CustomEntityNames.yml.");
 			System.err.println(e.getMessage());
 		}
 		// ExampleColor
@@ -388,9 +383,57 @@ public class CrazySpawner extends CrazyPlugin
 			System.err.println("[CrazySpawner] Could not save example DyeColor.yml.");
 			System.err.println(e.getMessage());
 		}
+		// ExampleMaterial
+		final YamlConfiguration material = new YamlConfiguration();
+		material.set("exampleMaterial", EnumParamitrisable.getEnumNames(Material.values()).toArray());
+		try
+		{
+			material.save(new File(exampleFolder, "Material.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example Material.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleProfession
+		final YamlConfiguration professions = new YamlConfiguration();
+		professions.set("exampleProfession", EnumParamitrisable.getEnumNames(Profession.values()).toArray());
+		try
+		{
+			professions.save(new File(exampleFolder, "Profession.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example Profession.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleCatType
+		final YamlConfiguration catTypes = new YamlConfiguration();
+		catTypes.set("exampleCatType", EnumParamitrisable.getEnumNames(Ocelot.Type.values()).toArray());
+		try
+		{
+			catTypes.save(new File(exampleFolder, "CatType.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example CatType.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleSkeletonType
+		final YamlConfiguration skeletonType = new YamlConfiguration();
+		skeletonType.set("exampleSkeletonType", EnumParamitrisable.getEnumNames(SkeletonType.values()).toArray());
+		try
+		{
+			skeletonType.save(new File(exampleFolder, "SkeletonType.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example SkeletonType.yml.");
+			System.err.println(e.getMessage());
+		}
 		// ExampleItem
 		final YamlConfiguration item = new YamlConfiguration();
-		item.options().header("CrazySpawner example Item.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Item.yml\n" + "Items have to be defined inside config.yml (in the custom creature inventory slots)");
+		item.options().header("CrazySpawner example Item.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Item.yml\n" + "Items have to be defined inside config.yml (in the custom customEntity inventory slots)");
 		item.set("exampleItem.type", "Material");
 		item.set("exampleItem.damage", "short (0 (full) - 528 (broken, upper limit may differ (mostly below)))");
 		item.set("exampleItem.amount", "int (1-64)");
@@ -456,82 +499,51 @@ public class CrazySpawner extends CrazyPlugin
 		}
 	}
 
-	private void registerEnderCrystalType()
-	{
-		ExtendedCreatureParamitrisable.registerExtendedEntityType(new ExtendedCreatureType()
-		{
-
-			@Override
-			public String getName()
-			{
-				return "ENDER_CRYSTAL";
-			}
-
-			@Override
-			public EntityType getType()
-			{
-				return EntityType.ENDER_CRYSTAL;
-			}
-
-			@Override
-			public Entity spawn(final Location location)
-			{
-				if (location.getChunk().isLoaded())
-				{
-					location.setX(Math.floor(location.getX()) + 0.5);
-					location.setY(Math.floor(location.getY()));
-					location.setZ(Math.floor(location.getZ()) + 0.5);
-					location.setYaw(0);
-					location.setPitch(0);
-					location.clone().add(0, 1, 0).getBlock().setType(Material.FIRE);
-					location.getBlock().setType(Material.BEDROCK);
-					return location.getWorld().spawnEntity(location, EntityType.ENDER_CRYSTAL);
-				}
-				else
-					return null;
-			}
-
-			@Override
-			public Collection<? extends Entity> getEntities(final World world)
-			{
-				return world.getEntitiesByClass(EntityType.ENDER_CRYSTAL.getEntityClass());
-			}
-
-			@Override
-			public String toString()
-			{
-				return getName();
-			}
-		}, "DRAGON_CRYSTAL", "HEAL_CRYSTAL", "ENDERCRYSTAL");
-	}
-
 	@Override
 	@Localized("CRAZYSPAWNER.CREATURES.LOADED $Count$")
 	public void loadConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		creatures.clear();
-		final ConfigurationSection creatureConfig = config.getConfigurationSection("creatures");
-		if (creatureConfig != null)
-			for (final String key : creatureConfig.getKeys(false))
+		// CustomEntities
+		customEntities.clear();
+		final ConfigurationSection customEntityConfig = config.getConfigurationSection("customEntities");
+		if (customEntityConfig != null)
+			for (final String key : customEntityConfig.getKeys(false))
 				try
 				{
-					final CustomCreature creature;
-					if (v15OrLater)
-						creature = new CustomCreature_1_5(creatureConfig.getConfigurationSection(key));
-					else if (v146OrLater)
-						creature = new CustomCreature_1_4_6(creatureConfig.getConfigurationSection(key));
-					else
-						creature = new CustomCreature_1_4_5(creatureConfig.getConfigurationSection(key));
-					creatures.add(creature);
-					ExtendedCreatureParamitrisable.registerExtendedEntityType(creature);
+					final CustomEntitySpawner customEntity = new CustomEntitySpawner(customEntityConfig.getConfigurationSection(key));
+					customEntities.add(customEntity);
+					NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity);
 				}
 				catch (final IllegalArgumentException e)
 				{
-					System.err.println("Could not load creature " + key);
+					System.err.println("Could not load customEntity " + key);
 					System.err.println(e.getMessage());
 				}
-		sendLocaleMessage("CREATURES.LOADED", Bukkit.getConsoleSender(), creatures.size());
+		sendLocaleMessage("CREATURES.LOADED", Bukkit.getConsoleSender(), customEntities.size());
+		// OverwriteEntities
+		for (final EntityType type : EntityType.values())
+			if (type.getEntityClass() != null && LivingEntity.class.isAssignableFrom(type.getEntityClass()))
+			{
+				final NamedEntitySpawner spawner = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(config.getString("overwriteEntities." + type.name(), null));
+				if (spawner == null)
+					overwriteEntities[type.ordinal()] = null;
+				else if (spawner.getType() == type)
+					if (spawner instanceof CustomEntitySpawner)
+						overwriteEntities[type.ordinal()] = (CustomEntitySpawner) spawner;
+					else
+					{
+						System.err.println("Could not use " + spawner.getName() + " to overwrite default " + type.name() + " entities (Only custom entities allowed)!");
+						overwriteEntities[type.ordinal()] = null;
+					}
+				else
+				{
+					System.err.println("Could not use " + spawner.getName() + " to overwrite default " + type.name() + " entities (Wrong EntityType)!");
+					overwriteEntities[type.ordinal()] = null;
+				}
+			}
+			else
+				overwriteEntities[type.ordinal()] = null;
 		for (final SpawnTask task : tasks)
 			task.cancel();
 		tasks.clear();
@@ -556,13 +568,22 @@ public class CrazySpawner extends CrazyPlugin
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		if (creatures.size() == 0)
-			config.set("creatures", new HashMap<String, Object>(0));
+		if (customEntities.size() == 0)
+			config.set("customEntities", new HashMap<String, Object>(0));
 		else
 		{
-			config.set("creatures", null);
-			for (final CustomCreature creature : creatures)
-				creature.save(config, "creatures." + creature.getName() + ".");
+			config.set("customEntities", null);
+			for (final CustomEntitySpawner customEntity : customEntities)
+				customEntity.save(config, "customEntities." + customEntity.getName() + ".");
+		}
+		// OverwriteEntities
+		for (final EntityType type : EntityType.values())
+		{
+			final NamedEntitySpawner spawner = overwriteEntities[type.ordinal()];
+			if (spawner == null)
+				config.set("overwriteEntities." + type.name(), null);
+			else
+				config.set("overwriteEntities." + type.name(), spawner.getName());
 		}
 		if (tasks.size() == 0)
 			config.set("tasks", new HashMap<String, Object>(0));
@@ -578,21 +599,21 @@ public class CrazySpawner extends CrazyPlugin
 		super.saveConfiguration();
 	}
 
-	public void addCustomCreature(final CustomCreature creature)
+	public void addCustomEntity(final CustomEntitySpawner customEntity, final String... aliases)
 	{
-		creatures.add(creature);
-		ExtendedCreatureParamitrisable.registerExtendedEntityType(creature);
+		customEntities.add(customEntity);
+		NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity, aliases);
 		saveConfiguration();
 	}
 
-	public Set<CustomCreature> getCreatures()
+	public Set<CustomEntitySpawner> getCreatures()
 	{
-		return creatures;
+		return customEntities;
 	}
 
-	public void removeCustomCreature(final CustomCreature creature)
+	public void removeCustomEntity(final CustomEntitySpawner customEntity)
 	{
-		creatures.remove(creature);
+		customEntities.remove(customEntity);
 		saveConfiguration();
 	}
 

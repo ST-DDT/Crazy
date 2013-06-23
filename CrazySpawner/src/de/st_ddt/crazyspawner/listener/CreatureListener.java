@@ -2,6 +2,7 @@ package de.st_ddt.crazyspawner.listener;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -10,6 +11,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -18,12 +20,13 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.CustomCreature.CustomDamage;
-import de.st_ddt.crazyspawner.data.CustomCreature.CustomDrops;
-import de.st_ddt.crazyspawner.data.CustomCreature.CustomXP;
-import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
-import de.st_ddt.crazyspawner.data.meta.NameMeta;
-import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
+import de.st_ddt.crazyspawner.entities.CustomEntitySpawner;
+import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
+import de.st_ddt.crazyspawner.entities.meta.CustomDamage;
+import de.st_ddt.crazyspawner.entities.meta.CustomDrops;
+import de.st_ddt.crazyspawner.entities.meta.CustomXP;
+import de.st_ddt.crazyspawner.entities.meta.NameMeta;
+import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.tasks.HealthTask;
 
 public class CreatureListener implements Listener
@@ -31,12 +34,38 @@ public class CreatureListener implements Listener
 
 	private final CrazySpawner plugin;
 	private final HealthTask health;
+	private final CustomEntitySpawner[] overwriteEntities;
 
-	public CreatureListener(final CrazySpawner plugin)
+	public CreatureListener(final CrazySpawner plugin, final CustomEntitySpawner[] overwriteEntities)
 	{
 		super();
 		this.plugin = plugin;
 		this.health = new HealthTask(plugin);
+		this.overwriteEntities = overwriteEntities;
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void CreatureSpawn(final CreatureSpawnEvent event)
+	{
+		final LivingEntity living = event.getEntity();
+		final CustomEntitySpawner spawner = overwriteEntities[living.getType().ordinal()];
+		if (spawner == null)
+			return;
+		else
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					if (!living.isValid())
+						return;
+					else if (living.hasMetadata(CustomEntitySpawner.METAHEADER))
+						return;
+					else
+						spawner.apply(living);
+				}
+			});
 	}
 
 	@EventHandler(ignoreCancelled = true)

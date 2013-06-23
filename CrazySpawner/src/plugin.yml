@@ -1,7 +1,7 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-version: 3.15.2
+version: 4
 website: http://dev.bukkit.org/server-mods/crazyspawner/
 # requires CrazyCore v10.5 or later
 depend: [CrazyCore]

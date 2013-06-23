@@ -1,4 +1,4 @@
-package de.st_ddt.crazyspawner.data.options;
+package de.st_ddt.crazyspawner.tasks.options;
 
 import org.bukkit.Location;
 

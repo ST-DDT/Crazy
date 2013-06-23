@@ -20,8 +20,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.data.meta.AlarmMeta;
-import de.st_ddt.crazyspawner.data.meta.PeacefulMeta;
+import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
+import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
 import de.st_ddt.crazyutil.source.Localized;
 
 public class PlayerListener implements Listener

@@ -1,4 +1,4 @@
-package de.st_ddt.crazyspawner.data.options;
+package de.st_ddt.crazyspawner.tasks.options;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,8 +10,8 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyspawner.data.comparator.SpawnTaskRangeComparator;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.comparator.SpawnTaskRangeComparator;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Filter;
 import de.st_ddt.crazyutil.FilterInterface;
@@ -20,15 +20,15 @@ import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.ExtendedCreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
 public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 {
 
 	private final CreatureParamitrisable creature = new CreatureParamitrisable(null);
-	private final ExtendedCreatureParamitrisable type = new ExtendedCreatureParamitrisable();
+	private final NamedEntitySpawnerParamitrisable type = new NamedEntitySpawnerParamitrisable();
 	private final LocationParamitrisable location;
 	private final DoubleParamitrisable range;
 	private final SpawnTaskRangeComparator rangeSort;
