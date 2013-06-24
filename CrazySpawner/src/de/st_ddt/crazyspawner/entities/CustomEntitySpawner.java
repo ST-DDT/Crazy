@@ -362,7 +362,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 	public Collection<? extends Entity> getEntities(final World world)
 	{
 		// TODO Automatisch generierter Methodenstub
-		return null;
+		return world.getEntitiesByClass(type.getEntityClass());
 	}
 
 	public final StringParamitrisable getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
