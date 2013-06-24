@@ -212,18 +212,19 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 		params.put("handdropchance", iteminhandDropChanceParam);
 		params.put("iteminhanddropchance", iteminhandDropChanceParam);
 		int count = 0;
-		for (final Drop drop : drops)
-		{
-			count++;
-			final ItemStackParamitrisable dropParam = PlayerItemStackParamitrisable.getParamitrisableFor(drop.getItem(), sender);
-			params.put("d" + count, dropParam);
-			params.put("drop" + count, dropParam);
-			final DoubleParamitrisable dropDropChanceParam = new DoubleParamitrisable(drop.getChance());
-			params.put("d" + count + "dc", dropDropChanceParam);
-			params.put("drop" + count + "dc", dropDropChanceParam);
-			params.put("d" + count + "dropchance", dropDropChanceParam);
-			params.put("drop" + count + "dropchance", dropDropChanceParam);
-		}
+		if (drops != null)
+			for (final Drop drop : drops)
+			{
+				count++;
+				final ItemStackParamitrisable dropParam = PlayerItemStackParamitrisable.getParamitrisableFor(drop.getItem(), sender);
+				params.put("d" + count, dropParam);
+				params.put("drop" + count, dropParam);
+				final DoubleParamitrisable dropDropChanceParam = new DoubleParamitrisable(drop.getChance());
+				params.put("d" + count + "dc", dropDropChanceParam);
+				params.put("drop" + count + "dc", dropDropChanceParam);
+				params.put("d" + count + "dropchance", dropDropChanceParam);
+				params.put("drop" + count + "dropchance", dropDropChanceParam);
+			}
 		count++;
 		final ItemStackParamitrisable dropParam = PlayerItemStackParamitrisable.getParamitrisableFor(null, sender);
 		params.put("d" + count, dropParam);
