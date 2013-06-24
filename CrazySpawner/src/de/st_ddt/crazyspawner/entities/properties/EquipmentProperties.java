@@ -15,7 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import de.st_ddt.crazyspawner.entities.meta.CustomDrops;
 import de.st_ddt.crazyutil.Drop;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
+import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.ItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.PlayerItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 
 public final class EquipmentProperties extends MetadataProperty implements CustomDrops
@@ -90,9 +94,42 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 
 	public EquipmentProperties(final Map<String, ? extends Paramitrisable> params)
 	{
-		// super(params);
-		this();
-		// EDIT Implementiere Konstruktor von EquipmentProperties
+		super(params);
+		final ItemStackParamitrisable bootsParam = (ItemStackParamitrisable) params.get("boots");
+		this.boots = bootsParam.getValue();
+		final DoubleParamitrisable bootsDropChanceParam = (DoubleParamitrisable) params.get("bootsdropchance");
+		this.bootsDropChance = bootsDropChanceParam.getValue().floatValue();
+		final ItemStackParamitrisable leggingsParam = (ItemStackParamitrisable) params.get("leggings");
+		this.leggings = leggingsParam.getValue();
+		final DoubleParamitrisable leggingsDropChanceParam = (DoubleParamitrisable) params.get("leggingsdropchance");
+		this.leggingsDropChance = leggingsDropChanceParam.getValue().floatValue();
+		final ItemStackParamitrisable chestplateParam = (ItemStackParamitrisable) params.get("chestplate");
+		this.chestplate = chestplateParam.getValue();
+		final DoubleParamitrisable chestplateDropChanceParam = (DoubleParamitrisable) params.get("chestplatedropchance");
+		this.chestplateDropChance = chestplateDropChanceParam.getValue().floatValue();
+		final ItemStackParamitrisable helmetParam = (ItemStackParamitrisable) params.get("helmet");
+		this.helmet = helmetParam.getValue();
+		final DoubleParamitrisable helmetDropChanceParam = (DoubleParamitrisable) params.get("helmetdropchance");
+		this.helmetDropChance = helmetDropChanceParam.getValue().floatValue();
+		final ItemStackParamitrisable itemInHandParam = (ItemStackParamitrisable) params.get("iteminhand");
+		this.itemInHand = itemInHandParam.getValue();
+		final DoubleParamitrisable itemInHandDropChanceParam = (DoubleParamitrisable) params.get("iteminhanddropchance");
+		this.itemInHandDropChance = itemInHandDropChanceParam.getValue().floatValue();
+		this.drops = new ArrayList<Drop>();
+		int count = 0;
+		while (true)
+		{
+			count++;
+			final ItemStackParamitrisable dropParam = (ItemStackParamitrisable) params.get("drop" + count);
+			final DoubleParamitrisable dropDropChanceParam = (DoubleParamitrisable) params.get("drop" + count + "dropchance");
+			if (dropParam == null)
+				break;
+			if (dropParam.getValue() == null)
+				continue;
+			drops.add(new Drop(dropParam.getValue(), dropDropChanceParam.getValue().floatValue()));
+		}
+		final BooleanParamitrisable allowItemPickUpParam = (BooleanParamitrisable) params.get("allowitempickup");
+		this.allowItemPickUp = allowItemPickUpParam.getValue();
 	}
 
 	@Override
@@ -134,7 +171,72 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 	@Override
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
-		// EDIT Implementiere EquipmentProperties.getCommandParams()
+		final ItemStackParamitrisable bootsParam = PlayerItemStackParamitrisable.getParamitrisableFor(boots, sender);
+		params.put("boots", bootsParam);
+		params.put("armorboots", bootsParam);
+		final DoubleParamitrisable bootsDropChanceParam = new DoubleParamitrisable(bootsDropChance);
+		params.put("bootsdc", bootsDropChanceParam);
+		params.put("armorbootsdc", bootsDropChanceParam);
+		params.put("bootsdropchance", bootsDropChanceParam);
+		params.put("armorbootsdropchances", bootsDropChanceParam);
+		final ItemStackParamitrisable leggingsParam = PlayerItemStackParamitrisable.getParamitrisableFor(leggings, sender);
+		params.put("leggings", leggingsParam);
+		params.put("armorleggings", leggingsParam);
+		final DoubleParamitrisable leggingsDropChanceParam = new DoubleParamitrisable(leggingsDropChance);
+		params.put("leggingsdc", leggingsDropChanceParam);
+		params.put("armorleggingsdc", leggingsDropChanceParam);
+		params.put("leggingsdropchance", leggingsDropChanceParam);
+		params.put("armorleggingsdropchances", leggingsDropChanceParam);
+		final ItemStackParamitrisable chestplateParam = PlayerItemStackParamitrisable.getParamitrisableFor(chestplate, sender);
+		params.put("helmet", chestplateParam);
+		params.put("armorhelmet", chestplateParam);
+		final DoubleParamitrisable chestplateDropChanceParam = new DoubleParamitrisable(chestplateDropChance);
+		params.put("helmetdc", chestplateDropChanceParam);
+		params.put("armorhelmetdc", chestplateDropChanceParam);
+		params.put("helmetdropchance", chestplateDropChanceParam);
+		params.put("armorhelmetdropchances", chestplateDropChanceParam);
+		final ItemStackParamitrisable helmetParam = PlayerItemStackParamitrisable.getParamitrisableFor(helmet, sender);
+		params.put("helmet", helmetParam);
+		params.put("armorhelmet", helmetParam);
+		final DoubleParamitrisable helmetDropChanceParam = new DoubleParamitrisable(helmetDropChance);
+		params.put("helmetdc", helmetDropChanceParam);
+		params.put("armorhelmetdc", helmetDropChanceParam);
+		params.put("helmetdropchance", helmetDropChanceParam);
+		params.put("armorhelmetdropchances", helmetDropChanceParam);
+		final ItemStackParamitrisable iteminhandParam = PlayerItemStackParamitrisable.getParamitrisableFor(itemInHand, sender);
+		params.put("hand", iteminhandParam);
+		params.put("iteminhand", iteminhandParam);
+		final DoubleParamitrisable iteminhandDropChanceParam = new DoubleParamitrisable(itemInHandDropChance);
+		params.put("handdc", iteminhandDropChanceParam);
+		params.put("iteminhanddc", iteminhandDropChanceParam);
+		params.put("handdropchance", iteminhandDropChanceParam);
+		params.put("iteminhanddropchance", iteminhandDropChanceParam);
+		int count = 0;
+		for (final Drop drop : drops)
+		{
+			count++;
+			final ItemStackParamitrisable dropParam = PlayerItemStackParamitrisable.getParamitrisableFor(drop.getItem(), sender);
+			params.put("d" + count, dropParam);
+			params.put("drop" + count, dropParam);
+			final DoubleParamitrisable dropDropChanceParam = new DoubleParamitrisable(drop.getChance());
+			params.put("d" + count + "dc", dropDropChanceParam);
+			params.put("drop" + count + "dc", dropDropChanceParam);
+			params.put("d" + count + "dropchance", dropDropChanceParam);
+			params.put("drop" + count + "dropchance", dropDropChanceParam);
+		}
+		count++;
+		final ItemStackParamitrisable dropParam = PlayerItemStackParamitrisable.getParamitrisableFor(null, sender);
+		params.put("d" + count, dropParam);
+		params.put("drop" + count, dropParam);
+		final DoubleParamitrisable dropDropChanceParam = new DoubleParamitrisable(1);
+		params.put("d" + count + "dc", dropDropChanceParam);
+		params.put("drop" + count + "dc", dropDropChanceParam);
+		params.put("d" + count + "dropchance", dropDropChanceParam);
+		params.put("drop" + count + "dropchance", dropDropChanceParam);
+		final BooleanParamitrisable allowItemPickUpParam = new BooleanParamitrisable(allowItemPickUp);
+		params.put("pickup", allowItemPickUpParam);
+		params.put("itempickup", allowItemPickUpParam);
+		params.put("allowitempickup", allowItemPickUpParam);
 	}
 
 	@Override
