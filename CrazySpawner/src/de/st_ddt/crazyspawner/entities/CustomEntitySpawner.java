@@ -23,6 +23,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Explosive;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
@@ -48,12 +50,14 @@ import de.st_ddt.crazyspawner.entities.properties.CreeperProperty;
 import de.st_ddt.crazyspawner.entities.properties.DamageProperty;
 import de.st_ddt.crazyspawner.entities.properties.DespawnProperty;
 import de.st_ddt.crazyspawner.entities.properties.DetectionProperty;
+import de.st_ddt.crazyspawner.entities.properties.DroppedItemProperty;
 import de.st_ddt.crazyspawner.entities.properties.EndermanProperty;
 import de.st_ddt.crazyspawner.entities.properties.EntityPropertyInterface;
 import de.st_ddt.crazyspawner.entities.properties.EquipmentProperties;
 import de.st_ddt.crazyspawner.entities.properties.ExperienceOrbProperty;
 import de.st_ddt.crazyspawner.entities.properties.ExplosiveProperty;
 import de.st_ddt.crazyspawner.entities.properties.HealthProperty;
+import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
 import de.st_ddt.crazyspawner.entities.properties.OcelotProperty;
 import de.st_ddt.crazyspawner.entities.properties.PassengerProperty;
@@ -146,8 +150,8 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		// Firework impossible?
 		// Hanging required?
 		// TODO InventoryHolder
-		// IronGolen required?
-		// Item impossible?
+		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
+		registerEntityProperty(DroppedItemProperty.class, Item.class);
 		// ItemFrame required?
 		// Minecard required?
 		registerEntityProperty(OcelotProperty.class, Ocelot.class);

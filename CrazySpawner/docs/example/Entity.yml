@@ -71,6 +71,8 @@ exampleEntity:
   passenger: NamedEntitySpawner
 # Allow despawning (Animals default to false, Monsters default to true)
   allowDespawn: Boolean (true/false/default)
+# Set if this golem has been created by players (IronGolem)
+  playerCreated: boolean (true/false)
 # Spawn as baby (Animals, Villager and Zombie)
   baby: boolean (true/false)
 # Spawn with saddle (Pig)
@@ -97,6 +99,10 @@ exampleEntity:
   angry: boolean (true/false)
 # Spawn as Zombievillager (Zombie)
   villager: boolean (true/false)
+# Set to custom itemstack (Dropped Item)
+  item: Item
+# Sets the delay before this Item is available to be picked up by players (Dropped Item)
+  pickUpDelay: int (0-x)
 # Select a cat type (Ocelot)
   catType: CatType
 # Spawn a sitting pet (Wolf + Ocelot/Cat)
