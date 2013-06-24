@@ -34,6 +34,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import org.bukkit.metadata.MetadataValue;
 
@@ -102,6 +103,17 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 				location.clone().add(0, 1, 0).getBlock().setType(Material.FIRE);
 				location.getBlock().setType(Material.BEDROCK);
 				return entity;
+			}
+		});
+		registerEntitySpawner(EntityType.DROPPED_ITEM, new BasicSpawner(EntityType.DROPPED_ITEM)
+		{
+
+			private final ItemStack item = new ItemStack(1);
+
+			@Override
+			public Entity spawn(final Location location)
+			{
+				return location.getWorld().dropItem(location, item);
 			}
 		});
 		// Properties
