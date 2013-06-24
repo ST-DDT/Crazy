@@ -44,7 +44,7 @@ public class Drop implements ConfigurationSaveable
 		return item.clone();
 	}
 
-	public double getChance()
+	public float getChance()
 	{
 		return chance;
 	}
