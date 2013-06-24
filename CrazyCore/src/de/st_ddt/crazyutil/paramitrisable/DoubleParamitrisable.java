@@ -6,6 +6,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class DoubleParamitrisable extends TypedParamitrisable<Double>
 {
 
+	public DoubleParamitrisable(final double defaultValue)
+	{
+		super(defaultValue);
+	}
+
 	public DoubleParamitrisable(final Double defaultValue)
 	{
 		super(defaultValue);

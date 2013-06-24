@@ -6,6 +6,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class LongParamitrisable extends TypedParamitrisable<Long>
 {
 
+	public LongParamitrisable(final long defaultValue)
+	{
+		super(defaultValue);
+	}
+
 	public LongParamitrisable(final Long defaultValue)
 	{
 		super(defaultValue);

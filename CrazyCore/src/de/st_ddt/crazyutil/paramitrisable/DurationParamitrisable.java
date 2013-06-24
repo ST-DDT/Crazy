@@ -31,12 +31,52 @@ public class DurationParamitrisable extends LongParamitrisable
 		}
 	}
 
-	public Long getTicks()
+	public final Long getMilliseconds()
+	{
+		if (value == null)
+			return null;
+		else
+			return value;
+	}
+
+	public final long getMilliseconds(final long defaultMilliseconds)
+	{
+		if (value == null)
+			return defaultMilliseconds;
+		else
+			return value;
+	}
+
+	public final Long getTicks()
 	{
 		if (value == null)
 			return null;
 		else
 			return value / 50;
+	}
+
+	public final long getTicks(final long defaultTicks)
+	{
+		if (value == null)
+			return defaultTicks;
+		else
+			return value / 50;
+	}
+
+	public final Long getSeconds()
+	{
+		if (value == null)
+			return null;
+		else
+			return value / 1000;
+	}
+
+	public final long getSeconds(final long defaultSeconds)
+	{
+		if (value == null)
+			return defaultSeconds;
+		else
+			return value / 1000;
 	}
 
 	@Override

@@ -9,6 +9,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class BooleanParamitrisable extends TypedParamitrisable<Boolean>
 {
 
+	public BooleanParamitrisable(final boolean defaultValue)
+	{
+		super(defaultValue);
+	}
+
 	public BooleanParamitrisable(final Boolean defaultValue)
 	{
 		super(defaultValue);

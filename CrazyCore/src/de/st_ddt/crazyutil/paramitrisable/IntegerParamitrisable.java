@@ -6,6 +6,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 public class IntegerParamitrisable extends TypedParamitrisable<Integer>
 {
 
+	public IntegerParamitrisable(final int defaultValue)
+	{
+		super(defaultValue);
+	}
+
 	public IntegerParamitrisable(final Integer defaultValue)
 	{
 		super(defaultValue);
