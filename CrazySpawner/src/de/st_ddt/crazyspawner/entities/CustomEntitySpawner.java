@@ -428,6 +428,12 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 
 		@Override
 		public abstract Entity spawn(Location location);
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			return world.getEntitiesByClass(type.getEntityClass());
+		}
 	}
 
 	private static class DefaultSpawner extends BasicSpawner
@@ -442,12 +448,6 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		public Entity spawn(final Location location)
 		{
 			return location.getWorld().spawnEntity(location, type);
-		}
-
-		@Override
-		public Collection<? extends Entity> getEntities(final World world)
-		{
-			return world.getEntitiesByClass(type.getEntityClass());
 		}
 	}
 
