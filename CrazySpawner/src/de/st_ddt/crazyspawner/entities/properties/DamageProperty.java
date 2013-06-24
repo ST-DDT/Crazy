@@ -52,7 +52,7 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable minDamageParam = new IntegerParamitrisable(minDamage);
 		params.put("minDamage", minDamageParam);

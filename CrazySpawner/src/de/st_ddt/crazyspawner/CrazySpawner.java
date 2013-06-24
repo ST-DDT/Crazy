@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -232,19 +233,20 @@ public class CrazySpawner extends CrazyPlugin
 		if (isUpdated)
 		{
 			saveExamples();
+			final ConsoleCommandSender console = Bukkit.getConsoleSender();
 			if (VersionComparator.compareVersions(previousVersion, "3.7") == -1)
 			{
 				// DefaultCreatures
 				// - Spider_Skeleton
-				final CustomEntitySpawner spiderSkeleton = new CustomEntitySpawner("Spider_Skeleton", EntityType.SPIDER, "passenger:SKELETON");
+				final CustomEntitySpawner spiderSkeleton = new CustomEntitySpawner("Spider_Skeleton", EntityType.SPIDER, console, "passenger:SKELETON");
 				customEntities.add(spiderSkeleton);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderSkeleton);
 				// - Zombie_Skeleton
-				final CustomEntitySpawner spiderZombie = new CustomEntitySpawner("Spider_Zombie", EntityType.SPIDER, "ZOMBIE");
+				final CustomEntitySpawner spiderZombie = new CustomEntitySpawner("Spider_Zombie", EntityType.SPIDER, console, "ZOMBIE");
 				customEntities.add(spiderZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderZombie);
 				// - Diamont_Zombie
-				final CustomEntitySpawner diamondZombie = new CustomEntitySpawner("Diamont_Zombie", EntityType.ZOMBIE, "boots:DIAMOND_BOOTS", "bootsdropchance:0.01", "leggings:DIAMOND_LEGGINGS", "leggingsdropchance:0.01", "chestplate:DIAMOND_CHESTPLATE", "chestplatedropchance:0.01", "helmet:DIAMOND_HELMET", "helmetdropchance:0.01", "iteminhand:DIAMOND_SWORD", "iteminhanddropchance:0.01");
+				final CustomEntitySpawner diamondZombie = new CustomEntitySpawner("Diamont_Zombie", EntityType.ZOMBIE, console, "boots:DIAMOND_BOOTS", "bootsdropchance:0.01", "leggings:DIAMOND_LEGGINGS", "leggingsdropchance:0.01", "chestplate:DIAMOND_CHESTPLATE", "chestplatedropchance:0.01", "helmet:DIAMOND_HELMET", "helmetdropchance:0.01", "iteminhand:DIAMOND_SWORD", "iteminhanddropchance:0.01");
 				customEntities.add(diamondZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(diamondZombie);
 				// - Giant
@@ -254,12 +256,12 @@ public class CrazySpawner extends CrazyPlugin
 				// - Healthy_Giant
 				if (v146OrLater)
 				{
-					final CustomEntitySpawner healthyGiant = new CustomEntitySpawner("Healthy_Giant", EntityType.GIANT, "maxhealth:200");
+					final CustomEntitySpawner healthyGiant = new CustomEntitySpawner("Healthy_Giant", EntityType.GIANT, console, "maxhealth:200");
 					customEntities.add(healthyGiant);
 					NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyGiant);
 				}
 				// - Spider_Diamont_Zombie
-				final CustomEntitySpawner spiderDiamondZombie = new CustomEntitySpawner("Spider_Diamont_Zombie", EntityType.SPIDER, "passenger:Diamont_Zombie");
+				final CustomEntitySpawner spiderDiamondZombie = new CustomEntitySpawner("Spider_Diamont_Zombie", EntityType.SPIDER, console, "passenger:Diamont_Zombie");
 				customEntities.add(spiderDiamondZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderDiamondZombie);
 				saveConfiguration();

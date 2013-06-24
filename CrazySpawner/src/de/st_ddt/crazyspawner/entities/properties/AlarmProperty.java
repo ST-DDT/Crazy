@@ -48,7 +48,7 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable alarmRangeParam = new IntegerParamitrisable(alarmRange);
 		params.put("ar", alarmRangeParam);

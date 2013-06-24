@@ -76,7 +76,7 @@ public final class WolfProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final EnumParamitrisable<DyeColor> colorParam = new EnumParamitrisable<DyeColor>("DyeColor", color, DyeColor.values());
 		params.put("c", colorParam);

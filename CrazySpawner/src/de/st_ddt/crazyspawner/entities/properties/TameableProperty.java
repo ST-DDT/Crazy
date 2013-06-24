@@ -59,7 +59,7 @@ public class TameableProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final OfflinePlayerParamitrisable tamerParam = new OfflinePlayerParamitrisable(tamer);
 		params.put("t", tamerParam);

@@ -48,7 +48,7 @@ public final class HealthProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable maxHealth = new IntegerParamitrisable(this.maxHealth);
 		params.put("h", maxHealth);

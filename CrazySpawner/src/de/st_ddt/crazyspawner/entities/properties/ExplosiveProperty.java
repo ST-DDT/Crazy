@@ -52,12 +52,12 @@ public final class ExplosiveProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final BooleanParamitrisable incendaryParam = new BooleanParamitrisable(incendary);
 		params.put("inc", incendaryParam);
 		params.put("incendary", incendaryParam);
-		final DoubleParamitrisable yieldParam = new DoubleParamitrisable((double) yield);
+		final DoubleParamitrisable yieldParam = new DoubleParamitrisable(yield);
 		params.put("er", yieldParam);
 		params.put("erange", yieldParam);
 		params.put("explosionrange", yieldParam);

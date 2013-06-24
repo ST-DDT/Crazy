@@ -47,7 +47,7 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable detectionRangeParam = new IntegerParamitrisable(detectionRange);
 		params.put("dr", detectionRangeParam);

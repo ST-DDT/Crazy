@@ -65,7 +65,7 @@ public final class NameProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final StringParamitrisable customNameParam = new ColoredStringParamitrisable(customName);
 		params.put("cn", customNameParam);

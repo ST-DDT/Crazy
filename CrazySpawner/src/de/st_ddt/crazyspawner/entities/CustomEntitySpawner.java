@@ -12,6 +12,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Creature;
@@ -84,7 +85,6 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 	protected final static EntitySpawner[] ENTITYSPAWNER = new EntitySpawner[EntityType.values().length];
 	@SuppressWarnings("unchecked")
 	protected final static Set<Class<? extends EntityPropertyInterface>>[] ENTITYPROPERTIES = new Set[EntityType.values().length];
-	// EDIT /MountMe spawn a creature to ride.
 	static
 	{
 		// Spawner - Default
@@ -225,13 +225,13 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		return res;
 	}
 
-	protected static StringParamitrisable getCommandParams(final EntityType type, final Map<String, ? super TabbedParamitrisable> params)
+	protected static StringParamitrisable getCommandParams(final EntityType type, final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final StringParamitrisable nameParam = new StringParamitrisable(null);
 		params.put("n", nameParam);
 		params.put("name", nameParam);
 		for (final EntityPropertyInterface property : getDefaultEntityProperties(type))
-			property.getCommandParams(params);
+			property.getCommandParams(params, sender);
 		return nameParam;
 	}
 
@@ -283,7 +283,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 	}
 
 	// EDIT Helper class for default custom entities
-	public CustomEntitySpawner(final String name, final EntityType type, final String... args)
+	public CustomEntitySpawner(final String name, final EntityType type, final CommandSender sender, final String... args)
 	{
 		super();
 		this.name = name;
@@ -291,7 +291,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			throw new IllegalArgumentException("Type cannot be null!");
 		this.type = type;
 		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
-		getCommandParams(type, params);
+		getCommandParams(type, params, sender);
 		for (final String arg : args)
 		{
 			final String[] split = arg.split(":", 2);
@@ -365,13 +365,13 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		return null;
 	}
 
-	public final StringParamitrisable getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public final StringParamitrisable getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final StringParamitrisable nameParam = new StringParamitrisable(name);
 		params.put("n", nameParam);
 		params.put("name", nameParam);
 		for (final EntityPropertyInterface property : properties)
-			property.getCommandParams(params);
+			property.getCommandParams(params, sender);
 		return nameParam;
 	}
 

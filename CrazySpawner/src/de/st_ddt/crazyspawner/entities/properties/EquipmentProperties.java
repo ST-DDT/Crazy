@@ -132,7 +132,7 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		// EDIT Implementiere EquipmentProperties.getCommandParams()
 	}

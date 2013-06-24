@@ -70,7 +70,7 @@ public final class OcelotProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final EnumParamitrisable<Type> typeParam = new EnumParamitrisable<Type>("CatType", type, Type.values());
 		params.put("ctype", typeParam);

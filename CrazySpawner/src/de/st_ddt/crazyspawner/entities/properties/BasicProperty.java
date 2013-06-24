@@ -38,7 +38,7 @@ public abstract class BasicProperty implements EntityPropertyInterface
 	public abstract void show(CommandSender target);
 
 	@Override
-	public abstract void getCommandParams(Map<String, ? super TabbedParamitrisable> params);
+	public abstract void getCommandParams(Map<String, ? super TabbedParamitrisable> params, CommandSender sender);
 
 	@Override
 	public abstract void save(ConfigurationSection config, String path);

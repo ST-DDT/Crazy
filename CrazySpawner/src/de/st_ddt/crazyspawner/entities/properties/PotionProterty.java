@@ -78,7 +78,7 @@ public final class PotionProterty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		for (final PotionEffectType type : PotionEffectType.values())
 			if (type != null)

@@ -65,7 +65,7 @@ public final class EndermanProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final MaterialParamitriable materialParam = new MaterialParamitriable(material);
 		params.put("m", materialParam);

@@ -63,7 +63,7 @@ public final class VillagerProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final EnumParamitrisable<Profession> professionParam = new EnumParamitrisable<Profession>("Profession", profession, Profession.values());
 		params.put("p", professionParam);

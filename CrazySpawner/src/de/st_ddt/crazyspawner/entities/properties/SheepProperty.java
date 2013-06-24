@@ -45,7 +45,7 @@ public class SheepProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final BooleanParamitrisable shearedParam = new BooleanParamitrisable(sheared);
 		params.put("s", shearedParam);

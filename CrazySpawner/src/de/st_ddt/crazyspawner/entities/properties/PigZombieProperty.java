@@ -45,7 +45,7 @@ public class PigZombieProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final BooleanParamitrisable angryParam = new BooleanParamitrisable(angry);
 		params.put("a", angryParam);

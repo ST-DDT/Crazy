@@ -45,7 +45,7 @@ public final class BurningProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable burning = new IntegerParamitrisable(this.burning);
 		params.put("burn", burning);

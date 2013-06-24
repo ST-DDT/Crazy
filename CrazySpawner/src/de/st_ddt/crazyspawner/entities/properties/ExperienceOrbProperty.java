@@ -53,7 +53,7 @@ public class ExperienceOrbProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable minXPParam = new IntegerParamitrisable(minXP);
 		params.put("minXP", minXPParam);

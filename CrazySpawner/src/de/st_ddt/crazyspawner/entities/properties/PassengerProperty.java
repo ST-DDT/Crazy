@@ -45,7 +45,7 @@ public final class PassengerProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final NamedEntitySpawnerParamitrisable passengerParam = new NamedEntitySpawnerParamitrisable(passenger);
 		params.put("p", passengerParam);

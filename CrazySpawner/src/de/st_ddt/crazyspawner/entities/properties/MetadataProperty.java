@@ -2,6 +2,7 @@ package de.st_ddt.crazyspawner.entities.properties;
 
 import java.util.Map;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
@@ -32,7 +33,7 @@ public abstract class MetadataProperty extends BasicProperty implements Metadata
 	public abstract void apply(final Entity entity);
 
 	@Override
-	public abstract void getCommandParams(final Map<String, ? super TabbedParamitrisable> params);
+	public abstract void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, CommandSender sender);
 
 	@Override
 	public abstract void save(final ConfigurationSection config, final String path);

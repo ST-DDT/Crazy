@@ -51,7 +51,7 @@ public final class ZombieProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final BooleanParamitrisable babyParam = new BooleanParamitrisable(baby);
 		params.put("b", babyParam);

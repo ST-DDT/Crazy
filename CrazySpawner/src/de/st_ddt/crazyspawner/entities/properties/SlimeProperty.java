@@ -46,7 +46,7 @@ public class SlimeProperty extends BasicProperty
 	}
 
 	@Override
-	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params)
+	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable sizeParam = new IntegerParamitrisable(size);
 		params.put("s", sizeParam);
