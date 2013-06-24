@@ -338,8 +338,14 @@ public class CrazySpawner extends CrazyPlugin
 		// ExampleCreature
 		final YamlConfiguration customEntity = new YamlConfiguration();
 		customEntity.options().header("CrazySpawner example Entity.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
+		// Debug Code to update Entity.yml
+		// for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
+		// new CustomEntitySpawner(type).dummySave(customEntity, "exampleEntity.");
 		for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
-			new CustomEntitySpawner(type).dummySave(customEntity, "exampleEntity.");
+		{
+			new CustomEntitySpawner(type).dummySave(customEntity, "example" + type.name() + ".");
+			customEntity.set("example" + type.name() + ".type", type.name());
+		}
 		try
 		{
 			customEntity.save(new File(exampleFolder, "Entity.yml"));
