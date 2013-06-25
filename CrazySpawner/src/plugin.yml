@@ -24,6 +24,10 @@ commands:
     description: Create auto respawn tasks for EnderDragons and EnderCrystals.
     usage: /<command> [interval:Duration] [world:World] [chunkloadrange:Integer]
     aliases: [theendautorespawn, ctearespawn, tearespawn,ctear,tear]
+  mountme:
+    description: Spawn an entity and ride it.
+    usage: /<command> <entity:NamedEntityType> [player:Player]
+    aliases: [mount,ride]
   crazyspawner:
     description: Plugin Mainmenu
     usage: /<command> [Subcommands...]
@@ -37,6 +41,8 @@ permissions:
       crazyspawner.kill: true
       crazyspawner.creaturespawner: true
       crazyspawner.theendautorespawn: true
+      crazyspawner.mountme: true
+      crazyspawner.mountme.others: true
       crazyspawner.list: true
       crazyspawner.remove: true
   crazyspawner.spawn:
@@ -51,6 +57,14 @@ permissions:
   crazyspawner.theendautorespawn:
     description: Allow creating auto respawn tasks for EnderDragons and EnderCrystals.
     default: op
+  crazyspawner.mountme:
+    description: Allow spawning of entities and ride it.
+    default: op
+  crazyspawner.mountme.others:
+    description: Allow spawning of entities for others players and let him ride it.
+    default: op
+    children:
+      crazyspawner.mountme: true
   crazyspawner.list:
     description: Allow listing spawn tasks.
     default: op

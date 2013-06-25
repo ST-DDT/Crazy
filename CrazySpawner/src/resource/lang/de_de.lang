@@ -52,4 +52,7 @@ CRAZYSPAWNER.ENTITY.PROPERTY.VILLAGER=Dorfbewohner: $0$
 CRAZYSPAWNER.ENTITY.PROPERTY.XP=Erfahrungspunkte: $0$-$1$
 CRAZYSPAWNER.ENTITY.PROPERTY.YIELD=Einflussbereich: $0$ Blöcke
 #CRAZYSPAWNER.MODE.CHANGE=
+CRAZYSPAWNER.MOUNTME.MOUNTED=Dir hat $1$ ein $0$ zum Reiten gespawnt.
+CRAZYSPAWNER.MOUNTME.OTHER=Du hast $1$ ein $0$ zum Reiten gespawnt.
+CRAZYSPAWNER.MOUNTME.SELF=Du hast ein $0$ zum Reiten gespawnt.
 CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE=Ein Ender-Drache wird in &4$1$&F nach &5$0$&F zurückkehren.
