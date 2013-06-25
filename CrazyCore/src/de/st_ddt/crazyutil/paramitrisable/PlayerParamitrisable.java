@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
@@ -14,6 +15,11 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
 public class PlayerParamitrisable extends TypedParamitrisable<Player>
 {
+
+	public PlayerParamitrisable(final CommandSender defaultValue)
+	{
+		super(defaultValue instanceof Player ? (Player) defaultValue : null);
+	}
 
 	public PlayerParamitrisable(final Player defaultValue)
 	{
