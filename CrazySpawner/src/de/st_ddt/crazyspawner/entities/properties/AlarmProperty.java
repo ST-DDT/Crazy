@@ -4,12 +4,10 @@ import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
-import de.st_ddt.crazyspawner.entities.meta.DetectionMeta;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
@@ -42,9 +40,8 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	@Override
 	public void apply(final Entity entity)
 	{
-		final Creature creature = (Creature) entity;
 		if (alarmRange != -1)
-			creature.setMetadata(DetectionMeta.METAHEADER, this);
+			entity.setMetadata(AlarmMeta.METAHEADER, this);
 	}
 
 	@Override

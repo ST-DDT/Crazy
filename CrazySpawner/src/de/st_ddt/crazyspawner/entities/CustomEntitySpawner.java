@@ -133,6 +133,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
 		registerEntityProperty(DamageProperty.class, LivingEntity.class);
 		registerEntityProperty(AlarmProperty.class, Creature.class);
+		registerEntityProperty(AlarmProperty.class, Item.class);
 		registerEntityProperty(DetectionProperty.class, Creature.class);
 		registerEntityProperty(BurningProperty.class, Entity.class);
 		registerEntityProperty(PassengerProperty.class, Entity.class);
