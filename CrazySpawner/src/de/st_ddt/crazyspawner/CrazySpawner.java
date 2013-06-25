@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -25,6 +27,9 @@ import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager.Profession;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffectType;
 
@@ -39,6 +44,8 @@ import de.st_ddt.crazyspawner.commands.CommandSpawnList;
 import de.st_ddt.crazyspawner.commands.CommandSpawnRemove;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.entities.CustomEntitySpawner;
+import de.st_ddt.crazyspawner.entities.properties.EquipmentProperties;
+import de.st_ddt.crazyspawner.entities.properties.PotionProterty;
 import de.st_ddt.crazyspawner.listener.CreatureListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.SpawnTask;
@@ -46,6 +53,7 @@ import de.st_ddt.crazyspawner.tasks.options.Thunder;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.CrazyPipe;
+import de.st_ddt.crazyutil.Drop;
 import de.st_ddt.crazyutil.NamedEntitySpawner;
 import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.metrics.Metrics;
@@ -266,65 +274,65 @@ public class CrazySpawner extends CrazyPlugin
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderDiamondZombie);
 				saveConfiguration();
 			}
-			// EDIT readd this
-			// if (VersionComparator.compareVersions(previousVersion, "3.11") == -1)
-			// {
-			// // - Speedy_Baby_Zombie
-			// final Map<PotionEffectType, Integer> potions = new HashMap<PotionEffectType, Integer>();
-			// potions.put(PotionEffectType.SPEED, 5);
-			// final ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
-			// boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
-			// final LeatherArmorMeta meta = (LeatherArmorMeta) boots.getItemMeta();
-			// meta.setColor(Color.RED);
-			// boots.setItemMeta(meta);
-			// final CustomEntitySpawner speedyZombie = null;// new CustomEntity("Speedy_Baby_Zombie", EntityType.ZOMBIE, "baby:true", boots, "bootsdropchance:0.5", potions);
-			// customEntities.add(speedyZombie);
-			// NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(speedyZombie);
-			// saveConfiguration();
-			// }
+			if (VersionComparator.compareVersions(previousVersion, "3.11") == -1)
+			{
+				// - Speedy_Baby_Zombie
+				final ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+				boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				final LeatherArmorMeta meta = (LeatherArmorMeta) boots.getItemMeta();
+				meta.setColor(Color.RED);
+				boots.setItemMeta(meta);
+				final CustomEntitySpawner speedyZombie = new CustomEntitySpawner("Speedy_Baby_Zombie", EntityType.ZOMBIE, console, "baby:true");
+				speedyZombie.addEntityProperty(new EquipmentProperties(boots, 0.5F, null, 0, null, 0, null, 0, null, 0, null, null));
+				speedyZombie.addEntityProperty(new PotionProterty(new PotionEffectType[] { PotionEffectType.SPEED }, new int[] { 5 }));
+				customEntities.add(speedyZombie);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(speedyZombie);
+				saveConfiguration();
+			}
 			if (VersionComparator.compareVersions(previousVersion, "3.11.1") == -1)
 			{
 				getConfig().set("example", null);
 				saveConfiguration();
 			}
 			// EDIT readd this
-			// if (VersionComparator.compareVersions(previousVersion, "3.15") == -1)
-			// {
-			// // - Healthy_Diamont_Zombie
-			// final ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS);
-			// final ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
-			// final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
-			// chestplate.setDurability((short) 3);
-			// chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
-			// chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
-			// chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
-			// if (v146OrLater)
-			// chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
-			// final ItemMeta meta = chestplate.getItemMeta();
-			// meta.setDisplayName("Holy Chestplate of the Goddes");
-			// final List<String> lore = new ArrayList<String>();
-			// lore.add(ChatColor.RED + "Blessed by the goddess kiss");
-			// lore.add("Manufactured by the best dwarfs known");
-			// meta.setLore(lore);
-			// chestplate.setItemMeta(meta);
-			// final ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
-			// final ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
-			// final List<Drop> drops = new ArrayList<Drop>();
-			// drops.add(new Drop(new ItemStack(Material.DIAMOND, 2), 0.5F));
-			// drops.add(new Drop(new ItemStack(Material.DIAMOND, 3), 0.5F));
-			// drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 2), 0.5F));
-			// drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 3), 0.5F));
-			// drops.add(new Drop(new ItemStack(Material.EMERALD, 2), 0.5F));
-			// drops.add(new Drop(boots, 1F));
-			// drops.add(new Drop(leggings, 1F));
-			// drops.add(new Drop(chestplate, 1F));
-			// drops.add(new Drop(helmet, 1F));
-			// drops.add(new Drop(sword, 1F));
-			// final CustomEntitySpawner healthyDiamondZombie = null;// new CustomEntity("Healthy_Diamont_Zombie", EntityType.ZOMBIE, drops, 10, 20, boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, 3, 7, 100, ChatColor.AQUA + "Diamond_Zombie", true);
-			// customEntities.add(healthyDiamondZombie);
-			// NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyDiamondZombie);
-			// saveConfiguration();
-			// }
+			if (VersionComparator.compareVersions(previousVersion, "3.15") == -1)
+			{
+				// - Healthy_Diamont_Zombie
+				final ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS);
+				final ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
+				final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
+				chestplate.setDurability((short) 3);
+				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
+				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
+				chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
+				if (v146OrLater)
+					chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
+				final ItemMeta meta = chestplate.getItemMeta();
+				meta.setDisplayName("Holy Chestplate of the Goddes");
+				final List<String> lore = new ArrayList<String>();
+				lore.add(ChatColor.RED + "Blessed by the goddess kiss");
+				lore.add("Manufactured by the best dwarfs known");
+				meta.setLore(lore);
+				chestplate.setItemMeta(meta);
+				final ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
+				final ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
+				final List<Drop> drops = new ArrayList<Drop>();
+				drops.add(new Drop(new ItemStack(Material.DIAMOND, 2), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.DIAMOND, 3), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 2), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.GOLD_INGOT, 3), 0.5F));
+				drops.add(new Drop(new ItemStack(Material.EMERALD, 2), 0.5F));
+				drops.add(new Drop(boots, 1F));
+				drops.add(new Drop(leggings, 1F));
+				drops.add(new Drop(chestplate, 1F));
+				drops.add(new Drop(helmet, 1F));
+				drops.add(new Drop(sword, 1F));
+				final CustomEntitySpawner healthyDiamondZombie = new CustomEntitySpawner("Healthy_Diamont_Zombie", EntityType.ZOMBIE, console, "customName:&3Diamond_Zombie", "showNameAboveHead:true", "showHealth:true", "maxHealth:100", "minDamage:3", "maxDamage:7", "minXP:10", "maxXP:20");
+				healthyDiamondZombie.addEntityProperty(new EquipmentProperties(boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, drops, false));
+				customEntities.add(healthyDiamondZombie);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyDiamondZombie);
+				saveConfiguration();
+			}
 		}
 		registerCommands();
 		registerMetrics();
