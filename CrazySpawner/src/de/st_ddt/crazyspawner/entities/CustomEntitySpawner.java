@@ -129,28 +129,19 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		// Properties
 		for (final EntityType type : EntityType.values())
 			ENTITYPROPERTIES[type.ordinal()] = new LinkedHashSet<Class<? extends EntityPropertyInterface>>();
-		// Properties - Special
-		if (v150OrLater)
-			registerEntityProperty(NameProperty.class, LivingEntity.class);
-		if (v146OrLater)
-			registerEntityProperty(HealthProperty.class, Damageable.class);
-		registerEntityProperty(PotionProterty.class, LivingEntity.class);
-		registerEntityProperty(XPProperty.class, LivingEntity.class);
-		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
-		registerEntityProperty(DamageProperty.class, LivingEntity.class);
-		registerEntityProperty(AlarmProperty.class, Creature.class);
-		registerEntityProperty(AlarmProperty.class, Item.class);
-		registerEntityProperty(DetectionProperty.class, Creature.class);
-		registerEntityProperty(BurningProperty.class, Entity.class);
-		registerEntityProperty(PassengerProperty.class, Entity.class);
-		registerEntityProperty(DespawnProperty.class, LivingEntity.class);
-		// Properties - Interfaces
+		// Properties - Sorted by EntityInterfaces
 		registerEntityProperty(AgeProperty.class, Ageable.class);
 		// Boat required?
 		registerEntityProperty(ColorableProperty.class, Colorable.class);
+		registerEntityProperty(AlarmProperty.class, Creature.class);
+		registerEntityProperty(DetectionProperty.class, Creature.class);
 		registerEntityProperty(CreeperProperty.class, Creeper.class);
+		if (v146OrLater)
+			registerEntityProperty(HealthProperty.class, Damageable.class);
 		registerEntityProperty(EndermanProperty.class, Enderman.class);
+		registerEntityProperty(BurningProperty.class, Entity.class);
 		registerEntityProperty(VelocityProperty.class, Entity.class);
+		registerEntityProperty(PassengerProperty.class, Entity.class);
 		registerEntityProperty(ExperienceOrbProperty.class, ExperienceOrb.class);
 		registerEntityProperty(ExplosiveProperty.class, Explosive.class);
 		// FallingBlock impossible?
@@ -159,8 +150,16 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		// Hanging required?
 		// TODO InventoryHolder
 		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
+		registerEntityProperty(AlarmProperty.class, Item.class);
 		registerEntityProperty(DroppedItemProperty.class, Item.class);
 		// ItemFrame required?
+		registerEntityProperty(DamageProperty.class, LivingEntity.class);
+		registerEntityProperty(DespawnProperty.class, LivingEntity.class);
+		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
+		if (v150OrLater)
+			registerEntityProperty(NameProperty.class, LivingEntity.class);
+		registerEntityProperty(PotionProterty.class, LivingEntity.class);
+		registerEntityProperty(XPProperty.class, LivingEntity.class);
 		// Minecard required?
 		registerEntityProperty(OcelotProperty.class, Ocelot.class);
 		// Painting required?
