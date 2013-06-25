@@ -35,7 +35,7 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 	{
 		super(params);
 		final IntegerParamitrisable detectionRangeParam = (IntegerParamitrisable) params.get("detectionrange");
-		this.detectionRange = detectionRangeParam.getValue();
+		this.detectionRange = Math.max(detectionRangeParam.getValue(), -1);
 	}
 
 	@Override

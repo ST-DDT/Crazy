@@ -36,7 +36,7 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	{
 		super(params);
 		final IntegerParamitrisable alarmRangeParam = (IntegerParamitrisable) params.get("alarmrange");
-		this.alarmRange = alarmRangeParam.getValue();
+		this.alarmRange = Math.max(alarmRangeParam.getValue(), -1);
 	}
 
 	@Override
