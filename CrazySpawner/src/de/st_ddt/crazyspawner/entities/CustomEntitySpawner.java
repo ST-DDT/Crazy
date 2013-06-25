@@ -400,8 +400,9 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			if (properties.get(i).getClass().getName().equals(property.getClass().getName()))
 			{
 				properties.set(i, property);
-				break;
+				return;
 			}
+		properties.add(property);
 	}
 
 	@Override
