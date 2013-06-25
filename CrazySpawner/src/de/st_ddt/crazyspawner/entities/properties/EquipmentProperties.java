@@ -55,6 +55,23 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 		this.allowItemPickUp = null;
 	}
 
+	public EquipmentProperties(final ItemStack boots, final float bootsDropChance, final ItemStack leggings, final float leggingsDropChance, final ItemStack chestplate, final float chestplateDropChance, final ItemStack helmet, final float helmetDropChance, final ItemStack itemInHand, final float itemInHandDropChance, final List<Drop> drops, final Boolean allowItemPickUp)
+	{
+		super();
+		this.boots = boots;
+		this.bootsDropChance = bootsDropChance;
+		this.leggings = leggings;
+		this.leggingsDropChance = leggingsDropChance;
+		this.chestplate = chestplate;
+		this.chestplateDropChance = chestplateDropChance;
+		this.helmet = helmet;
+		this.helmetDropChance = helmetDropChance;
+		this.itemInHand = itemInHand;
+		this.itemInHandDropChance = itemInHandDropChance;
+		this.drops = drops;
+		this.allowItemPickUp = allowItemPickUp;
+	}
+
 	public EquipmentProperties(final ConfigurationSection config)
 	{
 		super(config);
