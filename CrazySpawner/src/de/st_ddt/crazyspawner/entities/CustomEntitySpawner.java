@@ -77,6 +77,7 @@ import de.st_ddt.crazyutil.ConfigurationSaveable;
 import de.st_ddt.crazyutil.EntitySpawner;
 import de.st_ddt.crazyutil.NamedEntitySpawner;
 import de.st_ddt.crazyutil.VersionComparator;
+import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
@@ -120,6 +121,10 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 				return location.getWorld().dropItem(location, item);
 			}
 		});
+		for (final EntitySpawner spawner : ENTITYSPAWNER)
+			if (spawner != null)
+				if (spawner instanceof NamedEntitySpawner)
+					NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner((NamedEntitySpawner) spawner, spawner.getType().name(), spawner.getType().getName());
 		// Properties
 		for (final EntityType type : EntityType.values())
 			ENTITYPROPERTIES[type.ordinal()] = new LinkedHashSet<Class<? extends EntityPropertyInterface>>();
@@ -422,7 +427,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			property.dummySave(config, path);
 	}
 
-	private abstract static class BasicSpawner implements EntitySpawner
+	private abstract static class BasicSpawner implements NamedEntitySpawner
 	{
 
 		protected final EntityType type;
@@ -436,6 +441,12 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		public final EntityType getType()
 		{
 			return type;
+		}
+
+		@Override
+		public String getName()
+		{
+			return type.getName();
 		}
 
 		@Override
