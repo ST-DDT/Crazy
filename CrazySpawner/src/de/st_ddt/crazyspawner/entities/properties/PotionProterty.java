@@ -38,6 +38,21 @@ public final class PotionProterty extends BasicProperty
 		super();
 	}
 
+	public PotionProterty(final Map<PotionEffectType, Integer> potions, final boolean dummy)
+	{
+		super();
+		potionEffects.putAll(potions);
+	}
+
+	public PotionProterty(final PotionEffectType[] effects, final int[] levels)
+	{
+		super();
+		if (effects.length != levels.length)
+			throw new IllegalArgumentException("PotionEffects and Levels must have the same length!");
+		for (int i = 0; i < effects.length; i++)
+			potionEffects.put(effects[i], levels[i]);
+	}
+
 	public PotionProterty(final ConfigurationSection config)
 	{
 		super(config);
