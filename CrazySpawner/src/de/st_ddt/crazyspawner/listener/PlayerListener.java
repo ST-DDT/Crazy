@@ -21,7 +21,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
-import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
+import de.st_ddt.crazyspawner.entities.meta.DetectionMeta;
 import de.st_ddt.crazyutil.source.Localized;
 
 public class PlayerListener implements Listener
@@ -70,7 +70,7 @@ public class PlayerListener implements Listener
 				final Location location = item.getLocation();
 				for (final LivingEntity nearby : item.getWorld().getEntitiesByClass(LivingEntity.class))
 					if (location.distance(nearby.getLocation()) < alarmRange)
-						nearby.removeMetadata(PeacefulMeta.METAHEADER, plugin);
+						nearby.removeMetadata(DetectionMeta.METAHEADER, plugin);
 				break;
 			}
 	}

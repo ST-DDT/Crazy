@@ -25,6 +25,7 @@ import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
 import de.st_ddt.crazyspawner.entities.meta.CustomDamage;
 import de.st_ddt.crazyspawner.entities.meta.CustomDrops;
 import de.st_ddt.crazyspawner.entities.meta.CustomXP;
+import de.st_ddt.crazyspawner.entities.meta.DetectionMeta;
 import de.st_ddt.crazyspawner.entities.meta.NameMeta;
 import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.tasks.HealthTask;
@@ -91,7 +92,7 @@ public class CreatureListener implements Listener
 	public void CreatureDamagedbyEntity(final EntityDamageByEntityEvent event)
 	{
 		final Entity entity = event.getEntity();
-		entity.removeMetadata(PeacefulMeta.METAHEADER, plugin);
+		entity.removeMetadata(DetectionMeta.METAHEADER, plugin);
 		double alarmRange = plugin.getDefaultAlarmRange();
 		final List<MetadataValue> metas = entity.getMetadata(AlarmMeta.METAHEADER);
 		for (final MetadataValue meta : metas)
@@ -104,7 +105,7 @@ public class CreatureListener implements Listener
 		final Location location = entity.getLocation();
 		for (final LivingEntity nearby : entity.getWorld().getEntitiesByClass(LivingEntity.class))
 			if (location.distance(nearby.getLocation()) < alarmRange)
-				nearby.removeMetadata(PeacefulMeta.METAHEADER, plugin);
+				nearby.removeMetadata(DetectionMeta.METAHEADER, plugin);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -124,10 +125,26 @@ public class CreatureListener implements Listener
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void EntityTargetEvent(final EntityTargetEvent event)
 	{
-		if (event.getTarget() == null)
+		final Entity target = event.getTarget();
+		if (target == null)
 			return;
-		if (event.getEntity().hasMetadata(PeacefulMeta.METAHEADER))
+		final Entity entity = event.getEntity();
+		if (entity.hasMetadata(PeacefulMeta.METAHEADER))
 			event.setCancelled(true);
+		else
+		{
+			if (!entity.getWorld().equals(target.getWorld()))
+				return;
+			final List<MetadataValue> detectionMeta = entity.getMetadata(DetectionMeta.METAHEADER);
+			for (final MetadataValue meta : detectionMeta)
+				if (meta instanceof DetectionMeta)
+				{
+					final DetectionMeta detection = (DetectionMeta) meta;
+					if (entity.getLocation().distance(target.getLocation()) > detection.getDetectionRange())
+						event.setCancelled(true);
+					break;
+				}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
