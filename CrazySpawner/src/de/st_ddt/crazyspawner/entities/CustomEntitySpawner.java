@@ -211,6 +211,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			catch (final Exception e)
 			{
 				System.err.println("WARNING: Serious Bug detected, please report this!");
+				System.err.println("EntityType: " + type.name() + ", Property: " + property.getSimpleName());
 				e.printStackTrace();
 			}
 		return res;
@@ -228,6 +229,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			catch (final Exception e)
 			{
 				System.err.println("WARNING: Serious Bug detected, please report this!");
+				System.err.println("EntityType: " + type.name() + ", Property: " + property.getSimpleName());
 				e.printStackTrace();
 			}
 		return res;
@@ -245,6 +247,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			catch (final Exception e)
 			{
 				System.err.println("WARNING: Serious Bug detected, please report this!");
+				System.err.println("EntityType: " + type.name() + ", Property: " + property.getSimpleName());
 				e.printStackTrace();
 			}
 		return res;
