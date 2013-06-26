@@ -97,9 +97,9 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		// Spawner - Default
 		for (final EntityType type : EntityType.values())
 			if (type.isSpawnable())
-				registerEntitySpawner(type, new DefaultSpawner(type));
+				registerEntitySpawner(new DefaultSpawner(type));
 		// Spawner - Fixes
-		registerEntitySpawner(EntityType.ENDER_CRYSTAL, new CenteredSpawner(EntityType.ENDER_CRYSTAL)
+		registerEntitySpawner(new CenteredSpawner(EntityType.ENDER_CRYSTAL)
 		{
 
 			@Override
@@ -111,7 +111,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 				return entity;
 			}
 		});
-		registerEntitySpawner(EntityType.DROPPED_ITEM, new BasicSpawner(EntityType.DROPPED_ITEM)
+		registerEntitySpawner(new BasicSpawner(EntityType.DROPPED_ITEM)
 		{
 
 			private final ItemStack item = new ItemStack(1);
@@ -176,9 +176,9 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		registerEntityProperty(ZombieProperty.class, Zombie.class);
 	}
 
-	public static void registerEntitySpawner(final EntityType type, final EntitySpawner spawner)
+	public static void registerEntitySpawner(final EntitySpawner spawner)
 	{
-		ENTITYSPAWNER[type.ordinal()] = spawner;
+		ENTITYSPAWNER[spawner.getType().ordinal()] = spawner;
 	}
 
 	public static Set<EntityType> getSpawnableEntityTypes()
