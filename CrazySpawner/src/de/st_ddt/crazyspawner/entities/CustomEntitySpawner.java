@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Explosive;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -56,6 +58,7 @@ import de.st_ddt.crazyspawner.entities.properties.EntityPropertyInterface;
 import de.st_ddt.crazyspawner.entities.properties.EquipmentProperties;
 import de.st_ddt.crazyspawner.entities.properties.ExperienceOrbProperty;
 import de.st_ddt.crazyspawner.entities.properties.ExplosiveProperty;
+import de.st_ddt.crazyspawner.entities.properties.FallingBlockProperties;
 import de.st_ddt.crazyspawner.entities.properties.HealthProperty;
 import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
@@ -123,6 +126,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			}
 		});
 		registerEntitySpawner(new ClassSpawner(EntityType.FIREWORK));
+		registerEntitySpawner(new FallingBlockSpawner());
 		// Add Spawners to NamedEntitySpawnerParamitrisable
 		for (final EntitySpawner spawner : ENTITYSPAWNER)
 			if (spawner != null)
@@ -131,6 +135,8 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		// Properties
 		for (final EntityType type : EntityType.values())
 			ENTITYPROPERTIES[type.ordinal()] = new LinkedHashSet<Class<? extends EntityPropertyInterface>>();
+		// Properties - VIP required to be first!
+		registerEntityProperty(FallingBlockProperties.class, FallingBlock.class);
 		// Properties - Sorted by EntityInterfaces
 		registerEntityProperty(AgeProperty.class, Ageable.class);
 		// Boat required?
@@ -357,6 +363,12 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 
 	protected final EntitySpawner getSpawner()
 	{
+		if (!properties.isEmpty())
+		{
+			final EntityPropertyInterface property = properties.get(0);
+			if (property instanceof EntitySpawner)
+				return (EntitySpawner) property;
+		}
 		return ENTITYSPAWNER[type.ordinal()];
 	}
 
@@ -532,6 +544,54 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 				e.printStackTrace();
 				return null;
 			}
+		}
+	}
+
+	public static class FallingBlockSpawner extends DefaultSpawner
+	{
+
+		protected final Material material;
+		protected final byte data;
+
+		public FallingBlockSpawner()
+		{
+			super(EntityType.FALLING_BLOCK);
+			this.material = Material.STONE;
+			this.data = 0;
+		}
+
+		public FallingBlockSpawner(final Material material, final byte data)
+		{
+			super(EntityType.FALLING_BLOCK);
+			if (material == null)
+				throw new IllegalArgumentException("Material cannot be null!");
+			this.material = material;
+			this.data = data;
+		}
+
+		@Override
+		public final FallingBlock spawn(final Location location)
+		{
+			try
+			{
+				return location.getWorld().spawnFallingBlock(location, material, data);
+			}
+			catch (final Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		public final Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<FallingBlock> entities = world.getEntitiesByClass(FallingBlock.class);
+			final Iterator<FallingBlock> it = entities.iterator();
+			while (it.hasNext())
+				if (it.next().getMaterial() != material)
+					it.remove();
+			return entities;
 		}
 	}
 
