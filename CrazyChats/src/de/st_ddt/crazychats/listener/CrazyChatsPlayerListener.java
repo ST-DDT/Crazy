@@ -340,7 +340,15 @@ public class CrazyChatsPlayerListener implements Listener
 
 	protected void PlayerChatLog(final Player player, final String message)
 	{
-		plugin.getCrazyLogger().log("Chat", "[" + plugin.getPlayerData(player).getCurrentChannel().getName() + "] " + player.getName() + " >>> " + message);
+		if (player == null)
+			return;
+		final ChatPlayerData data = plugin.getPlayerData(player);
+		if (data == null)
+			return;
+		final ChannelInterface channel = data.getCurrentChannel();
+		if (channel == null)
+			return;
+		plugin.getCrazyLogger().log("Chat", "[" + channel.getName() + "] " + player.getName() + " >>> " + message);
 	}
 
 	protected class ChatResult
