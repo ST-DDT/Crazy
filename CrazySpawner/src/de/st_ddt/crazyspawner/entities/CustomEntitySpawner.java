@@ -122,6 +122,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 				return location.getWorld().dropItem(location, item);
 			}
 		});
+		// Add Spawners to NamedEntitySpawnerParamitrisable
 		for (final EntitySpawner spawner : ENTITYSPAWNER)
 			if (spawner != null)
 				if (spawner instanceof NamedEntitySpawner)
@@ -374,7 +375,13 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		return entity;
 	}
 
-	// EDIT use this method to apply this to spawned creatures (default, CreatureSpawners (overwrite defaults))
+	/**
+	 * Apply all features to the given entity.<br>
+	 * EntityType of this Spawner must match the EntityType of the given entity.
+	 * 
+	 * @param entity
+	 *            The entity the properties should be applied to.
+	 */
 	public final void apply(final Entity entity)
 	{
 		for (final EntityPropertyInterface property : properties)
@@ -384,7 +391,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 	@Override
 	public Collection<? extends Entity> getEntities(final World world)
 	{
-		// TODO Automatisch generierter Methodenstub
+		// EDIT include entity properties or check meta
 		return world.getEntitiesByClass(type.getEntityClass());
 	}
 
