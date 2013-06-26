@@ -25,6 +25,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -59,6 +60,7 @@ import de.st_ddt.crazyspawner.entities.properties.EquipmentProperties;
 import de.st_ddt.crazyspawner.entities.properties.ExperienceOrbProperty;
 import de.st_ddt.crazyspawner.entities.properties.ExplosiveProperty;
 import de.st_ddt.crazyspawner.entities.properties.FallingBlockProperties;
+import de.st_ddt.crazyspawner.entities.properties.FireworkProperty;
 import de.st_ddt.crazyspawner.entities.properties.HealthProperty;
 import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
@@ -155,7 +157,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		registerEntityProperty(ExperienceOrbProperty.class, ExperienceOrb.class);
 		registerEntityProperty(ExplosiveProperty.class, Explosive.class);
 		// Fireball required?
-		// Firework impossible?
+		registerEntityProperty(FireworkProperty.class, Firework.class);
 		// Hanging required?
 		// TODO InventoryHolder
 		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
