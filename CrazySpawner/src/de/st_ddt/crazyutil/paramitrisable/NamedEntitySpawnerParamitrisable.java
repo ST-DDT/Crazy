@@ -372,8 +372,8 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 		@Override
 		public Collection<? extends Entity> getEntities(final World world)
 		{
-			// TODO Automatisch generierter Methodenstub
-			return null;
+			//EDIT implement this method for subclasses
+			return world.getEntitiesByClass(type.getEntityClass());
 		}
 	}
 
