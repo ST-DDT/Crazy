@@ -122,6 +122,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 				return location.getWorld().dropItem(location, item);
 			}
 		});
+		registerEntitySpawner(new ClassSpawner(EntityType.FIREWORK));
 		// Add Spawners to NamedEntitySpawnerParamitrisable
 		for (final EntitySpawner spawner : ENTITYSPAWNER)
 			if (spawner != null)
@@ -505,6 +506,29 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 			location.setYaw(0);
 			location.setPitch(0);
 			return super.spawn(location);
+		}
+	}
+
+	private static class ClassSpawner extends DefaultSpawner
+	{
+
+		public ClassSpawner(final EntityType type)
+		{
+			super(type);
+		}
+
+		@Override
+		public Entity spawn(final Location location)
+		{
+			try
+			{
+				return location.getWorld().spawn(location, type.getEntityClass());
+			}
+			catch (final Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 
