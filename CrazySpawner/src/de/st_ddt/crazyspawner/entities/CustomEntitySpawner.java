@@ -64,6 +64,7 @@ import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
 import de.st_ddt.crazyspawner.entities.properties.OcelotProperty;
 import de.st_ddt.crazyspawner.entities.properties.PassengerProperty;
+import de.st_ddt.crazyspawner.entities.properties.PeacefulProperty;
 import de.st_ddt.crazyspawner.entities.properties.PigProperty;
 import de.st_ddt.crazyspawner.entities.properties.PigZombieProperty;
 import de.st_ddt.crazyspawner.entities.properties.PotionProterty;
@@ -150,6 +151,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		registerEntityProperty(BurningProperty.class, Entity.class);
 		registerEntityProperty(VelocityProperty.class, Entity.class);
 		registerEntityProperty(PassengerProperty.class, Entity.class);
+		registerEntityProperty(PeacefulProperty.class, Entity.class);
 		registerEntityProperty(ExperienceOrbProperty.class, ExperienceOrb.class);
 		registerEntityProperty(ExplosiveProperty.class, Explosive.class);
 		// FallingBlock impossible?
