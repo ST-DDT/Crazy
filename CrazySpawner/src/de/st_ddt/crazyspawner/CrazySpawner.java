@@ -294,7 +294,6 @@ public class CrazySpawner extends CrazyPlugin
 				getConfig().set("example", null);
 				saveConfiguration();
 			}
-			// EDIT readd this
 			if (VersionComparator.compareVersions(previousVersion, "3.15") == -1)
 			{
 				// - Healthy_Diamont_Zombie
