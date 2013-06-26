@@ -154,7 +154,6 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		registerEntityProperty(PeacefulProperty.class, Entity.class);
 		registerEntityProperty(ExperienceOrbProperty.class, ExperienceOrb.class);
 		registerEntityProperty(ExplosiveProperty.class, Explosive.class);
-		// FallingBlock impossible?
 		// Fireball required?
 		// Firework impossible?
 		// Hanging required?
