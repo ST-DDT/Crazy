@@ -319,7 +319,19 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		this.properties = getEntityPropertiesFromParams(type, params);
 	}
 
-	// EDIT Helper class for default custom entities
+	/**
+	 * Creates a CustomEntitySpawner from args.<br>
+	 * This is a helper method for default custom entities.
+	 * 
+	 * @param name
+	 *            The name of the custom entity.
+	 * @param type
+	 *            The entity type of this spawner.
+	 * @param sender
+	 *            The CommandSender how creates this object.
+	 * @param args
+	 *            The params to create this object.
+	 */
 	public CustomEntitySpawner(final String name, final EntityType type, final CommandSender sender, final String... args)
 	{
 		super();
