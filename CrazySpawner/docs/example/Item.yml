@@ -1,7 +1,7 @@
 # CrazySpawner example Item.yml
 # For more information visit
 # https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Item.yml
-# Items have to be defined inside config.yml (in the custom creature inventory slots)
+# Items have to be defined inside config.yml (in the custom entity inventory slots)
 exampleItem:
 # Material Type
 # For a full list visit the javadocs page
