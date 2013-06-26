@@ -159,7 +159,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		// Fireball required?
 		registerEntityProperty(FireworkProperty.class, Firework.class);
 		// Hanging required?
-		// TODO InventoryHolder
+		// InventoryHolder required?
 		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
 		registerEntityProperty(AlarmProperty.class, Item.class);
 		registerEntityProperty(DroppedItemProperty.class, Item.class);
@@ -181,7 +181,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		registerEntityProperty(SkeletonProperty.class, Skeleton.class);
 		registerEntityProperty(SlimeProperty.class, Slime.class);
 		registerEntityProperty(TameableProperty.class, Tameable.class);
-		// TODO TNTPrimed
+		// TNTPrimed impossible?
 		registerEntityProperty(VillagerProperty.class, Villager.class);
 		registerEntityProperty(WolfProperty.class, Wolf.class);
 		registerEntityProperty(ZombieProperty.class, Zombie.class);
