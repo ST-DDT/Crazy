@@ -13,6 +13,11 @@ public class DurationParamitrisable extends LongParamitrisable
 	protected final static Pattern PATTERN_SPACE = Pattern.compile(" ");
 	protected final static Pattern PATTERN_NUMERIC = Pattern.compile("[+-]?[0-9]+");
 
+	public DurationParamitrisable(final long defaultValue)
+	{
+		super(defaultValue);
+	}
+
 	public DurationParamitrisable(final Long defaultValue)
 	{
 		super(defaultValue);
