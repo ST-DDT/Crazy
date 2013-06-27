@@ -372,7 +372,7 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 		@Override
 		public Collection<? extends Entity> getEntities(final World world)
 		{
-			//EDIT implement this method for subclasses
+			// EDIT implement this method for subclasses
 			return world.getEntitiesByClass(type.getEntityClass());
 		}
 	}
