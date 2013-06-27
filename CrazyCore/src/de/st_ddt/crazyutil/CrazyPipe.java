@@ -3,26 +3,17 @@ package de.st_ddt.crazyutil;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.SimplePluginManager;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
@@ -104,7 +95,7 @@ public abstract class CrazyPipe
 			final PluginCommand command = Bukkit.getPluginCommand(pipeArgs[0]);
 			if (pipeArgs.length == 1)
 			{
-				for (final String cmd : getSaveCommandNames())
+				for (final String cmd : CommandHelper.getCommandNames())
 					if (cmd.toLowerCase().startsWith(pipeArgs[0].toLowerCase()))
 						res.add(cmd);
 				for (final String cmd : pipes.keySet())
@@ -117,46 +108,6 @@ public abstract class CrazyPipe
 		}
 		else
 			return pipe.tab(sender, ChatHelperExtended.shiftArray(pipeArgs, 1));
-	}
-
-	private static Set<String> getSaveCommandNames()
-	{
-		try
-		{
-			return getCommandNames();
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-			return new HashSet<String>();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private static Set<String> getCommandNames() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-	{
-		final PluginManager manager = Bukkit.getPluginManager();
-		final SimplePluginManager spm = (SimplePluginManager) manager;
-		SimpleCommandMap commandMap = null;
-		Map<String, Command> knownCommands = null;
-		if (spm != null)
-		{
-			final Field commandMapField = spm.getClass().getDeclaredField("commandMap");
-			commandMapField.setAccessible(true);
-			commandMap = (SimpleCommandMap) commandMapField.get(spm);
-			final Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
-			knownCommandsField.setAccessible(true);
-			knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
-		}
-		final Set<String> res = new TreeSet<String>();
-		if (commandMap != null)
-			for (final Iterator<Map.Entry<String, Command>> it = knownCommands.entrySet().iterator(); it.hasNext();)
-			{
-				final Command entry = it.next().getValue();
-				res.add(entry.getName());
-				res.addAll(entry.getAliases());
-			}
-		return res;
 	}
 
 	public static void pipe(final CommandSender sender, final ParameterData data, final String... pipeArgs) throws CrazyException
