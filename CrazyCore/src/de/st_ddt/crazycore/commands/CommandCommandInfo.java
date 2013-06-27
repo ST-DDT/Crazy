@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.PluginIdentifiableCommand;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
@@ -47,8 +47,8 @@ public class CommandCommandInfo extends CommandExecutor
 		else
 			plugin.sendLocaleMessage("COMMAND.COMMANDINFO.PERMISSION", sender, permission.toLowerCase());
 		plugin.sendLocaleMessage("COMMAND.COMMANDINFO.ALIASES", sender, ChatHelper.listingString(",  ", command.getAliases()));
-		if (command instanceof PluginCommand)
-			plugin.sendLocaleMessage("COMMAND.COMMANDINFO.OWNER", sender, ((PluginCommand) command).getPlugin().getName());
+		if (command instanceof PluginIdentifiableCommand)
+			plugin.sendLocaleMessage("COMMAND.COMMANDINFO.OWNER", sender, ((PluginIdentifiableCommand) command).getPlugin().getName());
 		else
 			plugin.sendLocaleMessage("COMMAND.COMMANDINFO.OWNER", sender, "SERVER");
 	}
