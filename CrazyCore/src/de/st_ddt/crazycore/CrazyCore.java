@@ -17,17 +17,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.messaging.Messenger;
 
-import de.st_ddt.crazycore.commands.CrazyCoreCommandLanguageTree;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandList;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPager;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPipe;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerAssociates;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerDelete;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerIPSearch;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerInfo;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeCommands;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandPlayerWipeFilePaths;
-import de.st_ddt.crazycore.commands.CrazyCoreCommandUpdateCheck;
+import de.st_ddt.crazycore.commands.CommandLanguageTree;
+import de.st_ddt.crazycore.commands.CommandList;
+import de.st_ddt.crazycore.commands.CommandPager;
+import de.st_ddt.crazycore.commands.CommandPipe;
+import de.st_ddt.crazycore.commands.CommandPlayerAssociates;
+import de.st_ddt.crazycore.commands.CommandPlayerDelete;
+import de.st_ddt.crazycore.commands.CommandPlayerIPSearch;
+import de.st_ddt.crazycore.commands.CommandPlayerInfo;
+import de.st_ddt.crazycore.commands.CommandPlayerWipeCommands;
+import de.st_ddt.crazycore.commands.CommandPlayerWipeFilePaths;
+import de.st_ddt.crazycore.commands.CommandUpdateCheck;
 import de.st_ddt.crazycore.listener.CrazyListener;
 import de.st_ddt.crazycore.listener.MessageListener;
 import de.st_ddt.crazycore.listener.PlayerListener;
@@ -209,19 +209,19 @@ public final class CrazyCore extends CrazyPlugin
 	{
 		final CrazyCommandTreeExecutor<CrazyCore> players = new CrazyCommandTreeExecutor<CrazyCore>(this);
 		mainCommand.addSubCommand(players, "p", "plr", "player", "players");
-		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeFilePaths(plugin), "wipefilepaths", "wipepaths");
-		mainCommand.addSubCommand(new CrazyCoreCommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
-		mainCommand.addSubCommand(new CrazyCoreCommandUpdateCheck(this), "updatecheck");
-		players.addSubCommand(new CrazyCoreCommandPlayerInfo(this), "i", "info");
-		players.addSubCommand(new CrazyCoreCommandPlayerAssociates(this), "a", "associates");
-		players.addSubCommand(new CrazyCoreCommandPlayerIPSearch(this), "ip", "ipsearch");
-		players.addSubCommand(new CrazyCoreCommandPlayerDelete(this), "delete", "remove");
-		final CrazyCommandTreeExecutor<CrazyCore> languages = new CrazyCoreCommandLanguageTree(this);
+		mainCommand.addSubCommand(new CommandPlayerWipeFilePaths(plugin), "wipefilepaths", "wipepaths");
+		mainCommand.addSubCommand(new CommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
+		mainCommand.addSubCommand(new CommandUpdateCheck(this), "updatecheck");
+		players.addSubCommand(new CommandPlayerInfo(this), "i", "info");
+		players.addSubCommand(new CommandPlayerAssociates(this), "a", "associates");
+		players.addSubCommand(new CommandPlayerIPSearch(this), "ip", "ipsearch");
+		players.addSubCommand(new CommandPlayerDelete(this), "delete", "remove");
+		final CrazyCommandTreeExecutor<CrazyCore> languages = new CommandLanguageTree(this);
 		getCommand("language").setExecutor(languages);
 		mainCommand.addSubCommand(languages, "language");
-		getCommand("crazylist").setExecutor(new CrazyCoreCommandList(this));
-		getCommand("crazypage").setExecutor(new CrazyCoreCommandPager(this));
-		getCommand("crazypipe").setExecutor(new CrazyCoreCommandPipe(this));
+		getCommand("crazylist").setExecutor(new CommandList(this));
+		getCommand("crazypage").setExecutor(new CommandPager(this));
+		getCommand("crazypipe").setExecutor(new CommandPipe(this));
 	}
 
 	private void registerHooks()

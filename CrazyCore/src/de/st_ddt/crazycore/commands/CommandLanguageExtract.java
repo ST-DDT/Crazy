@@ -16,16 +16,16 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
+public class CommandLanguageExtract extends CommandExecutor
 {
 
-	public CrazyCoreCommandLanguageDownload(final CrazyCore plugin)
+	public CommandLanguageExtract(final CrazyCore plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.DOWNLOADED $Language$", "CRAZYPLUGIN.COMMAND.LANGUAGE.DOWNLOADED.PLUGIN $Language$ $Plugin$" })
+	@Localized({ "CRAZYCORE.COMMAND.LANGUAGE.EXTRACTED $Language$", "CRAZYPLUGIN.COMMAND.LANGUAGE.EXTRACTED.PLUGIN $Language$ $Plugin$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length != 1)
@@ -37,10 +37,11 @@ public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
 			{
 				for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 				{
-					plugin.updateLanguage(language, sender, true);
+					plugin.unpackLanguage(language);
+					plugin.loadLanguage(language, sender);
 					plugin.checkLocale();
 				}
-				plugin.sendLocaleMessage("COMMAND.LANGUAGE.DOWNLOADED", sender, language);
+				plugin.sendLocaleMessage("COMMAND.LANGUAGE.EXTRACTED", sender, language);
 			}
 			return;
 		}
@@ -48,10 +49,11 @@ public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
 		{
 			for (final CrazyPlugin plugin : CrazyPlugin.getCrazyPlugins())
 			{
-				plugin.updateLanguage(name, sender, true);
+				plugin.unpackLanguage(name, sender);
+				plugin.loadLanguage(name, sender);
 				plugin.checkLocale();
 			}
-			plugin.sendLocaleMessage("COMMAND.LANGUAGE.DOWNLOADED", sender, name);
+			plugin.sendLocaleMessage("COMMAND.LANGUAGE.EXTRACTED", sender, name);
 			return;
 		}
 		final CrazyPlugin plugin = CrazyPlugin.getPlugin(name);
@@ -66,9 +68,10 @@ public class CrazyCoreCommandLanguageDownload extends CrazyCoreCommandExecutor
 		else
 			for (final String language : CrazyLocale.getLoadedLanguages())
 			{
-				plugin.updateLanguage(language, sender, true);
+				plugin.unpackLanguage(language, sender);
+				plugin.loadLanguage(language, sender);
 				plugin.checkLocale();
-				plugin.sendLocaleMessage("COMMAND.LANGUAGE.DOWNLOADED.PLUGIN", sender, language, plugin.getName());
+				plugin.sendLocaleMessage("COMMAND.LANGUAGE.EXTRACTED.PLUGIN", sender, language, plugin.getName());
 			}
 	}
 

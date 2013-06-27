@@ -11,17 +11,17 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandPlayerWipeFilePaths extends CrazyCommandListEditor<CrazyCore, String>
+public class CommandPlayerWipeCommands extends CrazyCommandListEditor<CrazyCore, String>
 {
 
 	private final ListFormat format = new ListFormat()
 	{
 
 		@Override
-		@Localized("CRAZYCORE.COMMAND.PLAYERWIPEFILEPATHS.LISTHEAD $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$")
+		@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.LISTHEAD $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$")
 		public String headFormat(final CommandSender sender)
 		{
-			return plugin.getLocale().getLanguageEntry("COMMAND.PLAYERWIPEFILEPATHS.LISTHEAD").getLanguageText(sender);
+			return plugin.getLocale().getLanguageEntry("COMMAND.PLAYERWIPECOMMANDS.LISTHEAD").getLanguageText(sender);
 		}
 
 		@Override
@@ -37,7 +37,7 @@ public class CrazyCoreCommandPlayerWipeFilePaths extends CrazyCommandListEditor<
 		}
 	};
 
-	public CrazyCoreCommandPlayerWipeFilePaths(final CrazyCore plugin)
+	public CommandPlayerWipeCommands(final CrazyCore plugin)
 	{
 		super(plugin);
 	}
@@ -49,17 +49,17 @@ public class CrazyCoreCommandPlayerWipeFilePaths extends CrazyCommandListEditor<
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.PLAYERWIPEFILEPATHS.ADD2 $Element$ $Index$")
+	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.ADD2 $Element$ $Index$")
 	public String addViaIndexLocale()
 	{
-		return "COMMAND.PLAYERWIPEFILEPATHS.ADD2";
+		return "COMMAND.PLAYERWIPECOMMANDS.ADD2";
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.PLAYERWIPEFILEPATHS.REMOVE2 $Element$ $Index$")
+	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.REMOVE2 $Element$ $Index$")
 	public String removeViaIndexLocale()
 	{
-		return "COMMAND.PLAYERWIPEFILEPATHS.REMOVE2";
+		return "COMMAND.PLAYERWIPECOMMANDS.REMOVE2";
 	}
 
 	@Override
@@ -75,17 +75,17 @@ public class CrazyCoreCommandPlayerWipeFilePaths extends CrazyCommandListEditor<
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.PLAYERWIPEFILEPATHS.ADD $Element$")
+	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.ADD $Element$")
 	public String addLocale()
 	{
-		return "COMMAND.PLAYERWIPEFILEPATHS.ADD";
+		return "COMMAND.PLAYERWIPECOMMANDS.ADD";
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.PLAYERWIPEFILEPATHS.REMOVE $Element$")
+	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.REMOVE $Element$")
 	public String removeLocale()
 	{
-		return "COMMAND.PLAYERWIPEFILEPATHS.REMOVE";
+		return "COMMAND.PLAYERWIPECOMMANDS.REMOVE";
 	}
 
 	@Override

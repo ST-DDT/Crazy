@@ -15,12 +15,12 @@ import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.PreSetList;
 
-public class CrazyCoreCommandPipe extends CrazyCoreCommandExecutor
+public class CommandPipe extends CommandExecutor
 {
 
 	private final Map<String, PreSetList> preSets = PreSetList.PRESETLISTS;
 
-	public CrazyCoreCommandPipe(final CrazyCore plugin)
+	public CommandPipe(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

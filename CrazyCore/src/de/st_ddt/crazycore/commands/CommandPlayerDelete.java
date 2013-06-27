@@ -16,10 +16,10 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandPlayerDelete extends CrazyCoreCommandExecutor
+public class CommandPlayerDelete extends CommandExecutor
 {
 
-	public CrazyCoreCommandPlayerDelete(final CrazyCore plugin)
+	public CommandPlayerDelete(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

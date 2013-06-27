@@ -16,10 +16,10 @@ import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandList extends CrazyCoreCommandExecutor
+public class CommandList extends CommandExecutor
 {
 
-	public CrazyCoreCommandList(final CrazyCore plugin)
+	public CommandList(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

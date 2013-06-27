@@ -14,10 +14,10 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandLanguageAddPreloaded extends CrazyCoreCommandExecutor
+public class CommandLanguageAddPreloaded extends CommandExecutor
 {
 
-	public CrazyCoreCommandLanguageAddPreloaded(final CrazyCore plugin)
+	public CommandLanguageAddPreloaded(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

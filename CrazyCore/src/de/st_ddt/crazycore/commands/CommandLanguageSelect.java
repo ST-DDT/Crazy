@@ -8,39 +8,33 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
-import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandLanguageSetDefault extends CrazyCoreCommandExecutor
+public class CommandLanguageSelect extends CommandExecutor
 {
 
-	public CrazyCoreCommandLanguageSetDefault(final CrazyCore plugin)
+	public CommandLanguageSelect(final CrazyCore plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.SET $LanguageName$ $Language$")
+	@Localized("CRAZYCORE.COMMAND.LANGUAGE.CHANGED $LanguageName$ $Language$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, "crazylanguage.advanced"))
-			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
-			throw new CrazyCommandUsageException("<Language>");
+			throw new CrazyCommandUsageException("[Language]");
 		final String language = args[0].toLowerCase();
 		if (!CrazyLocale.PATTERN_LANGUAGE.matcher(language).matches())
 			throw new CrazyCommandNoSuchException("Language", args[0], CrazyLocale.getActiveLanguagesNames(true));
-		if (!CrazyLocale.getDefaultLanguage().equals(language))
-		{
-			CrazyLocale.setDefaultLanguage(language);
-			plugin.loadLanguageFiles(language, true);
-		}
+		if (plugin.isLoadingUserLanguagesEnabled())
+			plugin.loadLanguageFiles(language, false);
+		CrazyLocale.setUserLanguage(sender, language);
 		plugin.save();
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.DEFAULT.SET", sender, CrazyLocale.getSaveLanguageName(language), language);
+		plugin.sendLocaleMessage("COMMAND.LANGUAGE.CHANGED", sender, CrazyLocale.getSaveLanguageName(language), language);
 	}
 
 	@Override

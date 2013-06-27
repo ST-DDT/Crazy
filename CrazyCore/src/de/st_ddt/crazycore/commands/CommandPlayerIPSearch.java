@@ -6,10 +6,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import de.st_ddt.crazycore.CrazyCore;
-import de.st_ddt.crazyplugin.events.CrazyPlayerAssociatesEvent;
+import de.st_ddt.crazyplugin.events.CrazyPlayerNamesConnectedToIPEvent;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelperExtended;
@@ -19,29 +18,28 @@ import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
-import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandPlayerAssociates extends CrazyCoreCommandExecutor
+public class CommandPlayerIPSearch extends CommandExecutor
 {
 
 	private final ListFormat listFormat = new ListFormat()
 	{
 
 		@Override
-		@Localized("CRAZYCORE.COMMAND.PLAYER.ASSOCIATES.LISTFORMAT $Index$ $Entry$ $ChatHeader$")
+		@Localized("CRAZYCORE.COMMAND.PLAYER.IPSEARCH.LISTFORMAT $Index$ $Entry$ $ChatHeader$")
 		public String listFormat(final CommandSender target)
 		{
-			return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYCORE.COMMAND.PLAYER.ASSOCIATES.LISTFORMAT");
+			return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYCORE.COMMAND.PLAYER.IPSEARCH.LISTFORMAT");
 		}
 
 		@Override
-		@Localized("CRAZYCORE.COMMAND.PLAYER.ASSOCIATES.HEADFORMAT $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $PlayerName$")
+		@Localized("CRAZYCORE.COMMAND.PLAYER.IPSEARCH.HEADFORMAT $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$ $IP$")
 		public String headFormat(final CommandSender target)
 		{
-			return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYCORE.COMMAND.PLAYER.ASSOCIATES.HEADFORMAT");
+			return CrazyLocale.getLocaleHead().getLocaleMessage(target, "CRAZYCORE.COMMAND.PLAYER.IPSEARCH.HEADFORMAT");
 		}
 
 		@Override
@@ -51,7 +49,7 @@ public class CrazyCoreCommandPlayerAssociates extends CrazyCoreCommandExecutor
 		}
 	};
 
-	public CrazyCoreCommandPlayerAssociates(final CrazyCore plugin)
+	public CommandPlayerIPSearch(final CrazyCore plugin)
 	{
 		super(plugin);
 	}
@@ -59,7 +57,7 @@ public class CrazyCoreCommandPlayerAssociates extends CrazyCoreCommandExecutor
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		final AssoicatesListModer moder = new AssoicatesListModer(sender);
+		final IPListModer moder = new IPListModer();
 		final String[] pipeArgs = ChatHelperExtended.processListCommand(sender, args, plugin.getChatHeader(), listFormat, null, null, null, moder, new ArrayList<String>(), moder);
 		if (pipeArgs != null)
 			for (final String data : moder.getList())
@@ -70,7 +68,7 @@ public class CrazyCoreCommandPlayerAssociates extends CrazyCoreCommandExecutor
 	public List<String> tab(final CommandSender sender, final String[] args)
 	{
 		final Map<String, Tabbed> params = new TreeMap<String, Tabbed>();
-		new AssoicatesListModer(sender).tabHelp(params);
+		new IPListModer().tabHelp(params);
 		final Tabbed page = ChatHelperExtended.listTabHelp(params, sender, null, null);
 		return ChatHelperExtended.tabHelp(args, params, page);
 	}
@@ -78,24 +76,14 @@ public class CrazyCoreCommandPlayerAssociates extends CrazyCoreCommandExecutor
 	@Override
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
-		return PermissionModule.hasPermission(sender, "crazycore.player.associates");
+		return PermissionModule.hasPermission(sender, "crazycore.player.ipsearch");
 	}
 
-	private class AssoicatesListModer implements ListOptionsModder<String>
+	private class IPListModer implements ListOptionsModder<String>
 	{
 
-		private final OfflinePlayerParamitrisable player;
-		private final IntegerParamitrisable recursion = new IntegerParamitrisable(0);
+		private final StringParamitrisable ip = new StringParamitrisable(null);
 		private List<String> datas;
-
-		protected AssoicatesListModer(final CommandSender sender)
-		{
-			super();
-			if (sender instanceof Player)
-				this.player = new OfflinePlayerParamitrisable((Player) sender);
-			else
-				this.player = new OfflinePlayerParamitrisable(null);
-		}
 
 		public List<String> getList()
 		{
@@ -106,42 +94,29 @@ public class CrazyCoreCommandPlayerAssociates extends CrazyCoreCommandExecutor
 		public void modListPreOptions(final Map<String, Paramitrisable> params, final List<String> datas)
 		{
 			this.datas = datas;
-			params.put("n", player);
-			params.put("name", player);
-			params.put("p", player);
-			params.put("player", player);
-			params.put("r", recursion);
-			params.put("recursion", recursion);
+			params.put("ip", ip);
 		}
 
 		@Override
 		public String[] modListPostOptions(final List<String> datas, final String[] pipeArgs) throws CrazyException
 		{
-			if (player.getValue() == null)
-				throw new CrazyCommandNoSuchException("Player", "(none)");
-			final CrazyPlayerAssociatesEvent event = new CrazyPlayerAssociatesEvent(player.getValue().getName(), recursion.getValue());
+			if (ip.getValue() == null)
+				throw new CrazyCommandNoSuchException("IP", "(none)");
+			final CrazyPlayerNamesConnectedToIPEvent event = new CrazyPlayerNamesConnectedToIPEvent(ip.getValue());
 			event.callEvent();
-			datas.addAll(event.getAssociates());
+			datas.addAll(event.getNames());
 			return pipeArgs;
 		}
 
 		public void tabHelp(final Map<String, Tabbed> params)
 		{
-			params.put("n", player);
-			params.put("name", player);
-			params.put("p", player);
-			params.put("player", player);
-			params.put("r", recursion);
-			params.put("recursion", recursion);
+			params.put("ip", ip);
 		}
 
 		@Override
 		public String toString()
 		{
-			if (player.getValue() == null)
-				return null;
-			else
-				return player.getValue().getName();
+			return ip.getValue();
 		}
 	}
 }

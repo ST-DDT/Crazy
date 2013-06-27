@@ -10,10 +10,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.CrazyPages;
 
-public class CrazyCoreCommandPager extends CrazyCoreCommandExecutor
+public class CommandPager extends CommandExecutor
 {
 
-	public CrazyCoreCommandPager(final CrazyCore plugin)
+	public CommandPager(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

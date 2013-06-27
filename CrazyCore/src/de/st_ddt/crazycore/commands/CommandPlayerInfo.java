@@ -19,10 +19,10 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandPlayerInfo extends CrazyCoreCommandExecutor
+public class CommandPlayerInfo extends CommandExecutor
 {
 
-	public CrazyCoreCommandPlayerInfo(final CrazyCore plugin)
+	public CommandPlayerInfo(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

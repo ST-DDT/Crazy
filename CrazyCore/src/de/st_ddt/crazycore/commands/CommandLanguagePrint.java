@@ -6,35 +6,28 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazycore.CrazyCore;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
-import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandLanguageLink extends CrazyCoreCommandExecutor
+public class CommandLanguagePrint extends CommandExecutor
 {
 
-	public CrazyCoreCommandLanguageLink(final CrazyCore plugin)
+	public CommandLanguagePrint(final CrazyCore plugin)
 	{
 		super(plugin);
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.LANGUAGE.LINK")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length != 1)
-			throw new CrazyCommandUsageException("<Path>");
-		plugin.sendLocaleMessage("COMMAND.LANGUAGE.LINK", sender);
-		final CrazyLocale locale = CrazyLocale.getLocaleHead().getLanguageEntry(args[0]);
-		if (locale == null)
-			throw new CrazyCommandNoSuchException("LanguageEntry", args[0]);
-		if (locale.getAlternative() == null)
-			sender.sendMessage(locale.getPath() + " <= (null)");
+			throw new CrazyCommandUsageException("<Path/*>");
+		if (args[0].equalsIgnoreCase("*"))
+			CrazyLocale.printAll(sender);
 		else
-			sender.sendMessage(locale.getPath() + " <= " + locale.getAlternative().getPath());
+			CrazyLocale.getLocaleHead().getLanguageEntry(args[0]).print(sender);
 	}
 
 	@Override

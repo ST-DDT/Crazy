@@ -9,10 +9,10 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandUpdateCheck extends CrazyCoreCommandExecutor
+public class CommandUpdateCheck extends CommandExecutor
 {
 
-	public CrazyCoreCommandUpdateCheck(final CrazyCore plugin)
+	public CommandUpdateCheck(final CrazyCore plugin)
 	{
 		super(plugin);
 	}

@@ -10,10 +10,10 @@ import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class CrazyCoreCommandLanguageList extends CrazyCoreCommandExecutor
+public class CommandLanguageList extends CommandExecutor
 {
 
-	public CrazyCoreCommandLanguageList(final CrazyCore plugin)
+	public CommandLanguageList(final CrazyCore plugin)
 	{
 		super(plugin);
 	}
