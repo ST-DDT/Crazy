@@ -16,6 +16,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CommandHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandCommandInfo extends CommandExecutor
 {
@@ -40,7 +41,11 @@ public class CommandCommandInfo extends CommandExecutor
 		plugin.sendLocaleMessage("COMMAND.COMMANDINFO.NAME", sender, command.getName());
 		plugin.sendLocaleMessage("COMMAND.COMMANDINFO.DESCRIPTION", sender, command.getDescription());
 		plugin.sendLocaleMessage("COMMAND.COMMANDINFO.USAGE", sender, command.getUsage());
-		plugin.sendLocaleMessage("COMMAND.COMMANDINFO.PERMISSION", sender, command.getPermission());
+		final String permission = command.getPermission();
+		if (permission == null)
+			plugin.sendLocaleMessage("COMMAND.COMMANDINFO.PERMISSION", sender, "UNKNOWN");
+		else
+			plugin.sendLocaleMessage("COMMAND.COMMANDINFO.PERMISSION", sender, permission.toLowerCase());
 		plugin.sendLocaleMessage("COMMAND.COMMANDINFO.ALIASES", sender, ChatHelper.listingString(",  ", command.getAliases()));
 		if (command instanceof PluginCommand)
 			plugin.sendLocaleMessage("COMMAND.COMMANDINFO.OWNER", sender, ((PluginCommand) command).getPlugin().getName());
@@ -66,6 +71,7 @@ public class CommandCommandInfo extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazycore.comamndinfo")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.commandinfo");

@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.messaging.Messenger;
 
+import de.st_ddt.crazycore.commands.CommandCommandInfo;
 import de.st_ddt.crazycore.commands.CommandLanguageTree;
 import de.st_ddt.crazycore.commands.CommandList;
 import de.st_ddt.crazycore.commands.CommandPager;
@@ -212,6 +213,7 @@ public final class CrazyCore extends CrazyPlugin
 		mainCommand.addSubCommand(new CommandPlayerWipeFilePaths(plugin), "wipefilepaths", "wipepaths");
 		mainCommand.addSubCommand(new CommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
 		mainCommand.addSubCommand(new CommandUpdateCheck(this), "updatecheck");
+		mainCommand.addSubCommand(new CommandCommandInfo(this), "ci", "cinfo", "commandinfo");
 		players.addSubCommand(new CommandPlayerInfo(this), "i", "info");
 		players.addSubCommand(new CommandPlayerAssociates(this), "a", "associates");
 		players.addSubCommand(new CommandPlayerIPSearch(this), "ip", "ipsearch");

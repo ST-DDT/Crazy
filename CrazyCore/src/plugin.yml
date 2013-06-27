@@ -49,6 +49,7 @@ permissions:
       crazycore.mode.*: true
       crazycore.reload: true
       crazycore.save: true
+      crazycore.comamndinfo: true
       crazylanguage.advanced: true
       crazypipe.use: true
   crazycore.protectedplayer:
@@ -109,6 +110,9 @@ permissions:
     default: op
   crazycore.save:
     description: Allow saving plugin.
+    default: op
+  crazycore.comamndinfo:
+    description: Allow searching for commands and displaying detailed information about it.
     default: op
   crazylanguage.advanced:
     description: Allow changing default languages or language reloads.
