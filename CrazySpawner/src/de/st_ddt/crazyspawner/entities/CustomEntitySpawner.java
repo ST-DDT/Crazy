@@ -63,6 +63,7 @@ import de.st_ddt.crazyspawner.entities.properties.FallingBlockProperties;
 import de.st_ddt.crazyspawner.entities.properties.FireworkProperty;
 import de.st_ddt.crazyspawner.entities.properties.HealthProperty;
 import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
+import de.st_ddt.crazyspawner.entities.properties.LivingDespawnProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
 import de.st_ddt.crazyspawner.entities.properties.OcelotProperty;
 import de.st_ddt.crazyspawner.entities.properties.PassengerProperty;
@@ -150,6 +151,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		if (v146OrLater)
 			registerEntityProperty(HealthProperty.class, Damageable.class);
 		registerEntityProperty(EndermanProperty.class, Enderman.class);
+		registerEntityProperty(DespawnProperty.class, Entity.class, LivingEntity.class);
 		registerEntityProperty(BurningProperty.class, Entity.class);
 		registerEntityProperty(VelocityProperty.class, Entity.class);
 		registerEntityProperty(PassengerProperty.class, Entity.class);
@@ -165,7 +167,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		registerEntityProperty(DroppedItemProperty.class, Item.class);
 		// ItemFrame required?
 		registerEntityProperty(DamageProperty.class, LivingEntity.class);
-		registerEntityProperty(DespawnProperty.class, LivingEntity.class);
+		registerEntityProperty(LivingDespawnProperty.class, LivingEntity.class);
 		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
 		if (v150OrLater)
 			registerEntityProperty(NameProperty.class, LivingEntity.class);
@@ -206,6 +208,18 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		for (final EntityType type : EntityType.values())
 			if (type.getEntityClass() != null && targetClass.isAssignableFrom(type.getEntityClass()))
 				ENTITYPROPERTIES[type.ordinal()].add(propertyClass);
+	}
+
+	public static void registerEntityProperty(final Class<? extends EntityPropertyInterface> propertyClass, final Class<?> targetClass, final Class<?>... ignoredClasses)
+	{
+		for (final EntityType type : EntityType.values())
+			if (type.getEntityClass() != null && targetClass.isAssignableFrom(type.getEntityClass()))
+			{
+				for (final Class<?> ignoredClass : ignoredClasses)
+					if (ignoredClass.isAssignableFrom(type.getEntityClass()))
+						return;
+				ENTITYPROPERTIES[type.ordinal()].add(propertyClass);
+			}
 	}
 
 	protected static List<EntityPropertyInterface> getDefaultEntityProperties(final EntityType type)
