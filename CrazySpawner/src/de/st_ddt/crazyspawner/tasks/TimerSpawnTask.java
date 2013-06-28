@@ -37,7 +37,7 @@ import de.st_ddt.crazyutil.VersionComparator;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 
-public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<SpawnTask>, ParameterData
+public class TimerSpawnTask implements Runnable, ConfigurationSaveable, Comparable<TimerSpawnTask>, ParameterData
 {
 
 	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
@@ -117,7 +117,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param thunder
 	 *            Cast thunder (effects) when spawning a creature.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
+	public TimerSpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final List<Long> countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
 	{
 		super();
 		this.plugin = plugin;
@@ -156,7 +156,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 		this.thunder = thunder;
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
+	public TimerSpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final double spawnRange, final int amount, final long interval, final int repeat, final boolean synced, final int chunkLoadRange, final int creatureMaxCount, final double creatureRange, final int playerMinCount, final double playerRange, final double blockingRange, final Long[] countDownTimes, final String countDownMessage, final boolean countDownBroadcast, final boolean allowDespawn, final boolean peaceful, final double alarmRange, final int health, final boolean showHealth, final int fire, final Thunder thunder)
 	{
 		this(plugin, type, location, spawnRange, amount, interval, repeat, synced, chunkLoadRange, creatureMaxCount, creatureRange, playerMinCount, playerRange, blockingRange, new ArrayList<Long>(countDownTimes == null ? 0 : countDownTimes.length), countDownMessage, countDownBroadcast, allowDespawn, peaceful, alarmRange, health, showHealth, fire, thunder);
 		if (countDownTimes != null)
@@ -181,12 +181,12 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	 * @param creatureRange
 	 *            Search range for the given type.
 	 */
-	public SpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
+	public TimerSpawnTask(final CrazySpawner plugin, final NamedEntitySpawner type, final Location location, final long interval, final int chunkLoadRange, final Long[] countDownTimes, final String countDownMessage, final double creatureRange)
 	{
 		this(plugin, type, location, 0, 1, interval, -1, true, chunkLoadRange, 1, creatureRange, 0, 0, 0, countDownTimes, countDownMessage, countDownMessage != null, false, false, -1, -1, false, -1, Thunder.EFFECT);
 	}
 
-	public SpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
+	public TimerSpawnTask(final CrazySpawner plugin, final ConfigurationSection config)
 	{
 		super();
 		this.plugin = plugin;
@@ -442,7 +442,7 @@ public class SpawnTask implements Runnable, ConfigurationSaveable, Comparable<Sp
 	}
 
 	@Override
-	public int compareTo(final SpawnTask o)
+	public int compareTo(final TimerSpawnTask o)
 	{
 		int res = location.getWorld().getName().compareToIgnoreCase(o.location.getWorld().getName());
 		if (res == 0)

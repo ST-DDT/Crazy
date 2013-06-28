@@ -16,7 +16,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.NamedEntitySpawner;
 import de.st_ddt.crazyutil.Tabbed;
@@ -84,7 +84,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 			throw new CrazyCommandNoSuchException("World", "(none)");
 		if (world.getEnvironment() != Environment.THE_END)
 			throw new CrazyCommandCircumstanceException("the world must be a The_End world!");
-		final SpawnTask dragon = new SpawnTask(plugin, DRAGONTYPE, new Location(world, 0, 0, 0), interval.getValue() / 50, 5, COUNTDOWNTIMES, plugin.getLocale().getDefaultLocaleMessage("THEENDAUTORESPAWN.COUNTDOWNMESSAGE", world.getName(), "$0$"), DRAGONRANGE);
+		final TimerSpawnTask dragon = new TimerSpawnTask(plugin, DRAGONTYPE, new Location(world, 0, 0, 0), interval.getValue() / 50, 5, COUNTDOWNTIMES, plugin.getLocale().getDefaultLocaleMessage("THEENDAUTORESPAWN.COUNTDOWNMESSAGE", world.getName(), "$0$"), DRAGONRANGE);
 		plugin.addSpawnTask(dragon);
 		dragon.start();
 		final int range = chunkloadrange.getValue();
@@ -93,7 +93,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 				world.loadChunk(x, z, false);
 		for (final Entity entity : CRYSTALTYPE.getEntities(world))
 		{
-			final SpawnTask crystal = new SpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), interval.getValue() / 50, 1, null, null, CRYSTALERANGE);
+			final TimerSpawnTask crystal = new TimerSpawnTask(plugin, CRYSTALTYPE, entity.getLocation().add(0, -1, 0), interval.getValue() / 50, 1, null, null, CRYSTALERANGE);
 			plugin.addSpawnTask(crystal);
 			crystal.start();
 		}

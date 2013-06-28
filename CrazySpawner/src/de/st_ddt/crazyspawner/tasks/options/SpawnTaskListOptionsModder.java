@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
-import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 import de.st_ddt.crazyspawner.tasks.comparator.SpawnTaskRangeComparator;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Filter;
@@ -24,7 +24,7 @@ import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 
-public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
+public class SpawnTaskListOptionsModder implements ListOptionsModder<TimerSpawnTask>
 {
 
 	private final CreatureParamitrisable creature = new CreatureParamitrisable(null);
@@ -51,10 +51,10 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 		};
 	}
 
-	public Collection<FilterInstanceInterface<SpawnTask>> getFilters()
+	public Collection<FilterInstanceInterface<TimerSpawnTask>> getFilters()
 	{
-		final List<FilterInstanceInterface<SpawnTask>> res = new ArrayList<FilterInterface.FilterInstanceInterface<SpawnTask>>();
-		res.add(new Filter.DeafFilterInstance<SpawnTask>()
+		final List<FilterInstanceInterface<TimerSpawnTask>> res = new ArrayList<FilterInterface.FilterInstanceInterface<TimerSpawnTask>>();
+		res.add(new Filter.DeafFilterInstance<TimerSpawnTask>()
 		{
 
 			@Override
@@ -64,12 +64,12 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 			}
 
 			@Override
-			public boolean filter(final SpawnTask data)
+			public boolean filter(final TimerSpawnTask data)
 			{
 				return creature.getValue() == data.getType().getType();
 			}
 		});
-		res.add(new Filter.DeafFilterInstance<SpawnTask>()
+		res.add(new Filter.DeafFilterInstance<TimerSpawnTask>()
 		{
 
 			@Override
@@ -79,12 +79,12 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 			}
 
 			@Override
-			public boolean filter(final SpawnTask data)
+			public boolean filter(final TimerSpawnTask data)
 			{
 				return type.getValue() == data.getType();
 			}
 		});
-		res.add(new Filter.DeafFilterInstance<SpawnTask>()
+		res.add(new Filter.DeafFilterInstance<TimerSpawnTask>()
 		{
 
 			@Override
@@ -94,7 +94,7 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 			}
 
 			@Override
-			public boolean filter(final SpawnTask data)
+			public boolean filter(final TimerSpawnTask data)
 			{
 				if (location.getValue().getWorld() == data.getLocation().getWorld())
 					return location.getValue().distance(data.getLocation()) <= range.getValue();
@@ -106,7 +106,7 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 	}
 
 	@Override
-	public void modListPreOptions(final Map<String, Paramitrisable> params, final List<SpawnTask> datas)
+	public void modListPreOptions(final Map<String, Paramitrisable> params, final List<TimerSpawnTask> datas)
 	{
 		params.put("c", creature);
 		params.put("creature", creature);
@@ -145,7 +145,7 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<SpawnTask>
 	}
 
 	@Override
-	public String[] modListPostOptions(final List<SpawnTask> datas, final String[] pipeArgs) throws CrazyException
+	public String[] modListPostOptions(final List<TimerSpawnTask> datas, final String[] pipeArgs) throws CrazyException
 	{
 		rangeSort.setLocation(location.getValue());
 		if (pipeArgs == null)

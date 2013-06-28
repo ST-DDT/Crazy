@@ -2,13 +2,13 @@ package de.st_ddt.crazyspawner.tasks.comparator;
 
 import java.util.Comparator;
 
-import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 
-public class SpawnTaskTypeComparator implements Comparator<SpawnTask>
+public class SpawnTaskTypeComparator implements Comparator<TimerSpawnTask>
 {
 
 	@Override
-	public int compare(final SpawnTask o1, final SpawnTask o2)
+	public int compare(final TimerSpawnTask o1, final TimerSpawnTask o2)
 	{
 		final int res = o1.getType().getName().compareTo(o2.getType().getName());
 		if (res == 0)

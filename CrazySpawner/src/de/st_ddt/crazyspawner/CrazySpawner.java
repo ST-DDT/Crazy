@@ -48,7 +48,7 @@ import de.st_ddt.crazyspawner.entities.properties.EquipmentProperties;
 import de.st_ddt.crazyspawner.entities.properties.PotionProterty;
 import de.st_ddt.crazyspawner.listener.CreatureListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
-import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 import de.st_ddt.crazyspawner.tasks.options.Thunder;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
@@ -78,7 +78,7 @@ public class CrazySpawner extends CrazyPlugin
 	private static CrazySpawner plugin;
 	protected final Set<CustomEntitySpawner> customEntities = new LinkedHashSet<CustomEntitySpawner>();
 	protected final CustomEntitySpawner[] overwriteEntities = new CustomEntitySpawner[EntityType.values().length];
-	protected final Set<SpawnTask> tasks = new TreeSet<SpawnTask>();
+	protected final Set<TimerSpawnTask> tasks = new TreeSet<TimerSpawnTask>();
 	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 	protected double defaultAlarmRange;
 	protected boolean monsterExplosionDamageEnabled;
@@ -556,7 +556,7 @@ public class CrazySpawner extends CrazyPlugin
 			}
 			else
 				overwriteEntities[type.ordinal()] = null;
-		for (final SpawnTask task : tasks)
+		for (final TimerSpawnTask task : tasks)
 			task.cancel();
 		tasks.clear();
 		final ConfigurationSection taskConfig = config.getConfigurationSection("tasks");
@@ -564,13 +564,13 @@ public class CrazySpawner extends CrazyPlugin
 			for (final String key : taskConfig.getKeys(false))
 				try
 				{
-					tasks.add(new SpawnTask(plugin, taskConfig.getConfigurationSection(key)));
+					tasks.add(new TimerSpawnTask(plugin, taskConfig.getConfigurationSection(key)));
 				}
 				catch (final IllegalArgumentException e)
 				{
 					e.printStackTrace();
 				}
-		for (final SpawnTask task : tasks)
+		for (final TimerSpawnTask task : tasks)
 			task.start(100);
 		defaultAlarmRange = config.getDouble("defaultAlarmRange", 10);
 		monsterExplosionDamageEnabled = config.getBoolean("monsterExplosionDamageEnabled", true);
@@ -603,7 +603,7 @@ public class CrazySpawner extends CrazyPlugin
 		{
 			config.set("tasks", null);
 			int i = 0;
-			for (final SpawnTask task : tasks)
+			for (final TimerSpawnTask task : tasks)
 				task.save(config, "tasks.t" + i++ + ".");
 		}
 		config.set("defaultAlarmRange", defaultAlarmRange);
@@ -629,18 +629,18 @@ public class CrazySpawner extends CrazyPlugin
 		saveConfiguration();
 	}
 
-	public void addSpawnTask(final SpawnTask task)
+	public void addSpawnTask(final TimerSpawnTask task)
 	{
 		tasks.add(task);
 		saveConfiguration();
 	}
 
-	public Set<SpawnTask> getTasks()
+	public Set<TimerSpawnTask> getTasks()
 	{
 		return tasks;
 	}
 
-	public void removeSpawnTask(final SpawnTask task)
+	public void removeSpawnTask(final TimerSpawnTask task)
 	{
 		tasks.remove(task);
 		saveConfiguration();

@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 import de.st_ddt.crazyspawner.tasks.comparator.SpawnTaskRangeComparator;
 import de.st_ddt.crazyspawner.tasks.comparator.SpawnTaskTypeComparator;
 import de.st_ddt.crazyspawner.tasks.options.SpawnTaskListOptionsModder;
@@ -24,7 +24,7 @@ import de.st_ddt.crazyutil.source.Localized;
 public class CommandSpawnList extends CommandExecutor
 {
 
-	private final Map<String, Comparator<SpawnTask>> sorters = new TreeMap<String, Comparator<SpawnTask>>();
+	private final Map<String, Comparator<TimerSpawnTask>> sorters = new TreeMap<String, Comparator<TimerSpawnTask>>();
 	final SpawnTaskRangeComparator rangeSort = new SpawnTaskRangeComparator();
 	private final ListFormat listFormat = new ListFormat()
 	{
@@ -54,7 +54,7 @@ public class CommandSpawnList extends CommandExecutor
 	public CommandSpawnList(final CrazySpawner plugin)
 	{
 		super(plugin);
-		final Comparator<SpawnTask> typeSort = new SpawnTaskTypeComparator();
+		final Comparator<TimerSpawnTask> typeSort = new SpawnTaskTypeComparator();
 		sorters.put("t", typeSort);
 		sorters.put("type", typeSort);
 		sorters.put("c", typeSort);
@@ -70,7 +70,7 @@ public class CommandSpawnList extends CommandExecutor
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final SpawnTaskListOptionsModder modder = new SpawnTaskListOptionsModder(rangeSort, sender instanceof Player ? 100D : null, sender);
-		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), listFormat, modder.getFilters(), sorters, rangeSort, modder, new ArrayList<SpawnTask>(plugin.getTasks()));
+		ChatHelperExtended.processFullListCommand(sender, args, plugin.getChatHeader(), listFormat, modder.getFilters(), sorters, rangeSort, modder, new ArrayList<TimerSpawnTask>(plugin.getTasks()));
 	}
 
 	@Override

@@ -4,9 +4,9 @@ import java.util.Comparator;
 
 import org.bukkit.Location;
 
-import de.st_ddt.crazyspawner.tasks.SpawnTask;
+import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 
-public class SpawnTaskRangeComparator implements Comparator<SpawnTask>
+public class SpawnTaskRangeComparator implements Comparator<TimerSpawnTask>
 {
 
 	private Location location;
@@ -17,7 +17,7 @@ public class SpawnTaskRangeComparator implements Comparator<SpawnTask>
 	}
 
 	@Override
-	public int compare(final SpawnTask o1, final SpawnTask o2)
+	public int compare(final TimerSpawnTask o1, final TimerSpawnTask o2)
 	{
 		if (location == null)
 			return o1.compareTo(o2);
