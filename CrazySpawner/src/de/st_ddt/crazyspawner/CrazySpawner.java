@@ -77,8 +77,10 @@ public class CrazySpawner extends CrazyPlugin
 	protected final static boolean v15OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5") >= 0;
 	private static CrazySpawner plugin;
 	protected final Set<CustomEntitySpawner> customEntities = new LinkedHashSet<CustomEntitySpawner>();
+	protected final YamlConfiguration customEntitiesConfig = new YamlConfiguration();
+	protected final Set<TimerSpawnTask> timerTasks = new TreeSet<TimerSpawnTask>();
+	protected final YamlConfiguration tasksConfig = new YamlConfiguration();
 	protected final CustomEntitySpawner[] overwriteEntities = new CustomEntitySpawner[EntityType.values().length];
-	protected final Set<TimerSpawnTask> tasks = new TreeSet<TimerSpawnTask>();
 	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
 	protected double defaultAlarmRange;
 	protected boolean monsterExplosionDamageEnabled;
@@ -199,7 +201,7 @@ public class CrazySpawner extends CrazyPlugin
 				@Override
 				public int getValue()
 				{
-					return tasks.size();
+					return timerTasks.size();
 				}
 			});
 			final Graph customEntityCount = metrics.createGraph("Custom Entities");
@@ -233,7 +235,7 @@ public class CrazySpawner extends CrazyPlugin
 	}
 
 	@Override
-	@Localized("CRAZYSPAWNER.CREATURES.AVAILABLE $Count$")
+	@Localized("CRAZYSPAWNER.SPAWNABLEENTITIES.AVAILABLE $Count$")
 	public void onEnable()
 	{
 		registerHooks();
@@ -335,7 +337,7 @@ public class CrazySpawner extends CrazyPlugin
 		}
 		registerCommands();
 		registerMetrics();
-		sendLocaleMessage("CREATURES.AVAILABLE", Bukkit.getConsoleSender(), NamedEntitySpawnerParamitrisable.ENTITY_TYPES.size());
+		sendLocaleMessage("SPAWNABLEENTITIES.AVAILABLE", Bukkit.getConsoleSender(), NamedEntitySpawnerParamitrisable.ENTITY_TYPES.size());
 	}
 
 	private void saveExamples()
@@ -347,8 +349,8 @@ public class CrazySpawner extends CrazyPlugin
 		{
 			final YamlConfiguration customEntity = new YamlConfiguration();
 			customEntity.options().header("CrazySpawner example Entity" + type.name() + ".yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
-			new CustomEntitySpawner(type).dummySave(customEntity, "customEntities.example" + type.name() + ".");
-			customEntity.set("customEntities.example" + type.name() + ".type", type.name());
+			new CustomEntitySpawner(type).dummySave(customEntity, "example" + type.name() + ".");
+			customEntity.set("example" + type.name() + ".type", type.name());
 			try
 			{
 				customEntity.save(new File(exampleFolder, "Entity" + type.name() + ".yml"));
@@ -512,14 +514,21 @@ public class CrazySpawner extends CrazyPlugin
 	}
 
 	@Override
-	@Localized("CRAZYSPAWNER.CREATURES.LOADED $Count$")
+	public void load()
+	{
+		loadCustomEntities();
+		super.load();
+		loadSpawnTasks();
+	}
+
+	@Override
 	public void loadConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		// CustomEntities
-		customEntities.clear();
+		// CustomEntities (Deprecated)
 		final ConfigurationSection customEntityConfig = config.getConfigurationSection("customEntities");
 		if (customEntityConfig != null)
+		{
 			for (final String key : customEntityConfig.getKeys(false))
 				try
 				{
@@ -532,7 +541,24 @@ public class CrazySpawner extends CrazyPlugin
 					System.err.println("Could not load customEntity " + key);
 					System.err.println(e.getMessage());
 				}
-		sendLocaleMessage("CREATURES.LOADED", Bukkit.getConsoleSender(), customEntities.size());
+			config.set("customEntities", null);
+		}
+		// Tasks (Deprecated)
+		final ConfigurationSection taskConfig = config.getConfigurationSection("tasks");
+		if (taskConfig != null)
+		{
+			for (final String key : taskConfig.getKeys(false))
+				try
+				{
+					timerTasks.add(new TimerSpawnTask(this, taskConfig.getConfigurationSection(key)));
+				}
+				catch (final IllegalArgumentException e)
+				{
+					System.err.println("[CrazySpawner] Could not load TimerTask " + key + ".");
+					System.err.println(e.getMessage());
+				}
+			config.set("tasks", null);
+		}
 		// OverwriteEntities
 		for (final EntityType type : EntityType.values())
 			if (type.getEntityClass() != null && LivingEntity.class.isAssignableFrom(type.getEntityClass()))
@@ -556,38 +582,84 @@ public class CrazySpawner extends CrazyPlugin
 			}
 			else
 				overwriteEntities[type.ordinal()] = null;
-		for (final TimerSpawnTask task : tasks)
+		defaultAlarmRange = config.getDouble("defaultAlarmRange", 10);
+		monsterExplosionDamageEnabled = config.getBoolean("monsterExplosionDamageEnabled", true);
+	}
+
+	@Localized("CRAZYSPAWNER.SPAWNABLEENTITIES.LOADED $Count$")
+	public void loadCustomEntities()
+	{
+		final File customEntitiesFile = new File(getDataFolder(), "CustomEntities.yml");
+		if (customEntitiesFile.exists())
+			try
+			{
+				customEntitiesConfig.load(customEntitiesFile);
+			}
+			catch (final Exception e)
+			{
+				System.err.println("[CrazySpawner] Could not load CustomEntities.yml.");
+				System.err.println(e.getMessage());
+			}
+		customEntities.clear();
+		for (final String key : customEntitiesConfig.getKeys(false))
+			try
+			{
+				final CustomEntitySpawner customEntity = new CustomEntitySpawner(customEntitiesConfig.getConfigurationSection(key));
+				customEntities.add(customEntity);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity);
+			}
+			catch (final IllegalArgumentException e)
+			{
+				System.err.println("Could not load CustomEntity " + key);
+				System.err.println(e.getMessage());
+			}
+		sendLocaleMessage("SPAWNABLEENTITIES.LOADED", Bukkit.getConsoleSender(), customEntities.size());
+	}
+
+	public void loadSpawnTasks()
+	{
+		final File tasksFile = new File(getDataFolder(), "Tasks.yml");
+		if (tasksFile.exists())
+			try
+			{
+				tasksConfig.load(tasksFile);
+			}
+			catch (final Exception e)
+			{
+				System.err.println("[CrazySpawner] Could not load CustomEntities.yml.");
+				System.err.println(e.getMessage());
+			}
+		for (final TimerSpawnTask task : timerTasks)
 			task.cancel();
-		tasks.clear();
-		final ConfigurationSection taskConfig = config.getConfigurationSection("tasks");
+		timerTasks.clear();
+		final ConfigurationSection taskConfig = tasksConfig.getConfigurationSection("timerTasks");
 		if (taskConfig != null)
 			for (final String key : taskConfig.getKeys(false))
 				try
 				{
-					tasks.add(new TimerSpawnTask(plugin, taskConfig.getConfigurationSection(key)));
+					timerTasks.add(new TimerSpawnTask(this, taskConfig.getConfigurationSection(key)));
 				}
 				catch (final IllegalArgumentException e)
 				{
-					e.printStackTrace();
+					System.err.println("[CrazySpawner] Could not load TimerTask " + key + ".");
+					System.err.println(e.getMessage());
 				}
-		for (final TimerSpawnTask task : tasks)
+		for (final TimerSpawnTask task : timerTasks)
 			task.start(100);
-		defaultAlarmRange = config.getDouble("defaultAlarmRange", 10);
-		monsterExplosionDamageEnabled = config.getBoolean("monsterExplosionDamageEnabled", true);
+	}
+
+	@Override
+	public void save()
+	{
+		saveCustomEntities();
+		super.save();
+		saveSpawnTasks();
 	}
 
 	@Override
 	public void saveConfiguration()
 	{
 		final ConfigurationSection config = getConfig();
-		if (customEntities.size() == 0)
-			config.set("customEntities", new HashMap<String, Object>(0));
-		else
-		{
-			config.set("customEntities", null);
-			for (final CustomEntitySpawner customEntity : customEntities)
-				customEntity.save(config, "customEntities." + customEntity.getName() + ".");
-		}
 		// OverwriteEntities
 		for (final EntityType type : EntityType.values())
 		{
@@ -597,25 +669,57 @@ public class CrazySpawner extends CrazyPlugin
 			else
 				config.set("overwriteEntities." + type.name(), spawner.getName());
 		}
-		if (tasks.size() == 0)
-			config.set("tasks", new HashMap<String, Object>(0));
-		else
-		{
-			config.set("tasks", null);
-			int i = 0;
-			for (final TimerSpawnTask task : tasks)
-				task.save(config, "tasks.t" + i++ + ".");
-		}
 		config.set("defaultAlarmRange", defaultAlarmRange);
 		config.set("monsterExplosionDamageEnabled", monsterExplosionDamageEnabled);
 		super.saveConfiguration();
+	}
+
+	public void saveCustomEntities()
+	{
+		for (final String key : new ArrayList<String>(customEntitiesConfig.getKeys(false)))
+			customEntitiesConfig.set(key, null);
+		for (final CustomEntitySpawner customEntity : customEntities)
+			customEntity.save(customEntitiesConfig, customEntity.getName() + ".");
+		try
+		{
+			getDataFolder().mkdirs();
+			customEntitiesConfig.save(new File(getDataFolder(), "CustomEntities.yml"));
+		}
+		catch (final Exception e)
+		{
+			System.err.println("[CrazySpawner] Could not save CustomEntities.yml.");
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public void saveSpawnTasks()
+	{
+		if (timerTasks.size() == 0)
+			tasksConfig.set("timerTasks", new HashMap<String, Object>(0));
+		else
+		{
+			tasksConfig.set("timerTasks", null);
+			int i = 0;
+			for (final TimerSpawnTask task : timerTasks)
+				task.save(tasksConfig, "timerTasks.t" + i++ + ".");
+		}
+		try
+		{
+			getDataFolder().mkdirs();
+			tasksConfig.save(new File(getDataFolder(), "Tasks.yml"));
+		}
+		catch (final Exception e)
+		{
+			System.err.println("[CrazySpawner] Could not save Tasks.yml.");
+			System.err.println(e.getMessage());
+		}
 	}
 
 	public void addCustomEntity(final CustomEntitySpawner customEntity, final String... aliases)
 	{
 		customEntities.add(customEntity);
 		NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity, aliases);
-		saveConfiguration();
+		saveCustomEntities();
 	}
 
 	public Set<CustomEntitySpawner> getCreatures()
@@ -626,24 +730,24 @@ public class CrazySpawner extends CrazyPlugin
 	public void removeCustomEntity(final CustomEntitySpawner customEntity)
 	{
 		customEntities.remove(customEntity);
-		saveConfiguration();
+		saveCustomEntities();
 	}
 
 	public void addSpawnTask(final TimerSpawnTask task)
 	{
-		tasks.add(task);
-		saveConfiguration();
+		timerTasks.add(task);
+		saveSpawnTasks();
 	}
 
 	public Set<TimerSpawnTask> getTasks()
 	{
-		return tasks;
+		return timerTasks;
 	}
 
 	public void removeSpawnTask(final TimerSpawnTask task)
 	{
-		tasks.remove(task);
-		saveConfiguration();
+		timerTasks.remove(task);
+		saveSpawnTasks();
 	}
 
 	public final double getDefaultAlarmRange()
