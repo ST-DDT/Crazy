@@ -1,9 +1,9 @@
 name: CrazySquads
 main: de.st_ddt.crazysquads.CrazySquads
 author: ST-DDT
-version: 1.2.1
+version: 1.2.2
 website: http://dev.bukkit.org/server-mods/crazysquads/
-# requires CrazyCore v10 or later
+# requires CrazyCore v10.7.1 or later
 depend: [CrazyCore]
 # requires CrazyChats v1.7 or later
 softdepend: [CrazyChats,TagAPI]
