@@ -38,7 +38,7 @@ public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor
 		final WeatherParamitrisable weather = new WeatherParamitrisable(null);
 		params.put("weather", weather);
 		params.put("", weather);
-		final DurationParamitrisable duration = new DurationParamitrisable((long) plugin.getRandomDuration());
+		final DurationParamitrisable duration = new DurationParamitrisable(plugin.getRandomDuration());
 		params.put("d", duration);
 		params.put("duration", duration);
 		final BooleanParamitrisable keepStatic = new BooleanParamitrisable(false);
@@ -73,7 +73,7 @@ public class CrazyWeatherCommandWeather extends CrazyWeatherCommandExecutor
 		final WeatherParamitrisable weather = new WeatherParamitrisable(null);
 		params.put("weather", weather);
 		params.put("", weather);
-		final DurationParamitrisable duration = new DurationParamitrisable((long) plugin.getRandomDuration());
+		final DurationParamitrisable duration = new DurationParamitrisable(plugin.getRandomDuration());
 		params.put("d", duration);
 		params.put("duration", duration);
 		final BooleanParamitrisable keepStatic = new BooleanParamitrisable(false);
