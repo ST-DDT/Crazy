@@ -1,9 +1,9 @@
 name: CrazyCommandKey
 main: de.st_ddt.crazycommandkey.CrazyCommandKey
 author: ST-DDT
-version: 1.6.1
+version: 1.6.2
 website: http://dev.bukkit.org/server-mods/crazycore/pages/crazy-command-key/
-# requires CrazyCore v10 or later
+# requires CrazyCore v10.7.1 or later
 depend: [CrazyCore]
 commands:
   key:
