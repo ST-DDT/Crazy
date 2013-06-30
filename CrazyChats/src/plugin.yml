@@ -1,9 +1,9 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.199.1
+version: 1.199.2
 website: http://dev.bukkit.org/server-mods/crazychats/
-# requires CrazyCore v10.5 or later
+# requires CrazyCore v10.7.1 or later
 depend: [CrazyCore]
 softdepend: [TagAPI]
 description: >
@@ -85,6 +85,8 @@ permissions:
       crazychats.player.silence: true
       crazychats.player.silence.adminbypass: true
       crazychats.player.unmute: true
+      crazychats.group.listnameprefix: true
+      crazychats.group.headnameprefix: true
       crazychats.coloredchat: true
       crazychats.chatspy: true
       crazychats.unmutable: true
@@ -157,6 +159,12 @@ permissions:
     default: op
   crazychats.player.unmute:
     description: Allow unmuting a player for another player.
+    default: op
+  crazychats.group.listnameprefix:
+    description: Allow chaning the default list name prefixes for groups.
+    default: op
+  crazychats.group.headnameprefix:
+    description: Allow chaning the default head name prefixes for groups.
     default: op
   crazychats.coloredchat:
     description: Allow colored chat.

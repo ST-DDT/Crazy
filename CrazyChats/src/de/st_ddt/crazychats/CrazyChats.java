@@ -29,10 +29,10 @@ import de.st_ddt.crazychats.channels.LocalChannel;
 import de.st_ddt.crazychats.channels.WorldChannel;
 import de.st_ddt.crazychats.commands.CommandClearChat;
 import de.st_ddt.crazychats.commands.CommandColorHelp;
+import de.st_ddt.crazychats.commands.CommandGroupHeadnamePrefix;
 import de.st_ddt.crazychats.commands.CommandGroupListnamePrefix;
 import de.st_ddt.crazychats.commands.CommandGroupPrefix;
 import de.st_ddt.crazychats.commands.CommandGroupSuffix;
-import de.st_ddt.crazychats.commands.CommandMainReload;
 import de.st_ddt.crazychats.commands.CommandPlayerDisplayName;
 import de.st_ddt.crazychats.commands.CommandPlayerHeadName;
 import de.st_ddt.crazychats.commands.CommandPlayerListName;
@@ -454,8 +454,6 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		getCommand("muteall").setExecutor(new PlayerCommandMuteAll(this));
 		getCommand("clearchat").setExecutor(new CommandClearChat(this));
 		getCommand("serversilence").setExecutor(new CommandServerSilence(this));
-		mainCommand.addSubCommand(modeCommand, "mode");
-		mainCommand.addSubCommand(new CommandMainReload(this), "reload");
 		playerCommand.addSubCommand(new CommandPlayerDisplayName(this), "displayname", "dispname", "dname");
 		if (tagAPIenabled)
 			playerCommand.addSubCommand(new CommandPlayerHeadName(this), "headname", "hname");
@@ -468,6 +466,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		groupCommand.addSubCommand(new CommandGroupPrefix(this), "prefix");
 		groupCommand.addSubCommand(new CommandGroupSuffix(this), "suffix");
 		groupCommand.addSubCommand(new CommandGroupListnamePrefix(this), "lnameprefix", "listnameprefix");
+		groupCommand.addSubCommand(new CommandGroupHeadnamePrefix(this), "hnameprefix", "headnameprefix");
 	}
 
 	private void registerHooks()
@@ -751,7 +750,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		return groupSuffixes.get("nogroup");
 	}
 
-	public Map<String, String> getGroupListnamePrefixes()
+	public final Map<String, String> getGroupListnamePrefixes()
 	{
 		return groupListnamePrefixes;
 	}
@@ -774,6 +773,11 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 					return infix;
 			}
 		return groupListnamePrefixes.get("nogroup");
+	}
+
+	public final Map<String, String> getGroupHeadnamePrefixes()
+	{
+		return groupHeadnamePrefixes;
 	}
 
 	public String getGroupHeadnamePrefix(final Player player)
