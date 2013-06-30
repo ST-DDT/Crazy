@@ -39,7 +39,10 @@ public class LivingDespawnProperty extends DespawnProperty
 	{
 		super(params);
 		final BooleanParamitrisable allowDespawnParam = (BooleanParamitrisable) params.get("allowdespawn");
-		this.allowDespawn = allowDespawnParam.getValue() || despawnAfter > 0;
+		if (despawnAfter > 0)
+			this.allowDespawn = true;
+		else
+			this.allowDespawn = allowDespawnParam.getValue();
 	}
 
 	@Override
