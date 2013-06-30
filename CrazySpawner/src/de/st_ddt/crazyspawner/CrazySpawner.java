@@ -385,7 +385,7 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		final File exampleFolder = new File(getDataFolder(), "example");
 		exampleFolder.mkdirs();
-		// ExampleCreature
+		// ExampleEntities
 		for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
 		{
 			final YamlConfiguration customEntity = new YamlConfiguration();
@@ -398,7 +398,22 @@ public class CrazySpawner extends CrazyPlugin
 			}
 			catch (final IOException e)
 			{
-				System.err.println("[CrazySpawner] Could not save example Entity.yml.");
+				System.err.println("[CrazySpawner] Could not save example Entity" + type.name() + ".yml.");
+				System.err.println(e.getMessage());
+			}
+		}
+		final YamlConfiguration customEntity = new YamlConfiguration();
+		for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
+		{
+			customEntity.options().header("CrazySpawner example Entity" + type.name() + ".yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
+			new CustomEntitySpawner(type).dummySave(customEntity, "exampleALL.");
+			try
+			{
+				customEntity.save(new File(exampleFolder, "EntityALL.yml"));
+			}
+			catch (final IOException e)
+			{
+				System.err.println("[CrazySpawner] Could not save example EntityALL.yml.");
 				System.err.println(e.getMessage());
 			}
 		}
