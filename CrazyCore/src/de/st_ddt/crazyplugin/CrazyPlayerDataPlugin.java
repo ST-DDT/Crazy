@@ -14,18 +14,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import de.st_ddt.crazyplugin.commands.CrazyPlayerDataPluginCommandMainReload;
+import de.st_ddt.crazyplugin.commands.CrazyCommandReload.Reloadable;
 import de.st_ddt.crazyplugin.commands.CrazyPlayerDataPluginCommandPlayerTree;
 import de.st_ddt.crazyplugin.comparator.PlayerDataComparator;
 import de.st_ddt.crazyplugin.comparator.PlayerDataNameComparator;
 import de.st_ddt.crazyplugin.data.PlayerDataFilter;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ListFormat;
 import de.st_ddt.crazyutil.ListOptionsModder;
 import de.st_ddt.crazyutil.databases.PlayerDataDatabase;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
+import de.st_ddt.crazyutil.source.Permission;
 
 @LocalizedVariable(variables = "CRAZYPLAYERDATAPLUGIN", values = "CRAZYPLUGIN")
 public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S extends T> extends CrazyPlugin implements CrazyPlayerDataPluginInterface<T, S>
@@ -266,7 +269,25 @@ public abstract class CrazyPlayerDataPlugin<T extends PlayerDataInterface, S ext
 	{
 		super.onEnable();
 		mainCommand.addSubCommand(playerCommand, "p", "plr", "player", "players");
-		mainCommand.addSubCommand(new CrazyPlayerDataPluginCommandMainReload<T>(this), "reload");
+		mainCommand.getReloadCommand().addReloadable(new Reloadable()
+		{
+
+			@Override
+			@Localized("$CRAZYPLAYERDATAPLUGIN$.COMMAND.DATABASE.RELOADED")
+			public void reload(final CommandSender sender) throws CrazyException
+			{
+				loadDatabase();
+				saveDatabase();
+				sendLocaleMessage("COMMAND.DATABASE.RELOADED", sender);
+			}
+
+			@Override
+			@Permission("$CRAZYPLAYERDATAPLUGIN$.reload.database")
+			public boolean hasAccessPermission(final CommandSender sender)
+			{
+				return PermissionModule.hasPermission(sender, getName().toLowerCase() + ".reload.database") || PermissionModule.hasPermission(sender, getName().toLowerCase() + ".reload.*");
+			}
+		}, "d", "db", "database");
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 
 	private static final LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin> plugins = new LinkedHashMap<Class<? extends CrazyPlugin>, CrazyPlugin>();
 	protected final CrazyLogger logger = new CrazyLogger(this);
-	protected final CrazyCommandTreeExecutor<CrazyPluginInterface> mainCommand = new CrazyPluginCommandMainTree(this);
+	protected final CrazyPluginCommandMainTree mainCommand = new CrazyPluginCommandMainTree(this);
 	protected final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
 	protected CrazyLocale locale = null;
 	protected String previousVersion = "0";

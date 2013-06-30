@@ -8,7 +8,7 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.Permission;
 
-public class CrazyPluginCommandMainReload<S extends CrazyPluginInterface> extends CrazyCommandReload<S> implements CrazyPluginCommandExecutorInterface<S>
+public class CrazyPluginCommandMainReload extends CrazyCommandReload<CrazyPluginInterface> implements CrazyPluginCommandExecutorInterface<CrazyPluginInterface>
 {
 
 	protected final Reloadable configReloadable = new Reloadable()
@@ -32,14 +32,14 @@ public class CrazyPluginCommandMainReload<S extends CrazyPluginInterface> extend
 		}
 	};
 
-	public CrazyPluginCommandMainReload(final S plugin)
+	public CrazyPluginCommandMainReload(final CrazyPluginInterface plugin)
 	{
 		super(plugin);
 		addReloadable(configReloadable, "c", "cfg", "config");
 	}
 
 	@Override
-	public final S getPlugin()
+	public final CrazyPluginInterface getPlugin()
 	{
 		return plugin;
 	}
