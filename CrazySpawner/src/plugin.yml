@@ -45,6 +45,8 @@ permissions:
       crazyspawner.mountme.others: true
       crazyspawner.list: true
       crazyspawner.remove: true
+      crazyspawner.reload: true
+      crazyspawner.reload.*: true
   crazyspawner.spawn:
     description: Allow spawning of creatures
     default: op
@@ -70,4 +72,23 @@ permissions:
     default: op
   crazyspawner.list:
     description: Allow removing spawn tasks.
+    default: op
+  crazyspawner.reload:
+    description: Allow accessing the reload command.
+    default: op
+  crazyspawner.reload.*:
+    description: Allow reloading the entire plugin.
+    default: op
+    children:
+      crazyspawner.reload.config: true
+      crazyspawner.reload.entities: true
+      crazyspawner.reload.spawntasks: true
+  crazyspawner.reload.config:
+    description: Allow reloading the config.
+    default: op
+  crazyspawner.reload.entities:
+    description: Allow reloading the custom entities.
+    default: op
+  crazyspawner.reload.spawntasks:
+    description: Allow reloading the spawn tasks.
     default: op

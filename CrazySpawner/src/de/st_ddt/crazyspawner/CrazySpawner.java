@@ -34,6 +34,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffectType;
 
 import de.st_ddt.crazyplugin.CrazyPlugin;
+import de.st_ddt.crazyplugin.commands.CrazyCommandReload.Reloadable;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -61,6 +62,7 @@ import de.st_ddt.crazyutil.metrics.Metrics.Graph;
 import de.st_ddt.crazyutil.metrics.Metrics.Plotter;
 import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modes.DoubleMode;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.CreatureParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.EnumParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.LocationParamitrisable;
@@ -68,6 +70,7 @@ import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
+import de.st_ddt.crazyutil.source.Permission;
 
 @LocalizedVariable(variables = { "CRAZYPLUGIN" }, values = { "CRAZYSPAWNER" })
 public class CrazySpawner extends CrazyPlugin
@@ -335,6 +338,44 @@ public class CrazySpawner extends CrazyPlugin
 				saveConfiguration();
 			}
 		}
+		mainCommand.getReloadCommand().addReloadable(new Reloadable()
+		{
+
+			@Override
+			@Localized("CRAZYSPAWNER.COMMAND.SPAWNABLEENTITIES.RELOADED")
+			public void reload(final CommandSender sender) throws CrazyException
+			{
+				loadCustomEntities();
+				saveCustomEntities();
+				sendLocaleMessage("COMMAND.SPAWNABLEENTITIES.RELOADED", sender);
+			}
+
+			@Override
+			@Permission("crazyspawner.reload.entities")
+			public boolean hasAccessPermission(final CommandSender sender)
+			{
+				return PermissionModule.hasPermission(sender, "crazyspawner.reload.entities") || PermissionModule.hasPermission(sender, "crazyspawner.reload.*");
+			}
+		}, "e", "ce", "entities", "customentities");
+		mainCommand.getReloadCommand().addReloadable(new Reloadable()
+		{
+
+			@Override
+			@Localized("CRAZYSPAWNER.COMMAND.SPAWNTASKS.RELOADED")
+			public void reload(final CommandSender sender) throws CrazyException
+			{
+				loadSpawnTasks();
+				saveSpawnTasks();
+				sendLocaleMessage("COMMAND.SPAWNABLEENTITIES.RELOADED", sender);
+			}
+
+			@Override
+			@Permission("crazyspawner.reload.spawntasks")
+			public boolean hasAccessPermission(final CommandSender sender)
+			{
+				return PermissionModule.hasPermission(sender, "crazyspawner.reload.spawntasks") || PermissionModule.hasPermission(sender, "crazyspawner.reload.*");
+			}
+		}, "t", "st", "spawntasks");
 		registerCommands();
 		registerMetrics();
 		sendLocaleMessage("SPAWNABLEENTITIES.AVAILABLE", Bukkit.getConsoleSender(), NamedEntitySpawnerParamitrisable.ENTITY_TYPES.size());
