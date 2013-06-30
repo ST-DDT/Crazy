@@ -1,9 +1,9 @@
 name: CrazyCaptcha
 main: de.st_ddt.crazycaptcha.CrazyCaptcha
 author: ST-DDT
-version: 2.1.2
+version: 2.1.3
 website: http://dev.bukkit.org/server-mods/crazycaptcha/
-# requires CrazyCore v10 or later
+# requires CrazyCore v10.7.1 or later
 depend: [CrazyCore]
 # requires CrazyLogin v7.3.1 or later
 softdepend: [CrazyLogin]
