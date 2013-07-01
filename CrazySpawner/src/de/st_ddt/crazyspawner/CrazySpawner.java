@@ -780,7 +780,7 @@ public class CrazySpawner extends CrazyPlugin
 		saveCustomEntities();
 	}
 
-	public Set<CustomEntitySpawner> getCreatures()
+	public Set<CustomEntitySpawner> getCustomEntities()
 	{
 		return customEntities;
 	}
