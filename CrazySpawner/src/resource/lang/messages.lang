@@ -12,6 +12,7 @@ CRAZYSPAWNER.COMMAND.KILLED.VILLAGER=$Amount$
 CRAZYSPAWNER.COMMAND.LIST.ENTRYFORMAT=$Type$ $World$ $X$ $Y$ $Z$ $Distance$ $IntervalTicks$ $IntervalText$ $Repeat$ $Amount$
 CRAZYSPAWNER.COMMAND.LIST.HEADFORMAT=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$
 CRAZYSPAWNER.COMMAND.LIST.LISTFORMAT=$Index$ $Entry$ $ChatHeader$
+CRAZYSPAWNER.COMMAND.MODIFYENTITY=$EntityType$ $Name$
 CRAZYSPAWNER.COMMAND.REMOVE.ENTRYFORMAT=$Type$ $World$ $X$ $Y$ $Z$ $Distance$ $IntervalTicks$ $IntervalText$ $Repeat$ $Amount$
 CRAZYSPAWNER.COMMAND.REMOVE.HEADFORMAT=$CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$
 CRAZYSPAWNER.COMMAND.REMOVE.LISTFORMAT=$Index$ $Entry$ $ChatHeader$

@@ -40,6 +40,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.commands.CommandCreatureSpawner;
 import de.st_ddt.crazyspawner.commands.CommandKill;
+import de.st_ddt.crazyspawner.commands.CommandModifyEntity;
 import de.st_ddt.crazyspawner.commands.CommandSpawn;
 import de.st_ddt.crazyspawner.commands.CommandSpawnList;
 import de.st_ddt.crazyspawner.commands.CommandSpawnRemove;
@@ -177,6 +178,7 @@ public class CrazySpawner extends CrazyPlugin
 		getCommand("crazytheendautorespawn").setExecutor(new CommandTheEndAutoRespawn(this));
 		mainCommand.addSubCommand(new CommandSpawnList(this), "l", "list");
 		mainCommand.addSubCommand(new CommandSpawnRemove(this), "rem", "remove");
+		mainCommand.addSubCommand(new CommandModifyEntity(this), "me", "modentity", "modifyentity");
 	}
 
 	private void registerMetrics()

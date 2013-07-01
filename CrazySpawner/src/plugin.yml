@@ -1,9 +1,9 @@
 name: CrazySpawner
 main: de.st_ddt.crazyspawner.CrazySpawner
 author: ST-DDT
-version: 4
+version: 4.1
 website: http://dev.bukkit.org/server-mods/crazyspawner/
-# requires CrazyCore v10.7.1 or later
+# requires CrazyCore v10.7.2 or later
 depend: [CrazyCore]
 description: >
             CrazySpawner spawn and remove mobs where ever you like.
@@ -58,6 +58,9 @@ permissions:
     default: op
   crazyspawner.theendautorespawn:
     description: Allow creating auto respawn tasks for EnderDragons and EnderCrystals.
+    default: op
+  crazyspawner.modifyentity:
+    description: Allow creating/modifing of custom entities. 
     default: op
   crazyspawner.mountme:
     description: Allow spawning of entities and ride it.
