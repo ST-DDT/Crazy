@@ -276,7 +276,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		return res;
 	}
 
-	protected static StringParamitrisable getCommandParams(final EntityType type, final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
+	public static StringParamitrisable getCommandParams(final EntityType type, final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final StringParamitrisable nameParam = new StringParamitrisable(null);
 		params.put("n", nameParam);
@@ -328,7 +328,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		final Paramitrisable nameParam = params.get("name");
 		this.name = ((StringParamitrisable) nameParam).getValue().toUpperCase();
 		if (type == null)
-			throw new IllegalArgumentException("Type cannot be null!");
+			throw new IllegalArgumentException("EntityType cannot be null!");
 		this.type = type;
 		this.properties = getEntityPropertiesFromParams(type, params);
 	}
