@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
@@ -48,7 +49,10 @@ public class CommandMountMe extends CommandExecutor
 		final Player player = playerParam.getValue();
 		if (player == null)
 			throw new CrazyCommandUsageException("<entity:NamedEntityType> <player:Player>");
-		entityParam.getValue().spawn(player.getLocation()).setPassenger(player);
+		Entity entity = entityParam.getValue().spawn(player.getLocation());
+		while (entity.getPassenger() != null)
+			entity = entity.getPassenger();
+		entity.setPassenger(player);
 		if (player == sender)
 			plugin.sendLocaleMessage("COMMAND.MOUNTME.SELF", sender, entityParam.getValue().getType().name());
 		else if (PermissionModule.hasPermission(sender, "crazyspawner.mountme.others"))
