@@ -1,5 +1,6 @@
 package de.st_ddt.crazyspawner.commands;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -62,6 +63,22 @@ public class CommandMountMe extends CommandExecutor
 		}
 		else
 			throw new CrazyCommandPermissionException();
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
+		final NamedEntitySpawnerParamitrisable entityParam = new NamedEntitySpawnerParamitrisable((NamedEntitySpawner) null);
+		params.put("c", entityParam);
+		params.put("creature", entityParam);
+		params.put("e", entityParam);
+		params.put("entity", entityParam);
+		final PlayerParamitrisable playerParam = new PlayerParamitrisable(sender);
+		params.put("p", playerParam);
+		params.put("plr", playerParam);
+		params.put("player", playerParam);
+		return ChatHelperExtended.tabHelp(args, params, entityParam, playerParam);
 	}
 
 	@Override
