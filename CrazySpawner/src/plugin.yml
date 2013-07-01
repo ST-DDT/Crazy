@@ -41,6 +41,8 @@ permissions:
       crazyspawner.kill: true
       crazyspawner.creaturespawner: true
       crazyspawner.theendautorespawn: true
+      crazyspawner.modifyentity: true
+      crazyspawner.showentity: true
       crazyspawner.mountme: true
       crazyspawner.mountme.others: true
       crazyspawner.list: true
@@ -61,6 +63,9 @@ permissions:
     default: op
   crazyspawner.modifyentity:
     description: Allow creating/modifing of custom entities. 
+    default: op
+  crazyspawner.showentity:
+    description: Allow displaying of custom entity properties. 
     default: op
   crazyspawner.mountme:
     description: Allow spawning of entities and ride it.

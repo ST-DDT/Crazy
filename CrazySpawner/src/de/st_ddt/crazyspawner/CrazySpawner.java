@@ -176,9 +176,10 @@ public class CrazySpawner extends CrazyPlugin
 		getCommand("crazykill").setExecutor(new CommandKill(this));
 		getCommand("crazycreaturespawner").setExecutor(new CommandCreatureSpawner(this, creatureSelection));
 		getCommand("crazytheendautorespawn").setExecutor(new CommandTheEndAutoRespawn(this));
+		mainCommand.addSubCommand(new CommandModifyEntity(this), "me", "modentity", "modifyentity");
+		mainCommand.addSubCommand(new CommandModifyEntity(this), "se", "showentity", "entityinfo");
 		mainCommand.addSubCommand(new CommandSpawnList(this), "l", "list");
 		mainCommand.addSubCommand(new CommandSpawnRemove(this), "rem", "remove");
-		mainCommand.addSubCommand(new CommandModifyEntity(this), "me", "modentity", "modifyentity");
 	}
 
 	private void registerMetrics()

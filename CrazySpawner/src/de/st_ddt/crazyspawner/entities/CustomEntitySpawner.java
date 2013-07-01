@@ -89,6 +89,7 @@ import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, ConfigurationSaveable
 {
@@ -418,6 +419,15 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		entity.setMetadata(METAHEADER, this);
 		apply(entity);
 		return entity;
+	}
+
+	@Localized({ "CRAZYSPAWNER.ENTITY.PROPERTY.NAME $Name$", "CRAZYSPAWNER.ENTITY.PROPERTY.TYPE $EntityType$" })
+	public void show(final CommandSender target)
+	{
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.NAME", target, name);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.TYPE", target, type.name());
+		for (final EntityPropertyInterface property : properties)
+			property.show(target);
 	}
 
 	/**
