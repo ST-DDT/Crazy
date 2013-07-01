@@ -325,8 +325,8 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 	public CustomEntitySpawner(final EntityType type, final Map<String, ? extends Paramitrisable> params)
 	{
 		super();
-		final Paramitrisable nameParam = params.get("name");
-		this.name = ((StringParamitrisable) nameParam).getValue().toUpperCase();
+		final StringParamitrisable nameParam = (StringParamitrisable) params.get("name");
+		this.name = nameParam.getValue().toUpperCase();
 		if (type == null)
 			throw new IllegalArgumentException("EntityType cannot be null!");
 		this.type = type;
