@@ -30,7 +30,7 @@ public class CommandMountMe extends CommandExecutor
 
 	@Override
 	@Permission("crazyspawner.mountme.others")
-	@Localized({ "CRAZYSPAWNER.MOUNTME.SELF $EntityType$", "CRAZYSPAWNER.MOUNTME.OTHER $EntityType$ $MountedPlayer$", "CRAZYSPAWNER.MOUNTME.MOUNTED $EntityType$ $Sender$" })
+	@Localized({ "CRAZYSPAWNER.COMMAND.MOUNTME.SELF $EntityType$", "CRAZYSPAWNER.COMMAND.MOUNTME.OTHER $EntityType$ $MountedPlayer$", "CRAZYSPAWNER.COMMAND.MOUNTME.MOUNTED $EntityType$ $Sender$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
