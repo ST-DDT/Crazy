@@ -1,5 +1,9 @@
 package de.st_ddt.crazyspawner.commands;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -40,26 +44,63 @@ public class CommandModifyEntity extends CommandExecutor
 		final StringParamitrisable nameParam;
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
 		final NamedEntitySpawner spawner = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(inheritance);
-		if (spawner == null)
+		if (spawner == null || !(spawner instanceof CustomEntitySpawner))
 		{
-			type = EntityType.valueOf(inheritance);
+			type = EntityType.valueOf(inheritance.toUpperCase());
 			if (type == null)
 				throw new CrazyCommandNoSuchException("Inheritance/EntityType", inheritance, EnumParamitrisable.getEnumNames(CustomEntitySpawner.getSpawnableEntityTypes()));
 			nameParam = CustomEntitySpawner.getCommandParams(type, params, sender);
 		}
-		else if (spawner instanceof CustomEntitySpawner)
+		else
 		{
 			type = spawner.getType();
 			nameParam = ((CustomEntitySpawner) spawner).getCommandParams(params, sender);
 		}
-		else
-			throw new CrazyCommandNoSuchException("Inheritance/EntityType", inheritance, EnumParamitrisable.getEnumNames(CustomEntitySpawner.getSpawnableEntityTypes()));
-		ChatHelperExtended.readParameters(args, params, nameParam);
+		ChatHelperExtended.readParameters(ChatHelperExtended.shiftArray(args, 1), new HashMap<String, TabbedParamitrisable>(params), nameParam);
 		if (nameParam.getValue() == null)
 			throw new CrazyCommandUsageException("<Inheritance/EntityType> <name:String> [Params...]");
 		final CustomEntitySpawner entitySpawner = new CustomEntitySpawner(type, params);
 		plugin.addCustomEntity(entitySpawner);
 		plugin.sendLocaleMessage("COMMAND.MODIFYENTITY", sender, type.getName(), nameParam.getValue());
+	}
+
+	@Override
+	public List<String> tab(final CommandSender sender, final String[] args)
+	{
+		if (args.length == 1)
+		{
+			final List<String> res = new ArrayList<String>();
+			res.addAll(EnumParamitrisable.getEnumNames(CustomEntitySpawner.getSpawnableEntityTypes()));
+			for (final CustomEntitySpawner spawner : plugin.getCustomEntities())
+				res.add(spawner.getName().toUpperCase());
+			final String inheritance = args[0].toUpperCase();
+			final Iterator<String> it = res.iterator();
+			while (it.hasNext())
+				if (!it.next().startsWith(inheritance))
+					it.remove();
+			return res;
+		}
+		else
+		{
+			final String inheritance = args[0];
+			final EntityType type;
+			final StringParamitrisable nameParam;
+			final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
+			final NamedEntitySpawner spawner = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(inheritance);
+			if (spawner == null || !(spawner instanceof CustomEntitySpawner))
+			{
+				type = EntityType.valueOf(inheritance.toUpperCase());
+				if (type == null)
+					return new ArrayList<String>(0);
+				nameParam = CustomEntitySpawner.getCommandParams(type, params, sender);
+			}
+			else
+			{
+				type = spawner.getType();
+				nameParam = ((CustomEntitySpawner) spawner).getCommandParams(params, sender);
+			}
+			return ChatHelperExtended.tabHelp(ChatHelperExtended.shiftArray(args, 1), params, nameParam);
+		}
 	}
 
 	@Override
