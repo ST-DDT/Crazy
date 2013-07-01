@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -45,6 +46,10 @@ public abstract class CrazyCommandExecutor<S extends ChatHeaderProvider> impleme
 		catch (final CrazyException e)
 		{
 			e.print(sender, plugin.getChatHeader());
+		}
+		catch (final Exception e)
+		{
+			new CrazyCommandErrorException(e).print(sender, plugin.getChatHeader());
 		}
 		return true;
 	}
