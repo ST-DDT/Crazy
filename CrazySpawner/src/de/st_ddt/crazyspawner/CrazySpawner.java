@@ -261,7 +261,7 @@ public class CrazySpawner extends CrazyPlugin
 				customEntities.add(spiderSkeleton);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderSkeleton);
 				// - Zombie_Skeleton
-				final CustomEntitySpawner spiderZombie = new CustomEntitySpawner("Spider_Zombie", EntityType.SPIDER, console, "ZOMBIE");
+				final CustomEntitySpawner spiderZombie = new CustomEntitySpawner("Spider_Zombie", EntityType.SPIDER, console, "passenger:ZOMBIE");
 				customEntities.add(spiderZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderZombie);
 				// - Diamond_Zombie
