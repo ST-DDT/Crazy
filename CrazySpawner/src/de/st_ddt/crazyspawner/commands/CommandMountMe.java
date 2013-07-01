@@ -43,7 +43,7 @@ public class CommandMountMe extends CommandExecutor
 		params.put("p", playerParam);
 		params.put("plr", playerParam);
 		params.put("player", playerParam);
-		ChatHelperExtended.readParameters(args, params, playerParam);
+		ChatHelperExtended.readParameters(args, params, entityParam, playerParam);
 		if (entityParam.getValue() == null)
 			throw new CrazyCommandUsageException("<entity:NamedEntityType> [player:Player]");
 		final Player player = playerParam.getValue();
