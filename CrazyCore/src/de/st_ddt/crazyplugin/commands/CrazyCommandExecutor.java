@@ -50,6 +50,7 @@ public abstract class CrazyCommandExecutor<S extends ChatHeaderProvider> impleme
 		catch (final Exception e)
 		{
 			new CrazyCommandErrorException(e).print(sender, plugin.getChatHeader());
+			e.printStackTrace();
 		}
 		return true;
 	}
