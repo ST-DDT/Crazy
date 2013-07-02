@@ -32,12 +32,10 @@ public final class FireworkProperty extends BasicProperty
 	{
 		super(config);
 		final Object object = config.get("firework", null);
-		if (object == null)
+		if (object == null || !(object instanceof FireworkMeta))
 			this.meta = null;
-		else if (object instanceof FireworkMeta)
-			this.meta = (FireworkMeta) object;
 		else
-			this.meta = null;
+			this.meta = (FireworkMeta) object;
 	}
 
 	public FireworkProperty(final Map<String, ? extends Paramitrisable> params)
