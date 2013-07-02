@@ -63,7 +63,8 @@ public class ItemStackParamitrisable extends TypedParamitrisable<ItemStack>
 		{
 			value = new ItemStack(material.getValue(), amount.getValue(), damage.getValue().shortValue());
 			for (final Entry<Enchantment, IntegerParamitrisable> entry : enchantments.entrySet())
-				value.addUnsafeEnchantment(entry.getKey(), entry.getValue().getValue());
+				if (entry.getValue().getValue() > 0)
+					value.addUnsafeEnchantment(entry.getKey(), entry.getValue().getValue());
 		}
 	}
 
@@ -74,24 +75,30 @@ public class ItemStackParamitrisable extends TypedParamitrisable<ItemStack>
 		final MaterialParamitriable material;
 		final IntegerParamitrisable amount;
 		final IntegerParamitrisable damage;
+		final Map<Enchantment, IntegerParamitrisable> enchantments = new LinkedHashMap<Enchantment, IntegerParamitrisable>();
 		if (value == null)
 		{
 			material = new MaterialParamitriable(null);
 			amount = new IntegerParamitrisable(1);
 			damage = new IntegerParamitrisable(0);
+			for (final Enchantment enchantment : Enchantment.values())
+			{
+				final IntegerParamitrisable level = new IntegerParamitrisable(0);
+				enchantments.put(enchantment, level);
+				params.put(enchantment.getName(), level);
+			}
 		}
 		else
 		{
 			material = new MaterialParamitriable(value.getType());
 			amount = new IntegerParamitrisable(value.getAmount());
 			damage = new IntegerParamitrisable(value.getDurability());
-		}
-		final Map<Enchantment, IntegerParamitrisable> enchantments = new LinkedHashMap<Enchantment, IntegerParamitrisable>();
-		for (final Enchantment enchantment : Enchantment.values())
-		{
-			final IntegerParamitrisable level = new IntegerParamitrisable(value.getEnchantmentLevel(enchantment));
-			enchantments.put(enchantment, level);
-			params.put(enchantment.getName(), level);
+			for (final Enchantment enchantment : Enchantment.values())
+			{
+				final IntegerParamitrisable level = new IntegerParamitrisable(value.getEnchantmentLevel(enchantment));
+				enchantments.put(enchantment, level);
+				params.put(enchantment.getName(), level);
+			}
 		}
 		return ChatHelperExtended.tabHelp(PATTERN_SPACE.split(parameter), params, material, amount, damage);
 	}
