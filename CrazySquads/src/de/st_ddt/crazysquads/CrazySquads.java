@@ -275,10 +275,10 @@ public final class CrazySquads extends CrazyPlugin implements PlayerDataProvider
 		this.playerListener = new CrazySquadsPlayerListener(this);
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(playerListener, this);
-		crazyChatsEnabled = Bukkit.getPluginManager().getPlugin("CrazyChats") != null;
+		crazyChatsEnabled = Bukkit.getPluginManager().isPluginEnabled("CrazyChats");
 		if (crazyChatsEnabled)
 			pm.registerEvents(new CrazySquadsCrazyChatsListener(this), this);
-		tagAPIEnabled = Bukkit.getPluginManager().getPlugin("TagAPI") != null;
+		tagAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("TagAPI");
 		if (tagAPIEnabled)
 			pm.registerEvents(new CrazySquadsTagAPIListener(this), this);
 	}

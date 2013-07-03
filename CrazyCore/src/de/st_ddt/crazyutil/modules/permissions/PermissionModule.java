@@ -141,7 +141,7 @@ public class PermissionModule implements Module
 	{
 		final PluginDepency plugin = clazz.getAnnotation(PluginDepency.class);
 		if (plugin != null)
-			if (Bukkit.getPluginManager().getPlugin(plugin.depend()) == null)
+			if (!Bukkit.getPluginManager().isPluginEnabled(plugin.depend()))
 				return false;
 		try
 		{

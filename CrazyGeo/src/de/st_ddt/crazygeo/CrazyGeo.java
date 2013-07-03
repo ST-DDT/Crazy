@@ -37,7 +37,7 @@ public class CrazyGeo extends CrazyPlugin
 	@Override
 	public void onEnable()
 	{
-		if (Bukkit.getServer().getPluginManager().getPlugin("WorldEdit") != null)
+		if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldEdit"))
 			this.weBridge = WorldEditBridge.getWorldEditBridge();
 		super.onEnable();
 		registerCommands();

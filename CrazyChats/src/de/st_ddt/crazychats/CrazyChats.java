@@ -480,7 +480,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(new CrazyChatsCrazyListener(this), this);
 		pm.registerEvents(new CrazyChatsGameListener(this), this);
-		tagAPIenabled = Bukkit.getPluginManager().getPlugin("TagAPI") != null;
+		tagAPIenabled = Bukkit.getPluginManager().isPluginEnabled("TagAPI");
 		if (tagAPIenabled)
 			pm.registerEvents(new CrazyChatsTagAPIListener(this), this);
 	}

@@ -56,7 +56,7 @@ import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
 
-@LocalizedVariable(variables="CRAZYPLUGIN",values="CRAZYARENA")
+@LocalizedVariable(variables = "CRAZYPLUGIN", values = "CRAZYARENA")
 public class CrazyArena extends CrazyPlugin
 {
 
@@ -185,7 +185,7 @@ public class CrazyArena extends CrazyPlugin
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new CrazyArenaPlayerListener(this), this);
-		crazyChatsEnabled = Bukkit.getPluginManager().getPlugin("CrazyChats") != null;
+		crazyChatsEnabled = Bukkit.getPluginManager().isPluginEnabled("CrazyChats");
 		if (crazyChatsEnabled)
 			pm.registerEvents(new CrazyArenaCrazyChatsListener(this), this);
 	}
