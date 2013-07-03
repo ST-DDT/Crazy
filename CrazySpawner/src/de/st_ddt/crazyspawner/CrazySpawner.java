@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -572,6 +573,45 @@ public class CrazySpawner extends CrazyPlugin
 		catch (final IOException e)
 		{
 			System.err.println("[CrazySpawner] Could not save example Thunder.yml.");
+			System.err.println(e.getMessage());
+		}
+		// FireworkMeta
+		final YamlConfiguration firework = new YamlConfiguration();
+		firework.set("exampleFireworkMeta.==", "ItemMeta");
+		firework.set("exampleFireworkMeta.meta-type", "FIREWORK");
+		final List<Map<String, Object>> effectsList = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < 2; i++)
+		{
+			final Map<String, Object> effectMap = new LinkedHashMap<String, Object>();
+			effectMap.put("==", "Firework");
+			effectMap.put("flicker", "boolean (true/false)");
+			effectMap.put("trail", "boolean (true/false)");
+			for (final String colorSection : new String[] { "colors", "fade-colors" })
+			{
+				final List<Map<String, Object>> colorList = new ArrayList<Map<String, Object>>();
+				for (int j = 0; j < 2; j++)
+				{
+					final Map<String, Object> colorMap = new LinkedHashMap<String, Object>();
+					colorMap.put("==", "Color");
+					colorMap.put("RED", "int (0-255)");
+					colorMap.put("GREEN", "int (0-255)");
+					colorMap.put("BLUE", "int (0-255)");
+					colorList.add(colorMap);
+				}
+				effectMap.put(colorSection, colorList);
+			}
+			effectMap.put("type", ChatHelper.listingString(" | ", EnumParamitrisable.getEnumNames(FireworkEffect.Type.values())));
+			effectsList.add(effectMap);
+		}
+		firework.set("exampleFireworkMeta.firework-effects", effectsList);
+		firework.set("exampleFireworkMeta.power", "int (0-127)");
+		try
+		{
+			firework.save(new File(exampleFolder, "FireworkMeta.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example FireworkMeta.yml.");
 			System.err.println(e.getMessage());
 		}
 	}
