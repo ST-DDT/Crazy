@@ -25,7 +25,7 @@ public class PlayerSaver implements Named
 	protected int experience;
 	protected int foodlevel;
 	protected GameMode gamemode;
-	protected int health;
+	protected double health;
 	protected int air;
 	protected final HashMap<Integer, ItemStack> inventory = new HashMap<Integer, ItemStack>();
 	// private int slot;
