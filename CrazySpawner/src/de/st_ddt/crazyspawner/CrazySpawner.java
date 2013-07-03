@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class CrazySpawner extends CrazyPlugin
 	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
 	protected final static boolean v15OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5") >= 0;
 	private static CrazySpawner plugin;
-	protected final Set<CustomEntitySpawner> customEntities = new LinkedHashSet<CustomEntitySpawner>();
+	protected final Map<String, CustomEntitySpawner> customEntities = new LinkedHashMap<String, CustomEntitySpawner>();
 	protected final YamlConfiguration customEntitiesConfig = new YamlConfiguration();
 	protected final Set<TimerSpawnTask> timerTasks = new TreeSet<TimerSpawnTask>();
 	protected final YamlConfiguration tasksConfig = new YamlConfiguration();
@@ -222,7 +223,7 @@ public class CrazySpawner extends CrazyPlugin
 					public int getValue()
 					{
 						int i = 0;
-						for (final CustomEntitySpawner customEntity : customEntities)
+						for (final CustomEntitySpawner customEntity : customEntities.values())
 							if (customEntity.getType() == type)
 								i++;
 						return i;
@@ -258,30 +259,30 @@ public class CrazySpawner extends CrazyPlugin
 				// DefaultCreatures
 				// - Spider_Skeleton
 				final CustomEntitySpawner spiderSkeleton = new CustomEntitySpawner("Spider_Skeleton", EntityType.SPIDER, console, "passenger:SKELETON");
-				customEntities.add(spiderSkeleton);
+				customEntities.put(spiderSkeleton.getName(), spiderSkeleton);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderSkeleton);
 				// - Zombie_Skeleton
 				final CustomEntitySpawner spiderZombie = new CustomEntitySpawner("Spider_Zombie", EntityType.SPIDER, console, "passenger:ZOMBIE");
-				customEntities.add(spiderZombie);
+				customEntities.put(spiderZombie.getName(), spiderZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderZombie);
 				// - Diamond_Zombie
 				final CustomEntitySpawner diamondZombie = new CustomEntitySpawner("Diamond_Zombie", EntityType.ZOMBIE, console, "boots:DIAMOND_BOOTS", "bootsdropchance:0.01", "leggings:DIAMOND_LEGGINGS", "leggingsdropchance:0.01", "chestplate:DIAMOND_CHESTPLATE", "chestplatedropchance:0.01", "helmet:DIAMOND_HELMET", "helmetdropchance:0.01", "iteminhand:DIAMOND_SWORD", "iteminhanddropchance:0.01");
-				customEntities.add(diamondZombie);
+				customEntities.put(diamondZombie.getName(), diamondZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(diamondZombie);
 				// - Giant
 				final CustomEntitySpawner giant = new CustomEntitySpawner("Giant", EntityType.GIANT);
-				customEntities.add(giant);
+				customEntities.put(giant.getName(), giant);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(giant);
 				// - Healthy_Giant
 				if (v146OrLater)
 				{
 					final CustomEntitySpawner healthyGiant = new CustomEntitySpawner("Healthy_Giant", EntityType.GIANT, console, "maxhealth:200");
-					customEntities.add(healthyGiant);
+					customEntities.put(healthyGiant.getName(), healthyGiant);
 					NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyGiant);
 				}
 				// - Spider_Diamond_Zombie
 				final CustomEntitySpawner spiderDiamondZombie = new CustomEntitySpawner("Spider_Diamond_Zombie", EntityType.SPIDER, console, "passenger:Diamond_Zombie");
-				customEntities.add(spiderDiamondZombie);
+				customEntities.put(spiderDiamondZombie.getName(), spiderDiamondZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(spiderDiamondZombie);
 				saveConfiguration();
 			}
@@ -296,7 +297,7 @@ public class CrazySpawner extends CrazyPlugin
 				final CustomEntitySpawner speedyZombie = new CustomEntitySpawner("Speedy_Baby_Zombie", EntityType.ZOMBIE, console, "baby:true");
 				speedyZombie.addEntityProperty(new EquipmentProperties(boots, 0.5F, null, 0, null, 0, null, 0, null, 0, null, null));
 				speedyZombie.addEntityProperty(new PotionProterty(new PotionEffectType[] { PotionEffectType.SPEED }, new int[] { 5 }));
-				customEntities.add(speedyZombie);
+				customEntities.put(speedyZombie.getName(), speedyZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(speedyZombie);
 				saveConfiguration();
 			}
@@ -339,7 +340,7 @@ public class CrazySpawner extends CrazyPlugin
 				drops.add(new Drop(sword, 1F));
 				final CustomEntitySpawner healthyDiamondZombie = new CustomEntitySpawner("Healthy_Diamond_Zombie", EntityType.ZOMBIE, console, "customName:&3Diamond_Zombie", "showNameAboveHead:true", "showHealth:true", "maxHealth:100", "minDamage:3", "maxDamage:7", "minXP:10", "maxXP:20");
 				healthyDiamondZombie.addEntityProperty(new EquipmentProperties(boots, 1F, leggings, 1F, chestplate, 1F, helmet, 1F, sword, 1F, drops, false));
-				customEntities.add(healthyDiamondZombie);
+				customEntities.put(healthyDiamondZombie.getName(), healthyDiamondZombie);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyDiamondZombie);
 				saveConfiguration();
 			}
@@ -595,7 +596,7 @@ public class CrazySpawner extends CrazyPlugin
 				try
 				{
 					final CustomEntitySpawner customEntity = new CustomEntitySpawner(customEntityConfig.getConfigurationSection(key));
-					customEntities.add(customEntity);
+					customEntities.put(customEntity.getName(), customEntity);
 					NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity);
 				}
 				catch (final IllegalArgumentException e)
@@ -667,7 +668,7 @@ public class CrazySpawner extends CrazyPlugin
 			try
 			{
 				final CustomEntitySpawner customEntity = new CustomEntitySpawner(customEntitiesConfig.getConfigurationSection(key));
-				customEntities.add(customEntity);
+				customEntities.put(customEntity.getName(), customEntity);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity);
 			}
 			catch (final IllegalArgumentException e)
@@ -740,7 +741,7 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		for (final String key : new ArrayList<String>(customEntitiesConfig.getKeys(false)))
 			customEntitiesConfig.set(key, null);
-		for (final CustomEntitySpawner customEntity : customEntities)
+		for (final CustomEntitySpawner customEntity : customEntities.values())
 			customEntity.save(customEntitiesConfig, customEntity.getName() + ".");
 		try
 		{
@@ -779,14 +780,14 @@ public class CrazySpawner extends CrazyPlugin
 
 	public void addCustomEntity(final CustomEntitySpawner customEntity, final String... aliases)
 	{
-		customEntities.add(customEntity);
+		customEntities.put(customEntity.getName(), customEntity);
 		NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity, aliases);
 		saveCustomEntities();
 	}
 
 	public Set<CustomEntitySpawner> getCustomEntities()
 	{
-		return customEntities;
+		return new LinkedHashSet<CustomEntitySpawner>(customEntities.values());
 	}
 
 	public void removeCustomEntity(final CustomEntitySpawner customEntity)
