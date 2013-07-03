@@ -161,10 +161,12 @@ public class PlayerSaver implements Named
 	}
 
 	/**
-	 * Restore player's data from the backup. This method does nothing if no backup is created. This method does nothing if player is null.
+	 * Restore player's data from the backup.<br>
+	 * This method does nothing if no backup is created.<br>
+	 * This method does nothing if player is null.
 	 * 
 	 * @param player
-	 *            The player this backup should apply to.
+	 *            The player this backup should be applied to.
 	 */
 	public void restore(final Player player)
 	{
