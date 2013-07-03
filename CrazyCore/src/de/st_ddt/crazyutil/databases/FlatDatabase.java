@@ -119,9 +119,8 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	}
 
 	@Override
-	public S loadEntry(String key)
+	public S loadEntry(final String key)
 	{
-		key = key.toLowerCase();
 		final String rawData = entries.get(key);
 		if (rawData == null)
 			return null;
@@ -195,7 +194,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 
 	private S loadEntryWithData(final String key, final String rawData) throws Exception
 	{
-		final S data = constructor.newInstance(new Object[] { PATTERN_DATASEPARATOR.split(rawData) });
+		final S data = constructor.newInstance(new Object[] { PATTERN_DATASEPARATOR.split(rawData, -1) });
 		datas.put(key, data);
 		return data;
 	}
@@ -239,7 +238,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	@Override
 	public boolean deleteEntry(final String key)
 	{
-		entries.remove(key.toLowerCase());
+		entries.remove(key);
 		final boolean res = super.deleteEntry(key);
 		asyncSaveDatabase();
 		return res;
@@ -251,7 +250,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		if (entry == null)
 			return;
 		super.save(entry);
-		entries.put(entry.getName().toLowerCase(), ChatHelper.listingString(DATASEPARATOR, entry.saveToFlatDatabase()) + LINESEPERATOR);
+		entries.put(entry.getName(), ChatHelper.listingString(DATASEPARATOR, entry.saveToFlatDatabase()) + LINESEPERATOR);
 		asyncSaveDatabase();
 	}
 
@@ -261,7 +260,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 		for (final S entry : entries)
 		{
 			super.save(entry);
-			this.entries.put(entry.getName().toLowerCase(), ChatHelper.listingString(DATASEPARATOR, entry.saveToFlatDatabase()) + LINESEPERATOR);
+			this.entries.put(entry.getName(), ChatHelper.listingString(DATASEPARATOR, entry.saveToFlatDatabase()) + LINESEPERATOR);
 		}
 		asyncSaveDatabase();
 	}
@@ -306,7 +305,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 					continue;
 				try
 				{
-					entries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0].toLowerCase(), zeile + LINESEPERATOR);
+					entries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0], zeile + LINESEPERATOR);
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
@@ -350,7 +349,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 					continue;
 				try
 				{
-					backupEntries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0].toLowerCase(), zeile);
+					backupEntries.put(PATTERN_DATASEPARATOR.split(zeile, 2)[0], zeile);
 				}
 				catch (final ArrayIndexOutOfBoundsException e)
 				{}
