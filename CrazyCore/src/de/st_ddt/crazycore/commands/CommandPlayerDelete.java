@@ -15,6 +15,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerDelete extends CommandExecutor
 {
@@ -55,6 +56,7 @@ public class CommandPlayerDelete extends CommandExecutor
 	}
 
 	@Override
+	@Permission({ "crazycore.player.delete.self", "crazycore.player.delete.other" })
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.player.delete.self") || PermissionModule.hasPermission(sender, "crazycore.player.delete.other");

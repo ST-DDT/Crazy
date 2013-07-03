@@ -30,6 +30,7 @@ import de.st_ddt.crazyutil.paramitrisable.ColoredStringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.FileParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
+import de.st_ddt.crazyutil.source.Permission;
 
 public abstract class CrazyPipe
 {
@@ -44,6 +45,7 @@ public abstract class CrazyPipe
 		return pipe;
 	}
 
+	@Permission("crazypipe.use")
 	public static void pipe(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
 	{
 		if (disabled)
@@ -110,6 +112,7 @@ public abstract class CrazyPipe
 			return pipe.tab(sender, ChatHelperExtended.shiftArray(pipeArgs, 1));
 	}
 
+	@Permission("crazypipe.use")
 	public static void pipe(final CommandSender sender, final ParameterData data, final String... pipeArgs) throws CrazyException
 	{
 		if (disabled)
@@ -137,6 +140,7 @@ public abstract class CrazyPipe
 		commandPipe(sender, data, pipeArgs);
 	}
 
+	@Permission("crazypipe.use")
 	public static void pipe(final CommandSender sender, final String data, final String... pipeArgs) throws CrazyException
 	{
 		if (disabled)

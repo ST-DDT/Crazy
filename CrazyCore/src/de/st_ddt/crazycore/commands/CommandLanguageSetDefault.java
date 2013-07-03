@@ -8,12 +8,12 @@ import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
-import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandLanguageSetDefault extends CommandExecutor
 {
@@ -27,8 +27,6 @@ public class CommandLanguageSetDefault extends CommandExecutor
 	@Localized("CRAZYCORE.COMMAND.LANGUAGE.DEFAULT.SET $LanguageName$ $Language$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		if (!PermissionModule.hasPermission(sender, "crazylanguage.advanced"))
-			throw new CrazyCommandPermissionException();
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<Language>");
 		final String language = args[0].toLowerCase();
@@ -55,5 +53,12 @@ public class CommandLanguageSetDefault extends CommandExecutor
 			if (pattern.matcher(language).find() || pattern.matcher(CrazyLocale.getSaveLanguageName(language)).find())
 				res.add(language);
 		return res;
+	}
+
+	@Override
+	@Permission("crazylanguage.advanced")
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazylanguage.advanced");
 	}
 }

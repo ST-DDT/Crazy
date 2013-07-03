@@ -23,6 +23,7 @@ import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerAssociates extends CommandExecutor
 {
@@ -76,6 +77,7 @@ public class CommandPlayerAssociates extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazycore.player.associates")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.player.associates");

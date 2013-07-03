@@ -13,6 +13,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandLanguageRemovePreloaded extends CommandExecutor
 {
@@ -50,6 +51,7 @@ public class CommandLanguageRemovePreloaded extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazylanguage.advanced")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazylanguage.advanced");

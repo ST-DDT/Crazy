@@ -18,6 +18,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerInfo extends CommandExecutor
 {
@@ -74,6 +75,7 @@ public class CommandPlayerInfo extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazycore.player.info")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.player.info");

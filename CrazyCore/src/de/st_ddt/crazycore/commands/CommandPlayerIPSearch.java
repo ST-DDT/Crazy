@@ -21,6 +21,7 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerIPSearch extends CommandExecutor
 {
@@ -74,6 +75,7 @@ public class CommandPlayerIPSearch extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazycore.player.ipsearch")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.player.ipsearch");

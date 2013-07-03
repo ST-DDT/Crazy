@@ -9,7 +9,9 @@ import de.st_ddt.crazyplugin.commands.CrazyCommandListEditor;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ListFormat;
+import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerWipeCommands extends CrazyCommandListEditor<CrazyCore, String>
 {
@@ -49,17 +51,24 @@ public class CommandPlayerWipeCommands extends CrazyCommandListEditor<CrazyCore,
 	}
 
 	@Override
+	@Permission("crazycore.wipecommands")
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return PermissionModule.hasPermission(sender, "crazycore.wipecommands");
+	}
+
+	@Override
 	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.ADD2 $Element$ $Index$")
 	public String addViaIndexLocale()
 	{
-		return "COMMAND.PLAYERWIPECOMMANDS.ADD2";
+		return "CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.ADD2";
 	}
 
 	@Override
 	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.REMOVE2 $Element$ $Index$")
 	public String removeViaIndexLocale()
 	{
-		return "COMMAND.PLAYERWIPECOMMANDS.REMOVE2";
+		return "CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.REMOVE2";
 	}
 
 	@Override
@@ -78,14 +87,14 @@ public class CommandPlayerWipeCommands extends CrazyCommandListEditor<CrazyCore,
 	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.ADD $Element$")
 	public String addLocale()
 	{
-		return "COMMAND.PLAYERWIPECOMMANDS.ADD";
+		return "CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.ADD";
 	}
 
 	@Override
 	@Localized("CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.REMOVE $Element$")
 	public String removeLocale()
 	{
-		return "COMMAND.PLAYERWIPECOMMANDS.REMOVE";
+		return "CRAZYCORE.COMMAND.PLAYERWIPECOMMANDS.REMOVE";
 	}
 
 	@Override

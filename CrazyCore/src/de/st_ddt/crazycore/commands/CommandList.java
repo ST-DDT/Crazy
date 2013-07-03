@@ -15,6 +15,7 @@ import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.Tabbed;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandList extends CommandExecutor
 {
@@ -40,6 +41,7 @@ public class CommandList extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazycore.list")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.list");

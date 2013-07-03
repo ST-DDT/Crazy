@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class PlayerListener implements Listener
 {
@@ -21,6 +22,7 @@ public class PlayerListener implements Listener
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@Permission("crazycore.protectedplayer")
 	public void PlayerJoin(final PlayerJoinEvent event)
 	{
 		final Player player = event.getPlayer();
