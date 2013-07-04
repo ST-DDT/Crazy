@@ -30,14 +30,11 @@ public class CommandShowEntity extends CommandExecutor
 		if (args.length != 1)
 			throw new CrazyCommandUsageException("<CustomEntityType>");
 		final String name = args[0].toUpperCase();
-		for (final CustomEntitySpawner spawner : plugin.getCustomEntities())
-			if (spawner.getName().equals(name))
-			{
-				plugin.sendLocaleMessage("COMMAND.SHOWENTITY", sender);
-				spawner.show(sender);
-				return;
-			}
-		throw new CrazyCommandNoSuchException("CustomEntityType", name, tab(sender, args));
+		final CustomEntitySpawner spawner = plugin.getCustomEntities().get(name.toUpperCase());
+		if (spawner == null)
+			throw new CrazyCommandNoSuchException("CustomEntityType", name, tab(sender, args));
+		plugin.sendLocaleMessage("COMMAND.SHOWENTITY", sender);
+		spawner.show(sender);
 	}
 
 	@Override
@@ -47,7 +44,7 @@ public class CommandShowEntity extends CommandExecutor
 			return new ArrayList<String>(0);
 		final String name = args[0].toUpperCase();
 		final List<String> res = new LinkedList<String>();
-		for (final CustomEntitySpawner spawner : plugin.getCustomEntities())
+		for (final CustomEntitySpawner spawner : plugin.getCustomEntities().values())
 			if (spawner.getName().startsWith(name))
 				res.add(name);
 		return res;

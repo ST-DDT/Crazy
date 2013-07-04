@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -825,9 +824,9 @@ public class CrazySpawner extends CrazyPlugin
 		saveCustomEntities();
 	}
 
-	public Set<CustomEntitySpawner> getCustomEntities()
+	public Map<String, CustomEntitySpawner> getCustomEntities()
 	{
-		return new LinkedHashSet<CustomEntitySpawner>(customEntities.values());
+		return customEntities;
 	}
 
 	public void removeCustomEntity(final CustomEntitySpawner customEntity)

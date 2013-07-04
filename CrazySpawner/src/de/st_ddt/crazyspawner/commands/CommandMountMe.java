@@ -35,34 +35,35 @@ public class CommandMountMe extends CommandExecutor
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
-		final NamedEntitySpawnerParamitrisable entityParam = new NamedEntitySpawnerParamitrisable((NamedEntitySpawner) null);
-		params.put("c", entityParam);
-		params.put("creature", entityParam);
-		params.put("e", entityParam);
-		params.put("entity", entityParam);
+		final NamedEntitySpawnerParamitrisable spawnerParam = new NamedEntitySpawnerParamitrisable((NamedEntitySpawner) null);
+		params.put("c", spawnerParam);
+		params.put("creature", spawnerParam);
+		params.put("e", spawnerParam);
+		params.put("entity", spawnerParam);
 		final PlayerParamitrisable playerParam = new PlayerParamitrisable(sender);
 		params.put("p", playerParam);
 		params.put("plr", playerParam);
 		params.put("player", playerParam);
-		ChatHelperExtended.readParameters(args, params, entityParam, playerParam);
-		if (entityParam.getValue() == null)
+		ChatHelperExtended.readParameters(args, params, spawnerParam, playerParam);
+		final NamedEntitySpawner spawner = spawnerParam.getValue();
+		if (spawner == null)
 			throw new CrazyCommandUsageException("<entity:NamedEntityType> [player:Player]");
 		final Player player = playerParam.getValue();
 		if (player == null)
 			throw new CrazyCommandUsageException("<entity:NamedEntityType> <player:Player>");
-		Entity entity = entityParam.getValue().spawn(player.getLocation());
+		if (!PermissionModule.hasPermission(sender, "crazyspawner.mountme." + (player == sender ? "self" : "others")))
+			throw new CrazyCommandPermissionException();
+		Entity entity = spawner.spawn(player.getLocation());
 		while (entity.getPassenger() != null)
 			entity = entity.getPassenger();
 		entity.setPassenger(player);
 		if (player == sender)
-			plugin.sendLocaleMessage("COMMAND.MOUNTME.SELF", sender, entityParam.getValue().getType().name());
-		else if (PermissionModule.hasPermission(sender, "crazyspawner.mountme.others"))
-		{
-			plugin.sendLocaleMessage("COMMAND.MOUNTME.OTHER", sender, entityParam.getValue().getType().name(), player.getName());
-			plugin.sendLocaleMessage("COMMAND.MOUNTME.MOUNTED", sender, entityParam.getValue().getType().name(), sender.getName());
-		}
+			plugin.sendLocaleMessage("COMMAND.MOUNTME.SELF", sender, spawnerParam.getValue().getType().name());
 		else
-			throw new CrazyCommandPermissionException();
+		{
+			plugin.sendLocaleMessage("COMMAND.MOUNTME.OTHER", sender, spawnerParam.getValue().getType().name(), player.getName());
+			plugin.sendLocaleMessage("COMMAND.MOUNTME.MOUNTED", sender, spawnerParam.getValue().getType().name(), sender.getName());
+		}
 	}
 
 	@Override

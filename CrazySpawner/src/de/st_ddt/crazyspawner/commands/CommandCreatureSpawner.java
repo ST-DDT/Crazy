@@ -38,14 +38,15 @@ public class CommandCreatureSpawner extends CommandExecutor
 			throw new CrazyCommandExecutorException(false);
 		final Player player = (Player) sender;
 		final Map<String, Paramitrisable> params = new TreeMap<String, Paramitrisable>();
-		final CreatureParamitrisable creature = new CreatureParamitrisable(null);
-		params.put("c", creature);
-		params.put("creature", creature);
-		ChatHelperExtended.readParameters(args, params, creature);
-		if (creature.getValue() == null)
+		final CreatureParamitrisable typeParam = new CreatureParamitrisable(null);
+		params.put("c", typeParam);
+		params.put("creature", typeParam);
+		ChatHelperExtended.readParameters(args, params, typeParam);
+		final EntityType type = typeParam.getValue();
+		if (type == null)
 			throw new CrazyCommandUsageException("<Creature>");
-		creatureSelection.put(player, creature.getValue());
-		plugin.sendLocaleMessage("COMMAND.CREATURESPAWNER.SELECTED", player, creature.getValue());
+		creatureSelection.put(player, type);
+		plugin.sendLocaleMessage("COMMAND.CREATURESPAWNER.SELECTED", player, type);
 	}
 
 	@Override

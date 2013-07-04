@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
@@ -13,6 +14,7 @@ import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 import de.st_ddt.crazyspawner.tasks.options.Thunder;
 import de.st_ddt.crazyutil.ChatHelperExtended;
+import de.st_ddt.crazyutil.NamedEntitySpawner;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ColoredStringParamitrisable;
@@ -40,9 +42,9 @@ public class CommandSpawn extends CommandExecutor
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		final Map<String, TabbedParamitrisable> params = new TreeMap<String, TabbedParamitrisable>();
-		final NamedEntitySpawnerParamitrisable creature = new NamedEntitySpawnerParamitrisable();
-		params.put("c", creature);
-		params.put("creature", creature);
+		final NamedEntitySpawnerParamitrisable spawnerParam = new NamedEntitySpawnerParamitrisable();
+		params.put("c", spawnerParam);
+		params.put("creature", spawnerParam);
 		final IntegerParamitrisable amount = new IntegerParamitrisable(1)
 		{
 
@@ -219,9 +221,9 @@ public class CommandSpawn extends CommandExecutor
 		params.put("ar", alarmRange);
 		params.put("arange", alarmRange);
 		params.put("alarmrange", alarmRange);
-		final LocationParamitrisable location = new LocationParamitrisable(sender);
-		location.addFullParams(params, "l", "loc", "location");
-		location.addAdvancedParams(params, "");
+		final LocationParamitrisable locationParam = new LocationParamitrisable(sender);
+		locationParam.addFullParams(params, "l", "loc", "location");
+		locationParam.addAdvancedParams(params, "");
 		final DoubleParamitrisable spawnRange = new DoubleParamitrisable(0D)
 		{
 
@@ -262,18 +264,20 @@ public class CommandSpawn extends CommandExecutor
 		params.put("thunder", thunder);
 		params.put("strike", thunder);
 		params.put("lightning", thunder);
-		ChatHelperExtended.readParameters(args, params, creature, amount, repeat, interval, delay);
-		if (creature.getValue() == null)
+		ChatHelperExtended.readParameters(args, params, spawnerParam, amount, repeat, interval, delay);
+		final NamedEntitySpawner spawner = spawnerParam.getValue();
+		if (spawner == null)
 			throw new CrazyCommandNoSuchException("Creature", "(none)");
-		if (location.getValue().getWorld() == null)
+		final Location location = locationParam.getValue();
+		if (location.getWorld() == null)
 			throw new CrazyCommandNoSuchException("World", "(none)");
-		final TimerSpawnTask task = new TimerSpawnTask(plugin, creature.getValue(), location.getValue(), spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), peaceful.getValue(), alarmRange.getValue(), health.getValue(), showHealth.getValue(), fire.getValue(), thunder.getValue());
+		final TimerSpawnTask task = new TimerSpawnTask(plugin, spawner, location, spawnRange.getValue(), amount.getValue(), interval.getValue() / 50, repeat.getValue(), synced.getValue(), chunkLoadRange.getValue(), creatureMaxCount.getValue(), creatureRange.getValue(), playerCount.getValue(), playerRange.getValue(), blockingRange.getValue(), countDownTimes.getValue(), countDownMessage.getValue(), countDownBroadcast.getValue(), allowDespawn.getValue(), peaceful.getValue(), alarmRange.getValue(), health.getValue(), showHealth.getValue(), fire.getValue(), thunder.getValue());
 		plugin.addSpawnTask(task);
 		if (synced.getValue())
 			task.start();
 		else
 			task.start(delay.getValue() / 50);
-		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, creature.getValue().getName(), amount);
+		plugin.sendLocaleMessage("COMMAND.SPAWNED", sender, spawnerParam.getValue().getName(), amount);
 	}
 
 	@Override

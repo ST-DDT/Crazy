@@ -71,7 +71,7 @@ public class CommandModifyEntity extends CommandExecutor
 		{
 			final List<String> res = new ArrayList<String>();
 			res.addAll(EnumParamitrisable.getEnumNames(CustomEntitySpawner.getSpawnableEntityTypes()));
-			for (final CustomEntitySpawner spawner : plugin.getCustomEntities())
+			for (final CustomEntitySpawner spawner : plugin.getCustomEntities().values())
 				res.add(spawner.getName().toUpperCase());
 			final String inheritance = args[0].toUpperCase();
 			final Iterator<String> it = res.iterator();
