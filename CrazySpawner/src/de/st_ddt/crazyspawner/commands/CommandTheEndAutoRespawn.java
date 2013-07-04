@@ -27,6 +27,7 @@ import de.st_ddt.crazyutil.paramitrisable.NamedEntitySpawnerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.WorldParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandTheEndAutoRespawn extends CommandExecutor
 {
@@ -121,6 +122,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazyspawner.theendautorespawn")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazyspawner.theendautorespawn");

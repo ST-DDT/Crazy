@@ -75,8 +75,10 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
 import de.st_ddt.crazyutil.source.Permission;
+import de.st_ddt.crazyutil.source.PermissionVariable;
 
 @LocalizedVariable(variables = { "CRAZYPLUGIN" }, values = { "CRAZYSPAWNER" })
+@PermissionVariable(variables = { "CRAZYPLUGIN" }, values = { "CRAZYSPAWNER" })
 public class CrazySpawner extends CrazyPlugin
 {
 

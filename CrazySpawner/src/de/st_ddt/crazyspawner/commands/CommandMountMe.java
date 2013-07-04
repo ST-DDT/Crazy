@@ -30,7 +30,7 @@ public class CommandMountMe extends CommandExecutor
 	}
 
 	@Override
-	@Permission("crazyspawner.mountme.others")
+	@Permission({ "crazyspawner.mountme.self", "crazyspawner.mountme.others", "crazyspawner.mountme.*", "crazyspawner.mountme.<ENTITYTYPE>.*", "crazyspawner.mountme.<CUSTOMENTITYNAME>" })
 	@Localized({ "CRAZYSPAWNER.COMMAND.MOUNTME.SELF $EntityType$", "CRAZYSPAWNER.COMMAND.MOUNTME.OTHER $EntityType$ $MountedPlayer$", "CRAZYSPAWNER.COMMAND.MOUNTME.MOUNTED $EntityType$ $Sender$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
@@ -52,6 +52,8 @@ public class CommandMountMe extends CommandExecutor
 		if (player == null)
 			throw new CrazyCommandUsageException("<entity:NamedEntityType> <player:Player>");
 		if (!PermissionModule.hasPermission(sender, "crazyspawner.mountme." + (player == sender ? "self" : "others")))
+			throw new CrazyCommandPermissionException();
+		if (!(PermissionModule.hasPermission(sender, "crazyspawner.mountme.*") || PermissionModule.hasPermission(sender, "crazyspawner.mountme." + spawner.getType().name() + ".*") || PermissionModule.hasPermission(sender, "crazyspawner.mountme." + spawner.getName())))
 			throw new CrazyCommandPermissionException();
 		Entity entity = spawner.spawn(player.getLocation());
 		while (entity.getPassenger() != null)
