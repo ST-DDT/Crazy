@@ -1,18 +1,40 @@
 package de.st_ddt.crazylogin.events;
 
+import java.util.Set;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 import de.st_ddt.crazylogin.data.LoginData;
 
-public class CrazyLoginPreRegisterEvent extends CrazyLoginPlayerDataEvent implements Cancellable
+public class CrazyLoginPreRegisterEvent extends CrazyLoginEvent implements Cancellable
 {
 
+	protected final Player player;
+	protected final Set<? extends LoginData> associates;
 	protected boolean cancelled = false;
 
-	public CrazyLoginPreRegisterEvent(final Player player, final LoginData data)
+	public CrazyLoginPreRegisterEvent(final Player player, final Set<? extends LoginData> associates)
 	{
-		super(player, data);
+		super();
+		this.player = player;
+		this.associates = associates;
+	}
+
+	/**
+	 * @return The player who tries to register.
+	 */
+	public Player getPlayer()
+	{
+		return player;
+	}
+
+	/**
+	 * @return All known associates who have an account in CrazyLogin.
+	 */
+	public Set<? extends LoginData> getAssociates()
+	{
+		return associates;
 	}
 
 	@Override

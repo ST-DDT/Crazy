@@ -4,7 +4,10 @@ import org.bukkit.event.HandlerList;
 
 import de.st_ddt.crazyplugin.events.CrazyEvent;
 
-public class CrazyLoginEvent extends CrazyEvent
+/**
+ * This event represent an event in CrazyLogin
+ */
+public abstract class CrazyLoginEvent extends CrazyEvent
 {
 
 	private static final HandlerList handlers = new HandlerList();

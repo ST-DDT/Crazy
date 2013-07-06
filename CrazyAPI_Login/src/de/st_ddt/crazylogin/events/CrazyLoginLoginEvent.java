@@ -4,6 +4,9 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazylogin.data.LoginData;
 
+/**
+ * This event is called after a player logged in successfully.
+ */
 public class CrazyLoginLoginEvent extends CrazyLoginPlayerDataEvent
 {
 

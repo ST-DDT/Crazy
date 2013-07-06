@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazylogin.data.LoginData;
 
-public class CrazyLoginPlayerDataEvent extends CrazyLoginEvent
+public abstract class CrazyLoginPlayerDataEvent extends CrazyLoginEvent
 {
 
 	protected final Player player;
@@ -17,11 +17,17 @@ public class CrazyLoginPlayerDataEvent extends CrazyLoginEvent
 		this.data = data;
 	}
 
+	/**
+	 * @return The player who caused this event to be called.
+	 */
 	public Player getPlayer()
 	{
 		return player;
 	}
 
+	/**
+	 * @return The LoginData belonging to the player who caused this event to be called.
+	 */
 	public LoginData getData()
 	{
 		return data;

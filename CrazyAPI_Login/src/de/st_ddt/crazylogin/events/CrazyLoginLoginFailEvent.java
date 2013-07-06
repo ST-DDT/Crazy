@@ -4,6 +4,9 @@ import org.bukkit.entity.Player;
 
 import de.st_ddt.crazylogin.data.LoginData;
 
+/**
+ * This event is called after a player fails to login.
+ */
 public class CrazyLoginLoginFailEvent extends CrazyLoginPlayerDataEvent
 {
 
@@ -15,6 +18,9 @@ public class CrazyLoginLoginFailEvent extends CrazyLoginPlayerDataEvent
 		this.reason = reason;
 	}
 
+	/**
+	 * @return The reason why the login failed.
+	 */
 	public LoginFailReason getReason()
 	{
 		return reason;
