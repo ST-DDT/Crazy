@@ -130,13 +130,13 @@ permissions:
     description: Player will be warned if a player tries to illegally access a protected player.
     default: true
   crazycore.reload:
-    description: Allow reload plugin.
+    description: Allow reloading the plugin.
     default: op
   crazycore.reload.*:
     description: Allow reloading the entire plugin.
     default: op
   crazycore.reload.config:
-    description: Allow reloading the config.
+    description: Allow reloading the config of this plugin.
     default: op
   crazycore.save:
     description: Allow saving plugin.
