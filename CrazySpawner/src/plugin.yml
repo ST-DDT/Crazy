@@ -68,28 +68,28 @@ permissions:
     description: Allow changing of creature spawners.
     default: op
   crazyspawner.creaturespawner.*:
-    description: No description available.
+    description: Allow changing of creature spawners to all possible types.
     default: op
-  crazyspawner.help:
-    description: No description available.
+  crazylogin.help:
+    description: Allow accessing the plugin help.
     default: op
-  crazyspawner.info:
-    description: No description available.
+  crazylogin.info:
+    description: Allow showing information about this plugin.
+    default: op
+  crazylogin.logger:
+    description: Allow configuring the plugin logger.
     default: op
   crazyspawner.kill:
-    description: Allow killing of creatures
+    description: Allow killing of creatures.
     default: op
   crazyspawner.list:
     description: Allow removing spawn tasks.
     default: op
-  crazyspawner.logger:
-    description: No description available.
-    default: op
   crazyspawner.mode:
-    description: No description available.
+    description: Allow changing plugin modes.
     default: op
   crazyspawner.mode.*:
-    description: No description available.
+    description: Allow changing plugin all modes.
     default: op
   crazyspawner.modifyentity:
     description: Allow creating/modifing of custom entities.
@@ -98,7 +98,7 @@ permissions:
     description: Allow spawning of entities and ride it.
     default: op
   crazyspawner.mountme.*:
-    description: No description available.
+    description: Allow spawning all possible entities and ride them.
     default: op
   crazyspawner.mountme.others:
     description: Allow spawning of entities for others players and let him ride it.
@@ -106,10 +106,12 @@ permissions:
     children:
       crazyspawner.mountme: true
   crazyspawner.mountme.self:
-    description: No description available.
+    description: Allow spawning of entities for yourself and ride it.
     default: op
+    children:
+      crazyspawner.mountme: true
   crazyspawner.overwriteentity:
-    description: No description available.
+    description: Allow overwriting default entities.
     default: op
   crazyspawner.reload:
     description: Allow accessing the reload command.
@@ -131,19 +133,19 @@ permissions:
     description: Allow reloading the spawn tasks.
     default: op
   crazyspawner.remove:
-    description: No description available.
+    description: Allow removing of spawn tasks.
     default: op
   crazyspawner.save:
-    description: No description available.
+    description: Allow saving the plugin.
     default: op
   crazyspawner.showentity:
     description: Allow displaying of custom entity properties.
     default: op
   crazyspawner.spawn:
-    description: Allow spawning of creatures
+    description: Allow spawning of entities.
     default: op
   crazyspawner.spawn.*:
-    description: No description available.
+    description: Allow spawning of all possible entities.
     default: op
   crazyspawner.theendautorespawn:
     description: Allow creating auto respawn tasks for EnderDragons and EnderCrystals.
