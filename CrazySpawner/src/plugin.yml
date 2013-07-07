@@ -70,20 +70,20 @@ permissions:
   crazyspawner.creaturespawner.*:
     description: Allow changing of creature spawners to all possible types.
     default: op
-  crazylogin.help:
+  crazyspawner.help:
     description: Allow accessing the plugin help.
     default: op
-  crazylogin.info:
+  crazyspawner.info:
     description: Allow showing information about this plugin.
-    default: op
-  crazylogin.logger:
-    description: Allow configuring the plugin logger.
     default: op
   crazyspawner.kill:
     description: Allow killing of creatures.
     default: op
   crazyspawner.list:
     description: Allow removing spawn tasks.
+    default: op
+  crazyspawner.logger:
+    description: Allow configuring the plugin logger.
     default: op
   crazyspawner.mode:
     description: Allow changing plugin modes.
