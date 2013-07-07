@@ -38,8 +38,8 @@ public class ExperienceOrbProperty extends BasicProperty
 	public ExperienceOrbProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
-		final IntegerParamitrisable minXPParam = (IntegerParamitrisable) params.get("minXP");
-		final IntegerParamitrisable maxXPParam = (IntegerParamitrisable) params.get("maxXP");
+		final IntegerParamitrisable minXPParam = (IntegerParamitrisable) params.get("minxp");
+		final IntegerParamitrisable maxXPParam = (IntegerParamitrisable) params.get("maxxp");
 		this.minXP = Math.max(Math.min(minXPParam.getValue(), maxXPParam.getValue()), -1);
 		this.maxXP = Math.max(Math.max(minXPParam.getValue(), maxXPParam.getValue()), -1);
 	}
@@ -56,9 +56,9 @@ public class ExperienceOrbProperty extends BasicProperty
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable minXPParam = new IntegerParamitrisable(minXP);
-		params.put("minXP", minXPParam);
+		params.put("minxp", minXPParam);
 		final IntegerParamitrisable maxXPParam = new IntegerParamitrisable(maxXP);
-		params.put("maxXP", maxXPParam);
+		params.put("maxxp", maxXPParam);
 	}
 
 	@Override

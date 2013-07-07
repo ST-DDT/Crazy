@@ -43,8 +43,8 @@ public final class HealthProperty extends BasicProperty
 		if (maxHealth == -1)
 			return;
 		final Damageable damageable = (Damageable) entity;
-		damageable.setHealth(maxHealth);
 		damageable.setMaxHealth(maxHealth);
+		damageable.setHealth(maxHealth);
 	}
 
 	@Override

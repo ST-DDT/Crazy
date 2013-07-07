@@ -38,8 +38,8 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	public DamageProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
-		final IntegerParamitrisable minDamageParam = (IntegerParamitrisable) params.get("minDamage");
-		final IntegerParamitrisable maxDamageParam = (IntegerParamitrisable) params.get("maxDamage");
+		final IntegerParamitrisable minDamageParam = (IntegerParamitrisable) params.get("mindamage");
+		final IntegerParamitrisable maxDamageParam = (IntegerParamitrisable) params.get("maxdamage");
 		this.minDamage = Math.max(Math.min(minDamageParam.getValue(), maxDamageParam.getValue()), -1);
 		this.maxDamage = Math.max(Math.max(minDamageParam.getValue(), maxDamageParam.getValue()), -1);
 	}
@@ -55,9 +55,9 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
 		final IntegerParamitrisable minDamageParam = new IntegerParamitrisable(minDamage);
-		params.put("minDamage", minDamageParam);
+		params.put("mindamage", minDamageParam);
 		final IntegerParamitrisable maxDamageParam = new IntegerParamitrisable(maxDamage);
-		params.put("maxDamage", maxDamageParam);
+		params.put("maxdamage", maxDamageParam);
 	}
 
 	@Override
