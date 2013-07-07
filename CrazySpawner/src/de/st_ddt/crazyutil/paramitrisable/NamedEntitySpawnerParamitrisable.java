@@ -315,16 +315,18 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 	{
 		parameter = parameter.toUpperCase();
 		final List<String> res = new LinkedList<String>();
-		final List<String> more = new LinkedList<String>();
 		if (parameter.length() == 0)
 			res.addAll(ENTITY_TYPES.keySet());
 		else
+		{
+			final List<String> more = new LinkedList<String>();
 			for (final Entry<String, NamedEntitySpawner> entry : ENTITY_TYPES.entrySet())
 				if (entry.getValue().getName().startsWith(parameter))
 					res.add(entry.getKey());
 				else if (entry.getValue().getType().name().contains(parameter) || entry.getKey().contains(parameter))
 					more.add(entry.getKey());
-		res.addAll(more);
+			res.addAll(more);
+		}
 		return res.subList(0, Math.min(res.size(), 10));
 	}
 

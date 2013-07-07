@@ -34,52 +34,82 @@ commands:
     aliases: [cspawner]
 permissions:
   crazyspawner.*:
-    description: Access to all commands
-    default: false
+    description: Access to all permissions belonging to this plugin.
+    default: op
     children:
-      crazyspawner.spawn: true
-      crazyspawner.kill: true
+      crazycore.protectedplayer: true
+      crazyspawner.creaturespawner.*: true
       crazyspawner.creaturespawner: true
-      crazyspawner.theendautorespawn: true
-      crazyspawner.modifyentity: true
-      crazyspawner.showentity: true
-      crazyspawner.mountme: true
-      crazyspawner.mountme.others: true
+      crazyspawner.help: true
+      crazyspawner.info: true
+      crazyspawner.kill: true
       crazyspawner.list: true
-      crazyspawner.remove: true
-      crazyspawner.reload: true
+      crazyspawner.logger: true
+      crazyspawner.mode.*: true
+      crazyspawner.mode: true
+      crazyspawner.modifyentity: true
+      crazyspawner.mountme.*: true
+      crazyspawner.mountme.others: true
+      crazyspawner.mountme.self: true
+      crazyspawner.mountme: true
+      crazyspawner.overwriteentity: true
       crazyspawner.reload.*: true
-  crazyspawner.spawn:
-    description: Allow spawning of creatures
+      crazyspawner.reload.config: true
+      crazyspawner.reload.entities: true
+      crazyspawner.reload.spawntasks: true
+      crazyspawner.reload: true
+      crazyspawner.remove: true
+      crazyspawner.save: true
+      crazyspawner.showentity: true
+      crazyspawner.spawn.*: true
+      crazyspawner.spawn: true
+      crazyspawner.theendautorespawn: true
+  crazyspawner.creaturespawner:
+    description: Allow changing of creature spawners.
+    default: op
+  crazyspawner.creaturespawner.*:
+    description: No description available.
+    default: op
+  crazyspawner.help:
+    description: No description available.
+    default: op
+  crazyspawner.info:
+    description: No description available.
     default: op
   crazyspawner.kill:
     description: Allow killing of creatures
     default: op
-  crazyspawner.creaturespawner:
-    description: Allow changing of creature spawners.
+  crazyspawner.list:
+    description: Allow removing spawn tasks.
     default: op
-  crazyspawner.theendautorespawn:
-    description: Allow creating auto respawn tasks for EnderDragons and EnderCrystals.
+  crazyspawner.logger:
+    description: No description available.
+    default: op
+  crazyspawner.mode:
+    description: No description available.
+    default: op
+  crazyspawner.mode.*:
+    description: No description available.
     default: op
   crazyspawner.modifyentity:
-    description: Allow creating/modifing of custom entities. 
-    default: op
-  crazyspawner.showentity:
-    description: Allow displaying of custom entity properties. 
+    description: Allow creating/modifing of custom entities.
     default: op
   crazyspawner.mountme:
     description: Allow spawning of entities and ride it.
+    default: op
+  crazyspawner.mountme.*:
+    description: No description available.
     default: op
   crazyspawner.mountme.others:
     description: Allow spawning of entities for others players and let him ride it.
     default: op
     children:
       crazyspawner.mountme: true
-  crazyspawner.list:
-    description: Allow listing spawn tasks.
+  crazyspawner.mountme.self:
+    description: No description available.
     default: op
-  crazyspawner.list:
-    description: Allow removing spawn tasks.
+  crazyspawner.overwriteentity:
+    description: No description available.
     default: op
   crazyspawner.reload:
     description: Allow accessing the reload command.
@@ -99,4 +129,22 @@ permissions:
     default: op
   crazyspawner.reload.spawntasks:
     description: Allow reloading the spawn tasks.
+    default: op
+  crazyspawner.remove:
+    description: No description available.
+    default: op
+  crazyspawner.save:
+    description: No description available.
+    default: op
+  crazyspawner.showentity:
+    description: Allow displaying of custom entity properties.
+    default: op
+  crazyspawner.spawn:
+    description: Allow spawning of creatures
+    default: op
+  crazyspawner.spawn.*:
+    description: No description available.
+    default: op
+  crazyspawner.theendautorespawn:
+    description: Allow creating auto respawn tasks for EnderDragons and EnderCrystals.
     default: op
