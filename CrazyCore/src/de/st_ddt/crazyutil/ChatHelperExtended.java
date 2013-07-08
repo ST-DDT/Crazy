@@ -617,6 +617,15 @@ public class ChatHelperExtended extends ChatHelper
 		return page;
 	}
 
+	/**
+	 * Truncates an array to the given length. Dropping elements at the end.
+	 * 
+	 * @param args
+	 *            The array to truncate
+	 * @param anz
+	 *            The length of the returned array
+	 * @return The truncated array
+	 */
 	public static <S> S[] cutArray(final S[] args, final int anz)
 	{
 		if (anz < 0)
