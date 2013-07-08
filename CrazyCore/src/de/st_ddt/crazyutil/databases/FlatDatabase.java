@@ -173,7 +173,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 			}
 			finally
 			{
-				if (datas.containsKey(key))
+				if (datas.containsKey(key.toLowerCase()))
 				{
 					plugin.getLogger().log(Level.SEVERE, "Repair success.");
 					save(key);
@@ -195,7 +195,7 @@ public class FlatDatabase<S extends FlatDatabaseEntry> extends BasicDatabase<S>
 	private S loadEntryWithData(final String key, final String rawData) throws Exception
 	{
 		final S data = constructor.newInstance(new Object[] { PATTERN_DATASEPARATOR.split(rawData, -1) });
-		datas.put(key, data);
+		datas.put(key.toLowerCase(), data);
 		return data;
 	}
 
