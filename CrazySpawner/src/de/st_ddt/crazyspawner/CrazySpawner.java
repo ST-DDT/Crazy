@@ -145,6 +145,7 @@ public class CrazySpawner extends CrazyPlugin
 			}
 
 			@Override
+			@Permission("crazyspawner.mode.defaultAlarmRange")
 			public void setValue(final Double newValue) throws CrazyException
 			{
 				defaultAlarmRange = newValue;
@@ -161,6 +162,7 @@ public class CrazySpawner extends CrazyPlugin
 			}
 
 			@Override
+			@Permission("crazyspawner.mode.monsterExplosionDamageEnabled")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				monsterExplosionDamageEnabled = newValue;

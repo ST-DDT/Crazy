@@ -47,6 +47,8 @@ permissions:
       crazyspawner.logger: true
       crazyspawner.mode.*: true
       crazyspawner.mode: true
+      crazyspawner.mode.defaultalarmrange: true
+      crazyspawner.mode.monsterexplosiondamageenabled: true
       crazyspawner.modifyentity: true
       crazyspawner.mountme.*: true
       crazyspawner.mountme.others: true
@@ -90,6 +92,12 @@ permissions:
     default: op
   crazyspawner.mode.*:
     description: Allow changing plugin all modes.
+    default: op
+  crazyspawner.mode.defaultalarmrange:
+    description: Allow changing defaultAlarmRange mode.
+    default: op
+  crazyspawner.mode.monsterexplosiondamageenabled:
+    description: Allow changing monsterExplosionDamageEnabled mode.
     default: op
   crazyspawner.modifyentity:
     description: Allow creating/modifing of custom entities.
