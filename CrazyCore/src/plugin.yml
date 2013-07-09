@@ -38,7 +38,7 @@ permissions:
     description: Access to all permissions belonging to this plugin.
     default: op
     children:
-      crazycore.comamndinfo: true
+      crazycore.commandinfo: true
       crazycore.help: true
       crazycore.info: true
       crazycore.list: true
@@ -65,7 +65,7 @@ permissions:
       crazycore.wipefilepaths: true
       crazylanguage.advanced: true
       crazypipe.use: true
-  crazycore.comamndinfo:
+  crazycore.commandinfo:
     description: Allow searching for commands and displaying detailed information about it.
     default: op
   crazycore.help:

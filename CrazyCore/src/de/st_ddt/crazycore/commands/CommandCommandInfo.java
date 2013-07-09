@@ -71,7 +71,7 @@ public class CommandCommandInfo extends CommandExecutor
 	}
 
 	@Override
-	@Permission("crazycore.comamndinfo")
+	@Permission("crazycore.commandinfo")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazycore.commandinfo");
