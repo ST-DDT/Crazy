@@ -43,22 +43,22 @@ permissions:
       crazycore.info: true
       crazycore.list: true
       crazycore.logger: true
+      crazycore.mode: true
       crazycore.mode.*: true
       crazycore.mode.checkforupdates: true
       crazycore.mode.loaduserlanguages: true
       crazycore.mode.wipeplayerbans: true
       crazycore.mode.wipeplayerworldfiles: true
-      crazycore.mode: true
       crazycore.player.associates: true
+      crazycore.player.delete: true
       crazycore.player.delete.other: true
       crazycore.player.delete.self: true
-      crazycore.player.delete: true
       crazycore.player.info: true
       crazycore.player.ipsearch: true
       crazycore.protectedplayer: true
+      crazycore.reload: true
       crazycore.reload.*: true
       crazycore.reload.config: true
-      crazycore.reload: true
       crazycore.save: true
       crazycore.updatecheck: true
       crazycore.wipecommands: true
