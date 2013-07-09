@@ -213,7 +213,7 @@ public final class CrazyCore extends CrazyPlugin
 		mainCommand.addSubCommand(new CommandPlayerWipeFilePaths(plugin), "wipefilepaths", "wipepaths");
 		mainCommand.addSubCommand(new CommandPlayerWipeCommands(plugin), "wipecommands", "wipecmd");
 		mainCommand.addSubCommand(new CommandUpdateCheck(this), "updatecheck");
-		mainCommand.addSubCommand(new CommandCommandInfo(this), "ci", "cinfo", "commandinfo");
+		mainCommand.addSubCommand(new CommandCommandInfo(this), "ci", "cinfo", "cmdinfo", "commandinfo");
 		players.addSubCommand(new CommandPlayerInfo(this), "i", "info");
 		players.addSubCommand(new CommandPlayerAssociates(this), "a", "associates");
 		players.addSubCommand(new CommandPlayerIPSearch(this), "ip", "ipsearch");
