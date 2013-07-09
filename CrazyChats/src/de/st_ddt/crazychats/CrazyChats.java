@@ -79,7 +79,9 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionCrazyChatsSystem;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.modules.permissions.PermissionSystem;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.LocalizedVariable;
 
+@LocalizedVariable(variables = { "CRAZYPLUGIN", "CRAZYPLAYERDATAPLUGIN" }, values = { "CRAZYCHATS", "CRAZYCHATS" })
 public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, ChatPlayerData>
 {
 
