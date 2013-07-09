@@ -80,8 +80,11 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.modules.permissions.PermissionSystem;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
+import de.st_ddt.crazyutil.source.Permission;
+import de.st_ddt.crazyutil.source.PermissionVariable;
 
 @LocalizedVariable(variables = { "CRAZYPLUGIN", "CRAZYPLAYERDATAPLUGIN" }, values = { "CRAZYCHATS", "CRAZYCHATS" })
+@PermissionVariable(variables = { "CRAZYPLUGIN", "CRAZYPLAYERDATAPLUGIN" }, values = { "CRAZYCHATS", "CRAZYCHATS" })
 public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, ChatPlayerData>
 {
 
@@ -154,6 +157,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.consoleDisplayName")
 			public void setValue(final CommandSender sender, final String... args) throws CrazyException
 			{
 				setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
@@ -191,6 +195,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.broadcastChatFormat")
 			public void setValue(final String newValue) throws CrazyException
 			{
 				broadcastChatFormat = newValue;
@@ -207,6 +212,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.globalChatFormat")
 			public void setValue(final String newValue) throws CrazyException
 			{
 				globalChatFormat = newValue;
@@ -223,6 +229,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.worldChatFormat")
 			public void setValue(final String newValue) throws CrazyException
 			{
 				worldChatFormat = newValue;
@@ -239,6 +246,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.localChatEnabled")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				localChatEnabled = newValue;
@@ -256,6 +264,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.localChatFormat")
 			public void setValue(final String newValue) throws CrazyException
 			{
 				localChatFormat = newValue;
@@ -278,6 +287,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.localChatRange")
 			public void setValue(final Double newValue) throws CrazyException
 			{
 				localChatRange = Math.max(1, newValue);
@@ -294,6 +304,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.privateChatFormat")
 			public void setValue(final String newValue) throws CrazyException
 			{
 				privateChatFormat = newValue;
@@ -310,6 +321,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.privateChatSpyingEnabled")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				privateChatSpyingEnabled = newValue;
@@ -326,6 +338,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.adminChatFormat")
 			public void setValue(final String newValue) throws CrazyException
 			{
 				adminChatFormat = newValue;
@@ -348,6 +361,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.ownChatNamePrefix")
 			public void setValue(final CommandSender sender, final String... args) throws CrazyException
 			{
 				setValue(ChatHelper.colorise(ChatHelper.listingString(" ", args)));
@@ -371,6 +385,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.defaultChannelKey")
 			public void setValue(final CommandSender sender, final String... args) throws CrazyException
 			{
 				setValue(ChatHelper.listingString(" ", args));
@@ -394,6 +409,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.maxSilenceTime")
 			public void setValue(final Long newValue) throws CrazyException
 			{
 				maxSilenceTime = newValue;
@@ -410,6 +426,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.cleanRepetitions")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				cleanRepetitions = newValue;
@@ -426,6 +443,7 @@ public final class CrazyChats extends CrazyPlayerDataPlugin<ChatPlayerData, Chat
 			}
 
 			@Override
+			@Permission("crazychats.mode.cleanCaps")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				cleanCaps = newValue;
