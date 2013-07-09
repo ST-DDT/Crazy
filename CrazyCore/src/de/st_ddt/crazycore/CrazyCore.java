@@ -54,6 +54,7 @@ import de.st_ddt.crazyutil.modes.BooleanFalseMode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
+import de.st_ddt.crazyutil.source.Permission;
 import de.st_ddt.crazyutil.source.PermissionVariable;
 
 @LocalizedVariable(variables = "CRAZYPLUGIN", values = "CRAZYCORE")
@@ -144,6 +145,7 @@ public final class CrazyCore extends CrazyPlugin
 		{
 
 			@Override
+			@Permission("crazycore.mode.wipePlayerWorldFiles")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				wipePlayerWorldFiles = newValue;
@@ -160,6 +162,7 @@ public final class CrazyCore extends CrazyPlugin
 		{
 
 			@Override
+			@Permission("crazycore.mode.wipePlayerBans")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				wipePlayerBans = newValue;
@@ -176,6 +179,7 @@ public final class CrazyCore extends CrazyPlugin
 		{
 
 			@Override
+			@Permission("crazycore.mode.loadUserLanguages")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				loadUserLanguages = newValue;
@@ -192,6 +196,7 @@ public final class CrazyCore extends CrazyPlugin
 		{
 
 			@Override
+			@Permission("crazycore.mode.checkForUpdates")
 			public void setValue(final Boolean newValue) throws CrazyException
 			{
 				checkForUpdates = newValue;

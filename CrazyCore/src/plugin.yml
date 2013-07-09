@@ -44,6 +44,10 @@ permissions:
       crazycore.list: true
       crazycore.logger: true
       crazycore.mode.*: true
+      crazycore.mode.checkforupdates: true
+      crazycore.mode.loaduserlanguages: true
+      crazycore.mode.wipeplayerbans: true
+      crazycore.mode.wipeplayerworldfiles: true
       crazycore.mode: true
       crazycore.player.associates: true
       crazycore.player.delete.other: true
