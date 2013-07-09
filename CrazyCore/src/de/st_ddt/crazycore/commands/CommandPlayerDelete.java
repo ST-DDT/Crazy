@@ -26,6 +26,7 @@ public class CommandPlayerDelete extends CommandExecutor
 	}
 
 	@Override
+	@Permission({ "crazycore.player.delete.self", "crazycore.player.delete.other", "crazycore.player.delete.protected" })
 	@Localized({ "CRAZYCORE.COMMAND.PLAYER.DELETE.SUCCESS $Name$ $Amount$", "CRAZYCORE.COMMAND.PLAYER.DELETE.LISTHEADER $CurrentPage$ $MaxPage$ $ChatHeader$ $DateTime$", "CRAZYCORE.COMMAND.PLAYER.DELETE.LISTFORMAT $Index$ $Entry$ $ChatHeader$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{

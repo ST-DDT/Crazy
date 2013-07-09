@@ -50,12 +50,15 @@ permissions:
       crazycore.mode.wipeplayerbans: true
       crazycore.mode.wipeplayerworldfiles: true
       crazycore.player.associates: true
-      crazycore.player.delete: true
       crazycore.player.delete.other: true
+      crazycore.player.delete.protected: true
       crazycore.player.delete.self: true
       crazycore.player.info: true
       crazycore.player.ipsearch: true
       crazycore.protectedplayer: true
+      crazycore.protectedplayer.accesswarn: true
+      crazycore.protectedplayer.illegalaccesswarn.staff: true
+      crazycore.protectedplayer.illegalaccesswarn.user: true
       crazycore.reload: true
       crazycore.reload.*: true
       crazycore.reload.config: true
@@ -106,14 +109,14 @@ permissions:
   crazycore.player.associates:
     description: Allow listing all known associates of a player (recursive) (stored by CrazyPlugins).
     default: op
-  crazycore.player.delete:
-    description: Allow deleting a player and all his stored information (CrazyPlugins+Commands).
-    default: op
   crazycore.player.delete.other:
-    description: Allow full deletion of other players.
+    description: Allow full deletion of other player's data.
+    default: op
+  crazycore.player.delete.protected:
+    description: Allow full deletion of protected player's data.
     default: op
   crazycore.player.delete.self:
-    description: Allow full deletion of the own player.
+    description: Allow full deletion of the own player's data.
     default: op
   crazycore.player.info:
     description: Allow displaying of all available information about a player (stored by CrazyPlugins).
