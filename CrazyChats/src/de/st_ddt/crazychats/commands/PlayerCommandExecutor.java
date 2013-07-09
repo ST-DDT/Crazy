@@ -3,10 +3,10 @@ package de.st_ddt.crazychats.commands;
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazyplugin.commands.CrazyPlayerCommandExecutor;
 
-public abstract class PlayerCommandExecutor extends CrazyPlayerCommandExecutor<CrazyChats> implements CommandExecutorInterface
+abstract class PlayerCommandExecutor extends CrazyPlayerCommandExecutor<CrazyChats> implements CommandExecutorInterface
 {
 
-	public PlayerCommandExecutor(final CrazyChats plugin)
+	PlayerCommandExecutor(final CrazyChats plugin)
 	{
 		super(plugin);
 	}

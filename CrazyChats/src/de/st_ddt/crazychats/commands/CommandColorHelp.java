@@ -7,6 +7,7 @@ import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandColorHelp extends CommandExecutor
 {
@@ -27,6 +28,7 @@ public class CommandColorHelp extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazychats.coloredchat")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazychats.coloredchat");

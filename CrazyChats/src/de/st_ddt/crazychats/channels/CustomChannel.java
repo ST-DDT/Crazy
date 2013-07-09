@@ -31,6 +31,7 @@ import de.st_ddt.crazyutil.modes.ChatFormatMode;
 import de.st_ddt.crazyutil.modes.Mode;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CustomChannel extends AbstractMuteableChannel implements ControlledChannelInterface, ConfigurationSaveable, ChatHeaderProvider
 {
@@ -220,6 +221,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 			}
 
 			@Override
+			@Permission("crazychats.customchannel.admin")
 			public boolean hasAccessPermission(final CommandSender sender)
 			{
 				return sender.getName().equals(owner) || PermissionModule.hasPermission(sender, "crazychats.customchannel.admin");
@@ -285,6 +287,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 			}
 
 			@Override
+			@Permission("crazychats.customchannel.admin")
 			public boolean hasAccessPermission(final CommandSender sender)
 			{
 				return sender.getName().equals(owner) || PermissionModule.hasPermission(sender, "crazychats.customchannel.admin");
@@ -350,6 +353,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 			}
 
 			@Override
+			@Permission("crazychats.customchannel.admin")
 			public boolean hasAccessPermission(final CommandSender sender)
 			{
 				if (PermissionModule.hasPermission(sender, "crazychats.customchannel.admin"))
@@ -793,6 +797,7 @@ public class CustomChannel extends AbstractMuteableChannel implements Controlled
 		}
 
 		@Override
+		@Permission("crazychats.customchannel.admin")
 		public boolean hasAccessPermission(final CommandSender sender)
 		{
 			return sender.getName().equals(owner) || PermissionModule.hasPermission(sender, "crazychats.customchannel.admin");

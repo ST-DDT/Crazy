@@ -35,6 +35,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyChatsChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CrazyChatsPlayerListener implements Listener
 {
@@ -174,6 +175,7 @@ public class CrazyChatsPlayerListener implements Listener
 	}
 
 	@EventHandler(ignoreCancelled = true)
+	@Permission("crazychats.customchannel.admin")
 	@Localized("CRAZYCHATS.SIGN.CREATED $ChannelID$ $ChannelName$")
 	public void SignChangeEvent(final SignChangeEvent event)
 	{
@@ -234,6 +236,7 @@ public class CrazyChatsPlayerListener implements Listener
 		}
 	}
 
+	@Permission({ "crazychats.talk", "crazychats.serversilence.bypass", "crazychats.unmutable", "crazychats.chatspy", "crazychats.nocleaning", "crazychats.coloredchat" })
 	@Localized({ "CRAZYCHATS.CHAT.BLOCKED.NOPERMISSION", "CRAZYCHATS.CHAT.BLOCKED.SILENCED $UntilDateTime$", "CRAZYCHATS.CHAT.BLOCKED.NOSUCHPLAYER $Player$", "CRAZYCHATS.CHANNEL.CHANGED $Channel$", "CRAZYCHATS.CHAT.BLOCKED.NOCHANNEL", "CRAZYCHATS.CHAT.BLOCKED.SERVERSILENCED" })
 	protected ChatResult PlayerChat(final Player player, String message)
 	{

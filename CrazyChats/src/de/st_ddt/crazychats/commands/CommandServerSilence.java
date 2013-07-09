@@ -16,6 +16,7 @@ import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TargetDateParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandServerSilence extends CommandExecutor
 {
@@ -49,6 +50,7 @@ public class CommandServerSilence extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazychats.serversilence")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazychats.serversilence");

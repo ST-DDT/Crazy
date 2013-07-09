@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class GlobalChannel extends AbstractMuteableChannel
 {
@@ -19,6 +20,7 @@ public class GlobalChannel extends AbstractMuteableChannel
 	}
 
 	@Override
+	@Permission("crazychats.globalchannel.talk")
 	public boolean hasTalkPermission(final Player player)
 	{
 		return PermissionModule.hasPermission(player, "crazychats.globalchannel.talk");

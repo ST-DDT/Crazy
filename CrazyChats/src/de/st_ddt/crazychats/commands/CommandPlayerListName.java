@@ -16,6 +16,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerListName extends CommandExecutor
 {
@@ -74,6 +75,7 @@ public class CommandPlayerListName extends CommandExecutor
 	}
 
 	@Override
+	@Permission({ "crazychats.player.listname.self", "crazychats.player.listname.other" })
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazychats.player.listname.self") || PermissionModule.hasPermission(sender, "crazychats.player.listname.other");

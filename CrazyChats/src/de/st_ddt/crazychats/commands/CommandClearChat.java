@@ -17,6 +17,7 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.PlayerParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandClearChat extends CommandExecutor
 {
@@ -28,6 +29,7 @@ public class CommandClearChat extends CommandExecutor
 
 	@SuppressWarnings("deprecation")
 	@Override
+	@Permission({ "crazychats.clearchat", "crazychats.chatspy" })
 	@Localized({ "CRAZYCHATS.COMMAND.CLEARCHAT.CLEAR", "CRAZYCHATS.COMMAND.CLEARCHAT.MESSAGE $Clearer$", "CRAZYCHATS.COMMAND.CLEARCHAT.DONE $Clearer$ $Cleared$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{

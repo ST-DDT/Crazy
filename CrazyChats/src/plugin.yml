@@ -1,7 +1,7 @@
 name: CrazyChats
 main: de.st_ddt.crazychats.CrazyChats
 author: ST-DDT
-version: 1.199.2
+version: 1.199.3
 website: http://dev.bukkit.org/server-mods/crazychats/
 # requires CrazyCore v10.7.1 or later
 depend: [CrazyCore]
@@ -63,90 +63,213 @@ commands:
     aliases: [crazychat,cchats,cchat]
 permissions:
   crazychats.*:
-    description: Access to all commands
-    default: false
+    description: Access to all permissions belonging to this plugin.
+    default: op
     children:
-      crazychats.mode: true
-      crazychats.broadcastchannel.talk: true
-      crazychats.globalchannel.talk: true
-      crazychats.worldchannels.remotetalk: true
-      crazychats.worldchannels.talk: true
-      crazychats.localchannel.talk: true
-      crazychats.adminchannel.talk: true
       crazychats.adminchannel.listen: true
-      crazychats.talk: true
-      crazychats.player.displayname.self: true
+      crazychats.adminchannel.talk: true
+      crazychats.broadcastchannel.talk: true
+      crazychats.chatspy: true
+      crazychats.clearchat: true
+      crazychats.coloredchat: true
+      crazychats.customchannel.admin: true
+      crazychats.globalchannel.talk: true
+      crazychats.group.headnameprefix: true
+      crazychats.group.listnameprefix: true
+      crazychats.group.prefix: true
+      crazychats.group.suffix: true
+      crazychats.help: true
+      crazychats.info: true
+      crazychats.localchannel.talk: true
+      crazychats.logger: true
+      crazychats.mode: true
+      crazychats.mode.*: true
+      crazychats.mode.adminchatformat: true
+      crazychats.mode.broadcastchatformat: true
+      crazychats.mode.cleancaps: true
+      crazychats.mode.cleanrepetitions: true
+      crazychats.mode.consoledisplayname: true
+      crazychats.mode.defaultchannelkey: true
+      crazychats.mode.globalchatformat: true
+      crazychats.mode.localchatenabled: true
+      crazychats.mode.localchatformat: true
+      crazychats.mode.localchatrange: true
+      crazychats.mode.maxsilencetime: true
+      crazychats.mode.ownchatnameprefix: true
+      crazychats.mode.privatechatformat: true
+      crazychats.mode.privatechatspyingenabled: true
+      crazychats.mode.worldchatformat: true
+      crazychats.nocleaning: true
+      crazychats.player.delete: true
       crazychats.player.displayname.other: true
-      crazychats.player.headname.self: true
+      crazychats.player.displayname.self: true
       crazychats.player.headname.other: true
-      crazychats.player.listname.self: true
+      crazychats.player.headname.self: true
+      crazychats.player.info.other: true
+      crazychats.player.info.self: true
+      crazychats.player.list: true
       crazychats.player.listname.other: true
+      crazychats.player.listname.self: true
       crazychats.player.mute: true
+      crazychats.player.search: true
       crazychats.player.silence: true
       crazychats.player.silence.adminbypass: true
       crazychats.player.unmute: true
-      crazychats.group.listnameprefix: true
-      crazychats.group.headnameprefix: true
-      crazychats.coloredchat: true
-      crazychats.chatspy: true
-      crazychats.unmutable: true
-      crazychats.nocleaning: true
-      crazychats.clearchat: true
+      crazychats.reload: true
+      crazychats.reload.*: true
+      crazychats.reload.config: true
+      crazychats.reload.database: true
+      crazychats.save: true
       crazychats.serversilence: true
       crazychats.serversilence.bypass: true
-      crazychats.customchannel.admin: true
-  crazychats.mode:
-    description: Allow changing plugin options.
+      crazychats.talk: true
+      crazychats.unmutable: true
+      crazychats.worldchannels.remotetalk: true
+      crazychats.worldchannels.talk: true
+      crazycore.protectedplayer: true
+  crazychats.adminchannel.listen:
+    description: Allow listening to Admin channel.
     default: op
-  crazychats.broadcastchannel.talk:
-    description: Allow chatting in Broadcast channel.
-    default: op
-  crazychats.globalchannel.talk:
-    description: Allow chatting in Global channel.
-    default: op
-  crazychats.worldchannels.remotetalk:
-    description: Allow chatting in all World channels (from other world).
-    default: op
-#  crazychats.worldchannel.WORLD.remotetalk:
-#    description: Allow chatting in WORLD's World channel (from other world).
-#    default: op
-  crazychats.worldchannels.talk:
-    description: Allow chatting in all World channels (current world).
-    default: true
-#  crazychats.worldchannel.WORLD.talk:
-#    description: Allow chatting in WORLD's World channel (current world).
-#    default: true
-  crazychats.localchannel.talk:
-    description: Allow chatting in Local channel.
-    default: true
   crazychats.adminchannel.talk:
     description: Allow chatting in Admin channel.
     default: op
     children:
       crazychats.adminchannel.listen: true
-  crazychats.adminchannel.listen:
-    description: Allow listening to Admin channel.
+  crazychats.broadcastchannel.talk:
+    description: Allow chatting in Broadcast channel.
     default: op
-  crazychats.talk:
-    description: Allow chatting.
+  crazychats.chatspy:
+    description: Show all messages to this player.
+    default: false
+    children:
+      crazychats.localchannel.talk: true
+      crazychats.worldchannels.remotetalk: true
+      crazychats.worldchannels.talk: true
+  crazychats.clearchat:
+    description: Allow clearing the players chat history.
+    default: op
+  crazychats.coloredchat:
+    description: Allow colored chat.
+    default: op
+  crazychats.customchannel.admin:
+    description: Allow modifing all custom channels.
+    default: op
+  crazychats.globalchannel.talk:
+    description: Allow chatting in Global channel.
+    default: op
+  crazychats.group.headnameprefix:
+    description: Allow chaning the default head name prefixes for groups.
+    default: op
+  crazychats.group.listnameprefix:
+    description: Allow changing the default list name prefixes for groups.
+    default: op
+  crazychats.group.prefix:
+    description: Allow changing group prefixes.
+    default: op
+  crazychats.group.suffix:
+    description: Allow changing group suffixes.
+    default: op
+  crazychats.help:
+    description: Allow accessing the plugin help.
+    default: op
+  crazychats.info:
+    description: Allow showing information about this plugin.
+    default: op
+  crazychats.localchannel.talk:
+    description: Allow chatting in Local channel.
     default: true
-  crazychats.player.displayname.self:
-    description: Allow changing your own display name.
+  crazychats.logger:
+    description: Allow configuring the plugin logger.
+    default: op
+  crazychats.mode:
+    description: Allow changing plugin modes.
+    default: op
+  crazychats.mode.*:
+    description: Allow changing plugin all modes.
+    default: op
+  crazychats.mode.adminchatformat:
+    description: Allow changing adminchatformat mode.
+    default: op
+  crazychats.mode.broadcastchatformat:
+    description: Allow changing broadcastchatformat mode.
+    default: op
+  crazychats.mode.cleancaps:
+    description: Allow changing cleancaps mode.
+    default: op
+  crazychats.mode.cleanrepetitions:
+    description: Allow changing cleanrepetitions mode.
+    default: op
+  crazychats.mode.consoledisplayname:
+    description: Allow changing consoledisplayname mode.
+    default: op
+  crazychats.mode.defaultchannelkey:
+    description: Allow changing defaultchannelkey mode.
+    default: op
+  crazychats.mode.globalchatformat:
+    description: Allow changing globalchatformat mode.
+    default: op
+  crazychats.mode.localchatenabled:
+    description: Allow changing localchatenabled mode.
+    default: op
+  crazychats.mode.localchatformat:
+    description: Allow changing localchatformat mode.
+    default: op
+  crazychats.mode.localchatrange:
+    description: Allow changing localchatrange mode.
+    default: op
+  crazychats.mode.maxsilencetime:
+    description: Allow changing maxsilencetime mode.
+    default: op
+  crazychats.mode.ownchatnameprefix:
+    description: Allow changing ownchatnameprefix mode.
+    default: op
+  crazychats.mode.privatechatformat:
+    description: Allow changing privatechatformat mode.
+    default: op
+  crazychats.mode.privatechatspyingenabled:
+    description: Allow changing privatechatspyingenabled mode.
+    default: op
+  crazychats.mode.worldchatformat:
+    description: Allow changing worldchatformat mode.
+    default: op
+  crazychats.nocleaning:
+    description: This player's chat messages will not be cleaned.
+    default: op
+  crazychats.player.delete:
+    description: Allow deleting a player's account.
     default: op
   crazychats.player.displayname.other:
     description: Allow changing other player's display names.
     default: op
-  crazychats.player.headname.self:
-    description: Allow changing your own head name.
+  crazychats.player.displayname.self:
+    description: Allow changing your own display name.
     default: op
   crazychats.player.headname.other:
     description: Allow changing other player's head name.
     default: op
-  crazychats.player.listname.self:
-    description: Allow changing your own list name.
+  crazychats.player.headname.self:
+    description: Allow changing your own head name.
+    default: op
+  crazychats.player.info.other:
+    description: Allow viewing playerinfo for other players.
+    default: op
+  crazychats.player.info.self:
+    description: Allow viewing own playerinfo.
+    default: op
+  crazychats.player.list:
+    description: Allow viewing all players accounts.
     default: op
   crazychats.player.listname.other:
     description: Allow changing other player's list name.
+    default: op
+  crazychats.player.listname.self:
+    description: Allow changing your own list name.
+    default: op
+  crazychats.player.mute:
+    description: Allow muting a player for another player.
+    default: op
+  crazychats.player.search:
+    description: Allow searching for players.
     default: op
   crazychats.player.silence:
     description: Allow silencing/globally muting a player.
@@ -154,37 +277,23 @@ permissions:
   crazychats.player.silence.adminbypass:
     description: Allow silencing/globally muting a player bypassing the max silence limit.
     default: op
-  crazychats.player.mute:
-    description: Allow muting a player for another player.
-    default: op
   crazychats.player.unmute:
     description: Allow unmuting a player for another player.
     default: op
-  crazychats.group.listnameprefix:
-    description: Allow chaning the default list name prefixes for groups.
+  crazychats.reload:
+    description: Allow reloading the plugin.
     default: op
-  crazychats.group.headnameprefix:
-    description: Allow chaning the default head name prefixes for groups.
+  crazychats.reload.*:
+    description: Allow reloading the entire plugin.
     default: op
-  crazychats.coloredchat:
-    description: Allow colored chat.
+  crazychats.reload.config:
+    description: Allow reloading the config of this plugin.
     default: op
-  crazychats.chatspy:
-    description: Show all messages to this player.
-    default: false
-    children:
-      crazychats.worldchannels.remotetalk: true
-      crazychats.worldchannels.talk: true
-      crazychats.localchannel.talk: true
-      crazychats.talk: true
-  crazychats.unmutable:
-    description: This player cannot be muted.
+  crazychats.reload.database:
+    description: Allow reloading the database of this plugin.
     default: op
-  crazychats.nocleaning:
-    description: This player's chat messages will not be cleaned.
-    default: op
-  crazychats.clearchat:
-    description: Allow clearing the players chat history.
+  crazychats.save:
+    description: Allow saving the plugin.
     default: op
   crazychats.serversilence:
     description: Allow silencing all public chat for a certain amount of time.
@@ -192,6 +301,15 @@ permissions:
   crazychats.serversilence.bypass:
     description: Allow public chatting while server is silenced.
     default: op
-  crazychats.customchannel.admin:
-    description: Allow modifing all custom channels.
+  crazychats.talk:
+    description: Allow chatting.
     default: op
+  crazychats.unmutable:
+    description: This player cannot be muted.
+    default: op
+  crazychats.worldchannels.remotetalk:
+    description: Allow chatting in all World channels (from other world).
+    default: op
+  crazychats.worldchannels.talk:
+    description: Allow chatting in all World channels (current world).
+    default: true

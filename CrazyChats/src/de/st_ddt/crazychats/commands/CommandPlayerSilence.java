@@ -23,6 +23,7 @@ import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TargetDateParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerSilence extends CommandExecutor
 {
@@ -33,6 +34,7 @@ public class CommandPlayerSilence extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazychats.player.silence.adminbypass")
 	@Localized({ "CRAZYCHATS.COMMAND.PLAYER.SILENCED.DONE $Player$ $UntilDateTime$", "CRAZYCHATS.COMMAND.PLAYER.SILENCED.MESSAGE $Muter$ $UntilDateTime$", "CRAZYCHATS.COMMAND.PLAYER.SILENCED.MESSAGE2 $Muter$ $UntilDateTime$ $Reason$" })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
@@ -100,6 +102,7 @@ public class CommandPlayerSilence extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazychats.player.silence")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazychats.player.silence");

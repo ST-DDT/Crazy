@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class AdminChannel extends AbstractMuteableChannel
 {
@@ -19,12 +20,14 @@ public class AdminChannel extends AbstractMuteableChannel
 	}
 
 	@Override
+	@Permission("crazychats.adminchannel.talk")
 	public boolean hasTalkPermission(final Player player)
 	{
 		return PermissionModule.hasPermission(player, "crazychats.adminchannel.talk");
 	}
 
 	@Override
+	@Permission("crazychats.adminchannel.listen")
 	public Set<Player> getTargets(final Player player)
 	{
 		final Set<Player> players = new HashSet<Player>();

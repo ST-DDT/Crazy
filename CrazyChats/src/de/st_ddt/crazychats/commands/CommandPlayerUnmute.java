@@ -16,6 +16,7 @@ import de.st_ddt.crazyutil.paramitrisable.OfflinePlayerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.PlayerDataParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class CommandPlayerUnmute extends CommandExecutor
 {
@@ -59,6 +60,7 @@ public class CommandPlayerUnmute extends CommandExecutor
 	}
 
 	@Override
+	@Permission("crazychats.player.unmute")
 	public boolean hasAccessPermission(final CommandSender sender)
 	{
 		return PermissionModule.hasPermission(sender, "crazychats.player.unmute");
