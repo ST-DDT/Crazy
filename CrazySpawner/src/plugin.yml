@@ -38,33 +38,33 @@ permissions:
     default: op
     children:
       crazycore.protectedplayer: true
-      crazyspawner.creaturespawner.*: true
       crazyspawner.creaturespawner: true
+      crazyspawner.creaturespawner.*: true
       crazyspawner.help: true
       crazyspawner.info: true
       crazyspawner.kill: true
       crazyspawner.list: true
       crazyspawner.logger: true
-      crazyspawner.mode.*: true
       crazyspawner.mode: true
+      crazyspawner.mode.*: true
       crazyspawner.mode.defaultalarmrange: true
       crazyspawner.mode.monsterexplosiondamageenabled: true
       crazyspawner.modifyentity: true
+      crazyspawner.mountme: true
       crazyspawner.mountme.*: true
       crazyspawner.mountme.others: true
       crazyspawner.mountme.self: true
-      crazyspawner.mountme: true
       crazyspawner.overwriteentity: true
+      crazyspawner.reload: true
       crazyspawner.reload.*: true
       crazyspawner.reload.config: true
       crazyspawner.reload.entities: true
       crazyspawner.reload.spawntasks: true
-      crazyspawner.reload: true
       crazyspawner.remove: true
       crazyspawner.save: true
       crazyspawner.showentity: true
-      crazyspawner.spawn.*: true
       crazyspawner.spawn: true
+      crazyspawner.spawn.*: true
       crazyspawner.theendautorespawn: true
   crazyspawner.creaturespawner:
     description: Allow changing of creature spawners.
@@ -91,7 +91,7 @@ permissions:
     description: Allow changing plugin modes.
     default: op
   crazyspawner.mode.*:
-    description: Allow changing plugin all modes.
+    description: Allow changing all plugin modes.
     default: op
   crazyspawner.mode.defaultalarmrange:
     description: Allow changing defaultAlarmRange mode.
