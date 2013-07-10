@@ -101,6 +101,7 @@ permissions:
       crazychats.mode.worldchatformat: true
       crazychats.nocleaning: true
       crazychats.player.delete: true
+      crazychats.player.delete.protected: true
       crazychats.player.displayname.other: true
       crazychats.player.displayname.self: true
       crazychats.player.headname.other: true
@@ -238,6 +239,11 @@ permissions:
   crazychats.player.delete:
     description: Allow deleting a player's account.
     default: op
+  crazychats.player.delete.protected:
+    description: Allow deleting a protected player's account.
+    default: op
+    children:
+      crazychats.player.delete: true
   crazychats.player.displayname.other:
     description: Allow changing other player's display names.
     default: op
