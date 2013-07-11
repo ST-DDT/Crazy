@@ -73,7 +73,10 @@ public final class ColorableProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "color", color.name());
+		if (color == null)
+			config.set(path + "color", null);
+		else
+			config.set(path + "color", color.name());
 	}
 
 	@Override
