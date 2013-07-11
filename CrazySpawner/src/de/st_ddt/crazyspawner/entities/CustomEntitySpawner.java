@@ -91,7 +91,7 @@ import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, ConfigurationSaveable
+public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, ConfigurationSaveable
 {
 
 	public final static String METAHEADER = "CustomEntityMeta";
@@ -391,7 +391,7 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 		return type.getEntityClass();
 	}
 
-	protected final EntitySpawner getSpawner()
+	protected EntitySpawner getSpawner()
 	{
 		if (!properties.isEmpty())
 		{
@@ -650,67 +650,67 @@ public final class CustomEntitySpawner implements NamedEntitySpawner, MetadataVa
 	}
 
 	@Override
-	public CustomEntitySpawner value()
+	public final CustomEntitySpawner value()
 	{
 		return this;
 	}
 
 	@Override
-	public int asInt()
+	public final int asInt()
 	{
 		return 0;
 	}
 
 	@Override
-	public float asFloat()
+	public final float asFloat()
 	{
 		return 0;
 	}
 
 	@Override
-	public double asDouble()
+	public final double asDouble()
 	{
 		return 0;
 	}
 
 	@Override
-	public long asLong()
+	public final long asLong()
 	{
 		return 0;
 	}
 
 	@Override
-	public short asShort()
+	public final short asShort()
 	{
 		return 0;
 	}
 
 	@Override
-	public byte asByte()
+	public final byte asByte()
 	{
 		return 0;
 	}
 
 	@Override
-	public boolean asBoolean()
+	public final boolean asBoolean()
 	{
 		return false;
 	}
 
 	@Override
-	public String asString()
+	public final String asString()
 	{
 		return toString();
 	}
 
 	@Override
-	public CrazySpawner getOwningPlugin()
+	public final CrazySpawner getOwningPlugin()
 	{
 		return CrazySpawner.getPlugin();
 	}
 
 	@Override
-	public void invalidate()
+	public final void invalidate()
 	{
 	}
 }
