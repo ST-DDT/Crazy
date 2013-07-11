@@ -27,7 +27,7 @@ public class DroppedItemProperty extends BasicProperty
 	{
 		super();
 		this.item = new ItemStack(1);
-		this.delay = 0;
+		this.delay = -1;
 	}
 
 	public DroppedItemProperty(final ConfigurationSection config)
@@ -35,7 +35,7 @@ public class DroppedItemProperty extends BasicProperty
 		super(config);
 		final ItemStack item = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("item"));
 		this.item = item == null ? new ItemStack(1) : item;
-		this.delay = Math.max(config.getInt("pickUpDelay", 0), 0);
+		this.delay = Math.max(config.getInt("pickUpDelay", -1), -1);
 	}
 
 	public DroppedItemProperty(final Map<String, ? extends Paramitrisable> params)
@@ -44,7 +44,7 @@ public class DroppedItemProperty extends BasicProperty
 		final ItemStackParamitrisable itemParam = (ItemStackParamitrisable) params.get("item");
 		this.item = itemParam.getValue();
 		final IntegerParamitrisable delayParam = (IntegerParamitrisable) params.get("pickupdelay");
-		this.delay = Math.max(delayParam.getValue(), 0);
+		this.delay = Math.max(delayParam.getValue(), -1);
 	}
 
 	@Override
@@ -52,7 +52,8 @@ public class DroppedItemProperty extends BasicProperty
 	{
 		final Item drop = (Item) entity;
 		drop.setItemStack(item);
-		drop.setPickupDelay(delay);
+		if (delay != -1)
+			drop.setPickupDelay(delay);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class DroppedItemProperty extends BasicProperty
 	public void dummySave(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "item", "Item");
-		config.set(path + "pickUpDelay", "int (0-x)");
+		config.set(path + "pickUpDelay", "int (0 - x; -1 = default)");
 	}
 
 	@Override
