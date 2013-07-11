@@ -88,4 +88,10 @@ public final class VillagerProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PROFESSION", target, profession.name());
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return profession == null;
+	}
 }

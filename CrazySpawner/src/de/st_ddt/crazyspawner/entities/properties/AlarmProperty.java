@@ -76,4 +76,10 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALARMRANGE", target, alarmRange);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return alarmRange == -1;
+	}
 }

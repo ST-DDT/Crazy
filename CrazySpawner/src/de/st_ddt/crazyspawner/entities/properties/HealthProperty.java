@@ -62,4 +62,10 @@ abstract class HealthProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.MAXHEALTH", target, maxHealth);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return maxHealth == -1;
+	}
 }

@@ -81,4 +81,10 @@ public class ExperienceOrbProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.XP", target, minXP, maxXP);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return minXP == -1;
+	}
 }

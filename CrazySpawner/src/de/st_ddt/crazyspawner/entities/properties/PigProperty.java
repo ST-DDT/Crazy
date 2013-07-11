@@ -69,4 +69,10 @@ public class PigProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SADDLE", target, saddle);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return saddle == false;
+	}
 }

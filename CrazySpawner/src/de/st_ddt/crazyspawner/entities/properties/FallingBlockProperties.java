@@ -85,4 +85,10 @@ public class FallingBlockProperties extends FallingBlockSpawner implements Entit
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.MATERIAL", target, material.name(), data & 0xFF);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.DROPITEM", target, dropItem);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return dropItem == false;
+	}
 }

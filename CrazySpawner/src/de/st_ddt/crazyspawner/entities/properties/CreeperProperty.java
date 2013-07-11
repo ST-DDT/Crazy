@@ -69,4 +69,10 @@ public class CreeperProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.POWERED", target, powered);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return powered == false;
+	}
 }

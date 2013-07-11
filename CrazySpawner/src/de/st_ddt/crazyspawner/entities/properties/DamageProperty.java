@@ -98,4 +98,10 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.DAMAGE", target, minDamage, maxDamage);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return minDamage == -1;
+	}
 }

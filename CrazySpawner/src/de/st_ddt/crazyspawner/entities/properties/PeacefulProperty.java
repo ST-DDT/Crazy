@@ -69,4 +69,10 @@ public class PeacefulProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PEACEFUL", target, peaceful);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return peaceful == false;
+	}
 }

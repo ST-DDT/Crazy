@@ -87,4 +87,10 @@ public class DespawnProperty extends BasicProperty
 		else
 			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.DESPAWNAFTER.DISABLED", target);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return despawnAfter == -1;
+	}
 }

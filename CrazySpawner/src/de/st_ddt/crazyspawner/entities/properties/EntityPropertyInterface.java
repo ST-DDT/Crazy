@@ -19,4 +19,6 @@ public interface EntityPropertyInterface extends ConfigurationSaveable
 	public void getCommandParams(Map<String, ? super TabbedParamitrisable> params, CommandSender sender);
 
 	public void dummySave(ConfigurationSection config, String path);
+
+	public boolean equalsDefault();
 }

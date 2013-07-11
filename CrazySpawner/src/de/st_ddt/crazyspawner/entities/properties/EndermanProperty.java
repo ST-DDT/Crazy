@@ -92,4 +92,10 @@ public final class EndermanProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CARRIEDMATERIAL", target, material.name());
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return material == null;
+	}
 }

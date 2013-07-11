@@ -90,4 +90,10 @@ public class DroppedItemProperty extends BasicProperty
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEM", target, item.toString());
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PICKUPDELAY", target, delay);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return item == null && delay == -1;
+	}
 }

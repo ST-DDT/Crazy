@@ -230,4 +230,10 @@ public final class FireworkProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.FIREWORK", target, meta);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return meta == null;
+	}
 }

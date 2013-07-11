@@ -82,4 +82,10 @@ public final class ZombieProperty extends BasicProperty
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BABY", target, baby);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.VILLAGER", target, villager);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return baby == false && villager == false;
+	}
 }

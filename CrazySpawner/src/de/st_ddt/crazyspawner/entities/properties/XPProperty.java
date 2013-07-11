@@ -98,4 +98,10 @@ public final class XPProperty extends MetadataProperty implements CustomXP
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.XP", target, minXP, maxXP);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return minXP == -1;
+	}
 }

@@ -70,4 +70,10 @@ public final class BurningProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BURNING", target, burning);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return burning == -1;
+	}
 }

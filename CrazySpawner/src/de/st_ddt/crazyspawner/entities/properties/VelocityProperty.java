@@ -96,4 +96,10 @@ public class VelocityProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.VELOCITY", target, velocity.getX(), velocity.getY(), velocity.getZ());
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return velocity.lengthSquared() == 0;
+	}
 }

@@ -113,4 +113,10 @@ public final class WolfProperty extends BasicProperty
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ANGRY", target, angry);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SITTING", target, sitting);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return color == null && angry == false && sitting == false;
+	}
 }

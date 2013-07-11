@@ -377,5 +377,10 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHANDDROPCHANCE", target, itemInHandDropChance);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALLOWITEMPICKUP", target, allowItemPickUp == null ? "default" : allowItemPickUp);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return boots == null && leggings == null && chestplate == null && helmet == null && itemInHand == null && drops == null && allowItemPickUp == null;
 	}
 }

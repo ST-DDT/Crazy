@@ -91,5 +91,10 @@ public final class ExplosiveProperty extends BasicProperty
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.INCENDARY", target, incendary);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.YIELD", target, yield == -1 ? "default" : yield);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return incendary == false && yield == -1;
 	}
 }

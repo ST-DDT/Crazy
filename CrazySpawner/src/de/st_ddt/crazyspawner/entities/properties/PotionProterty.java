@@ -127,4 +127,10 @@ public final class PotionProterty extends BasicProperty
 		for (final Entry<PotionEffectType, Integer> entry : potionEffects.entrySet())
 			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.POTION", target, entry.getKey().getName(), entry.getValue());
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return potionEffects == null;
+	}
 }

@@ -70,4 +70,10 @@ public class SheepProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SHEARED", target, sheared);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return sheared == false;
+	}
 }

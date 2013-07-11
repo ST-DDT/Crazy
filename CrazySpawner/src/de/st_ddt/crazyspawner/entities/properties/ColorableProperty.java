@@ -91,4 +91,10 @@ public final class ColorableProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.COLOR", target, color.name());
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return color == null;
+	}
 }

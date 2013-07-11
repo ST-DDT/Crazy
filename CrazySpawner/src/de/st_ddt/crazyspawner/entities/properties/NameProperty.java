@@ -106,4 +106,10 @@ public final class NameProperty extends BasicProperty
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SHOWNAMEABOVEHEAD", target, showNameAboveHead);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SHOWHEALTH", target, showHealth);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return customName == null && showNameAboveHead == false && showHealth == false;
+	}
 }

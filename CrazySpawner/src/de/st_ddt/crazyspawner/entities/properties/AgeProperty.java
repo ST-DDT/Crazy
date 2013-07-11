@@ -74,4 +74,10 @@ public final class AgeProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BABY", target, baby);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return baby == false;
+	}
 }

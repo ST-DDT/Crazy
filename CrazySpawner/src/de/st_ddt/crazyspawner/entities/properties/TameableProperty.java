@@ -91,4 +91,10 @@ public class TameableProperty extends BasicProperty
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.TAMED", target, tamed);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.TAMER", target, tamer == null ? "SERVER" : tamer);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return tamed == false;
+	}
 }

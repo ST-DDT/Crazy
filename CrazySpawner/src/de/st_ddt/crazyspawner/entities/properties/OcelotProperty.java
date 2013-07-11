@@ -101,4 +101,10 @@ public final class OcelotProperty extends BasicProperty
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CATTYPE", target, type.name());
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SITTING", target, sitting);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return type == null && sitting == false;
+	}
 }

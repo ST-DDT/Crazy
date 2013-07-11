@@ -88,4 +88,10 @@ public final class SkeletonProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SKELETONTYPE", target, type.name());
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return type == null;
+	}
 }

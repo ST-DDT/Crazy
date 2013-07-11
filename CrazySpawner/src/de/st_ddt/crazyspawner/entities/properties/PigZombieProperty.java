@@ -70,4 +70,10 @@ public class PigZombieProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ANGRY", target, angry);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return angry == false;
+	}
 }

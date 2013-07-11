@@ -73,4 +73,10 @@ public final class PassengerProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PASSENGER", target, passenger == null ? "None" : passenger.getName());
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return passenger == null;
+	}
 }

@@ -78,4 +78,10 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.DETECTIONRANGE", target, detectionRange);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return detectionRange == -1;
+	}
 }

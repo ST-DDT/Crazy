@@ -72,4 +72,10 @@ public class IronGolemProperty extends BasicProperty
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PLAYERCREATED", target, playerCreated);
 	}
+
+	@Override
+	public boolean equalsDefault()
+	{
+		return playerCreated == false;
+	}
 }
