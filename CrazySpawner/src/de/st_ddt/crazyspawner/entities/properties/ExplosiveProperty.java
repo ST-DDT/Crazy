@@ -40,7 +40,11 @@ public final class ExplosiveProperty extends BasicProperty
 		final BooleanParamitrisable incendaryParam = (BooleanParamitrisable) params.get("incendary");
 		this.incendary = incendaryParam.getValue();
 		final DoubleParamitrisable yieldParam = (DoubleParamitrisable) params.get("yield");
-		this.yield = yieldParam.getValue().floatValue();
+		final float yield = yieldParam.getValue().floatValue();
+		if (yield < 0)
+			this.yield = -1F;
+		else
+			this.yield = yield;
 	}
 
 	@Override
@@ -48,7 +52,8 @@ public final class ExplosiveProperty extends BasicProperty
 	{
 		final Explosive explosive = (Explosive) entity;
 		explosive.setIsIncendiary(incendary);
-		explosive.setYield(yield);
+		if (yield != -1)
+			explosive.setYield(yield);
 	}
 
 	@Override
@@ -76,7 +81,7 @@ public final class ExplosiveProperty extends BasicProperty
 	public void dummySave(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "incendary", "boolean (true/false)");
-		config.set(path + "yield", "float (0.0-x.y)");
+		config.set(path + "yield", "float (0.0 - x.y; -1 = default)");
 	}
 
 	@Override
@@ -84,6 +89,7 @@ public final class ExplosiveProperty extends BasicProperty
 	public void show(final CommandSender target)
 	{
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.INCENDARY", target, incendary);
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.YIELD", target, yield);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.YIELD", target, yield == -1 ? "default" : yield);
+	}
 	}
 }
