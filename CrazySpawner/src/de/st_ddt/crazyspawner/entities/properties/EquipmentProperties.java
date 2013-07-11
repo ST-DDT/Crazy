@@ -330,7 +330,7 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 	@Override
 	public <S extends Collection<ItemStack>> S updateDrops(final S collection)
 	{
-		if (drops.contains(null))
+		if (drops == null)
 			return collection;
 		try
 		{
