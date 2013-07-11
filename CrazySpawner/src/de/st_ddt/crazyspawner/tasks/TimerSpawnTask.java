@@ -45,6 +45,7 @@ public class TimerSpawnTask implements Runnable, ConfigurationSaveable, Comparab
 	protected final static Random RANDOM = new Random();
 	protected final List<BukkitTask> tasks = new LinkedList<BukkitTask>();
 	protected final CrazySpawner plugin;
+	protected final HealthTask healthTask;
 	protected final NamedEntitySpawner type;
 	protected final Location location;
 	protected final double spawnRange;
@@ -152,6 +153,10 @@ public class TimerSpawnTask implements Runnable, ConfigurationSaveable, Comparab
 			this.alarm = new FixedAlarmMeta(alarmRange);
 		this.health = v146OrLater ? health : -1;
 		this.showHealth = v15OrLater ? showHealth : false;
+		if (this.showHealth)
+			this.healthTask = new HealthTask(plugin);
+		else
+			this.healthTask = null;
 		this.fire = Math.max(fire, -1);
 		this.thunder = thunder;
 	}
@@ -227,6 +232,10 @@ public class TimerSpawnTask implements Runnable, ConfigurationSaveable, Comparab
 			this.alarm = new FixedAlarmMeta(alarmRange);
 		this.health = v146OrLater ? config.getInt("health", -1) : -1;
 		this.showHealth = v15OrLater ? config.getBoolean("showHealth", false) : false;
+		if (this.showHealth)
+			this.healthTask = new HealthTask(plugin);
+		else
+			this.healthTask = null;
 		this.fire = Math.max(config.getInt("fire", -1), -1);
 		final Thunder thunder = Thunder.valueOf(config.getString("thunder", Thunder.DISABLED.name()));
 		this.thunder = thunder == null ? Thunder.DISABLED : thunder;
@@ -351,7 +360,7 @@ public class TimerSpawnTask implements Runnable, ConfigurationSaveable, Comparab
 		{
 			final String name = entity.getCustomName() == null ? entity.getType().getName() : entity.getCustomName();
 			entity.setMetadata(NameMeta.METAHEADER, new FixedNameMeta(name));
-			entity.setCustomName(name + " (" + entity.getHealth() + ")");
+			healthTask.queue(entity);
 			entity.setCustomNameVisible(true);
 		}
 	}

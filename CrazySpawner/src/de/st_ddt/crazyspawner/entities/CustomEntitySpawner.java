@@ -61,7 +61,9 @@ import de.st_ddt.crazyspawner.entities.properties.ExperienceOrbProperty;
 import de.st_ddt.crazyspawner.entities.properties.ExplosiveProperty;
 import de.st_ddt.crazyspawner.entities.properties.FallingBlockProperties;
 import de.st_ddt.crazyspawner.entities.properties.FireworkProperty;
-import de.st_ddt.crazyspawner.entities.properties.HealthProperty;
+import de.st_ddt.crazyspawner.entities.properties.HealthProperty_146;
+import de.st_ddt.crazyspawner.entities.properties.HealthProperty_161;
+import de.st_ddt.crazyspawner.entities.properties.HorseProperty;
 import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
 import de.st_ddt.crazyspawner.entities.properties.LivingDespawnProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
@@ -97,6 +99,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	public final static String METAHEADER = "CustomEntityMeta";
 	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
 	protected final static boolean v150OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5.0") >= 0;
+	protected final static boolean v161OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.6.1") >= 0;
 	protected final static EntitySpawner[] ENTITYSPAWNER = new EntitySpawner[EntityType.values().length];
 	@SuppressWarnings("unchecked")
 	protected final static Set<Class<? extends EntityPropertyInterface>>[] ENTITYPROPERTIES = new Set[EntityType.values().length];
@@ -149,8 +152,10 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(AlarmProperty.class, Creature.class);
 		registerEntityProperty(DetectionProperty.class, Creature.class);
 		registerEntityProperty(CreeperProperty.class, Creeper.class);
-		if (v146OrLater)
-			registerEntityProperty(HealthProperty.class, Damageable.class);
+		if (v161OrLater)
+			registerEntityProperty(HealthProperty_161.class, Damageable.class);
+		else if (v146OrLater)
+			registerEntityProperty(HealthProperty_146.class, Damageable.class);
 		registerEntityProperty(EndermanProperty.class, Enderman.class);
 		registerEntityProperty(DespawnProperty.class, Entity.class, LivingEntity.class);
 		registerEntityProperty(BurningProperty.class, Entity.class);
