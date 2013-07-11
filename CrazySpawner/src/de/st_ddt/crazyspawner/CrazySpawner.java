@@ -23,6 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
@@ -85,6 +86,7 @@ public class CrazySpawner extends CrazyPlugin
 
 	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
 	protected final static boolean v15OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5") >= 0;
+	protected final static boolean v162OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.6.2") >= 0;
 	private static CrazySpawner plugin;
 	protected final Map<String, CustomEntitySpawner> customEntities = new LinkedHashMap<String, CustomEntitySpawner>();
 	protected final YamlConfiguration customEntitiesConfig = new YamlConfiguration();
@@ -617,6 +619,42 @@ public class CrazySpawner extends CrazyPlugin
 		catch (final IOException e)
 		{
 			System.err.println("[CrazySpawner] Could not save example FireworkMeta.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleHorseColor
+		final YamlConfiguration horseColor = new YamlConfiguration();
+		horseColor.set("exampleHorseColor", EnumParamitrisable.getEnumNames(Horse.Color.values()).toArray());
+		try
+		{
+			horseColor.save(new File(exampleFolder, "HorseColor.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example HorseColor.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleHorseStyle
+		final YamlConfiguration horseStyle = new YamlConfiguration();
+		horseStyle.set("exampleHorseStyle", EnumParamitrisable.getEnumNames(Horse.Style.values()).toArray());
+		try
+		{
+			horseStyle.save(new File(exampleFolder, "HorseStyle.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example HorseStyle.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleHorseVariant
+		final YamlConfiguration horseVariant = new YamlConfiguration();
+		horseVariant.set("exampleHorseVariant", EnumParamitrisable.getEnumNames(Horse.Variant.values()).toArray());
+		try
+		{
+			horseVariant.save(new File(exampleFolder, "HorseVariant.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example HorseVariant.yml.");
 			System.err.println(e.getMessage());
 		}
 	}

@@ -26,6 +26,7 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -100,6 +101,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
 	protected final static boolean v150OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5.0") >= 0;
 	protected final static boolean v161OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.6.1") >= 0;
+	protected final static boolean v162OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.6.2") >= 0;
 	protected final static EntitySpawner[] ENTITYSPAWNER = new EntitySpawner[EntityType.values().length];
 	@SuppressWarnings("unchecked")
 	protected final static Set<Class<? extends EntityPropertyInterface>>[] ENTITYPROPERTIES = new Set[EntityType.values().length];
@@ -167,6 +169,8 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		// Fireball required?
 		registerEntityProperty(FireworkProperty.class, Firework.class);
 		// Hanging required?
+		if (v162OrLater)
+			registerEntityProperty(HorseProperty.class, Horse.class);
 		// InventoryHolder required?
 		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
 		registerEntityProperty(AlarmProperty.class, Item.class);
