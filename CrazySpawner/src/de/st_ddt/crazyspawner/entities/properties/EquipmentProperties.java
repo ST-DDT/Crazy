@@ -12,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
+import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.CustomDrops;
 import de.st_ddt.crazyutil.Drop;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
@@ -21,6 +22,7 @@ import de.st_ddt.crazyutil.paramitrisable.ItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.PlayerItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public final class EquipmentProperties extends MetadataProperty implements CustomDrops
 {
@@ -345,8 +347,35 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 	}
 
 	@Override
+	@Localized({ "CRAZYSPAWNER.ENTITY.PROPERTY.BOOTS $Boots$", "CRAZYSPAWNER.ENTITY.PROPERTY.BOOTSDROPCHANCE $BootsDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.LEGGINGS $Leggings$", "CRAZYSPAWNER.ENTITY.PROPERTY.LEGGINGSDROPCHANCE $LeggingsDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.CHESTPLATE $Chestplate$", "CRAZYSPAWNER.ENTITY.PROPERTY.CHESTPLATEDROPCHANCE $ChestplateDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.HELMET $Helmet$", "CRAZYSPAWNER.ENTITY.PROPERTY.HELMETDROPCHANCE $HelmetDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.ITEMINHAND $ItemInHand$", "CRAZYSPAWNER.ENTITY.PROPERTY.ITEMINHANDDROPCHANCE $ItemInHandDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.ALLOWITEMPICKUP $AllowItemPickUp$" })
 	public void show(final CommandSender target)
 	{
-		// TODO Automatisch generierter Methodenstub
+		if (boots == null)
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BOOTS", target, "None");
+		else
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BOOTS", target, boots);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BOOTSDROPCHANCE", target, bootsDropChance);
+		if (leggings == null)
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.LEGGINGS", target, "None");
+		else
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.LEGGINGS", target, leggings);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.LEGGINGSDROPCHANCE", target, leggingsDropChance);
+		if (chestplate == null)
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CHESTPLATE", target, "None");
+		else
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CHESTPLATE", target, chestplate);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CHESTPLATEDROPCHANCE", target, chestplateDropChance);
+		if (helmet == null)
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.HELMET", target, "None");
+		else
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.HELMET", target, helmet);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.HELMETDROPCHANCE", target, helmetDropChance);
+		if (itemInHand == null)
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHAND", target, "None");
+		else
+			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHAND", target, itemInHand);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHANDDROPCHANCE", target, itemInHandDropChance);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALLOWITEMPICKUP", target, allowItemPickUp == null ? "default" : allowItemPickUp);
+	}
 	}
 }
