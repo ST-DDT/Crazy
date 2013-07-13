@@ -1,7 +1,9 @@
 package de.st_ddt.crazyspawner.entities.properties;
 
+import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -12,6 +14,8 @@ import org.bukkit.entity.Horse.Variant;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
@@ -20,6 +24,7 @@ import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
+import de.st_ddt.crazyutil.source.Localized;
 
 public class HorseProperty extends BasicProperty
 {
@@ -196,7 +201,29 @@ public class HorseProperty extends BasicProperty
 		// HorseInventoy
 		final ItemStackParamitrisable armorParam = new ItemStackParamitrisable(armor);
 		params.put("armor", armorParam);
-		final ItemStackParamitrisable saddleParam = new ItemStackParamitrisable(saddle);
+		final ItemStackParamitrisable saddleParam = new ItemStackParamitrisable(saddle)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				if (parameter.equalsIgnoreCase("true") || parameter.equals("1"))
+					value = new ItemStack(Material.SADDLE);
+				else
+					super.setParameter(parameter);
+			}
+
+			@Override
+			public List<String> tab(final String parameter)
+			{
+				final List<String> list = super.tab(parameter);
+				if ("1".startsWith(parameter))
+					list.add(0, "1");
+				if ("true".startsWith(parameter.toLowerCase()))
+					list.add(0, "true");
+				return list;
+			}
+		};
 		params.put("saddle", saddleParam);
 	}
 
@@ -246,9 +273,19 @@ public class HorseProperty extends BasicProperty
 	}
 
 	@Override
+	@Localized({ "CRAZYSPAWNER.ENTITY.PROPERTY.CHEST $Chest$", "CRAZYSPAWNER.ENTITY.PROPERTY.COLOR $Color$", "CRAZYSPAWNER.ENTITY.PROPERTY.DOMESTICATION $Domestication$", "CRAZYSPAWNER.ENTITY.PROPERTY.MAXDOMESTICATION $MaxDomestication$", "CRAZYSPAWNER.ENTITY.PROPERTY.JUMPSTRENGTH $JumpStrength$", "CRAZYSPAWNER.ENTITY.PROPERTY.STYLE $Style$", "CRAZYSPAWNER.ENTITY.PROPERTY.VARIANT $Variant$", "CRAZYSPAWNER.ENTITY.PROPERTY.ARMOR $Armor$", "CRAZYSPAWNER.ENTITY.PROPERTY.SADDLE $Saddle$" })
 	public void show(final CommandSender target)
 	{
-		// EDIT Implementiere HorseProperty.show()
+		final CrazySpawner plugin = CrazySpawner.getPlugin();
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.CHEST", target, chest);
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.COLOR", target, color == null ? "Default" : color.name());
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.DOMESTICATION", target, domestication == -1 ? "Default" : domestication);
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.MAXDOMESTICATION", target, maxDomestication == -1 ? "Default" : maxDomestication);
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.JUMPSTRENGTH", target, jumpStrength == -1 ? "Default" : jumpStrength);
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.STYLE", target, style == null ? "Default" : style.name());
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.VARIANT", target, variant == null ? "Default" : variant.name());
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.ARMOR", target, armor == null ? "None" : armor);
+		plugin.sendLocaleMessage("ENTITY.PROPERTY.SADDLE", target, saddle == null ? "None" : saddle);
 	}
 
 	@Override

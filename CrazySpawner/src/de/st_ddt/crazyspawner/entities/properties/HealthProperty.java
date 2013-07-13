@@ -4,14 +4,17 @@ import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.entities.CompatibilityHelper;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-abstract class HealthProperty extends BasicProperty
+public class HealthProperty extends BasicProperty
 {
 
 	protected final double maxHealth;
@@ -33,6 +36,16 @@ abstract class HealthProperty extends BasicProperty
 		super(params);
 		final DoubleParamitrisable healthParam = (DoubleParamitrisable) params.get("maxhealth");
 		this.maxHealth = healthParam.getValue();
+	}
+
+	@Override
+	public void apply(final Entity entity)
+	{
+		if (maxHealth < 0)
+			return;
+		final LivingEntity living = (LivingEntity) entity;
+		CompatibilityHelper.setMaxHealth(living, maxHealth);
+		CompatibilityHelper.setHealth(living, maxHealth);
 	}
 
 	@Override
@@ -60,7 +73,7 @@ abstract class HealthProperty extends BasicProperty
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.MAXHEALTH $MaxHealth$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.MAXHEALTH", target, maxHealth);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.MAXHEALTH", target, maxHealth == -1 ? "Default" : maxHealth);
 	}
 
 	@Override

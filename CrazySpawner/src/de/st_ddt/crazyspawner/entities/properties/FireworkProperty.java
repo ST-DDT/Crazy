@@ -228,7 +228,7 @@ public final class FireworkProperty extends BasicProperty
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.FIREWORK $Color$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.FIREWORK", target, meta);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.FIREWORK", target, meta == null ? "Default" : meta);
 	}
 
 	@Override

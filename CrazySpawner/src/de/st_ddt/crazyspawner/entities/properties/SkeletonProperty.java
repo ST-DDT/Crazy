@@ -86,7 +86,7 @@ public final class SkeletonProperty extends BasicProperty
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.SKELETONTYPE $SkeletonType$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SKELETONTYPE", target, type.name());
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SKELETONTYPE", target, type == null ? "Default" : type.name());
 	}
 
 	@Override

@@ -85,7 +85,7 @@ public class LivingDespawnProperty extends DespawnProperty
 	public void show(final CommandSender target)
 	{
 		super.show(target);
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALLOWDESPAWN", target, allowDespawn == null ? "default" : allowDespawn);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALLOWDESPAWN", target, allowDespawn == null ? "Default" : allowDespawn);
 	}
 
 	@Override

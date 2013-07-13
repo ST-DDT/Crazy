@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
-import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
@@ -16,7 +16,7 @@ import de.st_ddt.crazyutil.source.Localized;
 public class AlarmProperty extends MetadataProperty implements AlarmMeta
 {
 
-	protected final int alarmRange;
+	protected final double alarmRange;
 
 	public AlarmProperty()
 	{
@@ -27,13 +27,13 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	public AlarmProperty(final ConfigurationSection config)
 	{
 		super(config);
-		this.alarmRange = Math.max(config.getInt("alarmRange", -1), -1);
+		this.alarmRange = Math.max(config.getDouble("alarmRange", -1), -1);
 	}
 
 	public AlarmProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
-		final IntegerParamitrisable alarmRangeParam = (IntegerParamitrisable) params.get("alarmrange");
+		final DoubleParamitrisable alarmRangeParam = (DoubleParamitrisable) params.get("alarmrange");
 		this.alarmRange = Math.max(alarmRangeParam.getValue(), -1);
 	}
 
@@ -47,7 +47,7 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	@Override
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
-		final IntegerParamitrisable alarmRangeParam = new IntegerParamitrisable(alarmRange);
+		final DoubleParamitrisable alarmRangeParam = new DoubleParamitrisable(alarmRange);
 		params.put("ar", alarmRangeParam);
 		params.put("alarmrange", alarmRangeParam);
 	}
@@ -74,7 +74,7 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.ALARMRANGE $AlarmRange$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALARMRANGE", target, alarmRange);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALARMRANGE", target, alarmRange == -1 ? "Default" : alarmRange);
 	}
 
 	@Override

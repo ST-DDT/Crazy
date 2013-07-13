@@ -87,8 +87,8 @@ public class DroppedItemProperty extends BasicProperty
 	@Localized({ "CRAZYSPAWNER.ENTITY.PROPERTY.ITEM $Item$", "CRAZYSPAWNER.ENTITY.PROPERTY.PICKUPDELAY $Delay$" })
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEM", target, item.toString());
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PICKUPDELAY", target, delay);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEM", target, item == null ? "None" : item.toString());
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PICKUPDELAY", target, delay == -1 ? "Default" : delay);
 	}
 
 	@Override

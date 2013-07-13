@@ -69,7 +69,7 @@ public class SlimeProperty extends BasicProperty
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.SIZE $Size$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SIZE", target, size);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SIZE", target, size == -1 ? "Default" : size);
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public final class VillagerProperty extends BasicProperty
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.PROFESSION $Profession$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PROFESSION", target, profession.name());
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.PROFESSION", target, profession == null ? "Default" : profession.name());
 	}
 
 	@Override

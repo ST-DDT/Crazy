@@ -350,32 +350,17 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 	@Localized({ "CRAZYSPAWNER.ENTITY.PROPERTY.BOOTS $Boots$", "CRAZYSPAWNER.ENTITY.PROPERTY.BOOTSDROPCHANCE $BootsDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.LEGGINGS $Leggings$", "CRAZYSPAWNER.ENTITY.PROPERTY.LEGGINGSDROPCHANCE $LeggingsDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.CHESTPLATE $Chestplate$", "CRAZYSPAWNER.ENTITY.PROPERTY.CHESTPLATEDROPCHANCE $ChestplateDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.HELMET $Helmet$", "CRAZYSPAWNER.ENTITY.PROPERTY.HELMETDROPCHANCE $HelmetDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.ITEMINHAND $ItemInHand$", "CRAZYSPAWNER.ENTITY.PROPERTY.ITEMINHANDDROPCHANCE $ItemInHandDropChance$", "CRAZYSPAWNER.ENTITY.PROPERTY.ALLOWITEMPICKUP $AllowItemPickUp$" })
 	public void show(final CommandSender target)
 	{
-		if (boots == null)
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BOOTS", target, "None");
-		else
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BOOTS", target, boots);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BOOTS", target, boots == null ? "None" : boots);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BOOTSDROPCHANCE", target, bootsDropChance);
-		if (leggings == null)
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.LEGGINGS", target, "None");
-		else
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.LEGGINGS", target, leggings);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.LEGGINGS", target, leggings == null ? "None" : leggings);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.LEGGINGSDROPCHANCE", target, leggingsDropChance);
-		if (chestplate == null)
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CHESTPLATE", target, "None");
-		else
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CHESTPLATE", target, chestplate);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CHESTPLATE", target, chestplate == null ? "None" : chestplate);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.CHESTPLATEDROPCHANCE", target, chestplateDropChance);
-		if (helmet == null)
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.HELMET", target, "None");
-		else
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.HELMET", target, helmet);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.HELMET", target, helmet == null ? "None" : helmet);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.HELMETDROPCHANCE", target, helmetDropChance);
-		if (itemInHand == null)
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHAND", target, "None");
-		else
-			CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHAND", target, itemInHand);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHAND", target, itemInHand == null ? "None" : itemInHand);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ITEMINHANDDROPCHANCE", target, itemInHandDropChance);
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALLOWITEMPICKUP", target, allowItemPickUp == null ? "default" : allowItemPickUp);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ALLOWITEMPICKUP", target, allowItemPickUp == null ? "Default" : allowItemPickUp);
 	}
 
 	@Override

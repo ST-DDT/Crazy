@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.entities.CompatibilityHelper;
 import de.st_ddt.crazyspawner.entities.CustomEntitySpawner;
 import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
 import de.st_ddt.crazyspawner.entities.meta.CustomDamage;
@@ -117,7 +118,7 @@ public class CreatureListener implements Listener
 			if (meta instanceof CustomDamage)
 			{
 				final CustomDamage damage = (CustomDamage) meta;
-				event.setDamage(damage.getDamage());
+				CompatibilityHelper.setDamage(event, damage.getDamage());
 				break;
 			}
 	}

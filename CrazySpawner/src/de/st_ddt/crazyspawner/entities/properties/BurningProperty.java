@@ -68,7 +68,7 @@ public final class BurningProperty extends BasicProperty
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.BURNING $Burning$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BURNING", target, burning);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.BURNING", target, burning == -1 ? "Default" : burning);
 	}
 
 	@Override

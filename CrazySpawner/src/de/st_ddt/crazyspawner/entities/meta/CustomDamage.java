@@ -7,9 +7,9 @@ public interface CustomDamage extends MetadataValue
 
 	public static final String METAHEADER = "DamageMeta";
 
-	public int getMinDamage();
+	public double getMinDamage();
 
-	public int getMaxDamage();
+	public double getMaxDamage();
 
-	public int getDamage();
+	public double getDamage();
 }

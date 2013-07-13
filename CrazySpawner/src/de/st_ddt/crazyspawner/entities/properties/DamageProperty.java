@@ -75,19 +75,19 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	}
 
 	@Override
-	public int getMinDamage()
+	public double getMinDamage()
 	{
 		return minDamage;
 	}
 
 	@Override
-	public int getMaxDamage()
+	public double getMaxDamage()
 	{
 		return maxDamage;
 	}
 
 	@Override
-	public int getDamage()
+	public double getDamage()
 	{
 		return getRandom(minDamage, maxDamage);
 	}

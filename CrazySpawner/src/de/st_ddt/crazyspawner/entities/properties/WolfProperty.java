@@ -109,7 +109,7 @@ public final class WolfProperty extends BasicProperty
 	@Localized({ "CRAZYSPAWNER.ENTITY.PROPERTY.COLOR $Color$", "CRAZYSPAWNER.ENTITY.PROPERTY.ANGRY $Angry$", "CRAZYSPAWNER.ENTITY.PROPERTY.SITTING $Sitting$" })
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.COLOR", target, color.name());
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.COLOR", target, color == null ? "Default" : color.name());
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.ANGRY", target, angry);
 		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.SITTING", target, sitting);
 	}
