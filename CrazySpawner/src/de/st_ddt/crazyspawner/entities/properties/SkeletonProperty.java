@@ -58,7 +58,7 @@ public final class SkeletonProperty extends BasicProperty
 	public void apply(final Entity entity)
 	{
 		final Skeleton skeleton = (Skeleton) entity;
-		if (skeleton != null)
+		if (type != null)
 			skeleton.setSkeletonType(type);
 	}
 
@@ -73,7 +73,8 @@ public final class SkeletonProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "skeletonType", type.name());
+		if (type != null)
+			config.set(path + "skeletonType", type.name());
 	}
 
 	@Override

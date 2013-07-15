@@ -92,7 +92,8 @@ public final class WolfProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "color", color.name());
+		if (color != null)
+			config.set(path + "color", color.name());
 		config.set(path + "angry", angry);
 		config.set(path + "sitting", sitting);
 	}

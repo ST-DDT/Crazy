@@ -75,6 +75,7 @@ public final class OcelotProperty extends BasicProperty
 		final EnumParamitrisable<Type> typeParam = new EnumParamitrisable<Type>("CatType", type, Type.values());
 		params.put("ctype", typeParam);
 		params.put("cattype", typeParam);
+		params.put("ocelottype", typeParam);
 		final BooleanParamitrisable sittingParam = new BooleanParamitrisable(sitting);
 		params.put("sit", sittingParam);
 		params.put("sitting", sittingParam);
@@ -83,7 +84,8 @@ public final class OcelotProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "catType", type.name());
+		if (type != null)
+			config.set(path + "catType", type.name());
 		config.set(path + "sitting", sitting);
 	}
 

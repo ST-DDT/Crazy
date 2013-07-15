@@ -10,7 +10,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.material.MaterialData;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
-import de.st_ddt.crazyutil.paramitrisable.EnumParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.MaterialParamitriable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
@@ -48,11 +47,10 @@ public final class EndermanProperty extends BasicProperty
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public EndermanProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
-		final EnumParamitrisable<Material> materialParam = (EnumParamitrisable<Material>) params.get("carriedmaterial");
+		final MaterialParamitriable materialParam = (MaterialParamitriable) params.get("carriedmaterial");
 		this.material = materialParam.getValue();
 	}
 
@@ -77,7 +75,8 @@ public final class EndermanProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "carriedMaterial", material.name());
+		if (material != null)
+			config.set(path + "carriedMaterial", material.name());
 	}
 
 	@Override

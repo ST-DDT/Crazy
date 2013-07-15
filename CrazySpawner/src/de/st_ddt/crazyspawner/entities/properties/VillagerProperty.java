@@ -58,7 +58,7 @@ public final class VillagerProperty extends BasicProperty
 	public void apply(final Entity entity)
 	{
 		final Villager villager = (Villager) entity;
-		if (villager != null)
+		if (profession != null)
 			villager.setProfession(profession);
 	}
 
@@ -73,7 +73,8 @@ public final class VillagerProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "profession", profession.name());
+		if (profession != null)
+			config.set(path + "profession", profession.name());
 	}
 
 	@Override
