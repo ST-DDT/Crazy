@@ -19,7 +19,7 @@ public class HealthProperty extends BasicProperty
 
 	protected final double maxHealth;
 
-	protected HealthProperty()
+	public HealthProperty()
 	{
 		super();
 		this.maxHealth = -1;
