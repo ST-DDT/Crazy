@@ -26,8 +26,9 @@ public class CrazyCommandReload<S extends ChatHeaderProvider> extends CrazyComma
 		{
 			final Set<Reloadable> reloads = new HashSet<Reloadable>(reloadables.values());
 			for (final Reloadable reloadable : reloads)
-				if (reloadable.hasAccessPermission(sender))
-					reloadable.reload(sender);
+				if (reloadable != this)
+					if (reloadable.hasAccessPermission(sender))
+						reloadable.reload(sender);
 		}
 
 		@Override
@@ -46,15 +47,20 @@ public class CrazyCommandReload<S extends ChatHeaderProvider> extends CrazyComma
 	@Override
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		final MapParamitrisable<Reloadable> reload = new MapParamitrisable<Reloadable>("Reloadable", reloadables, getDefaultReloadable(), true);
-		final MultiParamitrisable<Reloadable> reloads = new MultiParamitrisable<Reloadable>(reload);
-		for (final String arg : args)
-			reloads.setParameter(arg);
-		for (final Reloadable reloadable : reloads.getValue())
-			if (!reloadable.hasAccessPermission(sender))
-				throw new CrazyCommandPermissionException();
-		for (final Reloadable reloadable : reloads.getValue())
-			reloadable.reload(sender);
+		if (args.length > 0)
+		{
+			final MapParamitrisable<Reloadable> reload = new MapParamitrisable<Reloadable>("Reloadable", reloadables, null, true);
+			final MultiParamitrisable<Reloadable> reloads = new MultiParamitrisable<Reloadable>(reload);
+			for (final String arg : args)
+				reloads.setParameter(arg);
+			for (final Reloadable reloadable : reloads.getValue())
+				if (!reloadable.hasAccessPermission(sender))
+					throw new CrazyCommandPermissionException();
+			for (final Reloadable reloadable : reloads.getValue())
+				reloadable.reload(sender);
+		}
+		else
+			getDefaultReloadable().reload(sender);
 	}
 
 	@Override
