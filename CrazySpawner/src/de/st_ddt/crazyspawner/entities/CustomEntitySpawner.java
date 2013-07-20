@@ -16,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Boat;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
@@ -47,6 +48,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.properties.AgeProperty;
 import de.st_ddt.crazyspawner.entities.properties.AlarmProperty;
+import de.st_ddt.crazyspawner.entities.properties.BoatProperty;
 import de.st_ddt.crazyspawner.entities.properties.BurningProperty;
 import de.st_ddt.crazyspawner.entities.properties.ColorableProperty;
 import de.st_ddt.crazyspawner.entities.properties.CreeperProperty;
@@ -147,7 +149,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(FallingBlockProperties.class, FallingBlock.class);
 		// Properties - Sorted by EntityInterfaces
 		registerEntityProperty(AgeProperty.class, Ageable.class);
-		// Boat required?
+		registerEntityProperty(BoatProperty.class, Boat.class);
 		registerEntityProperty(ColorableProperty.class, Colorable.class);
 		registerEntityProperty(AlarmProperty.class, Creature.class);
 		registerEntityProperty(DetectionProperty.class, Creature.class);
