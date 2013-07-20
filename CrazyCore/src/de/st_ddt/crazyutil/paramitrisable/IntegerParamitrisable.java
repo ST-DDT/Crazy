@@ -3,7 +3,7 @@ package de.st_ddt.crazyutil.paramitrisable;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class IntegerParamitrisable extends TypedParamitrisable<Integer>
+public class IntegerParamitrisable extends NumberParamitrisable<Integer>
 {
 
 	public IntegerParamitrisable(final int defaultValue)

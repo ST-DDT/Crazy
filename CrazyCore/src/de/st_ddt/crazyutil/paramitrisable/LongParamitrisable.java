@@ -3,7 +3,7 @@ package de.st_ddt.crazyutil.paramitrisable;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 
-public class LongParamitrisable extends TypedParamitrisable<Long>
+public class LongParamitrisable extends NumberParamitrisable<Long>
 {
 
 	public LongParamitrisable(final long defaultValue)
