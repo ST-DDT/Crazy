@@ -78,17 +78,17 @@ public class BoatProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set("occupiedDeceleration", occupiedDeceleration);
-		config.set("unoccupiedDeceleration", unoccupiedDeceleration);
-		config.set("workOnLand", workOnLand);
+		config.set(path + "occupiedDeceleration", occupiedDeceleration);
+		config.set(path + "unoccupiedDeceleration", unoccupiedDeceleration);
+		config.set(path + "workOnLand", workOnLand);
 	}
 
 	@Override
 	public void dummySave(final ConfigurationSection config, final String path)
 	{
-		config.set("occupiedDeceleration", "double (1.0 - x.y; -1 = default");
-		config.set("unoccupiedDeceleration", "double (1.0 - x.y; -1 = default");
-		config.set("workOnLand", "boolean (true/false)");
+		config.set(path + "occupiedDeceleration", "double (1.0 - x.y; -1 = default");
+		config.set(path + "unoccupiedDeceleration", "double (1.0 - x.y; -1 = default");
+		config.set(path + "workOnLand", "boolean (true/false)");
 	}
 
 	@Override
