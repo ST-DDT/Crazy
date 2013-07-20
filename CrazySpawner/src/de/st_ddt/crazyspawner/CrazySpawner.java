@@ -757,9 +757,9 @@ public class CrazySpawner extends CrazyPlugin
 				customEntities.put(customEntity.getName(), customEntity);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(customEntity);
 			}
-			catch (final IllegalArgumentException e)
+			catch (final Exception e)
 			{
-				System.err.println("Could not load CustomEntity " + key);
+				System.err.println("[CrazySpawner] Could not load CustomEntity " + key);
 				System.err.println(e.getMessage());
 			}
 		sendLocaleMessage("SPAWNABLEENTITIES.LOADED", Bukkit.getConsoleSender(), customEntities.size());

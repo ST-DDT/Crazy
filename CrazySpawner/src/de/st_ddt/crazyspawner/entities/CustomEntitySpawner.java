@@ -320,6 +320,8 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	public CustomEntitySpawner(final ConfigurationSection config)
 	{
 		super();
+		if (config == null)
+			throw new IllegalArgumentException("Config cannot be null!");
 		this.name = config.getString("name", "UNNAMED").toUpperCase();
 		final String typeName = config.getString("type", null);
 		if (typeName == null)
