@@ -36,7 +36,7 @@ public final class NameProperty extends BasicProperty
 	public NameProperty(final ConfigurationSection config)
 	{
 		super(config);
-		this.customName = config.getString("custonName", null);
+		this.customName = config.getString("customName", null);
 		this.showNameAboveHead = config.getBoolean("showNameAboveHead", false);
 		this.showHealth = config.getBoolean("showHealth", false);
 	}
