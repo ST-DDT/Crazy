@@ -53,7 +53,7 @@ import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.entities.CustomEntitySpawner;
 import de.st_ddt.crazyspawner.entities.properties.EquipmentProperties;
 import de.st_ddt.crazyspawner.entities.properties.PotionProterty;
-import de.st_ddt.crazyspawner.listener.CreatureListener;
+import de.st_ddt.crazyspawner.listener.EntityListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 import de.st_ddt.crazyspawner.tasks.options.Thunder;
@@ -177,7 +177,7 @@ public class CrazySpawner extends CrazyPlugin
 	{
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this, creatureSelection), this);
-		pm.registerEvents(new CreatureListener(this, overwriteEntities), this);
+		pm.registerEvents(new EntityListener(this, overwriteEntities), this);
 	}
 
 	private void registerCommands()

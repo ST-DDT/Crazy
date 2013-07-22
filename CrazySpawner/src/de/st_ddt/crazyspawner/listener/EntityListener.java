@@ -31,14 +31,14 @@ import de.st_ddt.crazyspawner.entities.meta.NameMeta;
 import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.tasks.HealthTask;
 
-public class CreatureListener implements Listener
+public class EntityListener implements Listener
 {
 
 	private final CrazySpawner plugin;
 	private final HealthTask health;
 	private final CustomEntitySpawner[] overwriteEntities;
 
-	public CreatureListener(final CrazySpawner plugin, final CustomEntitySpawner[] overwriteEntities)
+	public EntityListener(final CrazySpawner plugin, final CustomEntitySpawner[] overwriteEntities)
 	{
 		super();
 		this.plugin = plugin;
