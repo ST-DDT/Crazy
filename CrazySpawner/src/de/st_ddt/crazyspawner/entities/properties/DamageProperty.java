@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.CustomDamage;
-import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
@@ -16,8 +16,8 @@ import de.st_ddt.crazyutil.source.Localized;
 public final class DamageProperty extends MetadataProperty implements CustomDamage
 {
 
-	protected final int minDamage;
-	protected final int maxDamage;
+	protected final double minDamage;
+	protected final double maxDamage;
 
 	public DamageProperty()
 	{
@@ -29,8 +29,8 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	public DamageProperty(final ConfigurationSection config)
 	{
 		super(config);
-		final int minDamage = config.getInt("minDamage", -1);
-		final int maxDamage = config.getInt("maxDamage", -1);
+		final double minDamage = config.getDouble("minDamage", -1);
+		final double maxDamage = config.getDouble("maxDamage", -1);
 		this.minDamage = Math.max(Math.min(minDamage, maxDamage), -1);
 		this.maxDamage = Math.max(Math.max(minDamage, maxDamage), -1);
 	}
@@ -38,8 +38,8 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	public DamageProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
-		final IntegerParamitrisable minDamageParam = (IntegerParamitrisable) params.get("mindamage");
-		final IntegerParamitrisable maxDamageParam = (IntegerParamitrisable) params.get("maxdamage");
+		final DoubleParamitrisable minDamageParam = (DoubleParamitrisable) params.get("mindamage");
+		final DoubleParamitrisable maxDamageParam = (DoubleParamitrisable) params.get("maxdamage");
 		this.minDamage = Math.max(Math.min(minDamageParam.getValue(), maxDamageParam.getValue()), -1);
 		this.maxDamage = Math.max(Math.max(minDamageParam.getValue(), maxDamageParam.getValue()), -1);
 	}
@@ -47,16 +47,16 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	@Override
 	public void apply(final Entity entity)
 	{
-		if (minDamage >= -1)
+		if (minDamage >= 0)
 			entity.setMetadata(CustomDamage.METAHEADER, this);
 	}
 
 	@Override
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
-		final IntegerParamitrisable minDamageParam = new IntegerParamitrisable(minDamage);
+		final DoubleParamitrisable minDamageParam = new DoubleParamitrisable(minDamage);
 		params.put("mindamage", minDamageParam);
-		final IntegerParamitrisable maxDamageParam = new IntegerParamitrisable(maxDamage);
+		final DoubleParamitrisable maxDamageParam = new DoubleParamitrisable(maxDamage);
 		params.put("maxdamage", maxDamageParam);
 	}
 
