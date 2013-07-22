@@ -29,6 +29,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
@@ -67,6 +68,7 @@ import de.st_ddt.crazyspawner.entities.properties.HealthProperty;
 import de.st_ddt.crazyspawner.entities.properties.HorseProperty;
 import de.st_ddt.crazyspawner.entities.properties.InvulnerableProperty;
 import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
+import de.st_ddt.crazyspawner.entities.properties.LightningProperty;
 import de.st_ddt.crazyspawner.entities.properties.LivingDespawnProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
 import de.st_ddt.crazyspawner.entities.properties.OcelotProperty;
@@ -138,6 +140,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		});
 		registerEntitySpawner(new ClassSpawner(EntityType.FIREWORK));
 		registerEntitySpawner(new FallingBlockSpawner());
+		registerEntitySpawner(new LightningSpawner());
 		// Add Spawners to NamedEntitySpawnerParamitrisable
 		for (final EntitySpawner spawner : ENTITYSPAWNER)
 			if (spawner != null)
@@ -148,6 +151,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 			ENTITYPROPERTIES[type.ordinal()] = new LinkedHashSet<Class<? extends EntityPropertyInterface>>();
 		// Properties - VIP required to be first!
 		registerEntityProperty(FallingBlockProperties.class, FallingBlock.class);
+		registerEntityProperty(LightningProperty.class, LightningStrike.class);
 		// Properties - Sorted by EntityInterfaces
 		registerEntityProperty(AgeProperty.class, Ageable.class);
 		registerEntityProperty(BoatProperty.class, Boat.class);
@@ -634,12 +638,50 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		}
 
 		@Override
-		public final Collection<? extends Entity> getEntities(final World world)
+		public final Collection<FallingBlock> getEntities(final World world)
 		{
 			final Collection<FallingBlock> entities = world.getEntitiesByClass(FallingBlock.class);
 			final Iterator<FallingBlock> it = entities.iterator();
 			while (it.hasNext())
 				if (it.next().getMaterial() != material)
+					it.remove();
+			return entities;
+		}
+	}
+
+	public static class LightningSpawner extends DefaultSpawner
+	{
+
+		protected final boolean effect;
+
+		public LightningSpawner()
+		{
+			super(EntityType.LIGHTNING);
+			this.effect = false;
+		}
+
+		public LightningSpawner(final boolean effect)
+		{
+			super(EntityType.LIGHTNING);
+			this.effect = effect;
+		}
+
+		@Override
+		public final LightningStrike spawn(final Location location)
+		{
+			if (effect)
+				return location.getWorld().strikeLightningEffect(location);
+			else
+				return location.getWorld().strikeLightning(location);
+		}
+
+		@Override
+		public final Collection<LightningStrike> getEntities(final World world)
+		{
+			final Collection<LightningStrike> entities = world.getEntitiesByClass(LightningStrike.class);
+			final Iterator<LightningStrike> it = entities.iterator();
+			while (it.hasNext())
+				if (it.next().isEffect() != effect)
 					it.remove();
 			return entities;
 		}
