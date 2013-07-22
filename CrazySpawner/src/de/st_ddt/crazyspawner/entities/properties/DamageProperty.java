@@ -70,8 +70,8 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 	@Override
 	public void dummySave(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "minDamage", "int (-1 = default)");
-		config.set(path + "maxDamage", "int (-1 = default)");
+		config.set(path + "minDamage", "double (0.0 - x.y; -1.0 = default)");
+		config.set(path + "maxDamage", "double (0.0 - x.y; -1.0 = default)");
 	}
 
 	@Override
