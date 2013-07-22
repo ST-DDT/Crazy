@@ -29,6 +29,7 @@ import de.st_ddt.crazyspawner.entities.meta.CustomXP;
 import de.st_ddt.crazyspawner.entities.meta.DetectionMeta;
 import de.st_ddt.crazyspawner.entities.meta.NameMeta;
 import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
+import de.st_ddt.crazyspawner.entities.properties.InvulnerableProperty;
 import de.st_ddt.crazyspawner.tasks.HealthTask;
 
 public class EntityListener implements Listener
@@ -80,6 +81,13 @@ public class EntityListener implements Listener
 		if (event.getDamager() instanceof TNTPrimed)
 			return;
 		event.setCancelled(true);
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	public void EntityDamaged(final EntityDamageEvent event)
+	{
+		if (event.getEntity().hasMetadata(InvulnerableProperty.METAHEADER))
+			event.setCancelled(true);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

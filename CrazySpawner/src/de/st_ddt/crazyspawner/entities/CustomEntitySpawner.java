@@ -65,6 +65,7 @@ import de.st_ddt.crazyspawner.entities.properties.FallingBlockProperties;
 import de.st_ddt.crazyspawner.entities.properties.FireworkProperty;
 import de.st_ddt.crazyspawner.entities.properties.HealthProperty;
 import de.st_ddt.crazyspawner.entities.properties.HorseProperty;
+import de.st_ddt.crazyspawner.entities.properties.InvulnerableProperty;
 import de.st_ddt.crazyspawner.entities.properties.IronGolemProperty;
 import de.st_ddt.crazyspawner.entities.properties.LivingDespawnProperty;
 import de.st_ddt.crazyspawner.entities.properties.NameProperty;
@@ -159,6 +160,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(EndermanProperty.class, Enderman.class);
 		registerEntityProperty(DespawnProperty.class, Entity.class, LivingEntity.class);
 		registerEntityProperty(BurningProperty.class, Entity.class);
+		registerEntityProperty(InvulnerableProperty.class, Entity.class);
 		registerEntityProperty(VelocityProperty.class, Entity.class);
 		registerEntityProperty(PassengerProperty.class, Entity.class);
 		registerEntityProperty(PeacefulProperty.class, Entity.class);
