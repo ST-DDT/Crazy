@@ -108,7 +108,7 @@ public class EntityListener implements Listener
 			if (meta instanceof AlarmMeta)
 			{
 				final AlarmMeta alarm = (AlarmMeta) meta;
-				alarmRange = alarm.asDouble();
+				alarmRange = alarm.getAlarmRange();
 				break;
 			}
 		final Location location = entity.getLocation();
@@ -165,7 +165,7 @@ public class EntityListener implements Listener
 			if (meta.getOwningPlugin() == plugin)
 			{
 				final NameMeta name = (NameMeta) meta;
-				entity.setCustomName(name.asString());
+				entity.setCustomName(name.getCustomName());
 				break;
 			}
 		final List<MetadataValue> dropsMeta = entity.getMetadata(CustomDrops.METAHEADER);

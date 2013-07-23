@@ -46,12 +46,12 @@ public class HealthTask implements Runnable
 					{
 						final double health = CompatibilityHelper.getHealth(entity);
 						if (health == -1)
-							entity.setCustomName(name.asString());
+							entity.setCustomName(name.getCustomName());
 						else
-							entity.setCustomName(name.asString() + " (" + ((long) health) + ")");
+							entity.setCustomName(name.getCustomName() + " (" + ((long) health) + ")");
 					}
 					else
-						entity.setCustomName(name.asString());
+						entity.setCustomName(name.getCustomName());
 				}
 		}
 		entities.clear();

@@ -66,7 +66,7 @@ public class PlayerListener implements Listener
 			if (meta instanceof AlarmMeta)
 			{
 				final AlarmMeta alarm = (AlarmMeta) meta;
-				final double alarmRange = alarm.asDouble();
+				final double alarmRange = alarm.getAlarmRange();
 				final Location location = item.getLocation();
 				for (final LivingEntity nearby : item.getWorld().getEntitiesByClass(LivingEntity.class))
 					if (location.distance(nearby.getLocation()) < alarmRange)
