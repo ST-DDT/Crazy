@@ -667,6 +667,12 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		}
 
 		@Override
+		public final String getName()
+		{
+			return "LIGHTNINGSTRIKE";
+		}
+
+		@Override
 		public final LightningStrike spawn(final Location location)
 		{
 			if (effect)
