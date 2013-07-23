@@ -39,9 +39,14 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 
 	public static void registerNamedEntitySpawner(final NamedEntitySpawner entitySpawner, final String... aliases)
 	{
+		if (entitySpawner == null)
+			throw new IllegalArgumentException("EntitySpawner cannot be null!");
+		if (entitySpawner.getName() == null)
+			throw new IllegalArgumentException("EntitySpawner's name cannot be null (" + entitySpawner.getClass().getSimpleName() + ")!");
 		ENTITY_TYPES.put(entitySpawner.getName().toUpperCase(), entitySpawner);
 		for (final String alias : aliases)
-			ENTITY_TYPES.put(alias.toUpperCase(), entitySpawner);
+			if (alias != null)
+				ENTITY_TYPES.put(alias.toUpperCase(), entitySpawner);
 	}
 
 	public static NamedEntitySpawner getNamedEntitySpawner(final String name)
