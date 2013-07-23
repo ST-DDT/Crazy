@@ -306,7 +306,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 
 	public CustomEntitySpawner(final EntityType type)
 	{
-		this(type.getName(), type);
+		this(type.getName() == null ? type.name() : type.getName(), type);
 	}
 
 	public CustomEntitySpawner(final String name, final EntityType type)
