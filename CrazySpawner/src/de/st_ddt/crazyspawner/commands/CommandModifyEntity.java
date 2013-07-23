@@ -61,7 +61,7 @@ public class CommandModifyEntity extends CommandExecutor
 			throw new CrazyCommandUsageException("<Inheritance/EntityType> <name:String> [Params...]");
 		final CustomEntitySpawner entitySpawner = new CustomEntitySpawner(type, params);
 		plugin.addCustomEntity(entitySpawner);
-		plugin.sendLocaleMessage("COMMAND.MODIFYENTITY", sender, type.getName(), nameParam.getValue());
+		plugin.sendLocaleMessage("COMMAND.MODIFYENTITY", sender, type.getName() == null ? type.name() : type.getName(), nameParam.getValue());
 	}
 
 	@Override
