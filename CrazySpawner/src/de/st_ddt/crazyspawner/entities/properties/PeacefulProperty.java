@@ -40,7 +40,8 @@ public class PeacefulProperty extends BasicProperty
 	@Override
 	public void apply(final Entity entity)
 	{
-		entity.setMetadata(PeacefulMeta.METAHEADER, PeacefulMeta.INSTANCE);
+		if (peaceful)
+			entity.setMetadata(PeacefulMeta.METAHEADER, PeacefulMeta.INSTANCE);
 	}
 
 	@Override
