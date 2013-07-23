@@ -1,5 +1,6 @@
 package de.st_ddt.crazyspawner.entities.properties;
 
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.command.CommandSender;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
+import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ObjectSaveLoadHelper;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
@@ -62,7 +64,34 @@ public class DroppedItemProperty extends BasicProperty
 		final ItemStackParamitrisable itemParam = PlayerItemStackParamitrisable.getParamitrisableFor(item, sender);
 		params.put("i", itemParam);
 		params.put("item", itemParam);
-		final IntegerParamitrisable delayParam = new IntegerParamitrisable(delay);
+		final IntegerParamitrisable delayParam = new IntegerParamitrisable(delay)
+		{
+
+			@Override
+			public void setParameter(final String parameter) throws CrazyException
+			{
+				if (parameter.equalsIgnoreCase("instant"))
+					value = 0;
+				else if (parameter.equalsIgnoreCase("never") || parameter.equalsIgnoreCase("*"))
+					value = Integer.MAX_VALUE;
+				else
+					super.setParameter(parameter);
+			}
+
+			@Override
+			public List<String> tab(String parameter)
+			{
+				parameter = parameter.toLowerCase();
+				final List<String> res = super.tab(parameter);
+				if ("instant".startsWith(parameter))
+					res.add("instant");
+				if ("never".startsWith(parameter))
+					res.add("never");
+				if ("*".startsWith(parameter))
+					res.add("*");
+				return res;
+			}
+		};
 		params.put("pd", delayParam);
 		params.put("pdelay", delayParam);
 		params.put("pickupd", delayParam);
