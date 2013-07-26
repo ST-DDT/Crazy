@@ -16,7 +16,7 @@ public class RectangleRegion extends SquareRegion
 	public RectangleRegion(final ConfigurationSection config)
 	{
 		super(config);
-		config.getDouble("sizeZ");
+		this.sizeZ = config.getDouble("sizeZ");
 	}
 
 	@Override
