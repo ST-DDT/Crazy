@@ -136,13 +136,13 @@ public class ObjectSaveLoadHelper
 	public static void saveInventory(final ConfigurationSection config, final String path, final Inventory inventory)
 	{
 		for (int i = 0; i < inventory.getSize(); i++)
-			saveItemStack(config, path + i + ".", inventory.getItem(i));
+			saveItemStack(config, path + i, inventory.getItem(i));
 	}
 
 	public static void saveInventory(final ConfigurationSection config, final String path, final Map<Integer, ItemStack> items)
 	{
 		for (final Entry<Integer, ItemStack> entry : items.entrySet())
-			saveItemStack(config, path + entry.getKey().toString() + ".", entry.getValue());
+			saveItemStack(config, path + entry.getKey().toString(), entry.getValue());
 	}
 
 	public static ArrayList<ItemStack> loadItemStacks(final ConfigurationSection config)
