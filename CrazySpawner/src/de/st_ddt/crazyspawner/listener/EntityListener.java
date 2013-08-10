@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.TNTPrimed;
@@ -12,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -27,6 +31,7 @@ import de.st_ddt.crazyspawner.entities.meta.CustomDamage;
 import de.st_ddt.crazyspawner.entities.meta.CustomDrops;
 import de.st_ddt.crazyspawner.entities.meta.CustomXP;
 import de.st_ddt.crazyspawner.entities.meta.DetectionMeta;
+import de.st_ddt.crazyspawner.entities.meta.FallingBlockMeta;
 import de.st_ddt.crazyspawner.entities.meta.NameMeta;
 import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
 import de.st_ddt.crazyspawner.entities.properties.InvulnerableProperty;
@@ -154,6 +159,38 @@ public class EntityListener implements Listener
 					break;
 				}
 		}
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	public void FallingBlockImpact(final EntityChangeBlockEvent event)
+	{
+		final Entity entity = event.getEntity();
+		if (!(entity instanceof FallingBlock))
+			return;
+		final FallingBlock falling = (FallingBlock) entity;
+		final List<MetadataValue> fallingBlockMeta = falling.getMetadata(FallingBlockMeta.METAHEADER);
+		for (final MetadataValue meta : fallingBlockMeta)
+			if (meta instanceof FallingBlockMeta)
+			{
+				final FallingBlockMeta fallingMeta = (FallingBlockMeta) meta;
+				event.setCancelled(true);
+				if (fallingMeta.isDespawningOnImpactEnabled())
+					break;
+				Material material;
+				if (fallingMeta.getPlacedMaterial() == null)
+					material = falling.getMaterial();
+				else
+					material = fallingMeta.getPlacedMaterial();
+				byte data;
+				if (fallingMeta.getPlacedMaterialData() == null)
+					data = falling.getBlockData();
+				else
+					data = fallingMeta.getPlacedMaterialData();
+				final Block block = event.getBlock();
+				block.setTypeIdAndData(material.getId(), data, true);
+				fallingMeta.apply(block);
+				break;
+			}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)

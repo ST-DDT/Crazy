@@ -17,24 +17,24 @@ import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class FallingBlockProperties extends FallingBlockSpawner implements EntityPropertyInterface
+public class FallingBlockProperty extends FallingBlockSpawner implements EntityPropertyInterface
 {
 
 	protected final boolean dropItem;
 
-	public FallingBlockProperties()
+	public FallingBlockProperty()
 	{
 		super();
 		this.dropItem = false;
 	}
 
-	public FallingBlockProperties(final ConfigurationSection config)
+	public FallingBlockProperty(final ConfigurationSection config)
 	{
 		super(Material.valueOf(config.getString("material", "STONE")), (byte) config.getInt("data", 0));
 		this.dropItem = config.getBoolean("dropItem", false);
 	}
 
-	public FallingBlockProperties(final Map<String, ? extends Paramitrisable> params)
+	public FallingBlockProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(((MaterialParamitriable) params.get("material")).getValue(), ((IntegerParamitrisable) params.get("data")).getValue().byteValue());
 		final BooleanParamitrisable dropItemParam = (BooleanParamitrisable) params.get("dropitem");
