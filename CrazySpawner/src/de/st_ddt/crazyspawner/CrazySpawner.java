@@ -899,7 +899,7 @@ public class CrazySpawner extends CrazyPlugin
 		saveSpawnTasks();
 	}
 
-	public CustomEntitySpawner[] getOverwriteEntities()
+	public final CustomEntitySpawner[] getOverwriteEntities()
 	{
 		return overwriteEntities;
 	}
