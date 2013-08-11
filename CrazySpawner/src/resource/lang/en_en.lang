@@ -93,4 +93,5 @@ CRAZYSPAWNER.ENTITY.PROPERTY.YIELD=Yield: $0$ blocks
 #CRAZYSPAWNER.MODE.CHANGE=
 CRAZYSPAWNER.SPAWNABLEENTITIES.AVAILABLE=$0$ types of entity are ready to be spawned!
 CRAZYSPAWNER.SPAWNABLEENTITIES.LOADED=Loaded $0$ custom entity types!
+CRAZYSPAWNER.SPAWNABLEENTITIES.OPTIONS=Supported entity types: $0$\nActice Optionsgroups: $1$\nActive Options: $2$
 CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE=An Ender-Dragon will return to &D$0$&F in &4$1$&F.

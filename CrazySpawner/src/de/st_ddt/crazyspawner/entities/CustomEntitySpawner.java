@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -236,6 +238,42 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		for (final EntityPropertyInterface property : getDefaultEntityProperties(type))
 			property.getCommandParams(params, sender);
 		return nameParam;
+	}
+
+	public static int getTotalSpawnableEntityTypeCount()
+	{
+		return getSpawnableEntityTypes().size();
+	}
+
+	public static int getTotalPropertiesCount()
+	{
+		return getAllPropertyClasses().size();
+	}
+
+	protected static Set<Class<? extends EntityPropertyInterface>> getAllPropertyClasses()
+	{
+		final Set<Class<? extends EntityPropertyInterface>> properties = new HashSet<Class<? extends EntityPropertyInterface>>();
+		for (final EntityType type : getSpawnableEntityTypes())
+			properties.addAll(ENTITYPROPERTIES[type.ordinal()]);
+		return properties;
+	}
+
+	public static int getTotalCommandParamsCount()
+	{
+		final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+		final ConsoleCommandSender console = Bukkit.getConsoleSender();
+		for (final Class<? extends EntityPropertyInterface> property : getAllPropertyClasses())
+			try
+			{
+				property.newInstance().getCommandParams(params, console);
+			}
+			catch (final Exception e)
+			{
+				System.err.println("WARNING: Serious Bug detected, please report this!");
+				System.err.println("Property: " + property.getSimpleName());
+				e.printStackTrace();
+			}
+		return new HashSet<Paramitrisable>(params.values()).size();
 	}
 
 	protected final String name;

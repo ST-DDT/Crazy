@@ -267,7 +267,7 @@ public class CrazySpawner extends CrazyPlugin
 	}
 
 	@Override
-	@Localized("CRAZYSPAWNER.SPAWNABLEENTITIES.AVAILABLE $Count$")
+	@Localized({ "CRAZYSPAWNER.SPAWNABLEENTITIES.OPTIONS $SupportedTypes$ $AvailableOptionGroups$ $AvailableOptions$", "CRAZYSPAWNER.SPAWNABLEENTITIES.AVAILABLE $Count$" })
 	public void onEnable()
 	{
 		registerHooks();
@@ -407,6 +407,7 @@ public class CrazySpawner extends CrazyPlugin
 		}, "t", "st", "spawntasks");
 		registerCommands();
 		registerMetrics();
+		sendLocaleMessage("SPAWNABLEENTITIES.OPTIONS", Bukkit.getConsoleSender(), CustomEntitySpawner.getTotalSpawnableEntityTypeCount(), CustomEntitySpawner.getTotalPropertiesCount(), CustomEntitySpawner.getTotalCommandParamsCount());
 		sendLocaleMessage("SPAWNABLEENTITIES.AVAILABLE", Bukkit.getConsoleSender(), NamedEntitySpawnerParamitrisable.ENTITY_TYPES.size());
 	}
 

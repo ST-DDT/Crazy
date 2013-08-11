@@ -93,4 +93,5 @@ CRAZYSPAWNER.ENTITY.PROPERTY.YIELD=Einflussbereich: $0$ Blöcke
 #CRAZYSPAWNER.MODE.CHANGE=
 CRAZYSPAWNER.SPAWNABLEENTITIES.AVAILABLE=$0$ Objekt-Typen warten darauf gespawnt zu werden!
 CRAZYSPAWNER.SPAWNABLEENTITIES.LOADED=$0$ benutzerdefinierte Objekt-Typen geladen!
+CRAZYSPAWNER.SPAWNABLEENTITIES.OPTIONS=Unterstützte Typen: $0$\nAktive Optionsgruppen: $1$\nAktive Optionen: $2$
 CRAZYSPAWNER.THEENDAUTORESPAWN.COUNTDOWNMESSAGE=Ein Ender-Drache wird in &4$1$&F nach &5$0$&F zurückkehren.
