@@ -74,12 +74,41 @@ public abstract class CrazyPipe
 			}
 		final CrazyPipe pipe = pipes.get(pipeArgs[0].toLowerCase());
 		if (pipe == null)
-		{
 			commandPipe(sender, datas, pipeArgs);
-			return;
-		}
 		else
 			pipe.execute(sender, datas, ChatHelperExtended.shiftArray(pipeArgs, 1));
+	}
+
+	@Permission("crazypipe.use")
+	public static void pipe(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+	{
+		if (disabled)
+			return;
+		if (!PermissionModule.hasPermission(sender, "crazypipe.use"))
+			throw new CrazyCommandPermissionException();
+		if (pipeArgs == null)
+		{
+			defaultPipe(sender, datas, false);
+			return;
+		}
+		final int length = pipeArgs.length;
+		if (length == 0)
+		{
+			defaultPipe(sender, datas, false);
+			return;
+		}
+		for (int i = 0; i < length; i++)
+			if (pipeArgs[i].equals("|"))
+			{
+				pipe(sender, datas, false, ChatHelperExtended.cutArray(pipeArgs, i));
+				pipe(sender, datas, false, ChatHelperExtended.shiftArray(pipeArgs, i + 1));
+				return;
+			}
+		final CrazyPipe pipe = pipes.get(pipeArgs[0].toLowerCase());
+		if (pipe == null)
+			commandPipe(sender, datas, false, pipeArgs);
+		else
+			pipe.execute(sender, datas, false, ChatHelperExtended.shiftArray(pipeArgs, 1));
 	}
 
 	public static List<String> tabHelp(final CommandSender sender, final String[] pipeArgs)
@@ -148,10 +177,16 @@ public abstract class CrazyPipe
 		if (!PermissionModule.hasPermission(sender, "crazypipe.use"))
 			throw new CrazyCommandPermissionException();
 		if (pipeArgs == null)
+		{
+			defaultPipe(sender, data);
 			return;
+		}
 		final int length = pipeArgs.length;
 		if (length == 0)
+		{
+			defaultPipe(sender, data);
 			return;
+		}
 		for (int i = 0; i < length; i++)
 			if (pipeArgs[i].equals("|"))
 			{
@@ -168,14 +203,31 @@ public abstract class CrazyPipe
 			sender.sendMessage(data.getShortInfo());
 	}
 
+	private static void defaultPipe(final CommandSender sender, final Collection<String> datas, final boolean foo)
+	{
+		for (final String data : datas)
+			sender.sendMessage(data);
+	}
+
 	private static void defaultPipe(final CommandSender sender, final ParameterData data)
 	{
 		data.show(sender);
 	}
 
+	private static void defaultPipe(final CommandSender sender, final String data)
+	{
+		sender.sendMessage(data);
+	}
+
 	private static void commandPipe(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs)
 	{
 		for (final ParameterData data : datas)
+			commandPipe(sender, data, pipeArgs);
+	}
+
+	private static void commandPipe(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs)
+	{
+		for (final String data : datas)
 			commandPipe(sender, data, pipeArgs);
 	}
 
@@ -209,6 +261,8 @@ public abstract class CrazyPipe
 	}
 
 	public abstract void execute(CommandSender sender, Collection<? extends ParameterData> datas, String... pipeArgs) throws CrazyException;
+
+	public abstract void execute(CommandSender sender, Collection<String> datas, boolean foo, String... pipeArgs) throws CrazyException;
 
 	public List<String> tab(final CommandSender sender, final String[] parameter)
 	{
@@ -262,6 +316,39 @@ public abstract class CrazyPipe
 				}
 				pipe(sender, newEntries, newArgs);
 			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				String[] newArgs = null;
+				final LinkedList<String> newEntries = new LinkedList<String>();
+				final ArrayList<String> entries = new ArrayList<String>();
+				entries.addAll(datas);
+				final int length = pipeArgs.length;
+				for (int a = 0; a < length; a++)
+				{
+					final String arg = pipeArgs[a];
+					if (arg.equals(">"))
+					{
+						newArgs = shiftPipe(ChatHelperExtended.shiftArray(pipeArgs, a + 1));
+						break;
+					}
+					for (final String part : arg.split(","))
+						try
+						{
+							final String[] split = part.split("-");
+							final int begin = Math.max(Math.min(entries.size(), Integer.parseInt(split[0])), 0);
+							final int ende = Math.max(Math.min(entries.size(), Integer.parseInt(split[split.length - 1])), begin);
+							for (int i = begin; i <= ende; i++)
+								newEntries.add(entries.get(i - 1));
+						}
+						catch (final NumberFormatException e)
+						{
+							throw new CrazyCommandParameterException(a, "NumberRange");
+						}
+				}
+				pipe(sender, newEntries, false, newArgs);
+			}
 		}, "entry", "entries");
 		registerPipe(new CrazyPipe()
 		{
@@ -275,6 +362,17 @@ public abstract class CrazyPipe
 				entries.addAll(datas);
 				newEntries.add(entries.get(0));
 				pipe(sender, newEntries, newArgs);
+			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				final String[] newArgs = shiftPipe(ChatHelperExtended.shiftArray(pipeArgs, 1));
+				final LinkedList<String> newEntries = new LinkedList<String>();
+				final ArrayList<String> entries = new ArrayList<String>();
+				entries.addAll(datas);
+				newEntries.add(entries.get(0));
+				pipe(sender, newEntries, false, newArgs);
 			}
 		}, "first");
 		registerPipe(new CrazyPipe()
@@ -290,6 +388,17 @@ public abstract class CrazyPipe
 				newEntries.add(entries.get(entries.size() - 1));
 				pipe(sender, newEntries, newArgs);
 			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				final String[] newArgs = shiftPipe(ChatHelperExtended.shiftArray(pipeArgs, 1));
+				final LinkedList<String> newEntries = new LinkedList<String>();
+				final ArrayList<String> entries = new ArrayList<String>();
+				entries.addAll(datas);
+				newEntries.add(entries.get(entries.size() - 1));
+				pipe(sender, newEntries, false, newArgs);
+			}
 		}, "last");
 		registerPipe(new CrazyPipe()
 		{
@@ -298,6 +407,14 @@ public abstract class CrazyPipe
 			public void execute(final CommandSender sender, final Collection<? extends ParameterData> datas, final String... pipeArgs) throws CrazyException
 			{
 				final String[] args = ChatHelperExtended.processListCommand(sender, pipeArgs, "", null, null, null, null, null, new ArrayList<ParameterData>(datas));
+				if (args != null)
+					throw new CrazyCommandUnsupportedException("PipeCommand", args);
+			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				final String[] args = ChatHelperExtended.processListCommand(sender, pipeArgs, "", null, null, null, null, null, new ArrayList<String>(datas));
 				if (args != null)
 					throw new CrazyCommandUnsupportedException("PipeCommand", args);
 			}
@@ -311,6 +428,14 @@ public abstract class CrazyPipe
 				final String message = ChatHelper.colorise(ChatHelper.listingString(" ", pipeArgs));
 				for (final ParameterData data : datas)
 					sender.sendMessage(ChatHelper.putArgsPara(sender, message, data));
+			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				final String message = ChatHelper.colorise(ChatHelper.listingString(" ", pipeArgs));
+				for (final String data : datas)
+					sender.sendMessage(ChatHelper.putArgs(message, data));
 			}
 		}, "show");
 		registerPipe(new CrazyPipe()
@@ -329,6 +454,18 @@ public abstract class CrazyPipe
 						((PlayerDataInterface) data).show(sender, "", true);
 					}
 				sender.sendMessage(separator);
+			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				final String message = ChatHelper.colorise(ChatHelper.listingString(" ", pipeArgs));
+				final String separator = "----------------------------------------";
+				for (final String data : datas)
+				{
+					sender.sendMessage(separator);
+					sender.sendMessage(ChatHelper.putArgs(message, data));
+				}
 			}
 		}, "show+");
 		registerPipe(new CrazyPipe()
@@ -368,6 +505,39 @@ public abstract class CrazyPipe
 			}
 
 			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+				final FileParamitrisable file = new FileParamitrisable(CrazyCore.getPlugin().getDataFolder().getAbsoluteFile().getParentFile().getParentFile(), null);
+				params.put("file", file);
+				final BooleanParamitrisable append = new BooleanParamitrisable(false);
+				params.put("append", append);
+				final StringParamitrisable chatHeader = new ColoredStringParamitrisable("");
+				params.put("chatheader", chatHeader);
+				final StringParamitrisable headFormat = new ColoredStringParamitrisable(null);
+				params.put("headformat", headFormat);
+				final StringParamitrisable listFormat = new ColoredStringParamitrisable("$1$\n");
+				params.put("listformat", listFormat);
+				final StringParamitrisable entryFormat = new ColoredStringParamitrisable("$0$");
+				params.put("entryformat", entryFormat);
+				ChatHelperExtended.readParameters(pipeArgs, params, file);
+				int i = 0;
+				try
+				{
+					final Writer writer = new FileWriter(file.getValue(), append.getValue());
+					if (headFormat.getValue() != null)
+						writer.write(ChatHelper.putArgs(headFormat.getValue() + "\n", "", "", chatHeader.getValue(), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date())));
+					for (final String data : datas)
+						writer.write(ChatHelper.putArgs(listFormat.getValue(), Integer.toString(i++), ChatHelper.putArgs(entryFormat.getValue(), data), chatHeader.getValue()));
+					writer.close();
+				}
+				catch (final IOException e)
+				{
+					throw new CrazyCommandErrorException(e);
+				}
+			}
+
+			@Override
 			public List<String> tab(final CommandSender sender, final String[] args)
 			{
 				final Map<String, Tabbed> params = new HashMap<String, Tabbed>();
@@ -395,6 +565,19 @@ public abstract class CrazyPipe
 				try
 				{
 					pipe(sender, datas, pipeArgs);
+				}
+				catch (final CrazyException e)
+				{
+					e.show(sender);
+				}
+			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				try
+				{
+					pipe(sender, datas, false, pipeArgs);
 				}
 				catch (final CrazyException e)
 				{
