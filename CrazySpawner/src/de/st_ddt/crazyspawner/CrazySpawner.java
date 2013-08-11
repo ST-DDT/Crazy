@@ -120,6 +120,20 @@ public class CrazySpawner extends CrazyPlugin
 					throw new CrazyCommandUsageException("<World> <X> <Y> <Z>");
 				location.getValue().getWorld().strikeLightning(location.getValue());
 			}
+
+			@Override
+			public void execute(final CommandSender sender, final Collection<String> datas, final boolean foo, final String... pipeArgs) throws CrazyException
+			{
+				final Map<String, Paramitrisable> params = new HashMap<String, Paramitrisable>();
+				final LocationParamitrisable location = new LocationParamitrisable(sender);
+				location.addFullParams(params, "", "l", "loc", "location");
+				ChatHelperExtended.readParameters(pipeArgs, params, location);
+				if (location.getValue() == null)
+					throw new CrazyCommandUsageException("[World] <X> <Y> <Z>");
+				if (location.getValue().getWorld() == null)
+					throw new CrazyCommandUsageException("<World> <X> <Y> <Z>");
+				location.getValue().getWorld().strikeLightning(location.getValue());
+			}
 		}, "thunder", "strike");
 	}
 
