@@ -18,13 +18,13 @@ public class CrazyPluginCommandMainSave extends CrazyPluginCommandExecutor<Crazy
 	}
 
 	@Override
-	@Localized("$CRAZYPLUGIN$.COMMAND.CONFIG.SAVED")
+	@Localized("$CRAZYPLUGIN$.COMMAND.SAVED")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		if (args.length != 0)
 			throw new CrazyCommandUsageException("");
 		plugin.save();
-		plugin.sendLocaleMessage("COMMAND.CONFIG.SAVED", sender);
+		plugin.sendLocaleMessage("COMMAND.SAVED", sender);
 	}
 
 	@Override
