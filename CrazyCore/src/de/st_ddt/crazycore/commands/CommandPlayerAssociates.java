@@ -63,8 +63,7 @@ public class CommandPlayerAssociates extends CommandExecutor
 		final AssoicatesListModer moder = new AssoicatesListModer(sender);
 		final String[] pipeArgs = ChatHelperExtended.processListCommand(sender, args, plugin.getChatHeader(), listFormat, null, null, null, moder, new ArrayList<String>(), moder);
 		if (pipeArgs != null)
-			for (final String data : moder.getList())
-				CrazyPipe.pipe(sender, data, pipeArgs);
+			CrazyPipe.pipe(sender, moder.getList(), false, pipeArgs);
 	}
 
 	@Override
