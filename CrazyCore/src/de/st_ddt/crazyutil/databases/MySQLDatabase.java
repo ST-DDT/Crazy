@@ -55,18 +55,21 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 		if (connection == null)
 			throw new Exception("Database not accessible!");
 		Statement query = null;
+		String sql = null;
 		try
 		{
 			// Create Table if not exists
 			query = connection.createStatement();
-			query.executeUpdate("CREATE TABLE IF NOT EXISTS " + tableName + " (" + SQLColumn.getFullCreateString(columns) + ");");
+			sql = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + SQLColumn.getFullCreateString(columns) + ");";
+			query.executeUpdate(sql);
 			query.close();
 			// Create columns if not exist
 			query = null;
 			final HashSet<String> columnsNames = new HashSet<String>();
 			query = connection.createStatement();
 			// Vorhandene Spalten abfragen
-			final ResultSet result = query.executeQuery("SHOW COLUMNS FROM " + tableName);
+			sql = "SHOW COLUMNS FROM " + tableName;
+			final ResultSet result = query.executeQuery(sql);
 			while (result.next())
 				columnsNames.add(result.getString("Field"));
 			query.close();
@@ -80,12 +83,14 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 				query = null;
 				// Spalte hinzufügen
 				query = connection.createStatement();
-				query.executeUpdate("ALTER TABLE " + tableName + " ADD " + column.getCreateString(true));
+				sql = "ALTER TABLE " + tableName + " ADD " + column.getCreateString(true);
+				query.executeUpdate(sql);
 				query.close();
 			}
 		}
 		catch (final SQLException e)
 		{
+			System.err.println("Error executing sql statement: " + sql);
 			throw e;
 		}
 		finally
@@ -122,7 +127,10 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 			query.executeUpdate(sql);
 		}
 		catch (final SQLException e)
-		{}
+		{
+			System.err.println("Error executing sql statement: " + sql);
+			e.printStackTrace();
+		}
 		finally
 		{
 			if (query != null)
