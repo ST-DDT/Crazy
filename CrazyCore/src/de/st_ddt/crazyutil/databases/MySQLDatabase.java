@@ -13,8 +13,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 
 	private final SQLConnection connection;
 	protected final SQLConnectionPool connectionPool;
-	@Deprecated
-	protected final SQLConnectionPool mysqlConnectionPool;
 
 	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String defaultTableName, final ConfigurationSection config)
 	{
@@ -29,7 +27,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 			this.connection = MySQLConnection.getConnection(config.getConfigurationSection("connection"));
 			this.connectionPool = new MySQLConnectionPool(connection);
 		}
-		mysqlConnectionPool = connectionPool;
 	}
 
 	public MySQLDatabase(final Class<S> clazz, final SQLColumn[] columns, final String tableName, final String[] columnNames, final String host, final String port, final String database, final String user, final String password, final boolean cached, final boolean doNoUpdate)
@@ -37,7 +34,6 @@ public class MySQLDatabase<S extends MySQLDatabaseEntry> extends SQLDatabase<S>
 		super(DatabaseType.MYSQL, clazz, columns, tableName, columnNames, cached, doNoUpdate);
 		this.connection = new MySQLConnection(host, port, database, user, password);
 		this.connectionPool = new MySQLConnectionPool(connection);
-		mysqlConnectionPool = connectionPool;
 	}
 
 	@Override
