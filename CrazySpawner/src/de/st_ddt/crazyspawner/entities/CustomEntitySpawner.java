@@ -748,4 +748,10 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	public final void invalidate()
 	{
 	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{name: " + getName() + "}";
+	}
 }
