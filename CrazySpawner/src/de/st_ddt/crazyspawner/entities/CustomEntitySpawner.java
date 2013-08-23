@@ -407,7 +407,6 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		final Entity entity = spawner.spawn(location);
 		if (entity == null)
 			return null;
-		entity.setMetadata(METAHEADER, this);
 		apply(entity);
 		return entity;
 	}
@@ -430,6 +429,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	 */
 	public final void apply(final Entity entity)
 	{
+		entity.setMetadata(METAHEADER, this);
 		for (final EntityPropertyInterface property : properties)
 			property.apply(entity);
 	}
