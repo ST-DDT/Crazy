@@ -52,7 +52,7 @@ public class VelocityProperty extends BasicProperty
 	public VelocityProperty(final ConfigurationSection config)
 	{
 		super(config);
-		if (config.contains("velocity.pitchMin"))
+		if (config.contains("velocity.pitch"))
 		{
 			this.pitch = config.getInt("velocity.pitch", 0);
 			this.pitchOff = config.getInt("velocity.pitchOff", 0);
