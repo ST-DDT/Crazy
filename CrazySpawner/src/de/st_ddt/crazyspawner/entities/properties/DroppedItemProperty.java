@@ -3,6 +3,7 @@ package de.st_ddt.crazyspawner.entities.properties;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -28,7 +29,7 @@ public class DroppedItemProperty extends BasicProperty
 	public DroppedItemProperty()
 	{
 		super();
-		this.item = new ItemStack(1);
+		this.item = new ItemStack(Material.STONE);
 		this.delay = -1;
 	}
 
@@ -36,7 +37,7 @@ public class DroppedItemProperty extends BasicProperty
 	{
 		super(config);
 		final ItemStack item = ObjectSaveLoadHelper.loadItemStack(config.getConfigurationSection("item"));
-		this.item = item == null ? new ItemStack(1) : item;
+		this.item = item == null ? new ItemStack(Material.STONE) : item;
 		this.delay = Math.max(config.getInt("pickUpDelay", -1), -1);
 	}
 
