@@ -94,9 +94,9 @@ public final class FireworkProperty extends BasicProperty
 	@Override
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
-		ItemStackParamitrisable itemParam=new ItemStackParamitrisable(null);
-		params.put("item",itemParam);
-		params.put("copyfromitem",itemParam);
+		final ItemStackParamitrisable itemParam = new ItemStackParamitrisable(null);
+		params.put("item", itemParam);
+		params.put("copyfromitem", itemParam);
 		IntegerParamitrisable powerParam;
 		int count = 0;
 		if (meta == null)
