@@ -52,6 +52,7 @@ public final class NameProperty extends BasicProperty
 		this.showHealth = showHealthParam.getValue();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void apply(final Entity entity)
 	{
