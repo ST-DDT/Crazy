@@ -11,12 +11,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
+import de.st_ddt.crazyutil.paramitrisable.ItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.MultiParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.RGBColorParamitrisable;
@@ -48,30 +50,37 @@ public final class FireworkProperty extends BasicProperty
 	public FireworkProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
-		final FireworkMeta meta = (FireworkMeta) Bukkit.getItemFactory().getItemMeta(Material.FIREWORK);
-		final IntegerParamitrisable powerParam = (IntegerParamitrisable) params.get("power");
-		meta.setPower(Math.min(Math.max(powerParam.getValue(), 0), 127));
-		int count = 0;
-		while (true)
+		final ItemStackParamitrisable itemParam = (ItemStackParamitrisable) params.get("item");
+		final ItemStack item = itemParam.getValue();
+		if (item == null || item.getItemMeta() == null || !(item.getItemMeta() instanceof FireworkMeta))
 		{
-			count++;
-			final BooleanParamitrisable removeParam = (BooleanParamitrisable) params.get("removefirework" + count);
-			if (removeParam == null)
-				break;
-			if (removeParam.getValue())
-				continue;
-			final Builder builder = FireworkEffect.builder();
-			final BooleanParamitrisable flickerParam = (BooleanParamitrisable) params.get("flicker" + count);
-			builder.flicker(flickerParam.getValue());
-			final BooleanParamitrisable trailParam = (BooleanParamitrisable) params.get("trail" + count);
-			builder.trail(trailParam.getValue());
-			final MultiParamitrisable<Color> colorParam = (MultiParamitrisable<Color>) params.get("color" + count);
-			builder.withColor(colorParam.getValue());
-			final MultiParamitrisable<Color> fadeParam = (MultiParamitrisable<Color>) params.get("fade" + count);
-			builder.withFade(fadeParam.getValue());
-			meta.addEffect(builder.build());
+			final FireworkMeta meta = (FireworkMeta) Bukkit.getItemFactory().getItemMeta(Material.FIREWORK);
+			final IntegerParamitrisable powerParam = (IntegerParamitrisable) params.get("power");
+			meta.setPower(Math.min(Math.max(powerParam.getValue(), 0), 127));
+			int count = 0;
+			while (true)
+			{
+				count++;
+				final BooleanParamitrisable removeParam = (BooleanParamitrisable) params.get("removefirework" + count);
+				if (removeParam == null)
+					break;
+				if (removeParam.getValue())
+					continue;
+				final Builder builder = FireworkEffect.builder();
+				final BooleanParamitrisable flickerParam = (BooleanParamitrisable) params.get("flicker" + count);
+				builder.flicker(flickerParam.getValue());
+				final BooleanParamitrisable trailParam = (BooleanParamitrisable) params.get("trail" + count);
+				builder.trail(trailParam.getValue());
+				final MultiParamitrisable<Color> colorParam = (MultiParamitrisable<Color>) params.get("color" + count);
+				builder.withColor(colorParam.getValue());
+				final MultiParamitrisable<Color> fadeParam = (MultiParamitrisable<Color>) params.get("fade" + count);
+				builder.withFade(fadeParam.getValue());
+				meta.addEffect(builder.build());
+			}
+			this.meta = meta;
 		}
-		this.meta = meta;
+		else
+			this.meta = (FireworkMeta) item.getItemMeta();
 	}
 
 	@Override
@@ -85,6 +94,9 @@ public final class FireworkProperty extends BasicProperty
 	@Override
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
+		ItemStackParamitrisable itemParam=new ItemStackParamitrisable(null);
+		params.put("item",itemParam);
+		params.put("copyfromitem",itemParam);
 		IntegerParamitrisable powerParam;
 		int count = 0;
 		if (meta == null)
