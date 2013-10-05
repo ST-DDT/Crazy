@@ -54,6 +54,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 			if (type.isSpawnable())
 				registerEntitySpawner(new DefaultSpawner(type));
 		// Spawner - Fixes
+		registerEntitySpawner(new ClassSpawner(EntityType.EGG));
 		registerEntitySpawner(new CenteredSpawner(EntityType.ENDER_CRYSTAL)
 		{
 
@@ -77,9 +78,10 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 				return location.getWorld().dropItem(location, item);
 			}
 		});
-		registerEntitySpawner(new ClassSpawner(EntityType.FIREWORK));
 		registerEntitySpawner(new FallingBlockSpawner());
+		registerEntitySpawner(new ClassSpawner(EntityType.FIREWORK));
 		registerEntitySpawner(new LightningSpawner());
+		registerEntitySpawner(new ClassSpawner(EntityType.SPLASH_POTION));
 		// Add Spawners to NamedEntitySpawnerParamitrisable
 		for (final EntitySpawner spawner : ENTITYSPAWNER)
 			if (spawner != null)
@@ -138,6 +140,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(SkeletonProperty.class, Skeleton.class);
 		registerEntityProperty(SlimeProperty.class, Slime.class);
 		registerEntityProperty(TameableProperty.class, Tameable.class);
+		registerEntityProperty(ThrownPotionProperty.class, ThrownPotion.class);
 		// TNTPrimed impossible?
 		registerEntityProperty(VillagerProperty.class, Villager.class);
 		registerEntityProperty(WolfProperty.class, Wolf.class);
