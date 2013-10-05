@@ -504,7 +504,10 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		@Override
 		public String getName()
 		{
-			return type.getName();
+			if (type.getName() == null)
+				return type.name();
+			else
+				return type.getName();
 		}
 
 		@Override
@@ -520,6 +523,12 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		public Collection<? extends Entity> getEntities(final World world)
 		{
 			return world.getEntitiesByClass(type.getEntityClass());
+		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{type: " + type.name() + "}";
 		}
 	}
 
@@ -756,6 +765,6 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + "{name: " + getName() + "}";
+		return "CustomEntitySpawner{name: " + getName() + "; type: " + type.name() + "}";
 	}
 }
