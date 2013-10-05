@@ -69,7 +69,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntitySpawner(new BasicSpawner(EntityType.DROPPED_ITEM)
 		{
 
-			private final ItemStack item = new ItemStack(1);
+			private final ItemStack item = new ItemStack(Material.STONE);
 
 			@Override
 			public Entity spawn(final Location location)
