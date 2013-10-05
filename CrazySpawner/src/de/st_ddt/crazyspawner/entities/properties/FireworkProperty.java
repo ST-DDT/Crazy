@@ -21,6 +21,7 @@ import de.st_ddt.crazyutil.paramitrisable.IntegerParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.ItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.MultiParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
+import de.st_ddt.crazyutil.paramitrisable.PlayerItemStackParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.RGBColorParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
@@ -94,7 +95,7 @@ public final class FireworkProperty extends BasicProperty
 	@Override
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
-		final ItemStackParamitrisable itemParam = new ItemStackParamitrisable(null);
+		final ItemStackParamitrisable itemParam = PlayerItemStackParamitrisable.getParamitrisableFor(null, sender);
 		params.put("item", itemParam);
 		params.put("copyfromitem", itemParam);
 		IntegerParamitrisable powerParam;
