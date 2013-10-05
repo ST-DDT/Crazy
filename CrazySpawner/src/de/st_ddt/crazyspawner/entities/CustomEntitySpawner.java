@@ -133,7 +133,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(PigProperty.class, Pig.class);
 		registerEntityProperty(PigZombieProperty.class, PigZombie.class);
 		registerEntityProperty(DamageProperty.class, Projectile.class);
-		// Projectile required?
+		registerEntityProperty(ProjectileProperty.class, Projectile.class);
 		registerEntityProperty(SheepProperty.class, Sheep.class);
 		registerEntityProperty(SkeletonProperty.class, Skeleton.class);
 		registerEntityProperty(SlimeProperty.class, Slime.class);
