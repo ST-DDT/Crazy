@@ -38,12 +38,15 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	private final NamedEntitySpawner DRAGONTYPE;
 	private final NamedEntitySpawner CRYSTALTYPE;
 
-	@SuppressWarnings("deprecation")
 	public CommandTheEndAutoRespawn(final CrazySpawner plugin)
 	{
 		super(plugin);
-		DRAGONTYPE = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(EntityType.ENDER_DRAGON.getName());
-		CRYSTALTYPE = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(EntityType.ENDER_CRYSTAL.getName());
+		DRAGONTYPE = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(EntityType.ENDER_DRAGON.name());
+		if (DRAGONTYPE == null)
+			throw new IllegalStateException("Critical Bug detected! Could not find ENDER_DRAGON spawner");
+		CRYSTALTYPE = NamedEntitySpawnerParamitrisable.getNamedEntitySpawner(EntityType.ENDER_CRYSTAL.name());
+		if (CRYSTALTYPE == null)
+			throw new IllegalStateException("Critical Bug detected! Could not find ENDER_CRYSTAL spawner!");
 	}
 
 	@Override

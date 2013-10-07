@@ -208,7 +208,6 @@ public class CrazySpawner extends CrazyPlugin
 		mainCommand.addSubCommand(new CommandSpawnRemove(this), "rem", "remove");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void registerMetrics()
 	{
 		final boolean metricsEnabled = getConfig().getBoolean("metrics.enabled", true);
@@ -239,7 +238,7 @@ public class CrazySpawner extends CrazyPlugin
 			});
 			final Graph customEntityCount = metrics.createGraph("Custom Entities");
 			for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
-				customEntityCount.addPlotter(new Plotter(type.getName())
+				customEntityCount.addPlotter(new Plotter(type.name())
 				{
 
 					@Override
