@@ -358,6 +358,7 @@ public class TimerSpawnTask implements Runnable, ConfigurationSaveable, Comparab
 			entity.setMetadata(PeacefulMeta.METAHEADER, PeacefulMeta.INSTANCE);
 		if (showHealth)
 		{
+			@SuppressWarnings("deprecation")
 			final String name = entity.getCustomName() == null ? entity.getType().getName() : entity.getCustomName();
 			entity.setMetadata(NameMeta.METAHEADER, new FixedNameMeta(name));
 			healthTask.queue(entity);
