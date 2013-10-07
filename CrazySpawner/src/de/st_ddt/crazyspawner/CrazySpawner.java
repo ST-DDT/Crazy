@@ -238,7 +238,7 @@ public class CrazySpawner extends CrazyPlugin
 				}
 			});
 			final Graph customEntityCount = metrics.createGraph("Custom Entities");
-			for (final EntityType type : CreatureParamitrisable.CREATURE_TYPES)
+			for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
 				customEntityCount.addPlotter(new Plotter(type.getName())
 				{
 
