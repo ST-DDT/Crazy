@@ -2,6 +2,7 @@ package de.st_ddt.crazyutil.paramitrisable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
@@ -351,7 +351,10 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 		@Override
 		public String getName()
 		{
-			return type.getName().toUpperCase();
+			if (type.getName() == null)
+				return type.name();
+			else
+				return type.getName().toUpperCase();
 		}
 
 		@Override
@@ -361,27 +364,26 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 		}
 
 		@Override
-		public Class<? extends LivingEntity> getEntityClass()
+		public Class<? extends Entity> getEntityClass()
 		{
-			return type.getEntityClass().asSubclass(LivingEntity.class);
+			return type.getEntityClass();
 		}
 
 		@Override
-		public LivingEntity spawn(final Location location)
+		public Entity spawn(final Location location)
 		{
-			return (LivingEntity) location.getWorld().spawnEntity(location, type);
+			return location.getWorld().spawnEntity(location, type);
 		}
 
 		@Override
-		public final String toString()
+		public String toString()
 		{
-			return getName();
+			return getClass().getSimpleName() + "{type: " + type.name() + "}";
 		}
 
 		@Override
 		public Collection<? extends Entity> getEntities(final World world)
 		{
-			// EDIT implement this method for subclasses
 			return world.getEntitiesByClass(type.getEntityClass());
 		}
 	}
@@ -406,6 +408,20 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 			final Ageable ageable = (Ageable) super.spawn(location);
 			ageable.setBaby();
 			return ageable;
+		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = super.getEntities(world);
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+			{
+				final Ageable ageable = (Ageable) it.next();
+				if (ageable.isAdult())
+					it.remove();
+			}
+			return entities;
 		}
 	}
 
@@ -433,6 +449,26 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 			villager.setProfession(profession);
 			return villager;
 		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = super.getEntities(world);
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+			{
+				final Villager villager = (Villager) it.next();
+				if (villager.getProfession() != profession)
+					it.remove();
+			}
+			return entities;
+		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{type: " + type.name() + "; profession: " + profession.name() + "}";
+		}
 	}
 
 	private static class SheepNamedEntitySpawner extends DefaultNamedEntitySpawner
@@ -458,6 +494,26 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 			final Sheep sheep = (Sheep) super.spawn(location);
 			sheep.setColor(color);
 			return sheep;
+		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = super.getEntities(world);
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+			{
+				final Sheep sheep = (Sheep) it.next();
+				if (sheep.getColor() != color)
+					it.remove();
+			}
+			return entities;
+		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{type: " + type.name() + "; color: " + color.name() + "}";
 		}
 	}
 
@@ -496,6 +552,26 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 			final Slime slime = (Slime) super.spawn(location);
 			slime.setSize(size);
 			return slime;
+		}
+
+		@Override
+		public Collection<? extends Entity> getEntities(final World world)
+		{
+			final Collection<? extends Entity> entities = super.getEntities(world);
+			final Iterator<? extends Entity> it = entities.iterator();
+			while (it.hasNext())
+			{
+				final Slime slime = (Slime) it.next();
+				if (slime.getSize() != size)
+					it.remove();
+			}
+			return entities;
+		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{type: " + type.name() + "; size: " + size + "}";
 		}
 	}
 }
