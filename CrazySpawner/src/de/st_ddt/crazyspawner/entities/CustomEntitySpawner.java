@@ -442,8 +442,21 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	@Override
 	public Collection<? extends Entity> getEntities(final World world)
 	{
-		// EDIT include entity properties or check meta
-		return world.getEntitiesByClass(type.getEntityClass());
+		final Collection<? extends Entity> res = world.getEntitiesByClass(type.getEntityClass());
+		final Iterator<? extends Entity> it = res.iterator();
+		while (it.hasNext())
+		{
+			boolean valid = false;
+			for (final MetadataValue meta : it.next().getMetadata(METAHEADER))
+				if (equals(meta))
+				{
+					valid = true;
+					break;
+				}
+			if (!valid)
+				it.remove();
+		}
+		return res;
 	}
 
 	public final StringParamitrisable getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
@@ -686,7 +699,9 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	@Override
 	public boolean equals(final Object obj)
 	{
-		if (obj instanceof CustomEntitySpawner)
+		if (this == obj)
+			return true;
+		else if (obj instanceof CustomEntitySpawner)
 			return name.equals(((CustomEntitySpawner) obj).name);
 		else
 			return false;
