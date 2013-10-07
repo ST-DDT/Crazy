@@ -164,6 +164,7 @@ public class EntityListener implements Listener
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void FallingBlockImpact(final EntityChangeBlockEvent event)
 	{

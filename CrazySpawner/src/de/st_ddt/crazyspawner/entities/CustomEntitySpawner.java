@@ -36,6 +36,7 @@ import de.st_ddt.crazyutil.paramitrisable.StringParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
+@SuppressWarnings("deprecation")
 public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, ConfigurationSaveable
 {
 
