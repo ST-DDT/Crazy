@@ -38,6 +38,7 @@ public class CommandTheEndAutoRespawn extends CommandExecutor
 	private final NamedEntitySpawner DRAGONTYPE;
 	private final NamedEntitySpawner CRYSTALTYPE;
 
+	@SuppressWarnings("deprecation")
 	public CommandTheEndAutoRespawn(final CrazySpawner plugin)
 	{
 		super(plugin);
