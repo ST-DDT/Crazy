@@ -18,7 +18,7 @@ import de.st_ddt.crazyutil.source.Localized;
 public class VelocityProperty extends BasicProperty
 {
 
-	protected final double ANGLECONVERTER = 180 / Math.PI;
+	public final static double ANGLECONVERTER = 180 / Math.PI;
 	protected final int pitch;
 	protected final int pitchOff;
 	protected final int yaw;
