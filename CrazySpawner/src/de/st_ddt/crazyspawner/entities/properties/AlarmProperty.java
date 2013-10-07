@@ -24,6 +24,12 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 		this.alarmRange = -1;
 	}
 
+	public AlarmProperty(final double alarmRange)
+	{
+		super();
+		this.alarmRange = alarmRange;
+	}
+
 	public AlarmProperty(final ConfigurationSection config)
 	{
 		super(config);
