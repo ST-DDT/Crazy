@@ -154,7 +154,7 @@ public class SpawnTaskListOptionsModder implements ListOptionsModder<TimerSpawnT
 			if (pipeArgs[0].equalsIgnoreCase("thunder") || pipeArgs[0].equalsIgnoreCase("strike"))
 				return ChatHelperExtended.appendArray(pipeArgs, "x:$2$", "y:$3$", "z:$4$", "w:$1$");
 			else if (pipeArgs[0].equalsIgnoreCase("blink"))
-				return ChatHelperExtended.appendArray(pipeArgs, Integer.toString(Material.MOB_SPAWNER.getId()), "x:$2$", "y:$3$", "z:$4$", "w:$1$", "r:5", "i:1s");
+				return ChatHelperExtended.appendArray(pipeArgs, Material.MOB_SPAWNER.name(), "x:$2$", "y:$3$", "z:$4$", "w:$1$", "r:5", "i:1s");
 		return pipeArgs;
 	}
 }
