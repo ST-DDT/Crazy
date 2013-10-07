@@ -143,18 +143,21 @@ public class EntityListener implements Listener
 		if (target == null)
 			return;
 		final Entity entity = event.getEntity();
-		if (entity.hasMetadata(PeacefulMeta.METAHEADER))
+		if (!(entity instanceof LivingEntity))
+			return;
+		final LivingEntity living = (LivingEntity) entity;
+		if (living.hasMetadata(PeacefulMeta.METAHEADER))
 			event.setCancelled(true);
 		else
 		{
-			if (!entity.getWorld().equals(target.getWorld()))
+			if (!living.getWorld().equals(target.getWorld()))
 				return;
-			final List<MetadataValue> detectionMeta = entity.getMetadata(DetectionMeta.METAHEADER);
+			final List<MetadataValue> detectionMeta = living.getMetadata(DetectionMeta.METAHEADER);
 			for (final MetadataValue meta : detectionMeta)
 				if (meta instanceof DetectionMeta)
 				{
 					final DetectionMeta detection = (DetectionMeta) meta;
-					if (entity.getLocation().distance(target.getLocation()) > detection.getDetectionRange())
+					if (!detection.canDetect(living, target))
 						event.setCancelled(true);
 					break;
 				}

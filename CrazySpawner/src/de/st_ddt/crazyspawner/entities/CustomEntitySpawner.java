@@ -98,7 +98,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(BoatProperty.class, Boat.class);
 		registerEntityProperty(ColorableProperty.class, Colorable.class);
 		registerEntityProperty(AlarmProperty.class, Creature.class);
-		registerEntityProperty(DetectionProperty.class, Creature.class);
+		registerEntityProperty(DetectionProperty.class, LivingEntity.class);
 		registerEntityProperty(CreeperProperty.class, Creeper.class);
 		if (v146OrLater)
 			registerEntityProperty(HealthProperty.class, LivingEntity.class);
