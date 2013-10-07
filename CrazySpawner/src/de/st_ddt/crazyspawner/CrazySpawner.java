@@ -208,6 +208,7 @@ public class CrazySpawner extends CrazyPlugin
 		mainCommand.addSubCommand(new CommandSpawnRemove(this), "rem", "remove");
 	}
 
+	@SuppressWarnings("deprecation")
 	private void registerMetrics()
 	{
 		final boolean metricsEnabled = getConfig().getBoolean("metrics.enabled", true);

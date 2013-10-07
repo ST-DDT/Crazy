@@ -33,6 +33,7 @@ public class CommandModifyEntity extends CommandExecutor
 		super(plugin);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Localized("CRAZYSPAWNER.COMMAND.MODIFYENTITY $EntityType$ $Name$")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException

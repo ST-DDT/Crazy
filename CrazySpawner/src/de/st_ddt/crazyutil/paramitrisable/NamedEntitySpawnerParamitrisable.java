@@ -297,6 +297,7 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 		this(ENTITY_TYPES.get(defaultValue.toUpperCase()));
 	}
 
+	@SuppressWarnings("deprecation")
 	public NamedEntitySpawnerParamitrisable(final EntityType defaultValue)
 	{
 		this(defaultValue.getName());
@@ -346,6 +347,7 @@ public class NamedEntitySpawnerParamitrisable extends TypedParamitrisable<NamedE
 			this.type = type;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public String getName()
 		{
