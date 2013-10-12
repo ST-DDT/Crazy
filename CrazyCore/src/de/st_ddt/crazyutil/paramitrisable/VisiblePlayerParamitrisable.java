@@ -7,13 +7,24 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
+import de.st_ddt.crazyutil.source.Permission;
 
 public class VisiblePlayerParamitrisable extends PlayerParamitrisable
 {
+
+	@Permission("crazycore.params.invisibleplayers")
+	public static PlayerParamitrisable getParamitrisableFor(final Player defaultValue, final CommandSender sender)
+	{
+		if (sender instanceof Player && !sender.hasPermission("crazycore.params.invisibleplayers"))
+			return new VisiblePlayerParamitrisable(defaultValue, (Player) sender);
+		else
+			return new PlayerParamitrisable(defaultValue);
+	}
 
 	protected final Player canBeSeenBy;
 
