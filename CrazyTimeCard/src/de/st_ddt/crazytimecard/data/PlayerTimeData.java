@@ -165,7 +165,6 @@ public class PlayerTimeData extends PlayerData<PlayerTimeData> implements Config
 		final Date now = new Date();
 		final CrazyTimeCard plugin = getPlugin();
 		final double timeofday = (now.getTime() / 1000 / 60 / 60D + plugin.getEnabledOffset()) % 24;
-		System.out.println(timeofday);
 		// EDIT Please test this!
 		final double enabledAfter = plugin.getEnabledAfter();
 		final double enabledUntil = plugin.getEnabledUntil();

@@ -1,7 +1,7 @@
 name: CrazyTimeCard
 main: de.st_ddt.crazytimecard.CrazyTimeCard
 author: ST-DDT
-version: 0.3.2
+version: 0.3.3
 website: http://dev.bukkit.org/server-mods/crazytimecard/
 # requires CrazyCore v10.7.1 or later
 depend: [CrazyCore]
