@@ -489,14 +489,12 @@ public abstract class CrazyPipe
 				params.put("entryformat", entryFormat);
 				ChatHelperExtended.readParameters(pipeArgs, params, file);
 				int i = 0;
-				try
+				try (final Writer writer = new FileWriter(file.getValue(), append.getValue()))
 				{
-					final Writer writer = new FileWriter(file.getValue(), append.getValue());
 					if (headFormat.getValue() != null)
 						writer.write(ChatHelper.putArgs(headFormat.getValue() + "\n", "", "", chatHeader.getValue(), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date())));
 					for (final ParameterData data : datas)
 						writer.write(ChatHelper.putArgs(listFormat.getValue(), Integer.toString(i++), ChatHelper.putArgsPara(sender, entryFormat.getValue(), data), chatHeader.getValue()));
-					writer.close();
 				}
 				catch (final IOException e)
 				{
@@ -522,14 +520,12 @@ public abstract class CrazyPipe
 				params.put("entryformat", entryFormat);
 				ChatHelperExtended.readParameters(pipeArgs, params, file);
 				int i = 0;
-				try
+				try (final Writer writer = new FileWriter(file.getValue(), append.getValue()))
 				{
-					final Writer writer = new FileWriter(file.getValue(), append.getValue());
 					if (headFormat.getValue() != null)
 						writer.write(ChatHelper.putArgs(headFormat.getValue() + "\n", "", "", chatHeader.getValue(), CrazyLightPluginInterface.DATETIMEFORMAT.format(new Date())));
 					for (final String data : datas)
 						writer.write(ChatHelper.putArgs(listFormat.getValue(), Integer.toString(i++), ChatHelper.putArgs(entryFormat.getValue(), data), chatHeader.getValue()));
-					writer.close();
 				}
 				catch (final IOException e)
 				{

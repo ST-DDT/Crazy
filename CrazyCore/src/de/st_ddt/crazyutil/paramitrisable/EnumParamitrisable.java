@@ -24,6 +24,7 @@ public class EnumParamitrisable<S extends Enum<S>> extends TypedParamitrisable<S
 			this.values.put(value.name().toUpperCase(), value);
 	}
 
+	@SafeVarargs
 	public EnumParamitrisable(final String type, final S defaultValue, final S... values)
 	{
 		super(defaultValue);
@@ -56,6 +57,7 @@ public class EnumParamitrisable<S extends Enum<S>> extends TypedParamitrisable<S
 		return res;
 	}
 
+	@SafeVarargs
 	public static <S extends Enum<S>> List<String> getEnumNames(final S... values)
 	{
 		final List<String> res = new ArrayList<String>(values.length);

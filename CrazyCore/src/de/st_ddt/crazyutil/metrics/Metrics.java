@@ -405,15 +405,21 @@ public class Metrics
 		if (debug)
 			System.out.println("[Metrics] Prepared request for " + pluginName + " uncompressed=" + uncompressed.length + " compressed=" + compressed.length);
 		// Write the data
-		final OutputStream os = connection.getOutputStream();
-		os.write(compressed);
-		os.flush();
-		// Now read the response
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		String response = reader.readLine();
-		// close resources
-		os.close();
-		reader.close();
+		String response;
+		try (final OutputStream os = connection.getOutputStream())
+		{
+			os.write(compressed);
+			os.flush();
+			// Now read the response
+			try (final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())))
+			{
+				response = reader.readLine();
+			}
+			finally
+			{}
+		}
+		finally
+		{}
 		if (response == null || response.startsWith("ERR") || response.startsWith("7"))
 		{
 			if (response == null)

@@ -642,6 +642,7 @@ public class ChatHelperExtended extends ChatHelper
 			return Arrays.copyOfRange(args, anz, args.length);
 	}
 
+	@SafeVarargs
 	public static <S> S[] appendArray(final S[] array1, final S... array2)
 	{
 		final int length = array1.length + array2.length;
@@ -651,6 +652,7 @@ public class ChatHelperExtended extends ChatHelper
 		return res;
 	}
 
+	@SafeVarargs
 	public static <S> S[] insertArray(final S[] array1, final int pos, final S... array2)
 	{
 		final int length = array1.length + array2.length;

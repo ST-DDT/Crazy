@@ -24,6 +24,7 @@ public class MultiParamitrisable<S> extends TypedParamitrisable<List<S>> impleme
 		this.param = param;
 	}
 
+	@SafeVarargs
 	public MultiParamitrisable(final TypedParamitrisable<S> param, final S... startEntries)
 	{
 		super(new LinkedList<S>());
