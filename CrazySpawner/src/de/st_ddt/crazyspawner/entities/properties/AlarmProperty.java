@@ -1,21 +1,30 @@
 package de.st_ddt.crazyspawner.entities.properties;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.AlarmMeta;
+import de.st_ddt.crazyspawner.entities.persistance.PersistanceManager;
+import de.st_ddt.crazyspawner.entities.persistance.PersistantState;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
-public class AlarmProperty extends MetadataProperty implements AlarmMeta
+@SerializableAs("CrazySpawner_Persistence_AlarmProperty")
+public class AlarmProperty extends MetadataProperty implements AlarmMeta, PersistantState
 {
 
+	static
+	{
+		PersistanceManager.registerPersistableState(AlarmProperty.class);
+	}
 	protected final double alarmRange;
 
 	public AlarmProperty()
@@ -28,6 +37,15 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	{
 		super();
 		this.alarmRange = alarmRange;
+	}
+
+	public AlarmProperty(final Double alarmRange)
+	{
+		super();
+		if (alarmRange == null)
+			this.alarmRange = -1;
+		else
+			this.alarmRange = alarmRange;
 	}
 
 	public AlarmProperty(final ConfigurationSection config)
@@ -87,5 +105,25 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta
 	public boolean equalsDefault()
 	{
 		return alarmRange == -1;
+	}
+
+	public static AlarmProperty deserialize(final Map<String, Object> map)
+	{
+		return new AlarmProperty((Double) map.get("alarmRange"));
+	}
+
+	@Override
+	public Map<String, Object> serialize()
+	{
+		final Map<String, Object> res = new HashMap<String, Object>();
+		res.put("alarmRange", alarmRange);
+		return res;
+	}
+
+	@Override
+	public void attachTo(final Entity entity, final PersistanceManager manager)
+	{
+		apply(entity);
+		manager.watch(entity, METAHEADER, null);
 	}
 }

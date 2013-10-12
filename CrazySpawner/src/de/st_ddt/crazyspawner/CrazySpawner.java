@@ -51,9 +51,11 @@ import de.st_ddt.crazyspawner.commands.CommandSpawnList;
 import de.st_ddt.crazyspawner.commands.CommandSpawnRemove;
 import de.st_ddt.crazyspawner.commands.CommandTheEndAutoRespawn;
 import de.st_ddt.crazyspawner.entities.CustomEntitySpawner;
+import de.st_ddt.crazyspawner.entities.persistance.PersistanceManager;
 import de.st_ddt.crazyspawner.entities.properties.EquipmentProperties;
 import de.st_ddt.crazyspawner.entities.properties.PotionProterty;
 import de.st_ddt.crazyspawner.listener.EntityListener;
+import de.st_ddt.crazyspawner.listener.EntityPersistenceListener;
 import de.st_ddt.crazyspawner.listener.PlayerListener;
 import de.st_ddt.crazyspawner.tasks.TimerSpawnTask;
 import de.st_ddt.crazyspawner.tasks.options.Thunder;
@@ -83,9 +85,6 @@ import de.st_ddt.crazyutil.source.PermissionVariable;
 public class CrazySpawner extends CrazyPlugin
 {
 
-	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
-	protected final static boolean v15OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5") >= 0;
-	protected final static boolean v162OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.6.2") >= 0;
 	private static CrazySpawner plugin;
 	protected final Map<String, CustomEntitySpawner> customEntities = new LinkedHashMap<String, CustomEntitySpawner>();
 	protected final YamlConfiguration customEntitiesConfig = new YamlConfiguration();
@@ -93,6 +92,7 @@ public class CrazySpawner extends CrazyPlugin
 	protected final YamlConfiguration tasksConfig = new YamlConfiguration();
 	protected final CustomEntitySpawner[] overwriteEntities = new CustomEntitySpawner[EntityType.values().length];
 	protected final Map<Player, EntityType> creatureSelection = new HashMap<Player, EntityType>();
+	protected PersistanceManager persistanceManager;
 	protected double defaultAlarmRange;
 	protected boolean monsterExplosionDamageEnabled;
 	static
@@ -191,6 +191,7 @@ public class CrazySpawner extends CrazyPlugin
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this, creatureSelection), this);
 		pm.registerEvents(new EntityListener(this, overwriteEntities), this);
+		pm.registerEvents(new EntityPersistenceListener(this, persistanceManager), this);
 	}
 
 	private void registerCommands()
@@ -262,6 +263,7 @@ public class CrazySpawner extends CrazyPlugin
 	public void onLoad()
 	{
 		plugin = this;
+		persistanceManager = new PersistanceManager(new File(getDataFolder(), "StoredEntities"));
 		super.onLoad();
 	}
 
@@ -295,12 +297,9 @@ public class CrazySpawner extends CrazyPlugin
 				customEntities.put(giant.getName(), giant);
 				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(giant);
 				// - Healthy_Giant
-				if (v146OrLater)
-				{
-					final CustomEntitySpawner healthyGiant = new CustomEntitySpawner("Healthy_Giant", EntityType.GIANT, console, "maxhealth:200");
-					customEntities.put(healthyGiant.getName(), healthyGiant);
-					NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyGiant);
-				}
+				final CustomEntitySpawner healthyGiant = new CustomEntitySpawner("Healthy_Giant", EntityType.GIANT, console, "maxhealth:200");
+				customEntities.put(healthyGiant.getName(), healthyGiant);
+				NamedEntitySpawnerParamitrisable.registerNamedEntitySpawner(healthyGiant);
 				// - Spider_Diamond_Zombie
 				final CustomEntitySpawner spiderDiamondZombie = new CustomEntitySpawner("Spider_Diamond_Zombie", EntityType.SPIDER, console, "passenger:Diamond_Zombie");
 				customEntities.put(spiderDiamondZombie.getName(), spiderDiamondZombie);
@@ -337,8 +336,7 @@ public class CrazySpawner extends CrazyPlugin
 				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 5);
 				chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, 5);
 				chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
-				if (v146OrLater)
-					chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
+				chestplate.addUnsafeEnchantment(Enchantment.THORNS, 3);
 				final ItemMeta meta = chestplate.getItemMeta();
 				meta.setDisplayName("Holy Chestplate of the Goddes");
 				final List<String> lore = new ArrayList<String>();
@@ -635,44 +633,41 @@ public class CrazySpawner extends CrazyPlugin
 			System.err.println("[CrazySpawner] Could not save example FireworkMeta.yml.");
 			System.err.println(e.getMessage());
 		}
-		if (v162OrLater)
+		// ExampleHorseColor
+		final YamlConfiguration horseColor = new YamlConfiguration();
+		horseColor.set("exampleHorseColor", EnumParamitrisable.getEnumNames(Horse.Color.values()).toArray());
+		try
 		{
-			// ExampleHorseColor
-			final YamlConfiguration horseColor = new YamlConfiguration();
-			horseColor.set("exampleHorseColor", EnumParamitrisable.getEnumNames(Horse.Color.values()).toArray());
-			try
-			{
-				horseColor.save(new File(exampleFolder, "HorseColor.yml"));
-			}
-			catch (final IOException e)
-			{
-				System.err.println("[CrazySpawner] Could not save example HorseColor.yml.");
-				System.err.println(e.getMessage());
-			}
-			// ExampleHorseStyle
-			final YamlConfiguration horseStyle = new YamlConfiguration();
-			horseStyle.set("exampleHorseStyle", EnumParamitrisable.getEnumNames(Horse.Style.values()).toArray());
-			try
-			{
-				horseStyle.save(new File(exampleFolder, "HorseStyle.yml"));
-			}
-			catch (final IOException e)
-			{
-				System.err.println("[CrazySpawner] Could not save example HorseStyle.yml.");
-				System.err.println(e.getMessage());
-			}
-			// ExampleHorseVariant
-			final YamlConfiguration horseVariant = new YamlConfiguration();
-			horseVariant.set("exampleHorseVariant", EnumParamitrisable.getEnumNames(Horse.Variant.values()).toArray());
-			try
-			{
-				horseVariant.save(new File(exampleFolder, "HorseVariant.yml"));
-			}
-			catch (final IOException e)
-			{
-				System.err.println("[CrazySpawner] Could not save example HorseVariant.yml.");
-				System.err.println(e.getMessage());
-			}
+			horseColor.save(new File(exampleFolder, "HorseColor.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example HorseColor.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleHorseStyle
+		final YamlConfiguration horseStyle = new YamlConfiguration();
+		horseStyle.set("exampleHorseStyle", EnumParamitrisable.getEnumNames(Horse.Style.values()).toArray());
+		try
+		{
+			horseStyle.save(new File(exampleFolder, "HorseStyle.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example HorseStyle.yml.");
+			System.err.println(e.getMessage());
+		}
+		// ExampleHorseVariant
+		final YamlConfiguration horseVariant = new YamlConfiguration();
+		horseVariant.set("exampleHorseVariant", EnumParamitrisable.getEnumNames(Horse.Variant.values()).toArray());
+		try
+		{
+			horseVariant.save(new File(exampleFolder, "HorseVariant.yml"));
+		}
+		catch (final IOException e)
+		{
+			System.err.println("[CrazySpawner] Could not save example HorseVariant.yml.");
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -916,6 +911,11 @@ public class CrazySpawner extends CrazyPlugin
 	public final CustomEntitySpawner[] getOverwriteEntities()
 	{
 		return overwriteEntities;
+	}
+
+	public PersistanceManager getPersistanceManager()
+	{
+		return persistanceManager;
 	}
 
 	public final double getDefaultAlarmRange()

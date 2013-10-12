@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
@@ -24,6 +25,8 @@ import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyspawner.CrazySpawner;
+import de.st_ddt.crazyspawner.entities.persistance.PersistanceManager;
+import de.st_ddt.crazyspawner.entities.persistance.PersistantState;
 import de.st_ddt.crazyspawner.entities.properties.*;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ConfigurationSaveable;
@@ -37,19 +40,18 @@ import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
 @SuppressWarnings("deprecation")
-public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, ConfigurationSaveable
+@SerializableAs("CrazySpawner_CustomEntitySpawner")
+public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, ConfigurationSaveable, PersistantState
 {
 
 	public final static String METAHEADER = "CustomEntityMeta";
-	protected final static boolean v146OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.4.6") >= 0;
-	protected final static boolean v150OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.5.0") >= 0;
-	protected final static boolean v161OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.6.1") >= 0;
-	protected final static boolean v162OrLater = VersionComparator.compareVersions(ChatHelper.getMinecraftVersion(), "1.6.2") >= 0;
+	public final static String PERSISTENCEKEY = "SPAWNER";
 	protected final static EntitySpawner[] ENTITYSPAWNER = new EntitySpawner[EntityType.values().length];
 	@SuppressWarnings("unchecked")
 	protected final static Set<Class<? extends EntityPropertyInterface>>[] ENTITYPROPERTIES = new Set[EntityType.values().length];
 	static
 	{
+		PersistanceManager.registerPersistableState(CustomEntitySpawner.class);
 		// Spawner - Default
 		for (final EntityType type : EntityType.values())
 			if (type.isSpawnable())
@@ -101,8 +103,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(AlarmProperty.class, Creature.class);
 		registerEntityProperty(DetectionProperty.class, LivingEntity.class);
 		registerEntityProperty(CreeperProperty.class, Creeper.class);
-		if (v146OrLater)
-			registerEntityProperty(HealthProperty.class, LivingEntity.class);
+		registerEntityProperty(HealthProperty.class, LivingEntity.class);
 		registerEntityProperty(EndermanProperty.class, Enderman.class);
 		registerEntityProperty(DespawnProperty.class, Entity.class, LivingEntity.class);
 		registerEntityProperty(BurningProperty.class, Entity.class);
@@ -116,8 +117,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		// Fireball required?
 		registerEntityProperty(FireworkProperty.class, Firework.class);
 		// Hanging required?
-		if (v162OrLater)
-			registerEntityProperty(HorseProperty.class, Horse.class);
+		registerEntityProperty(HorseProperty.class, Horse.class);
 		// InventoryHolder required?
 		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
 		registerEntityProperty(AlarmProperty.class, Item.class);
@@ -126,8 +126,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(DamageProperty.class, LivingEntity.class);
 		registerEntityProperty(LivingDespawnProperty.class, LivingEntity.class);
 		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
-		if (v150OrLater)
-			registerEntityProperty(NameProperty.class, LivingEntity.class);
+		registerEntityProperty(NameProperty.class, LivingEntity.class);
 		registerEntityProperty(PotionProterty.class, LivingEntity.class);
 		registerEntityProperty(XPProperty.class, LivingEntity.class);
 		// Minecard required?
@@ -434,7 +433,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	 */
 	public final void apply(final Entity entity)
 	{
-		entity.setMetadata(METAHEADER, this);
+		attachTo(entity, CrazySpawner.getPlugin().getPersistanceManager());
 		for (final EntityPropertyInterface property : properties)
 			property.apply(entity);
 	}
@@ -782,5 +781,25 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 	public String toString()
 	{
 		return "CustomEntitySpawner{name: " + getName() + "; type: " + type.name() + "}";
+	}
+
+	public static CustomEntitySpawner deserialize(final Map<String, Object> map)
+	{
+		return CrazySpawner.getPlugin().getCustomEntities().get(map.get("name"));
+	}
+
+	@Override
+	public Map<String, Object> serialize()
+	{
+		final Map<String, Object> res = new HashMap<String, Object>();
+		res.put("name", name);
+		return res;
+	}
+
+	@Override
+	public void attachTo(final Entity entity, final PersistanceManager manager)
+	{
+		entity.setMetadata(METAHEADER, this);
+		manager.watch(entity, PERSISTENCEKEY, this);
 	}
 }
