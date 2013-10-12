@@ -16,6 +16,7 @@ public class MaterialParamitriable extends TypedParamitrisable<Material>
 		super(defaultValue);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void setParameter(final String parameter) throws CrazyException
 	{

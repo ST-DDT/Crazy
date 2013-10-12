@@ -280,7 +280,7 @@ public class PlayerSaver implements Named
 		this.bed = ObjectSaveLoadHelper.loadLocation(config.getConfigurationSection("bed"), null);
 		this.experience = config.getInt("xp", 0);
 		this.foodlevel = config.getInt("food", 20);
-		this.gamemode = GameMode.getByValue(config.getInt("gamemode"));
+		this.gamemode = GameMode.valueOf(config.getString("gamemode"));
 		if (gamemode == null)
 			gamemode = Bukkit.getDefaultGameMode();
 		this.health = config.getInt("hp", 10);
@@ -317,7 +317,7 @@ public class PlayerSaver implements Named
 			ObjectSaveLoadHelper.saveLocation(config, "bed.", bed, true, true);
 		config.set("xp", experience);
 		config.set("foodlevel", foodlevel);
-		config.set("gamemode", gamemode.getValue());
+		config.set("gamemode", gamemode);
 		config.set("hp", health);
 		config.set("air", air);
 		config.set("exhaustion", exhaustion);
