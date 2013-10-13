@@ -114,9 +114,18 @@ public class MinecartProperty extends BasicProperty
 	public void save(final ConfigurationSection config, final String path)
 	{
 		config.set("topSpeed", topSpeed);
-		config.set("slowWhenEmpty", slowWhenEmpty);
-		config.set("flyingVelocity", flyingVelocity);
-		config.set("derailedVelocity", derailedVelocity);
+		if (slowWhenEmpty == null)
+			config.set("slowWhenEmpty", "default");
+		else
+			config.set("slowWhenEmpty", slowWhenEmpty);
+		if (flyingVelocity == null)
+			config.set("flyingVelocity", "default");
+		else
+			config.set("flyingVelocity", flyingVelocity);
+		if (derailedVelocity == null)
+			config.set("derailedVelocity", "default");
+		else
+			config.set("derailedVelocity", derailedVelocity);
 	}
 
 	@Override
