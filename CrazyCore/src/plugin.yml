@@ -49,6 +49,7 @@ permissions:
       crazycore.mode.loaduserlanguages: true
       crazycore.mode.wipeplayerbans: true
       crazycore.mode.wipeplayerworldfiles: true
+      crazycore.params.invisibleplayers: true
       crazycore.player.associates: true
       crazycore.player.delete.other: true
       crazycore.player.delete.protected: true
@@ -105,6 +106,9 @@ permissions:
     default: op
   crazycore.mode.wipeplayerworldfiles:
     description: Allow changing wipePlayerWorldFiles mode.
+    default: op
+  crazycore.params.invisibleplayers:
+    description: Allow this player to use invisible players in commands.
     default: op
   crazycore.player.associates:
     description: Allow listing all known associates of a player (recursive) (stored by CrazyPlugins).

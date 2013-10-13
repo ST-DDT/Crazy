@@ -2,7 +2,6 @@ package de.st_ddt.crazyplugin;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,7 +28,7 @@ import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.ChatHelperExtended;
 import de.st_ddt.crazyutil.CrazyLogger;
 import de.st_ddt.crazyutil.ListFormat;
-import de.st_ddt.crazyutil.VersionComparator;
+import de.st_ddt.crazyutil.UpdateChecker;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
@@ -43,12 +42,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	protected final CrazyLogger logger = new CrazyLogger(this);
 	protected final CrazyPluginCommandMainTree mainCommand = new CrazyPluginCommandMainTree(this);
 	protected final CrazyPluginCommandMainMode modeCommand = new CrazyPluginCommandMainMode(this);
+	private UpdateChecker updateChecker = null;
 	protected CrazyLocale locale = null;
 	protected String previousVersion = "0";
-	protected String updateVersion = "0";
 	protected boolean isUpdated = false;
 	protected boolean isInstalled = false;
-	protected String updateURL = null;
 
 	public final static Collection<CrazyPlugin> getCrazyPlugins()
 	{
@@ -107,6 +105,9 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		isInstalled = previousVersion.equals("0");
 		isUpdated = !previousVersion.equals(getDescription().getVersion());
 		config.set("version", getDescription().getVersion());
+		final Integer bukkitProjectId = getBukkitProjectId();
+		if (bukkitProjectId != null)
+			this.updateChecker = new UpdateChecker(getName(), bukkitProjectId);
 		super.onLoad();
 	}
 
@@ -168,7 +169,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			public void run()
 			{
 				if (checkForUpdate(false))
-					ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("UPDATE"), updateVersion);
+					ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("UPDATE"), updateChecker);
 			}
 		});
 	}
@@ -385,17 +386,13 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	@Localized("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD $Language$ $Plugin$")
 	public void downloadLanguage(final String language, final CommandSender sender)
 	{
-		try
+		try (final InputStream stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream())
 		{
-			BufferedInputStream in = null;
-			FileOutputStream out = null;
-			try
+			if (stream == null)
+				return;
+			try (BufferedInputStream in = new BufferedInputStream(stream);
+					FileOutputStream out = new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang");)
 			{
-				final InputStream stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream();
-				if (stream == null)
-					return;
-				in = new BufferedInputStream(stream);
-				out = new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang");
 				final byte data[] = new byte[1024];
 				int count;
 				while ((count = in.read(data, 0, 1024)) != -1)
@@ -403,12 +400,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 				out.flush();
 			}
 			finally
-			{
-				if (in != null)
-					in.close();
-				if (out != null)
-					out.close();
-			}
+			{}
 		}
 		catch (final IOException e)
 		{
@@ -468,18 +460,13 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	@Localized("CRAZYPLUGIN.LANGUAGE.ERROR.EXTRACT $Language$ $Plugin$")
 	public void unpackLanguage(final String language, final CommandSender sender)
 	{
-		try
+		try (InputStream stream = getClass().getResourceAsStream("/resource/lang/" + language + ".lang"))
 		{
-			InputStream stream = null;
-			InputStream in = null;
-			OutputStream out = null;
-			try
+			if (stream == null)
+				return;
+			try (InputStream in = new BufferedInputStream(stream);
+					OutputStream out = new BufferedOutputStream(new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang"));)
 			{
-				stream = getClass().getResourceAsStream("/resource/lang/" + language + ".lang");
-				if (stream == null)
-					return;
-				in = new BufferedInputStream(stream);
-				out = new BufferedOutputStream(new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang"));
 				final byte data[] = new byte[1024];
 				int count;
 				while ((count = in.read(data, 0, 1024)) != -1)
@@ -487,14 +474,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 				out.flush();
 			}
 			finally
-			{
-				if (out != null)
-					out.close();
-				if (stream != null)
-					stream.close();
-				if (in != null)
-					in.close();
-			}
+			{}
 		}
 		catch (final IOException e)
 		{
@@ -504,95 +484,49 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 
 	public final void loadLanguageFile(final String language, final File file) throws IOException
 	{
-		InputStream stream = null;
-		InputStreamReader reader = null;
-		try
+		try (InputStream stream = new FileInputStream(file);
+				InputStreamReader reader = new InputStreamReader(stream, "UTF-8"))
 		{
-			stream = new FileInputStream(file);
-			reader = new InputStreamReader(stream, "UTF-8");
 			CrazyLocale.readFile(language, reader);
 		}
 		finally
-		{
-			if (reader != null)
-				reader.close();
-			if (stream != null)
-				stream.close();
-		}
+		{}
+	}
+
+	public Integer getBukkitProjectId()
+	{
+		return null;
 	}
 
 	@Override
 	public final String getUpdateVersion()
 	{
-		return updateVersion;
+		if (updateChecker == null)
+			return null;
+		else if (updateChecker.hasUpdate())
+			return updateChecker.getLatestVersion();
+		else
+			return null;
 	}
 
 	public final String getUpdateURL()
 	{
-		return updateURL;
+		if (updateChecker == null)
+			return null;
+		else if (updateChecker.hasUpdate())
+			return updateChecker.getLatestLink();
+		else
+			return null;
 	}
 
 	@Override
 	public boolean checkForUpdate(final boolean force)
 	{
-		if (!force)
-		{
-			if (updateVersion == null)
-				return false;
-			if (!updateVersion.equals("0"))
-			{
-				final int value = VersionComparator.compareVersions(this, updateVersion);
-				if (value == 1)
-					return false;
-				else if (value == -1)
-					return true;
-			}
-		}
-		try
-		{
-			BufferedReader bufreader = null;
-			try
-			{
-				final InputStream stream = new URL("http://dev.bukkit.org/server-mods/" + getName().toLowerCase() + "/files.rss").openStream();
-				if (stream == null)
-				{
-					updateVersion = null;
-					return false;
-				}
-				bufreader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-				String zeile = null;
-				boolean active = false;
-				while ((zeile = bufreader.readLine()) != null)
-				{
-					zeile = zeile.trim();
-					if (active)
-						if (zeile.startsWith("<title>"))
-							updateVersion = zeile.substring(7 + getName().length() + 2).split("<")[0];
-						else if (zeile.startsWith("<link>"))
-							updateURL = zeile.substring(6).split("<")[0];
-						else if (zeile.equals("<item>"))
-							break;
-						else
-							continue;
-					else if (zeile.equals("<item>"))
-						active = true;
-					else
-						continue;
-					if (updateVersion != null && updateURL != null)
-						break;
-				}
-			}
-			finally
-			{
-				if (bufreader != null)
-					bufreader.close();
-			}
-		}
-		catch (final Exception e)
-		{
-			updateVersion = null;
+		if (updateChecker == null)
 			return false;
-		}
-		return VersionComparator.compareVersions(this, updateVersion) == -1;
+		if (force)
+			return updateChecker.query();
+		else
+			return updateChecker.hasUpdate();
 	}
 }
