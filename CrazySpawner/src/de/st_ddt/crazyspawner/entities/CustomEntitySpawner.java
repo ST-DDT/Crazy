@@ -101,16 +101,13 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(BoatProperty.class, Boat.class);
 		registerEntityProperty(ColorableProperty.class, Colorable.class);
 		registerEntityProperty(AlarmProperty.class, Creature.class);
-		registerEntityProperty(DetectionProperty.class, LivingEntity.class);
 		registerEntityProperty(CreeperProperty.class, Creeper.class);
-		registerEntityProperty(HealthProperty.class, LivingEntity.class);
 		registerEntityProperty(EndermanProperty.class, Enderman.class);
 		registerEntityProperty(DespawnProperty.class, Entity.class, LivingEntity.class);
 		registerEntityProperty(BurningProperty.class, Entity.class);
 		registerEntityProperty(InvulnerableProperty.class, Entity.class);
 		registerEntityProperty(VelocityProperty.class, Entity.class);
 		registerEntityProperty(PassengerProperty.class, Entity.class);
-		registerEntityProperty(PeacefulProperty.class, Entity.class);
 		registerEntityProperty(ExperienceOrbProperty.class, ExperienceOrb.class);
 		registerEntityProperty(ExplosiveProperty.class, Explosive.class);
 		registerEntityProperty(FallingBlockExtendedProperty.class, FallingBlock.class);
@@ -124,9 +121,12 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(DroppedItemProperty.class, Item.class);
 		// ItemFrame required?
 		registerEntityProperty(DamageProperty.class, LivingEntity.class);
-		registerEntityProperty(LivingDespawnProperty.class, LivingEntity.class);
+		registerEntityProperty(DetectionProperty.class, LivingEntity.class);
 		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
+		registerEntityProperty(HealthProperty.class, LivingEntity.class);
+		registerEntityProperty(LivingDespawnProperty.class, LivingEntity.class);
 		registerEntityProperty(NameProperty.class, LivingEntity.class);
+		registerEntityProperty(PeacefulProperty.class, LivingEntity.class);
 		registerEntityProperty(PotionProterty.class, LivingEntity.class);
 		registerEntityProperty(XPProperty.class, LivingEntity.class);
 		// Minecard required?

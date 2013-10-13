@@ -61,7 +61,7 @@ public class InvulnerableProperty extends MetadataProperty
 	@Override
 	public void dummySave(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "invulnerable", "boolean (False/true)");
+		config.set(path + "invulnerable", "boolean (false/true)");
 	}
 
 	@Override
