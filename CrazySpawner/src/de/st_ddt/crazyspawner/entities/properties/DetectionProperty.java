@@ -41,17 +41,17 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 	public DetectionProperty(final ConfigurationSection config)
 	{
 		super(config);
-		this.viewRange = Math.max(config.getDouble("viewRange", config.getDouble("detectionRange", -1)), -1);
-		this.viewAngle = Math.max(Math.min(config.getDouble("viewAngle") / ANGLECONVERTER, Math.PI), -1);
+		this.viewRange = getSecureValue(config.getDouble("viewRange", config.getDouble("detectionRange", -1)));
+		this.viewAngle = getSecureValue(Math.min(config.getDouble("viewAngle") / ANGLECONVERTER, Math.PI));
 	}
 
 	public DetectionProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
 		final DoubleParamitrisable viewRangeParam = (DoubleParamitrisable) params.get("viewrange");
-		this.viewRange = Math.max(viewRangeParam.getValue(), -1);
+		this.viewRange = getSecureValue(viewRangeParam.getValue());
 		final DoubleParamitrisable viewAngleParam = (DoubleParamitrisable) params.get("viewangle");
-		this.viewAngle = Math.max(Math.min(viewAngleParam.getValue() / ANGLECONVERTER, Math.PI), -1);
+		this.viewAngle = getSecureValue(Math.min(viewAngleParam.getValue() / ANGLECONVERTER, Math.PI));
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 	public void save(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "viewRange", viewRange);
-		config.set(path + "viewAngle", viewAngle);
+		config.set(path + "viewAngle", viewAngle * ANGLECONVERTER);
 	}
 
 	@Override
