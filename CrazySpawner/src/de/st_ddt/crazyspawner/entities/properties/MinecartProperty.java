@@ -113,28 +113,28 @@ public class MinecartProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		config.set("topSpeed", topSpeed);
+		config.set(path + "topSpeed", topSpeed);
 		if (slowWhenEmpty == null)
-			config.set("slowWhenEmpty", "default");
+			config.set(path + "slowWhenEmpty", "default");
 		else
-			config.set("slowWhenEmpty", slowWhenEmpty);
+			config.set(path + "slowWhenEmpty", slowWhenEmpty);
 		if (flyingVelocity == null)
-			config.set("flyingVelocity", "default");
+			config.set(path + "flyingVelocity", "default");
 		else
-			config.set("flyingVelocity", flyingVelocity);
+			config.set(path + "flyingVelocity", flyingVelocity);
 		if (derailedVelocity == null)
-			config.set("derailedVelocity", "default");
+			config.set(path + "derailedVelocity", "default");
 		else
-			config.set("derailedVelocity", derailedVelocity);
+			config.set(path + "derailedVelocity", derailedVelocity);
 	}
 
 	@Override
 	public void dummySave(final ConfigurationSection config, final String path)
 	{
-		config.set("topSpeed", "double (0.0 - X.Y; -1 = default)");
-		config.set("slowWhenEmpty", "Boolean (true/false/default)");
-		config.set("flyingVelocity", "Vector");
-		config.set("derailedVelocity", "Vector");
+		config.set(path + "topSpeed", "double (0.0 - X.Y; -1 = default)");
+		config.set(path + "slowWhenEmpty", "Boolean (true/false/default)");
+		config.set(path + "flyingVelocity", "Vector");
+		config.set(path + "derailedVelocity", "Vector");
 	}
 
 	@Override
