@@ -129,7 +129,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(PeacefulProperty.class, LivingEntity.class);
 		registerEntityProperty(PotionProterty.class, LivingEntity.class);
 		registerEntityProperty(XPProperty.class, LivingEntity.class);
-		// Minecard required?
+		registerEntityProperty(MinecartProperty.class, Minecart.class);
 		registerEntityProperty(OcelotProperty.class, Ocelot.class);
 		// Painting required?
 		registerEntityProperty(PigProperty.class, Pig.class);

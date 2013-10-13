@@ -73,4 +73,20 @@ public abstract class BasicProperty implements EntityPropertyInterface
 		else
 			return RANDOM.nextDouble() * (max - min + 1) + min;
 	}
+
+	protected final int getSecureValue(final int value)
+	{
+		if (value < 0)
+			return -1;
+		else
+			return value;
+	}
+
+	protected final double getSecureValue(final double value)
+	{
+		if (value < 0)
+			return -1;
+		else
+			return value;
+	}
 }
