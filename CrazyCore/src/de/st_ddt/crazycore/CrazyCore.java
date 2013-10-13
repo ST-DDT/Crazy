@@ -314,9 +314,9 @@ public final class CrazyCore extends CrazyPlugin
 		PermissionModule.init(getChatHeader(), Bukkit.getConsoleSender());
 		registerHooks();
 		Bukkit.getScheduler().runTaskLaterAsynchronously(this, new ScheduledPermissionAllTask(), 20);
-		if (checkForUpdates)
-			Bukkit.getScheduler().runTaskTimerAsynchronously(this, new PluginUpdateCheckTask(), 6000, 432000);
 		super.onEnable();
+		if (checkForUpdates)
+			Bukkit.getScheduler().runTaskTimerAsynchronously(this, new PluginUpdateCheckTask(), 1200, 432000);
 		registerCommands();
 		registerMetrics();
 	}
@@ -499,13 +499,18 @@ public final class CrazyCore extends CrazyPlugin
 		}
 	}
 
-	public Set<String> getPreloadedLanguages()
+	public final Set<String> getPreloadedLanguages()
 	{
 		return preloadedLanguages;
 	}
 
-	public boolean isLoadingUserLanguagesEnabled()
+	public final boolean isLoadingUserLanguagesEnabled()
 	{
 		return loadUserLanguages;
+	}
+
+	public final boolean isCheckingForUpdatesEnabled()
+	{
+		return checkForUpdates;
 	}
 }

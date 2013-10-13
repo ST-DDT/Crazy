@@ -20,6 +20,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import de.st_ddt.crazycore.CrazyCore;
 import de.st_ddt.crazyplugin.commands.CrazyCommandTreeExecutor;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainMode;
 import de.st_ddt.crazyplugin.commands.CrazyPluginCommandMainTree;
@@ -33,6 +34,7 @@ import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.source.Localized;
 import de.st_ddt.crazyutil.source.LocalizedVariable;
+import de.st_ddt.crazyutil.source.Permission;
 
 @LocalizedVariable(variables = "CRAZYPLUGIN", values = "CRAZYPLUGIN")
 public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPluginInterface
@@ -520,12 +522,15 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 	{
 		if (updateChecker == null)
 			return false;
-		if (force)
+		else if (!CrazyCore.getPlugin().isCheckingForUpdatesEnabled())
+			return updateChecker.hasUpdate();
+		else if (force || !updateChecker.wasQueried())
 			return updateChecker.query();
 		else
 			return updateChecker.hasUpdate();
 	}
 
+	@Permission("crazycore.updatecheck")
 	@Localized("CRAZYPLUGIN.PLUGININFO.UPDATE $UpdateVersion$ $UpdateType$ $UpdateGameVersion$ $UpdateDownloadLink$")
 	public final boolean checkForUpdateWithMessage(final boolean force, final CommandSender sender)
 	{

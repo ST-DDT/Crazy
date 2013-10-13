@@ -42,6 +42,7 @@ public class UpdateChecker
 	private String latestGameVersion;
 	// Update
 	private boolean hasUpdate;
+	private boolean queried = false;
 
 	/**
 	 * Check for updates
@@ -55,7 +56,6 @@ public class UpdateChecker
 		this.projectName = projectName;
 		this.projectVersion = projectVersion;
 		this.projectID = projectID;
-		query();
 	}
 
 	/**
@@ -63,6 +63,7 @@ public class UpdateChecker
 	 */
 	public boolean query()
 	{
+		queried = true;
 		URL url = null;
 		try
 		{
@@ -158,14 +159,6 @@ public class UpdateChecker
 	}
 
 	/**
-	 * @return True, if an update is available.
-	 */
-	public final boolean hasUpdate()
-	{
-		return hasUpdate;
-	}
-
-	/**
 	 * @return The latest version available.
 	 */
 	public String getLatestVersion()
@@ -179,5 +172,21 @@ public class UpdateChecker
 	public final String getLatestGameVersion()
 	{
 		return latestGameVersion;
+	}
+
+	/**
+	 * @return True, if an update is available.
+	 */
+	public final boolean hasUpdate()
+	{
+		return hasUpdate;
+	}
+
+	/**
+	 * @return True, if it has already checked for updates once, False otherwise.
+	 */
+	public final boolean wasQueried()
+	{
+		return queried;
 	}
 }

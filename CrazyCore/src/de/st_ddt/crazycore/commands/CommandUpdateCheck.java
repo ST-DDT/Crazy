@@ -19,11 +19,16 @@ public class CommandUpdateCheck extends CommandExecutor
 	}
 
 	@Override
-	@Localized("CRAZYCORE.COMMAND.UPDATECHECK")
+	@Localized({ "CRAZYCORE.COMMAND.UPDATECHECK", "CRAZYCORE.COMMAND.UPDATECHECK.DISABLED", })
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
-		plugin.sendLocaleMessage("COMMAND.UPDATECHECK", sender);
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, new PluginUpdateCheckTask(plugin, sender, true));
+		if (plugin.isCheckingForUpdatesEnabled())
+		{
+			plugin.sendLocaleMessage("COMMAND.UPDATECHECK", sender);
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, new PluginUpdateCheckTask(plugin, sender, true));
+		}
+		else
+			plugin.sendLocaleMessage("COMMAND.UPDATECHECK.DISABLED", sender);
 	}
 
 	@Override
