@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
@@ -227,6 +228,40 @@ public class ChatConverter
 				throw new CrazyCommandUsageException("[[World] <X> <Y> <Z>]", "[World] <X> <Y> <Z> <Yaw> <Pitch>");
 		}
 		return location;
+	}
+
+	public static Vector stringToVector(final String[] args) throws CrazyCommandException
+	{
+		if (args.length != 3)
+			throw new CrazyCommandUsageException("<X> <Y> <Z>");
+		double x = 0;
+		try
+		{
+			x = Double.parseDouble(args[0]);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new CrazyCommandParameterException(0, "Number (Double)");
+		}
+		double y = 0;
+		try
+		{
+			y = Double.parseDouble(args[1]);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new CrazyCommandParameterException(1, "Number (Double)");
+		}
+		double z = 0;
+		try
+		{
+			z = Double.parseDouble(args[2]);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new CrazyCommandParameterException(2, "Number (Double)");
+		}
+		return new Vector(x, y, z);
 	}
 
 	public static long stringToDuration(final String[] args) throws CrazyCommandException
