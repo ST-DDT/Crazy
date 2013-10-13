@@ -18,13 +18,12 @@ public class CommandUpdateCheck extends CommandExecutor
 		super(plugin);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	@Localized("CRAZYCORE.COMMAND.UPDATECHECK")
 	public void command(final CommandSender sender, final String[] args) throws CrazyException
 	{
 		plugin.sendLocaleMessage("COMMAND.UPDATECHECK", sender);
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new PluginUpdateCheckTask(true));
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, new PluginUpdateCheckTask(plugin, sender, true));
 	}
 
 	@Override

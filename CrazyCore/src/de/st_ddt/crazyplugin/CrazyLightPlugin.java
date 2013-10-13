@@ -120,7 +120,7 @@ public abstract class CrazyLightPlugin extends JavaPlugin implements CrazyLightP
 
 	public String getBukkitURL()
 	{
-		return "http://dev.bukkit.org/server-mods/" + getName().toLowerCase() + "/";
+		return "http://dev.bukkit.org/bukkit-plugins/" + getName().toLowerCase() + "/";
 	}
 
 	@Override

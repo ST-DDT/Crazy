@@ -46,6 +46,7 @@ import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.ChatHelper;
 import de.st_ddt.crazyutil.CrazyPipe;
 import de.st_ddt.crazyutil.PreSetList;
+import de.st_ddt.crazyutil.UpdateChecker;
 import de.st_ddt.crazyutil.locales.CrazyLocale;
 import de.st_ddt.crazyutil.metrics.Metrics;
 import de.st_ddt.crazyutil.metrics.Metrics.Graph;
@@ -298,19 +299,23 @@ public final class CrazyCore extends CrazyPlugin
 	public void onLoad()
 	{
 		plugin = this;
-		CrazyLocale.setDefaultLanguage(getConfig().getString("defaultLanguage", "en_en"));
+		final ConfigurationSection config = getConfig();
+		CrazyLocale.setDefaultLanguage(config.getString("defaultLanguage", "en_en"));
+		final String bukkitServerAPIKey = config.getString("bukkitServerAPIKey", "none");
+		config.set("bukkitServerAPIKey", bukkitServerAPIKey);
+		if (!bukkitServerAPIKey.equalsIgnoreCase("none"))
+			UpdateChecker.setApiKey(bukkitServerAPIKey);
 		super.onLoad();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable()
 	{
 		PermissionModule.init(getChatHeader(), Bukkit.getConsoleSender());
 		registerHooks();
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new ScheduledPermissionAllTask(), 20);
+		Bukkit.getScheduler().runTaskLaterAsynchronously(this, new ScheduledPermissionAllTask(), 20);
 		if (checkForUpdates)
-			Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new PluginUpdateCheckTask(), 6000, 432000);
+			Bukkit.getScheduler().runTaskTimerAsynchronously(this, new PluginUpdateCheckTask(), 6000, 432000);
 		super.onEnable();
 		registerCommands();
 		registerMetrics();
@@ -414,6 +419,12 @@ public final class CrazyCore extends CrazyPlugin
 	public boolean showMetrics()
 	{
 		return false;
+	}
+
+	@Override
+	public Integer getBukkitProjectId()
+	{
+		return 37878;
 	}
 
 	public boolean isWipingPlayerWorldFilesEnabled()

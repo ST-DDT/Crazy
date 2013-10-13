@@ -107,7 +107,7 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		config.set("version", getDescription().getVersion());
 		final Integer bukkitProjectId = getBukkitProjectId();
 		if (bukkitProjectId != null)
-			this.updateChecker = new UpdateChecker(getName(), bukkitProjectId);
+			this.updateChecker = new UpdateChecker(getName(), getVersion(), bukkitProjectId);
 		super.onLoad();
 	}
 
@@ -155,21 +155,17 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		saveConfig();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	@Localized("CRAZYPLUGIN.PLUGININFO.UPDATE $NewVersion$")
 	public void show(final CommandSender target, final String chatHeader, final boolean showDetailed)
 	{
 		super.show(target, chatHeader, showDetailed);
-		final CrazyLocale locale = CrazyLocale.getLocaleHead().getSecureLanguageEntry("CRAZYPLUGIN.PLUGININFO");
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new Runnable()
+		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable()
 		{
 
 			@Override
 			public void run()
 			{
-				if (checkForUpdate(false))
-					ChatHelper.sendMessage(target, chatHeader, locale.getLanguageEntry("UPDATE"), updateChecker);
+				checkForUpdateWithMessage(false, target);
 			}
 		});
 	}
@@ -528,5 +524,17 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			return updateChecker.query();
 		else
 			return updateChecker.hasUpdate();
+	}
+
+	@Localized("CRAZYPLUGIN.PLUGININFO.UPDATE $UpdateVersion$ $UpdateType$ $UpdateGameVersion$ $UpdateDownloadLink$")
+	public final boolean checkForUpdateWithMessage(final boolean force, final CommandSender sender)
+	{
+		final boolean res = checkForUpdate(force);
+		if (res)
+			if (sender == null)
+				broadcastLocaleMessage(true, "crazycore.updatecheck", "PLUGININFO.UPDATE", updateChecker.getLatestVersion(), updateChecker.getLatestType(), updateChecker.getLatestGameVersion(), updateChecker.getLatestLink());
+			else
+				sendLocaleMessage("PLUGININFO.UPDATE", sender, updateChecker.getLatestVersion(), updateChecker.getLatestType(), updateChecker.getLatestGameVersion(), updateChecker.getLatestLink());
+		return res;
 	}
 }
