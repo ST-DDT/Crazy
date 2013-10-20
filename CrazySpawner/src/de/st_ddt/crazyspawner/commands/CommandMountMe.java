@@ -64,7 +64,7 @@ public class CommandMountMe extends CommandExecutor
 		else
 		{
 			plugin.sendLocaleMessage("COMMAND.MOUNTME.OTHER", sender, spawnerParam.getValue().getType().name(), player.getName());
-			plugin.sendLocaleMessage("COMMAND.MOUNTME.MOUNTED", sender, spawnerParam.getValue().getType().name(), sender.getName());
+			plugin.sendLocaleMessage("COMMAND.MOUNTME.MOUNTED", player, spawnerParam.getValue().getType().name(), sender.getName());
 		}
 	}
 
