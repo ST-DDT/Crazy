@@ -11,12 +11,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.Rotation;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,8 +30,8 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton.SkeletonType;
-import org.bukkit.entity.Villager.Profession;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -408,127 +411,33 @@ public class CrazySpawner extends CrazyPlugin
 		sendLocaleMessage("SPAWNABLEENTITIES.AVAILABLE", Bukkit.getConsoleSender(), NamedEntitySpawnerParamitrisable.ENTITY_TYPES.size());
 	}
 
-	private void saveExamples()
+	protected void saveExamples()
 	{
 		final File exampleFolder = new File(getDataFolder(), "example");
 		exampleFolder.mkdirs();
-		// ExampleEntities
+		// Example - Entities (Properties)
+		final YamlConfiguration allCustomEntityProperties = new YamlConfiguration();
+		allCustomEntityProperties.options().header("CrazySpawner example EntityALL.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
 		for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
 		{
-			final YamlConfiguration customEntity = new YamlConfiguration();
-			customEntity.options().header("CrazySpawner example Entity" + type.name() + ".yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
-			new CustomEntitySpawner(type).dummySave(customEntity, "example" + type.name() + ".");
-			customEntity.set("example" + type.name() + ".type", type.name());
-			try
-			{
-				customEntity.save(new File(exampleFolder, "Entity" + type.name() + ".yml"));
-			}
-			catch (final IOException e)
-			{
-				System.err.println("[CrazySpawner] Could not save example Entity" + type.name() + ".yml.");
-				System.err.println(e.getMessage());
-			}
+			final YamlConfiguration customEntityProperties = new YamlConfiguration();
+			customEntityProperties.options().header("CrazySpawner example Entity" + type.name() + ".yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
+			final CustomEntitySpawner spawner = new CustomEntitySpawner(type);
+			spawner.dummySave(customEntityProperties, "example" + type.name() + ".");
+			spawner.dummySave(allCustomEntityProperties, "exampleALL.");
+			customEntityProperties.set("example" + type.name() + ".type", type.name());
+			saveExampleFile(exampleFolder, "Entity" + type.name(), customEntityProperties);
 		}
-		final YamlConfiguration customEntity = new YamlConfiguration();
-		for (final EntityType type : CustomEntitySpawner.getSpawnableEntityTypes())
-		{
-			customEntity.options().header("CrazySpawner example Entity" + type.name() + ".yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Entity.yml\n" + "Custom entities have to be defined inside config.yml");
-			new CustomEntitySpawner(type).dummySave(customEntity, "exampleALL.");
-			try
-			{
-				customEntity.save(new File(exampleFolder, "EntityALL.yml"));
-			}
-			catch (final IOException e)
-			{
-				System.err.println("[CrazySpawner] Could not save example EntityALL.yml.");
-				System.err.println(e.getMessage());
-			}
-		}
-		// ExampleType
+		saveExampleFile(exampleFolder, "EntityALL", allCustomEntityProperties);
+		// Example - EntityType (supported only)
 		final YamlConfiguration entityTypes = new YamlConfiguration();
 		entityTypes.set("exampleEntityType", EnumParamitrisable.getEnumNames(CustomEntitySpawner.getSpawnableEntityTypes()));
-		try
-		{
-			entityTypes.save(new File(exampleFolder, "EntityType.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example EntityType.yml.");
-			System.err.println(e.getMessage());
-		}
-		// CustomEntityNames
+		saveExampleFile(exampleFolder, "EntityType", entityTypes);
+		// Example - CustomEntityNames
 		final YamlConfiguration customTypes = new YamlConfiguration();
 		customTypes.set("exampleCustomEntityNames", new ArrayList<String>(NamedEntitySpawnerParamitrisable.ENTITY_TYPES.keySet()));
-		try
-		{
-			customTypes.save(new File(exampleFolder, "CustomEntityNames.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example CustomEntityNames.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleColor
-		final YamlConfiguration dyeColors = new YamlConfiguration();
-		dyeColors.set("exampleDyeColor", EnumParamitrisable.getEnumNames(DyeColor.values()).toArray());
-		try
-		{
-			dyeColors.save(new File(exampleFolder, "DyeColor.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example DyeColor.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleMaterial
-		final YamlConfiguration material = new YamlConfiguration();
-		material.set("exampleMaterial", EnumParamitrisable.getEnumNames(Material.values()).toArray());
-		try
-		{
-			material.save(new File(exampleFolder, "Material.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example Material.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleProfession
-		final YamlConfiguration professions = new YamlConfiguration();
-		professions.set("exampleProfession", EnumParamitrisable.getEnumNames(Profession.values()).toArray());
-		try
-		{
-			professions.save(new File(exampleFolder, "Profession.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example Profession.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleCatType
-		final YamlConfiguration catTypes = new YamlConfiguration();
-		catTypes.set("exampleCatType", EnumParamitrisable.getEnumNames(Ocelot.Type.values()).toArray());
-		try
-		{
-			catTypes.save(new File(exampleFolder, "CatType.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example CatType.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleSkeletonType
-		final YamlConfiguration skeletonType = new YamlConfiguration();
-		skeletonType.set("exampleSkeletonType", EnumParamitrisable.getEnumNames(SkeletonType.values()).toArray());
-		try
-		{
-			skeletonType.save(new File(exampleFolder, "SkeletonType.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example SkeletonType.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleItem
+		saveExampleFile(exampleFolder, "CustomEntityNames", customTypes);
+		// Example - Item
 		final YamlConfiguration item = new YamlConfiguration();
 		item.options().header("CrazySpawner example Item.yml\n" + "For more information visit\n" + "https://github.com/ST-DDT/Crazy/blob/master/CrazySpawner/docs/example/Item.yml\n" + "Items have to be defined inside config.yml (in the custom customEntity inventory slots)");
 		item.set("exampleItem.type", "Material");
@@ -541,60 +450,24 @@ public class CrazySpawner extends CrazyPlugin
 		item.set("exampleItem.meta.enchants.ENCHANTMENT1", "int (1-255)");
 		item.set("exampleItem.meta.enchants.ENCHANTMENT2", "int (1-255)");
 		item.set("exampleItem.meta.enchants.ENCHANTMENTx", "int (1-255)");
-		try
-		{
-			item.save(new File(exampleFolder, "Item.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example Item.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleEnchantment
+		saveExampleFile(exampleFolder, "Item", item);
+		// Example - Enchantment
 		final YamlConfiguration enchantments = new YamlConfiguration();
 		final List<String> exampleEnchantments = new ArrayList<String>();
 		for (final Enchantment enchantment : Enchantment.values())
 			if (enchantment != null)
 				exampleEnchantments.add(enchantment.getName());
 		enchantments.set("exampleEnchantment", exampleEnchantments);
-		try
-		{
-			enchantments.save(new File(exampleFolder, "Enchantment.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example Enchantment.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExamplePotionEffect
+		saveExampleFile(exampleFolder, "Enchantment", enchantments);
+		// Example - PotionEffect
 		final YamlConfiguration potionEffects = new YamlConfiguration();
 		final List<String> examplePotionEffects = new ArrayList<String>();
 		for (final PotionEffectType potionEffect : PotionEffectType.values())
 			if (potionEffect != null)
 				examplePotionEffects.add(potionEffect.getName());
 		potionEffects.set("examplePotionEffect", examplePotionEffects);
-		try
-		{
-			potionEffects.save(new File(exampleFolder, "PotionEffect.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example PotionEffect.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleThunder
-		final YamlConfiguration thunder = new YamlConfiguration();
-		thunder.set("exampleThunder", EnumParamitrisable.getEnumNames(Thunder.values()).toArray());
-		try
-		{
-			thunder.save(new File(exampleFolder, "Thunder.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example Thunder.yml.");
-			System.err.println(e.getMessage());
-		}
-		// FireworkMeta
+		saveExampleFile(exampleFolder, "PotionEffect", potionEffects);
+		// Example - FireworkMeta
 		final YamlConfiguration firework = new YamlConfiguration();
 		firework.set("exampleFireworkMeta.==", "ItemMeta");
 		firework.set("exampleFireworkMeta.meta-type", "FIREWORK");
@@ -624,49 +497,38 @@ public class CrazySpawner extends CrazyPlugin
 		}
 		firework.set("exampleFireworkMeta.firework-effects", effectsList);
 		firework.set("exampleFireworkMeta.power", "int (0-127)");
+		saveExampleFile(exampleFolder, "FireworkMeta", firework);
+		// Example - Enums
+		saveExampleEnum(exampleFolder, Art.values(), "Art");
+		saveExampleEnum(exampleFolder, BlockFace.values(), "BlockFace");
+		saveExampleEnum(exampleFolder, DyeColor.values(), "DyeColor");
+		saveExampleEnum(exampleFolder, Horse.Color.values(), "HorseColor");
+		saveExampleEnum(exampleFolder, Horse.Style.values(), "HorseStyle");
+		saveExampleEnum(exampleFolder, Horse.Variant.values(), "HorseVariant");
+		saveExampleEnum(exampleFolder, Material.values(), "Material");
+		saveExampleEnum(exampleFolder, Ocelot.Type.values(), "CatType");
+		saveExampleEnum(exampleFolder, Rotation.values(), "Rotation");
+		saveExampleEnum(exampleFolder, Skeleton.SkeletonType.values(), "SkeletonType");
+		saveExampleEnum(exampleFolder, Thunder.values(), "Thunder");
+		saveExampleEnum(exampleFolder, Villager.Profession.values(), "Profession");
+	}
+
+	protected <A extends Enum<A>> void saveExampleEnum(final File exampleFolder, final A[] values, final String name)
+	{
+		final YamlConfiguration config = new YamlConfiguration();
+		config.set("example" + name, EnumParamitrisable.getEnumNames(values).toArray());
+		saveExampleFile(exampleFolder, name, config);
+	}
+
+	protected void saveExampleFile(final File exampleFolder, final String name, final YamlConfiguration config)
+	{
 		try
 		{
-			firework.save(new File(exampleFolder, "FireworkMeta.yml"));
+			config.save(new File(exampleFolder, name + ".yml"));
 		}
 		catch (final IOException e)
 		{
-			System.err.println("[CrazySpawner] Could not save example FireworkMeta.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleHorseColor
-		final YamlConfiguration horseColor = new YamlConfiguration();
-		horseColor.set("exampleHorseColor", EnumParamitrisable.getEnumNames(Horse.Color.values()).toArray());
-		try
-		{
-			horseColor.save(new File(exampleFolder, "HorseColor.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example HorseColor.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleHorseStyle
-		final YamlConfiguration horseStyle = new YamlConfiguration();
-		horseStyle.set("exampleHorseStyle", EnumParamitrisable.getEnumNames(Horse.Style.values()).toArray());
-		try
-		{
-			horseStyle.save(new File(exampleFolder, "HorseStyle.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example HorseStyle.yml.");
-			System.err.println(e.getMessage());
-		}
-		// ExampleHorseVariant
-		final YamlConfiguration horseVariant = new YamlConfiguration();
-		horseVariant.set("exampleHorseVariant", EnumParamitrisable.getEnumNames(Horse.Variant.values()).toArray());
-		try
-		{
-			horseVariant.save(new File(exampleFolder, "HorseVariant.yml"));
-		}
-		catch (final IOException e)
-		{
-			System.err.println("[CrazySpawner] Could not save example HorseVariant.yml.");
+			System.err.println("[CrazySpawner] Could not save example " + name + ".yml.");
 			System.err.println(e.getMessage());
 		}
 	}
