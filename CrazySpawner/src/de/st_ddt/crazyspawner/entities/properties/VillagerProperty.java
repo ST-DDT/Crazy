@@ -25,11 +25,17 @@ public final class VillagerProperty extends BasicProperty
 		this.profession = null;
 	}
 
+	public VillagerProperty(final Profession profession)
+	{
+		super();
+		this.profession = profession;
+	}
+
 	public VillagerProperty(final ConfigurationSection config)
 	{
 		super(config);
-		final String professionName = config.getString("profession");
-		if (professionName == null)
+		final String professionName = config.getString("profession", "default");
+		if (professionName.equals("default"))
 			this.profession = null;
 		else
 		{
@@ -46,10 +52,10 @@ public final class VillagerProperty extends BasicProperty
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public VillagerProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
+		@SuppressWarnings("unchecked")
 		final EnumParamitrisable<Profession> professionParam = (EnumParamitrisable<Profession>) params.get("profession");
 		this.profession = professionParam.getValue();
 	}
@@ -73,7 +79,9 @@ public final class VillagerProperty extends BasicProperty
 	@Override
 	public void save(final ConfigurationSection config, final String path)
 	{
-		if (profession != null)
+		if (profession == null)
+			config.set(path + "profession", "default");
+		else
 			config.set(path + "profession", profession.name());
 	}
 

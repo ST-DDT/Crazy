@@ -35,9 +35,6 @@ public abstract class BasicProperty implements EntityPropertyInterface
 	public abstract void apply(Entity entity);
 
 	@Override
-	public abstract void show(CommandSender target);
-
-	@Override
 	public abstract void getCommandParams(Map<String, ? super TabbedParamitrisable> params, CommandSender sender);
 
 	@Override
@@ -45,6 +42,12 @@ public abstract class BasicProperty implements EntityPropertyInterface
 
 	@Override
 	public abstract void dummySave(ConfigurationSection config, String path);
+
+	@Override
+	public abstract void show(CommandSender target);
+
+	@Override
+	public abstract boolean equalsDefault();
 
 	protected final ItemStack saveClone(final ItemStack item)
 	{

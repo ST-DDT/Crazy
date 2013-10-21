@@ -2,6 +2,7 @@ package de.st_ddt.crazyspawner.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,11 +10,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -83,7 +86,52 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		});
 		registerEntitySpawner(new FallingBlockSpawner());
 		registerEntitySpawner(new ClassSpawner(EntityType.FIREWORK));
+		registerEntitySpawner(new CenteredSpawner(EntityType.ITEM_FRAME)
+		{
+
+			@Override
+			public Entity spawn(final Location location)
+			{
+				final Block block = location.getBlock();
+				if (!block.getType().isSolid())
+					block.setType(Material.STONE);
+				final Entity entity = super.spawn(location);
+				return entity;
+			}
+		});
+		registerEntitySpawner(new CenteredSpawner(EntityType.LEASH_HITCH)
+		{
+
+			@Override
+			public Entity spawn(final Location location)
+			{
+				final Block block = location.getBlock();
+				switch (block.getType())
+				{
+					case FENCE:
+					case NETHER_FENCE:
+						break;
+					default:
+						block.setType(Material.FENCE);
+				}
+				final Entity entity = super.spawn(location);
+				return entity;
+			}
+		});
 		registerEntitySpawner(new LightningSpawner());
+		registerEntitySpawner(new CenteredSpawner(EntityType.PAINTING)
+		{
+
+			@Override
+			public Entity spawn(final Location location)
+			{
+				final Block block = location.getBlock();
+				if (!block.getType().isSolid())
+					block.setType(Material.STONE);
+				final Entity entity = super.spawn(location);
+				return entity;
+			}
+		});
 		registerEntitySpawner(new ClassSpawner(EntityType.SPLASH_POTION));
 		// Add Spawners to NamedEntitySpawnerParamitrisable
 		for (final EntitySpawner spawner : ENTITYSPAWNER)
@@ -113,13 +161,13 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(FallingBlockExtendedProperty.class, FallingBlock.class);
 		// Fireball required?
 		registerEntityProperty(FireworkProperty.class, Firework.class);
-		// Hanging required?
+		registerEntityProperty(HangingProperty.class, Hanging.class);
 		registerEntityProperty(HorseProperty.class, Horse.class);
 		// InventoryHolder required?
 		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
 		registerEntityProperty(AlarmProperty.class, Item.class);
 		registerEntityProperty(DroppedItemProperty.class, Item.class);
-		// ItemFrame required?
+		registerEntityProperty(ItemFrameProperty.class, ItemFrame.class);
 		registerEntityProperty(DamageProperty.class, LivingEntity.class);
 		registerEntityProperty(DetectionProperty.class, LivingEntity.class);
 		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
@@ -131,7 +179,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(XPProperty.class, LivingEntity.class);
 		registerEntityProperty(MinecartProperty.class, Minecart.class);
 		registerEntityProperty(OcelotProperty.class, Ocelot.class);
-		// Painting required?
+		registerEntityProperty(PaintingProperty.class, Painting.class);
 		registerEntityProperty(PigProperty.class, Pig.class);
 		registerEntityProperty(PigZombieProperty.class, PigZombie.class);
 		registerEntityProperty(DamageProperty.class, Projectile.class);
@@ -141,7 +189,7 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		registerEntityProperty(SlimeProperty.class, Slime.class);
 		registerEntityProperty(TameableProperty.class, Tameable.class);
 		registerEntityProperty(ThrownPotionProperty.class, ThrownPotion.class);
-		// TNTPrimed impossible?
+		registerEntityProperty(TNTPrimedProperty.class, TNTPrimed.class);
 		registerEntityProperty(VillagerProperty.class, Villager.class);
 		registerEntityProperty(WolfProperty.class, Wolf.class);
 		registerEntityProperty(ZombieProperty.class, Zombie.class);
@@ -154,7 +202,15 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 
 	public static Set<EntityType> getSpawnableEntityTypes()
 	{
-		final Set<EntityType> res = new HashSet<EntityType>();
+		final Set<EntityType> res = new TreeSet<EntityType>(new Comparator<EntityType>()
+		{
+
+			@Override
+			public int compare(final EntityType o1, final EntityType o2)
+			{
+				return o1.name().compareTo(o2.name());
+			}
+		});
 		for (final EntityType type : EntityType.values())
 			if (ENTITYSPAWNER[type.ordinal()] != null)
 				res.add(type);
