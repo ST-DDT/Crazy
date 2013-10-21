@@ -405,10 +405,10 @@ public class CrazySpawner extends CrazyPlugin
 				return PermissionModule.hasPermission(sender, "crazyspawner.reload.spawntasks") || PermissionModule.hasPermission(sender, "crazyspawner.reload.*");
 			}
 		}, "t", "st", "spawntasks");
-		registerCommands();
-		registerMetrics();
 		sendLocaleMessage("SPAWNABLEENTITIES.OPTIONS", Bukkit.getConsoleSender(), CustomEntitySpawner.getTotalSpawnableEntityTypeCount(), CustomEntitySpawner.getTotalPropertiesCount(), CustomEntitySpawner.getTotalCommandParamsCount());
 		sendLocaleMessage("SPAWNABLEENTITIES.AVAILABLE", Bukkit.getConsoleSender(), NamedEntitySpawnerParamitrisable.ENTITY_TYPES.size());
+		registerCommands();
+		registerMetrics();
 	}
 
 	protected void saveExamples()
