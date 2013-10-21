@@ -312,7 +312,18 @@ public class TimerSpawnTask implements Runnable, ConfigurationSaveable, Comparab
 						world.loadChunk(cX + x, cZ + z, false);
 			final int amount = checkCreatures();
 			for (int i = 0; i < amount; i++)
-				postSpawnProcessing(type.spawn(randomizedLocation(location, spawnRange)));
+				try
+				{
+					postSpawnProcessing(type.spawn(randomizedLocation(location, spawnRange)));
+				}
+				catch (final Exception e)
+				{
+					System.err.println("WARNING: Serious Bug detected, please report this!");
+					e.printStackTrace();
+					repeat = 0;
+					plugin.removeSpawnTask(this);
+					cancel();
+				}
 			thunder.trigger(location);
 			if (amount > 0)
 				if (repeat > 0)
