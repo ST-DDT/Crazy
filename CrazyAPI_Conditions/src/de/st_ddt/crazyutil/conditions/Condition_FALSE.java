@@ -30,7 +30,7 @@ public class Condition_FALSE extends BasicCondition
 	}
 
 	@Override
-	public boolean check(final ConditionChecker property)
+	public boolean check(final ConditionChecker checker)
 	{
 		return false;
 	}

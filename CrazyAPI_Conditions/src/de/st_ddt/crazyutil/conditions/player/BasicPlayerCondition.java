@@ -19,8 +19,6 @@ public abstract class BasicPlayerCondition extends BasicCondition
 		super(config);
 	}
 
-	
-
 	@Override
 	public boolean isApplicable(final Class<? extends ConditionChecker> clazz)
 	{
@@ -28,10 +26,10 @@ public abstract class BasicPlayerCondition extends BasicCondition
 	}
 
 	@Override
-	public final boolean check(final ConditionChecker property)
+	public final boolean check(final ConditionChecker checker)
 	{
-		return check((PlayerConditionChecker) property);
+		return check((PlayerConditionChecker) checker);
 	}
 
-	public abstract boolean check(final PlayerConditionChecker property);
+	public abstract boolean check(final PlayerConditionChecker checker);
 }

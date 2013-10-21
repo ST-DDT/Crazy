@@ -31,10 +31,10 @@ public class Condition_AND extends ConditionList
 	}
 
 	@Override
-	public boolean check(final ConditionChecker property)
+	public boolean check(final ConditionChecker checker)
 	{
 		for (final Condition condition : conditions)
-			if (!condition.check(property))
+			if (!condition.check(checker))
 				return false;
 		return true;
 	}

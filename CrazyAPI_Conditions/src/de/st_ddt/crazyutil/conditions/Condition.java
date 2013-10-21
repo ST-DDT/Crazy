@@ -33,9 +33,9 @@ public interface Condition extends ConfigurationSaveable
 	/**
 	 * Checks whether the given property matches this condition.
 	 * 
-	 * @param property
+	 * @param checker
 	 *            The property that should be checked.
 	 * @return True, if the given property matches this condition.
 	 */
-	public boolean check(ConditionChecker property);
+	public boolean check(ConditionChecker checker);
 }

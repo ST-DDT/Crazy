@@ -38,12 +38,12 @@ public class Condition_Player_Permission extends BasicPlayerCondition
 	}
 
 	@Override
-	public boolean check(final PlayerConditionChecker property)
+	public boolean check(final PlayerConditionChecker checker)
 	{
 		if (permission == null)
 			return true;
 		else
-			return property.getPlayer().hasPermission(permission);
+			return checker.getPlayer().hasPermission(permission);
 	}
 
 	@Override

@@ -47,8 +47,8 @@ public class Condition_NOT extends BasicCondition
 	}
 
 	@Override
-	public boolean check(final ConditionChecker property)
+	public boolean check(final ConditionChecker checker)
 	{
-		return !condition.check(property);
+		return !condition.check(checker);
 	}
 }
