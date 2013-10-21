@@ -1,32 +1,41 @@
 package de.st_ddt.crazyutil.conditions;
 
+import java.util.List;
+
 import org.bukkit.configuration.ConfigurationSection;
 
-public class Condition_OR<T> extends ConditionList<T>
-{
+import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
 
-	public Condition_OR(final ConfigurationSection config)
-	{
-		super(config);
-	}
+public class Condition_OR extends ConditionList
+{
 
 	public Condition_OR()
 	{
 		super();
 	}
 
-	@Override
-	public boolean match(final T tester)
+	public Condition_OR(final List<Condition> conditions)
 	{
-		for (final Condition<T> condition : conditions)
-			if (condition.match(tester))
-				return true;
-		return false;
+		super(conditions);
+	}
+
+	public Condition_OR(final ConfigurationSection config) throws Exception
+	{
+		super(config);
 	}
 
 	@Override
-	public String getTypeIdentifier()
+	public String getType()
 	{
 		return "OR";
+	}
+
+	@Override
+	public boolean check(final ConditionChecker property)
+	{
+		for (final Condition condition : conditions)
+			if (condition.check(property))
+				return true;
+		return false;
 	}
 }

@@ -1,38 +1,43 @@
 package de.st_ddt.crazyutil.conditions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public abstract class ConditionList<T> extends ConditionBase<T>
+import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
+
+public abstract class ConditionList extends BasicCondition
 {
 
-	protected final ArrayList<ConditionBase<T>> conditions = new ArrayList<ConditionBase<T>>();
-
-	public ConditionList(ConfigurationSection config)
-	{
-		super(config);
-		config = config.getConfigurationSection("conditions");
-		if (config == null)
-			return;
-		for (final String name : config.getKeys(false))
-			try
-			{
-				@SuppressWarnings("unchecked")
-				final ConditionBase<T> condition = (ConditionBase<T>) ConditionBase.load(config.getConfigurationSection(name));
-				if (condition != null)
-					conditions.add(condition);
-			}
-			catch (final Exception e)
-			{
-				System.err.println("Error loading condition: " + name + " (" + config.getCurrentPath() + ")");
-				e.printStackTrace();
-			}
-	}
+	protected final List<Condition> conditions = new ArrayList<Condition>();
 
 	public ConditionList()
 	{
 		super();
+	}
+
+	public ConditionList(final List<Condition> conditions)
+	{
+		super();
+		this.conditions.addAll(conditions);
+	}
+
+	public ConditionList(final ConfigurationSection config) throws Exception
+	{
+		super(config);
+		final ConfigurationSection entryConfig = config.getConfigurationSection("conditions");
+		for (final String key : entryConfig.getKeys(false))
+			conditions.add(BasicCondition.load(entryConfig.getConfigurationSection(key)));
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends ConditionChecker> clazz)
+	{
+		for (final Condition condition : conditions)
+			if (!condition.isApplicable(clazz))
+				return false;
+		return true;
 	}
 
 	@Override
@@ -41,11 +46,11 @@ public abstract class ConditionList<T> extends ConditionBase<T>
 		super.save(config, path);
 		int a = 0;
 		config.set(path + "conditions", null);
-		for (final ConditionBase<? extends T> condition : conditions)
-			condition.save(config, path + "conditions." + condition.getTypeIdentifier() + (a++) + ".");
+		for (final Condition condition : conditions)
+			condition.save(config, path + "conditions." + condition.getType() + (a++) + ".");
 	}
 
-	public final ArrayList<ConditionBase<T>> getConditions()
+	public final List<Condition> getConditions()
 	{
 		return conditions;
 	}

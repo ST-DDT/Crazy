@@ -2,22 +2,29 @@ package de.st_ddt.crazyutil.conditions;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class Condition_NOT<T> extends ConditionBase<T>
+import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
+
+public class Condition_NOT extends BasicCondition
 {
 
-	protected ConditionBase<T> condition = null;
-
-	@SuppressWarnings("unchecked")
-	public Condition_NOT(final ConfigurationSection config)
-	{
-		super(config);
-		condition = (ConditionBase<T>) ConditionBase.load(config.getConfigurationSection("condition"));
-	}
+	protected Condition condition = null;
 
 	public Condition_NOT()
 	{
 		super();
-		condition = new Condition_TRUE<T>();
+		condition = new Condition_TRUE();
+	}
+
+	public Condition_NOT(final Condition condition)
+	{
+		super();
+		this.condition = condition;
+	}
+
+	public Condition_NOT(final ConfigurationSection config) throws Exception
+	{
+		super(config);
+		condition = BasicCondition.load(config.getConfigurationSection("condition"));
 	}
 
 	@Override
@@ -28,14 +35,20 @@ public class Condition_NOT<T> extends ConditionBase<T>
 	}
 
 	@Override
-	public String getTypeIdentifier()
+	public String getType()
 	{
 		return "NOT";
 	}
 
 	@Override
-	public boolean match(final T tester)
+	public boolean isApplicable(final Class<? extends ConditionChecker> clazz)
 	{
-		return !condition.match(tester);
+		return condition.isApplicable(clazz);
+	}
+
+	@Override
+	public boolean check(final ConditionChecker property)
+	{
+		return !condition.check(property);
 	}
 }

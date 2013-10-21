@@ -2,28 +2,36 @@ package de.st_ddt.crazyutil.conditions;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class Condition_TRUE<T> extends ConditionBase<T>
-{
+import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
 
-	public Condition_TRUE(final ConfigurationSection config)
-	{
-		super(config);
-	}
+public class Condition_TRUE extends BasicCondition
+{
 
 	public Condition_TRUE()
 	{
 		super();
 	}
 
+	public Condition_TRUE(final ConfigurationSection config)
+	{
+		super(config);
+	}
+
 	@Override
-	public boolean match(final T tester)
+	public String getType()
+	{
+		return "TRUE";
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends ConditionChecker> clazz)
 	{
 		return true;
 	}
 
 	@Override
-	public String getTypeIdentifier()
+	public boolean check(final ConditionChecker property)
 	{
-		return "TRUE";
+		return true;
 	}
 }

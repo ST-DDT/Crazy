@@ -1,32 +1,41 @@
 package de.st_ddt.crazyutil.conditions;
 
+import java.util.List;
+
 import org.bukkit.configuration.ConfigurationSection;
 
-public class Condition_AND<T> extends ConditionList<T>
-{
+import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
 
-	public Condition_AND(final ConfigurationSection config)
-	{
-		super(config);
-	}
+public class Condition_AND extends ConditionList
+{
 
 	public Condition_AND()
 	{
 		super();
 	}
 
-	@Override
-	public boolean match(final T tester)
+	public Condition_AND(final List<Condition> conditions)
 	{
-		for (final Condition<T> condition : conditions)
-			if (!condition.match(tester))
-				return false;
-		return true;
+		super(conditions);
+	}
+
+	public Condition_AND(final ConfigurationSection config) throws Exception
+	{
+		super(config);
 	}
 
 	@Override
-	public String getTypeIdentifier()
+	public String getType()
 	{
 		return "AND";
+	}
+
+	@Override
+	public boolean check(final ConditionChecker property)
+	{
+		for (final Condition condition : conditions)
+			if (!condition.check(property))
+				return false;
+		return true;
 	}
 }

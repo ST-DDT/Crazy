@@ -1,77 +1,41 @@
 package de.st_ddt.crazyutil.conditions;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.bukkit.configuration.ConfigurationSection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import de.st_ddt.crazyutil.ConfigurationSaveable;
+import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
 
-public interface Condition<T> extends ConfigurationSaveable
+/**
+ * A condition to check certain conditions at runtime.
+ */
+public interface Condition extends ConfigurationSaveable
 {
 
-	// public ConditionBase(ConfigurationSection config)
-	// public ConditionBase()
-	/**
-	 * Save this Condition to config
-	 * 
-	 * @param config
-	 *            The Config to save to
-	 * @param path
-	 *            The path in the config to save the data (path should end with ".")
-	 */
-	@Override
-	public abstract void save(ConfigurationSection config, String path);
+	public final static Map<String, Class<? extends Condition>> CONDITIONCLASSES = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
 	/**
-	 * A name used when saving (extended with index)
-	 * 
-	 * @return The name used for saving.
+	 * @return The type of this Condition.<br>
+	 *         Required to reloading it after server restart.
 	 */
-	public abstract String getTypeIdentifier();
+	public String getType();
 
 	/**
-	 * Check whether tester matches this conditions.
+	 * This method checks whether this and any possible subcondition is applicable for the given check.<br>
+	 * This method should be executed after loading the entire condition tree.
 	 * 
-	 * @param tester
-	 *            The testers to check this condition.
-	 * @return whether the tester matches this condition
+	 * @param clazz
+	 *            The class that should be checked, whether it can be used to execute the test.
+	 * @return True, if given clazz can execute the test properly.
 	 */
-	public abstract boolean match(T tester);
+	public boolean isApplicable(Class<? extends ConditionChecker> clazz);
 
 	/**
-	 * Check whether tester matches this conditions.
+	 * Checks whether the given property matches this condition.
 	 * 
-	 * @param testers
-	 *            The tester to check this condition.
-	 * @return whether all of the testers matches this condition
+	 * @param property
+	 *            The property that should be checked.
+	 * @return True, if the given property matches this condition.
 	 */
-	public abstract boolean match(T[] testers);
-
-	/**
-	 * Check whether tester matches this conditions.
-	 * 
-	 * @param testers
-	 *            The testers to check this condition.
-	 * @return whether all of the testers matches this condition
-	 */
-	public abstract boolean match(List<? extends T> testers);
-
-	/**
-	 * Returns a Collection containing all testers matching the condition.
-	 * 
-	 * @param testers
-	 *            Testers to check the conditions.
-	 * @return A Collection containing all testers matching the condition.
-	 */
-	public abstract Collection<T> getMatching(T[] testers);
-
-	/**
-	 * Returns a Collection containing all testers matching the condition.
-	 * 
-	 * @param testers
-	 *            Testers to check the conditions.
-	 * @return A Collection containing all testers matching the condition.
-	 */
-	public abstract Collection<T> getMatching(Collection<? extends T> testers);
+	public boolean check(ConditionChecker property);
 }
