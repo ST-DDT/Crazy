@@ -31,7 +31,7 @@ public abstract class PreSetList implements Named
 
 	static
 	{
-		new PreSetList("ops")
+		new PreSetList("online_ops")
 		{
 
 			@Override
@@ -43,7 +43,44 @@ public abstract class PreSetList implements Named
 				return list;
 			}
 		};
-		new PreSetList("onlines")
+		new PreSetList("offline_ops")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getOperators())
+					list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("all_ops")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getOperators())
+					list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("not_ops")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getOnlinePlayers())
+					if (!player.isOp())
+						list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("online_players")
 		{
 
 			@Override
@@ -55,7 +92,7 @@ public abstract class PreSetList implements Named
 				return list;
 			}
 		};
-		new PreSetList("offlines")
+		new PreSetList("offline_players")
 		{
 
 			@Override
@@ -68,7 +105,7 @@ public abstract class PreSetList implements Named
 				return list;
 			}
 		};
-		new PreSetList("players")
+		new PreSetList("all_players")
 		{
 
 			@Override
@@ -77,6 +114,57 @@ public abstract class PreSetList implements Named
 				final List<String> list = new ArrayList<String>();
 				for (final OfflinePlayer player : Bukkit.getOfflinePlayers())
 					list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("online_whitelisted")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getWhitelistedPlayers())
+					if (player.isOnline())
+						list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("offline_whitelisted")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getWhitelistedPlayers())
+					if (!player.isOnline())
+						list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("all_whitelisted")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getWhitelistedPlayers())
+					list.add(player.getName());
+				return list;
+			}
+		};
+		new PreSetList("not_whitelisted")
+		{
+
+			@Override
+			public List<String> getList()
+			{
+				final List<String> list = new ArrayList<String>();
+				for (final OfflinePlayer player : Bukkit.getOnlinePlayers())
+					if (!player.isWhitelisted())
+						list.add(player.getName());
 				return list;
 			}
 		};
