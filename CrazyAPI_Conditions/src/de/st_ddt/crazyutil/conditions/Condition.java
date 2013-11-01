@@ -21,12 +21,12 @@ public interface Condition extends ConfigurationSaveable
 	public String getType();
 
 	/**
-	 * This method checks whether this and any possible subcondition is applicable for the given check.<br>
+	 * This method checks whether this and any possible sub conditions are applicable for the given check.<br>
 	 * This method should be executed after loading the entire condition tree.
 	 * 
 	 * @param clazz
 	 *            The class that should be checked, whether it can be used to execute the test.
-	 * @return True, if given clazz can execute the test properly.
+	 * @return True, if given class can execute the test properly.
 	 */
 	public boolean isApplicable(Class<? extends ConditionChecker> clazz);
 
