@@ -13,7 +13,7 @@ import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.DoubleParamitrisable;
 import de.st_ddt.crazyutil.paramitrisable.Paramitrisable;
 import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
-import de.st_ddt.crazyutil.paramitrisable.VectorParamistrisable;
+import de.st_ddt.crazyutil.paramitrisable.VectorParamitrisable;
 import de.st_ddt.crazyutil.source.Localized;
 
 public class MinecartProperty extends BasicProperty
@@ -64,9 +64,9 @@ public class MinecartProperty extends BasicProperty
 		this.topSpeed = getSecureValue(topSpeedParam.getValue());
 		final BooleanParamitrisable slowWhenEmptyParam = (BooleanParamitrisable) params.get("slowwhenempty");
 		this.slowWhenEmpty = slowWhenEmptyParam.getValue();
-		final VectorParamistrisable flyingVelocityParam = (VectorParamistrisable) params.get("flyingvelocity");
+		final VectorParamitrisable flyingVelocityParam = (VectorParamitrisable) params.get("flyingvelocity");
 		this.flyingVelocity = flyingVelocityParam.getValue();
-		final VectorParamistrisable derailedVelocityParam = (VectorParamistrisable) params.get("derailedvelocity");
+		final VectorParamitrisable derailedVelocityParam = (VectorParamitrisable) params.get("derailedvelocity");
 		this.derailedVelocity = derailedVelocityParam.getValue();
 	}
 
@@ -96,13 +96,13 @@ public class MinecartProperty extends BasicProperty
 		params.put("swe", slowWhenEmptyParam);
 		params.put("slowwe", slowWhenEmptyParam);
 		params.put("slowwhenempty", slowWhenEmptyParam);
-		final VectorParamistrisable flyingVelocityParam = new VectorParamistrisable(flyingVelocity);
+		final VectorParamitrisable flyingVelocityParam = new VectorParamitrisable(flyingVelocity);
 		params.put("fv", flyingVelocityParam);
 		params.put("flyv", flyingVelocityParam);
 		params.put("flyvelo", flyingVelocityParam);
 		params.put("flyvelocity", flyingVelocityParam);
 		params.put("flyingvelocity", flyingVelocityParam);
-		final VectorParamistrisable derailedVelocityParam = new VectorParamistrisable(derailedVelocity);
+		final VectorParamitrisable derailedVelocityParam = new VectorParamitrisable(derailedVelocity);
 		params.put("dv", derailedVelocityParam);
 		params.put("derv", derailedVelocityParam);
 		params.put("dervelo", derailedVelocityParam);
