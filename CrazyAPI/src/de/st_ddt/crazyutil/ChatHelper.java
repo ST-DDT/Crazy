@@ -172,6 +172,7 @@ public class ChatHelper
 		return listingString(", ", strings);
 	}
 
+	@SafeVarargs
 	public static <S> String listingString(final String separator, final S... strings)
 	{
 		return StringUtils.join(strings, separator);
