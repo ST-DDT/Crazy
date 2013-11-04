@@ -1,7 +1,6 @@
 package de.st_ddt.crazyutil;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -109,10 +108,10 @@ public class UpdateChecker
 				hasUpdate = VersionComparator.compareVersions(projectVersion, latestVersion) == -1;
 			}
 		}
-		catch (final IOException e)
+		catch (final Exception e)
 		{
 			// There was an error reading the query
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return hasUpdate;
 	}
