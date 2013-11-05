@@ -56,7 +56,6 @@ public class CrazyLocale extends HashMap<String, CrazyLocale>
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.UPDATED", "$0$ has been updated. Updating language files.");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.READ", "Failed reading $0$ language files!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.EXTRACT", "Failed exporting $0$ language files!");
-		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD", "Failed downloading $0$ language files!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.LANGUAGE.ERROR.AVAILABLE", "$0$ language files not available!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.DATABASE.LOADED", "Loaded $0$ entries from database!");
 		getLocaleHead().addLanguageEntry("en_en", "CRAZYPLUGIN.DATABASE.ACCESSWARN", "&CWARNING! Cannot access Database!");

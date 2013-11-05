@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -339,15 +338,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
 		if (!file.exists())
 		{
-			downloadLanguage(language);
+			unpackLanguage(language);
 			if (!file.exists())
 			{
-				unpackLanguage(language);
-				if (!file.exists())
-				{
-					sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language, getName());
-					return;
-				}
+				sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language, getName());
+				return;
 			}
 		}
 		try
@@ -371,41 +366,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 			}
 	}
 
-	public String getMainDownloadLocation()
-	{
-		return "https://raw.github.com/ST-DDT/Crazy/master/" + getName() + "/src/resource";
-	}
-
-	public final void downloadLanguage(final String language)
-	{
-		downloadLanguage(language, Bukkit.getConsoleSender());
-	}
-
-	@Localized("CRAZYPLUGIN.LANGUAGE.ERROR.DOWNLOAD $Language$ $Plugin$")
-	public void downloadLanguage(final String language, final CommandSender sender)
-	{
-		try (final InputStream stream = new URL(getMainDownloadLocation() + "/lang/" + language + ".lang").openStream())
-		{
-			if (stream == null)
-				return;
-			try (BufferedInputStream in = new BufferedInputStream(stream);
-					FileOutputStream out = new FileOutputStream(getDataFolder().getPath() + "/lang/" + language + ".lang");)
-			{
-				final byte data[] = new byte[1024];
-				int count;
-				while ((count = in.read(data, 0, 1024)) != -1)
-					out.write(data, 0, count);
-				out.flush();
-			}
-			finally
-			{}
-		}
-		catch (final IOException e)
-		{
-			sendLocaleMessage("LANGUAGE.ERROR.DOWNLOAD", sender, language, getName());
-		}
-	}
-
+	// public String getMainDownloadLocation()
+	// {
+	// return "https://raw.github.com/ST-DDT/Crazy/master/" + getName() + "/src/resource";
+	// }
+	
 	public final void updateLanguage(final String language, final boolean reload)
 	{
 		updateLanguage(language, Bukkit.getConsoleSender(), reload);
@@ -417,15 +382,11 @@ public abstract class CrazyPlugin extends CrazyLightPlugin implements CrazyPlugi
 		if (!isSupportingLanguages())
 			return;
 		final File file = new File(getDataFolder().getPath() + "/lang/" + language + ".lang");
-		downloadLanguage(language);
+		unpackLanguage(language);
 		if (!file.exists())
 		{
-			unpackLanguage(language);
-			if (!file.exists())
-			{
-				sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language, getName());
-				return;
-			}
+			sendLocaleMessage("LANGUAGE.ERROR.AVAILABLE", sender, language, getName());
+			return;
 		}
 		if (reload)
 		{
