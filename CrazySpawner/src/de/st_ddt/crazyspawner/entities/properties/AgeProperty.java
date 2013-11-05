@@ -41,6 +41,12 @@ public final class AgeProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return Ageable.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final Ageable ageable = (Ageable) entity;

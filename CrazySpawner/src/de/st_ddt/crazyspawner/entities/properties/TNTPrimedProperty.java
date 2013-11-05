@@ -39,6 +39,12 @@ public class TNTPrimedProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return TNTPrimed.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final TNTPrimed tnt = (TNTPrimed) entity;

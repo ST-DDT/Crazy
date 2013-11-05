@@ -48,6 +48,12 @@ public final class ExplosiveProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return Explosive.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final Explosive explosive = (Explosive) entity;

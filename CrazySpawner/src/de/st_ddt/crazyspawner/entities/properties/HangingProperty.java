@@ -67,6 +67,12 @@ public class HangingProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return Hanging.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final Hanging hanging = (Hanging) entity;

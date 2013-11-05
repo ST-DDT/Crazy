@@ -5,6 +5,8 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.CustomDamage;
@@ -42,6 +44,12 @@ public final class DamageProperty extends MetadataProperty implements CustomDama
 		final DoubleParamitrisable maxDamageParam = (DoubleParamitrisable) params.get("maxdamage");
 		this.minDamage = Math.max(Math.min(minDamageParam.getValue(), maxDamageParam.getValue()), -1);
 		this.maxDamage = Math.max(Math.max(minDamageParam.getValue(), maxDamageParam.getValue()), -1);
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return LivingEntity.class.isAssignableFrom(clazz) || Projectile.class.isAssignableFrom(clazz);
 	}
 
 	@Override

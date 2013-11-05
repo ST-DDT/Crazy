@@ -38,6 +38,12 @@ public class PigZombieProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return PigZombie.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final PigZombie pigzombie = (PigZombie) entity;

@@ -32,6 +32,12 @@ public class LightningProperty extends LightningSpawner implements EntityPropert
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return LightningProperty.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 	}

@@ -31,6 +31,16 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 	 */
 	protected final double viewAngle;
 
+	/**
+	 * The maximum range an enemy is detected/seen with the entity's own ears,<br>
+	 * if emiting a noise level of exactly 1. <br>
+	 * Noise level is dependend on what the entity moves.<br>
+	 * Sneaking halves the noise level.<br>
+	 * Sprinting doubles the noise level.<br>
+	 * Flying entities do not make any movement sounds.<br>
+	 * -1 = default
+	 */
+	// protected final double noiseRange;
 	public DetectionProperty()
 	{
 		super();
@@ -52,6 +62,12 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 		this.viewRange = getSecureValue(viewRangeParam.getValue());
 		final DoubleParamitrisable viewAngleParam = (DoubleParamitrisable) params.get("viewangle");
 		this.viewAngle = getSecureValue(Math.min(viewAngleParam.getValue() / ANGLECONVERTER, Math.PI));
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return LivingEntity.class.isAssignableFrom(clazz);
 	}
 
 	@Override

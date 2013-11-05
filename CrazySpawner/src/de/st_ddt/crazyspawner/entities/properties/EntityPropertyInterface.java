@@ -12,6 +12,8 @@ import de.st_ddt.crazyutil.paramitrisable.TabbedParamitrisable;
 public interface EntityPropertyInterface extends ConfigurationSaveable
 {
 
+	public boolean isApplicable(Class<? extends Entity> clazz);
+
 	public void apply(Entity entity);
 
 	public void show(CommandSender target);

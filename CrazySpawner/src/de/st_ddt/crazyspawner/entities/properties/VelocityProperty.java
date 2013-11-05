@@ -5,6 +5,7 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fireball;
 import org.bukkit.util.Vector;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -91,6 +92,12 @@ public class VelocityProperty extends BasicProperty
 		this.velocityMin = velocityMinParam.getValue();
 		final DoubleParamitrisable velocityMaxParam = (DoubleParamitrisable) params.get("velocitymax");
 		this.velocityMax = velocityMaxParam.getValue();
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return !Fireball.class.isAssignableFrom(clazz);
 	}
 
 	@Override

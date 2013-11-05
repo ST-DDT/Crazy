@@ -37,11 +37,16 @@ public final class BurningProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return Entity.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
-		if (burning == -1)
-			return;
-		entity.setFireTicks(burning);
+		if (burning != -1)
+			entity.setFireTicks(burning);
 	}
 
 	@Override

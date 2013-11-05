@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyutil.ChatConverter;
@@ -39,6 +40,12 @@ public class DespawnProperty extends BasicProperty
 		super(params);
 		final DurationParamitrisable despawnAfterParam = (DurationParamitrisable) params.get("despawnafter");
 		this.despawnAfter = Math.max(despawnAfterParam.getTicks(), -1);
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return !LivingEntity.class.isAssignableFrom(clazz);
 	}
 
 	@Override

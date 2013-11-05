@@ -42,6 +42,12 @@ public class FallingBlockProperty extends FallingBlockSpawner implements EntityP
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return FallingBlock.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final FallingBlock block = (FallingBlock) entity;

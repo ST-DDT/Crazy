@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -92,6 +93,12 @@ public class FallingBlockExtendedProperty extends MetadataProperty implements Fa
 			if (item != null)
 				content.put(i, item);
 		}
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return FallingBlock.class.isAssignableFrom(clazz);
 	}
 
 	@Override

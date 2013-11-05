@@ -45,6 +45,12 @@ public class ExperienceOrbProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return ExperienceOrb.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final ExperienceOrb orb = (ExperienceOrb) entity;

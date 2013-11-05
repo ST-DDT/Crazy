@@ -38,6 +38,12 @@ public final class PassengerProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return true;
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		if (passenger != null)

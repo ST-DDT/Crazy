@@ -46,6 +46,12 @@ public class ThrownPotionProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return ThrownPotion.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final ThrownPotion potion = (ThrownPotion) entity;

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.PeacefulMeta;
@@ -35,6 +36,12 @@ public class PeacefulProperty extends BasicProperty
 		super(params);
 		final BooleanParamitrisable peacefulParam = (BooleanParamitrisable) params.get("peaceful");
 		this.peaceful = peacefulParam.getValue();
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return LivingEntity.class.isAssignableFrom(clazz);
 	}
 
 	@Override

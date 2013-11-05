@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
@@ -59,6 +60,12 @@ public class AlarmProperty extends MetadataProperty implements AlarmMeta, Persis
 		super(params);
 		final DoubleParamitrisable alarmRangeParam = (DoubleParamitrisable) params.get("alarmrange");
 		this.alarmRange = Math.max(alarmRangeParam.getValue(), -1);
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return Creature.class.isAssignableFrom(clazz);
 	}
 
 	@Override

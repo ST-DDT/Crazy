@@ -5,6 +5,7 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
 import de.st_ddt.crazyspawner.CrazySpawner;
 import de.st_ddt.crazyspawner.entities.meta.CustomXP;
@@ -42,6 +43,12 @@ public final class XPProperty extends MetadataProperty implements CustomXP
 		final IntegerParamitrisable maxXPParam = (IntegerParamitrisable) params.get("maxxp");
 		this.minXP = Math.max(Math.min(minXPParam.getValue(), maxXPParam.getValue()), -1);
 		this.maxXP = Math.max(Math.max(minXPParam.getValue(), maxXPParam.getValue()), -1);
+	}
+
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return LivingEntity.class.isAssignableFrom(clazz);
 	}
 
 	@Override

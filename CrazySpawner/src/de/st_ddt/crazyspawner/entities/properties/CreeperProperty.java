@@ -16,18 +16,23 @@ import de.st_ddt.crazyutil.source.Localized;
 public class CreeperProperty extends BasicProperty
 {
 
-	protected final boolean powered;
+	protected final Boolean powered;
 
 	public CreeperProperty()
 	{
 		super();
-		this.powered = false;
+		this.powered = null;
 	}
 
 	public CreeperProperty(final ConfigurationSection config)
 	{
 		super(config);
-		this.powered = config.getBoolean("powered", false);
+		if (config.getBoolean("powered", false))
+			this.powered = false;
+		else if (!config.getBoolean("powered", true))
+			this.powered = false;
+		else
+			this.powered = null;
 	}
 
 	public CreeperProperty(final Map<String, ? extends Paramitrisable> params)
@@ -38,10 +43,17 @@ public class CreeperProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return Creeper.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final Creeper creeper = (Creeper) entity;
-		creeper.setPowered(powered);
+		if (powered != null)
+			creeper.setPowered(powered);
 	}
 
 	@Override
@@ -60,19 +72,19 @@ public class CreeperProperty extends BasicProperty
 	@Override
 	public void dummySave(final ConfigurationSection config, final String path)
 	{
-		config.set(path + "powered", "boolean (true/false)");
+		config.set(path + "powered", "Boolean (true/false/default)");
 	}
 
 	@Override
 	@Localized("CRAZYSPAWNER.ENTITY.PROPERTY.POWERED $Powered$")
 	public void show(final CommandSender target)
 	{
-		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.POWERED", target, powered);
+		CrazySpawner.getPlugin().sendLocaleMessage("ENTITY.PROPERTY.POWERED", target, powered == null ? "Default" : powered);
 	}
 
 	@Override
 	public boolean equalsDefault()
 	{
-		return powered == false;
+		return powered == null;
 	}
 }

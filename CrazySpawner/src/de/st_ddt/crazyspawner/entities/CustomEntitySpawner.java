@@ -21,9 +21,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Colorable;
 import org.bukkit.metadata.MetadataValue;
 
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
@@ -140,57 +142,57 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		for (final EntityType type : EntityType.values())
 			ENTITYPROPERTIES[type.ordinal()] = new LinkedHashSet<Class<? extends EntityPropertyInterface>>();
 		// Properties - VIP required to be first!
-		registerEntityProperty(FallingBlockProperty.class, FallingBlock.class);
-		registerEntityProperty(LightningProperty.class, LightningStrike.class);
+		registerEntityProperty(FallingBlockProperty.class);
+		registerEntityProperty(LightningProperty.class);
 		// Properties - Sorted by EntityInterfaces
-		registerEntityProperty(AgeProperty.class, Ageable.class);
-		registerEntityProperty(BoatProperty.class, Boat.class);
-		registerEntityProperty(ColorableProperty.class, Colorable.class);
-		registerEntityProperty(AlarmProperty.class, Creature.class);
-		registerEntityProperty(CreeperProperty.class, Creeper.class);
-		registerEntityProperty(EndermanProperty.class, Enderman.class);
-		registerEntityProperty(DespawnProperty.class, Entity.class, LivingEntity.class);
-		registerEntityProperty(BurningProperty.class, Entity.class);
-		registerEntityProperty(InvulnerableProperty.class, Entity.class);
-		registerEntityProperty(VelocityProperty.class, Entity.class);
-		registerEntityProperty(PassengerProperty.class, Entity.class);
-		registerEntityProperty(ExperienceOrbProperty.class, ExperienceOrb.class);
-		registerEntityProperty(ExplosiveProperty.class, Explosive.class);
-		registerEntityProperty(FallingBlockExtendedProperty.class, FallingBlock.class);
-		// Fireball required?
-		registerEntityProperty(FireworkProperty.class, Firework.class);
-		registerEntityProperty(HangingProperty.class, Hanging.class);
-		registerEntityProperty(HorseProperty.class, Horse.class);
+		registerEntityProperty(AgeProperty.class);
+		registerEntityProperty(BoatProperty.class);
+		registerEntityProperty(ColorableProperty.class);
+		registerEntityProperty(AlarmProperty.class);
+		registerEntityProperty(CreeperProperty.class);
+		registerEntityProperty(EndermanProperty.class);
+		registerEntityProperty(DespawnProperty.class);
+		registerEntityProperty(BurningProperty.class);
+		registerEntityProperty(InvulnerableProperty.class);
+		registerEntityProperty(VelocityProperty.class);
+		registerEntityProperty(PassengerProperty.class);
+		registerEntityProperty(ExperienceOrbProperty.class);
+		registerEntityProperty(ExplosiveProperty.class);
+		registerEntityProperty(FallingBlockExtendedProperty.class);
+		registerEntityProperty(FireballVelocityProperty.class);
+		registerEntityProperty(FireworkProperty.class);
+		registerEntityProperty(HangingProperty.class);
+		registerEntityProperty(HorseProperty.class);
 		// InventoryHolder required?
-		registerEntityProperty(IronGolemProperty.class, IronGolem.class);
-		registerEntityProperty(AlarmProperty.class, Item.class);
-		registerEntityProperty(DroppedItemProperty.class, Item.class);
-		registerEntityProperty(ItemFrameProperty.class, ItemFrame.class);
-		registerEntityProperty(DamageProperty.class, LivingEntity.class);
-		registerEntityProperty(DetectionProperty.class, LivingEntity.class);
-		registerEntityProperty(EquipmentProperties.class, LivingEntity.class);
-		registerEntityProperty(HealthProperty.class, LivingEntity.class);
-		registerEntityProperty(LivingDespawnProperty.class, LivingEntity.class);
-		registerEntityProperty(NameProperty.class, LivingEntity.class);
-		registerEntityProperty(PeacefulProperty.class, LivingEntity.class);
-		registerEntityProperty(PotionProterty.class, LivingEntity.class);
-		registerEntityProperty(XPProperty.class, LivingEntity.class);
-		registerEntityProperty(MinecartProperty.class, Minecart.class);
-		registerEntityProperty(OcelotProperty.class, Ocelot.class);
-		registerEntityProperty(PaintingProperty.class, Painting.class);
-		registerEntityProperty(PigProperty.class, Pig.class);
-		registerEntityProperty(PigZombieProperty.class, PigZombie.class);
-		registerEntityProperty(DamageProperty.class, Projectile.class);
-		registerEntityProperty(ProjectileProperty.class, Projectile.class);
-		registerEntityProperty(SheepProperty.class, Sheep.class);
-		registerEntityProperty(SkeletonProperty.class, Skeleton.class);
-		registerEntityProperty(SlimeProperty.class, Slime.class);
-		registerEntityProperty(TameableProperty.class, Tameable.class);
-		registerEntityProperty(ThrownPotionProperty.class, ThrownPotion.class);
-		registerEntityProperty(TNTPrimedProperty.class, TNTPrimed.class);
-		registerEntityProperty(VillagerProperty.class, Villager.class);
-		registerEntityProperty(WolfProperty.class, Wolf.class);
-		registerEntityProperty(ZombieProperty.class, Zombie.class);
+		registerEntityProperty(IronGolemProperty.class);
+		registerEntityProperty(AlarmProperty.class);
+		registerEntityProperty(DroppedItemProperty.class);
+		registerEntityProperty(ItemFrameProperty.class);
+		registerEntityProperty(DamageProperty.class);
+		registerEntityProperty(DetectionProperty.class);
+		registerEntityProperty(EquipmentProperties.class);
+		registerEntityProperty(HealthProperty.class);
+		registerEntityProperty(LivingDespawnProperty.class);
+		registerEntityProperty(NameProperty.class);
+		registerEntityProperty(PeacefulProperty.class);
+		registerEntityProperty(PotionProterty.class);
+		registerEntityProperty(XPProperty.class);
+		registerEntityProperty(MinecartProperty.class);
+		registerEntityProperty(OcelotProperty.class);
+		registerEntityProperty(PaintingProperty.class);
+		registerEntityProperty(PigProperty.class);
+		registerEntityProperty(PigZombieProperty.class);
+		registerEntityProperty(DamageProperty.class);
+		registerEntityProperty(ProjectileProperty.class);
+		registerEntityProperty(SheepProperty.class);
+		registerEntityProperty(SkeletonProperty.class);
+		registerEntityProperty(SlimeProperty.class);
+		registerEntityProperty(TameableProperty.class);
+		registerEntityProperty(ThrownPotionProperty.class);
+		registerEntityProperty(TNTPrimedProperty.class);
+		registerEntityProperty(VillagerProperty.class);
+		registerEntityProperty(WolfProperty.class);
+		registerEntityProperty(ZombieProperty.class);
 	}
 
 	public static void registerEntitySpawner(final EntitySpawner spawner)
@@ -215,23 +217,21 @@ public class CustomEntitySpawner implements NamedEntitySpawner, MetadataValue, C
 		return res;
 	}
 
-	public static void registerEntityProperty(final Class<? extends EntityPropertyInterface> propertyClass, final Class<?> targetClass)
+	public static void registerEntityProperty(final Class<? extends EntityPropertyInterface> propertyClass)
 	{
-		for (final EntityType type : EntityType.values())
-			if (type.getEntityClass() != null && targetClass.isAssignableFrom(type.getEntityClass()))
-				ENTITYPROPERTIES[type.ordinal()].add(propertyClass);
-	}
-
-	public static void registerEntityProperty(final Class<? extends EntityPropertyInterface> propertyClass, final Class<?> targetClass, final Class<?>... ignoredClasses)
-	{
-		for (final EntityType type : EntityType.values())
-			if (type.getEntityClass() != null && targetClass.isAssignableFrom(type.getEntityClass()))
-			{
-				for (final Class<?> ignoredClass : ignoredClasses)
-					if (ignoredClass.isAssignableFrom(type.getEntityClass()))
-						return;
-				ENTITYPROPERTIES[type.ordinal()].add(propertyClass);
-			}
+		try
+		{
+			final EntityPropertyInterface property = propertyClass.newInstance();
+			for (final EntityType type : EntityType.values())
+				if (type.getEntityClass() != null && property.isApplicable(type.getEntityClass()))
+					ENTITYPROPERTIES[type.ordinal()].add(propertyClass);
+		}
+		catch (final Exception e)
+		{
+			System.err.println("WARNING: Serious Bug detected, please report this!");
+			System.err.println("Property: " + propertyClass.getSimpleName());
+			e.printStackTrace();
+		}
 	}
 
 	protected static List<EntityPropertyInterface> getDefaultEntityProperties(final EntityType type)

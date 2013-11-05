@@ -152,6 +152,12 @@ public final class EquipmentProperties extends MetadataProperty implements Custo
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return LivingEntity.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final LivingEntity living = (LivingEntity) entity;

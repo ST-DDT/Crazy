@@ -52,6 +52,12 @@ public final class NameProperty extends BasicProperty
 		this.showHealth = showHealthParam.getValue();
 	}
 
+	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return LivingEntity.class.isAssignableFrom(clazz);
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void apply(final Entity entity)

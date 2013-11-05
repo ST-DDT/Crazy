@@ -38,6 +38,12 @@ public class InvulnerableProperty extends MetadataProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return true;
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		if (invulnerable)

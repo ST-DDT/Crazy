@@ -72,6 +72,12 @@ public class ItemFrameProperty extends BasicProperty
 	}
 
 	@Override
+	public boolean isApplicable(final Class<? extends Entity> clazz)
+	{
+		return ItemFrame.class.isAssignableFrom(clazz);
+	}
+
+	@Override
 	public void apply(final Entity entity)
 	{
 		final ItemFrame frame = (ItemFrame) entity;
