@@ -2,11 +2,12 @@ package de.st_ddt.crazyutil.conditions.player;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.st_ddt.crazyutil.conditions.BasicCondition;
 import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
+import de.st_ddt.crazyutil.conditions.checker.LivingEntityConditionChecker;
 import de.st_ddt.crazyutil.conditions.checker.PlayerConditionChecker;
+import de.st_ddt.crazyutil.conditions.livingentity.BasicLivingEntityCondition;
 
-public abstract class BasicPlayerCondition extends BasicCondition
+public abstract class BasicPlayerCondition extends BasicLivingEntityCondition
 {
 
 	public BasicPlayerCondition()
@@ -26,7 +27,7 @@ public abstract class BasicPlayerCondition extends BasicCondition
 	}
 
 	@Override
-	public final boolean check(final ConditionChecker checker)
+	public final boolean check(final LivingEntityConditionChecker checker)
 	{
 		return check((PlayerConditionChecker) checker);
 	}
