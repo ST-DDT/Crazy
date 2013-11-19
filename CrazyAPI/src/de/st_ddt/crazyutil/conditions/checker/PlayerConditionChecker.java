@@ -2,10 +2,11 @@ package de.st_ddt.crazyutil.conditions.checker;
 
 import org.bukkit.entity.Player;
 
-public interface PlayerConditionChecker extends ConditionChecker
+public interface PlayerConditionChecker extends LivingEntityConditionChecker
 {
 
-	public Player getPlayer();
+	@Override
+	public Player getEntity();
 
 	public class SimplePlayerConditionChecker implements PlayerConditionChecker
 	{
@@ -19,7 +20,7 @@ public interface PlayerConditionChecker extends ConditionChecker
 		}
 
 		@Override
-		public Player getPlayer()
+		public Player getEntity()
 		{
 			return player;
 		}

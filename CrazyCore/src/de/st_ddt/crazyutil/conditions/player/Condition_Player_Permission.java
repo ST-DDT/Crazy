@@ -43,7 +43,7 @@ public class Condition_Player_Permission extends BasicPlayerCondition
 		if (permission == null)
 			return true;
 		else
-			return checker.getPlayer().hasPermission(permission);
+			return checker.getEntity().hasPermission(permission);
 	}
 
 	@Override
