@@ -93,7 +93,7 @@ public class DetectionProperty extends MetadataProperty implements DetectionMeta
 	public void save(final ConfigurationSection config, final String path)
 	{
 		config.set(path + "viewRange", viewRange);
-		config.set(path + "viewAngle", viewAngle * ANGLECONVERTER);
+		config.set(path + "viewAngle", getViewAngleDegree());
 	}
 
 	@Override
