@@ -29,17 +29,23 @@ public class DespawnProperty extends BasicProperty
 		this.despawnAfter = -1;
 	}
 
+	public DespawnProperty(final long despawnAfter)
+	{
+		super();
+		this.despawnAfter = getSecureValue(despawnAfter);
+	}
+
 	public DespawnProperty(final ConfigurationSection config)
 	{
 		super(config);
-		this.despawnAfter = config.getLong("despawnAfter", -1);
+		this.despawnAfter = getSecureValue(config.getLong("despawnAfter", -1));
 	}
 
 	public DespawnProperty(final Map<String, ? extends Paramitrisable> params)
 	{
 		super(params);
 		final DurationParamitrisable despawnAfterParam = (DurationParamitrisable) params.get("despawnafter");
-		this.despawnAfter = Math.max(despawnAfterParam.getTicks(), -1);
+		this.despawnAfter = getSecureValue(despawnAfterParam.getTicks());
 	}
 
 	@Override
@@ -67,7 +73,7 @@ public class DespawnProperty extends BasicProperty
 	@Override
 	public void getCommandParams(final Map<String, ? super TabbedParamitrisable> params, final CommandSender sender)
 	{
-		final DurationParamitrisable despawnAfterParam = new DurationParamitrisable(despawnAfter);
+		final DurationParamitrisable despawnAfterParam = new DurationParamitrisable(despawnAfter * 50);
 		params.put("da", despawnAfterParam);
 		params.put("dafter", despawnAfterParam);
 		params.put("despawnafter", despawnAfterParam);

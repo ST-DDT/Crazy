@@ -87,6 +87,22 @@ public abstract class BasicProperty implements EntityPropertyInterface
 		else
 			return value;
 	}
+	
+	protected final long getSecureValue(final long value)
+	{
+		if (value < 0)
+			return -1;
+		else
+			return value;
+	}
+
+	protected final float getSecureValue(final float value)
+	{
+		if (value < 0)
+			return -1;
+		else
+			return value;
+	}
 
 	protected final double getSecureValue(final double value)
 	{
