@@ -84,6 +84,8 @@ public class PersistanceManager
 
 	public void load(final Entity entity)
 	{
+		if (entity == null)
+			return;
 		final File file = getEntityDataFile(entity);
 		if (!file.exists())
 			return;
@@ -163,6 +165,8 @@ public class PersistanceManager
 
 	public void delete(final Entity entity)
 	{
+		if (entity == null)
+			return;
 		final File file = getEntityDataFile(entity);
 		if (!file.exists())
 			return;
