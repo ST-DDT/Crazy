@@ -254,7 +254,7 @@ public class VelocityProperty extends BasicProperty
 			return center - RANDOM.nextDouble() * off;
 	}
 
-	protected Vector getVector(final double pitch, final double yaw, final double velocity)
+	public static Vector getVector(final double pitch, final double yaw, final double velocity)
 	{
 		final double x = Math.sin(pitch) * velocity;
 		final double z = Math.cos(pitch) * velocity;
@@ -262,16 +262,32 @@ public class VelocityProperty extends BasicProperty
 		return new Vector(x, y, z);
 	}
 
-	protected double[] fromXYZ(final double x, final double y, final double z)
+	/**
+	 * Converts the the given vector to two angles and a length.
+	 * 
+	 * @param x
+	 *            The vector size in the x-dimension.
+	 * @param y
+	 *            The vector size in the y-dimension.
+	 * @param z
+	 *            The vector size in the z-dimension.
+	 * @return An array consisting of pitch, yaw, length.
+	 */
+	public static double[] fromXYZ(final double x, final double y, final double z)
 	{
 		final double[] res = new double[3];
-		res[0] = (int) (Math.tan(x / z) * ANGLECONVERTER);
+		res[0] = Math.tan(x / z) * ANGLECONVERTER;
 		res[2] = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-		res[1] = (int) (Math.tan(y / res[2]) * ANGLECONVERTER);
+		res[1] = Math.tan(y / res[2]) * ANGLECONVERTER;
 		return res;
 	}
 
-	protected double[] fromVector(final Vector vector)
+	/**
+	 * Converts the the given vector to two angles and a length.
+	 * 
+	 * @return An array consisting of pitch, yaw, length.
+	 */
+	public static double[] fromVector(final Vector vector)
 	{
 		return fromXYZ(vector.getX(), vector.getY(), vector.getZ());
 	}
