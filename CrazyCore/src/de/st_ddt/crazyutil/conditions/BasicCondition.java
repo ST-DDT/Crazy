@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import de.st_ddt.crazyutil.conditions.checker.ConditionChecker;
 import de.st_ddt.crazyutil.conditions.player.Condition_Player_Permission;
 
 public abstract class BasicCondition implements Condition
@@ -50,6 +51,15 @@ public abstract class BasicCondition implements Condition
 	{
 		super();
 	}
+
+	@Override
+	public abstract String getType();
+
+	@Override
+	public abstract boolean isApplicable(Class<? extends ConditionChecker> clazz);
+
+	@Override
+	public abstract boolean check(ConditionChecker checker);
 
 	@Override
 	public void save(final ConfigurationSection config, final String path)
