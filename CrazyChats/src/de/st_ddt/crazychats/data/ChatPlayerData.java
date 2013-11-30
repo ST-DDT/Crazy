@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import de.st_ddt.crazychats.CrazyChats;
 import de.st_ddt.crazychats.channels.ChannelInterface;
@@ -116,12 +117,23 @@ public class ChatPlayerData extends PlayerData<ChatPlayerData> implements Config
 
 	public Map<String, ChannelInterface> getChannelMap()
 	{
+		final Player player = getPlayer();
+		if (player == null || !player.isOnline() || player.getWorld() == null)
+			return new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		accessibleChannels.remove(null);
-		final Map<String, ChannelInterface> res = new TreeMap<String, ChannelInterface>(String.CASE_INSENSITIVE_ORDER);
+		final Map<String, ChannelInterface> res = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		for (final ChannelInterface channel : accessibleChannels)
-			if (channel.hasTalkPermission(getPlayer()))
-				for (final String alias : channel.getAliases())
-					res.put(alias, channel);
+			try
+			{
+				if (channel.hasTalkPermission(player))
+					for (final String alias : channel.getAliases())
+						res.put(alias, channel);
+			}
+			catch (final Exception e)
+			{
+				System.err.println("[CrazyChats] Error checking " + channel + "'s access permissions for player " + player.getName());
+				System.err.println(e.getMessage());
+			}
 		return res;
 	}
 
