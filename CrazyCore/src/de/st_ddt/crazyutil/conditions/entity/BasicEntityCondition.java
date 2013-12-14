@@ -20,6 +20,9 @@ public abstract class BasicEntityCondition extends BasicCondition
 	}
 
 	@Override
+	public abstract String getType();
+
+	@Override
 	public boolean isApplicable(final Class<? extends ConditionChecker> clazz)
 	{
 		return EntityConditionChecker.class.isAssignableFrom(clazz);
