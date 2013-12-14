@@ -83,6 +83,11 @@ public class CommandPipe extends CommandExecutor
 			return res;
 		}
 		else
+		{
+			for (int i = 0; i < args.length; i++)
+				if (args[i].equals(">"))
+					return CrazyPipe.tabHelp(sender, ChatHelperExtended.shiftArray(args, i + 1));
 			return null;
+		}
 	}
 }

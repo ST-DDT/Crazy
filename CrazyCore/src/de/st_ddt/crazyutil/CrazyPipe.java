@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -77,8 +78,10 @@ public abstract class CrazyPipe
 		final CrazyPipe pipe = pipes.get(pipeArgs[0].toLowerCase());
 		if (pipe == null)
 			commandPipe(sender, datas, pipeArgs);
-		else
+		else if (pipe.hasAccessPermission(sender))
 			pipe.execute(sender, datas, ChatHelperExtended.shiftArray(pipeArgs, 1));
+		else
+			throw new CrazyCommandPermissionException();
 	}
 
 	@Permission("crazypipe.use")
@@ -109,15 +112,28 @@ public abstract class CrazyPipe
 		final CrazyPipe pipe = pipes.get(pipeArgs[0].toLowerCase());
 		if (pipe == null)
 			commandPipe(sender, datas, false, pipeArgs);
-		else
+		else if (pipe.hasAccessPermission(sender))
 			pipe.execute(sender, datas, false, ChatHelperExtended.shiftArray(pipeArgs, 1));
+		else
+			throw new CrazyCommandPermissionException();
 	}
 
 	public static List<String> tabHelp(final CommandSender sender, final String[] pipeArgs)
 	{
 		final int length = pipeArgs.length;
-		if (length == 0)
-			return null;
+		if (pipeArgs.length == 0)
+		{
+			final Set<String> commands = CommandHelper.getCommandNames();
+			commands.addAll(pipes.keySet());
+			final List<String> res = new ArrayList<>(20);
+			int i = 0;
+			for (final String command : commands)
+				if (i++ < 20)
+					res.add("> " + command);
+				else
+					break;
+			return res;
+		}
 		for (int i = 0; i < length; i++)
 			if (pipeArgs[i].equals("|"))
 				return tabHelp(sender, ChatHelperExtended.shiftArray(pipeArgs, i + 1));
@@ -126,7 +142,7 @@ public abstract class CrazyPipe
 		{
 			final List<String> res = new LinkedList<String>();
 			final PluginCommand command = Bukkit.getPluginCommand(pipeArgs[0]);
-			if (pipeArgs.length == 1)
+			if (length == 1)
 			{
 				for (final String cmd : CommandHelper.getCommandNames())
 					if (cmd.toLowerCase().startsWith(pipeArgs[0].toLowerCase()))
@@ -269,6 +285,11 @@ public abstract class CrazyPipe
 	public List<String> tab(final CommandSender sender, final String[] parameter)
 	{
 		return new LinkedList<String>();
+	}
+
+	public boolean hasAccessPermission(final CommandSender sender)
+	{
+		return true;
 	}
 
 	public static boolean isDisabled()
@@ -492,6 +513,7 @@ public abstract class CrazyPipe
 				ChatHelperExtended.readParameters(pipeArgs, params, file);
 				if (file.getValue() == null)
 					throw new CrazyCommandNoSuchException("File", "(null)");
+				file.getValue().getParentFile().mkdirs();
 				int i = 0;
 				try (final Writer writer = new FileWriter(file.getValue(), append.getValue()))
 				{
@@ -525,6 +547,7 @@ public abstract class CrazyPipe
 				ChatHelperExtended.readParameters(pipeArgs, params, file);
 				if (file.getValue() == null)
 					throw new CrazyCommandUsageException("File", "(null)");
+				file.getValue().getParentFile().mkdirs();
 				int i = 0;
 				try (final Writer writer = new FileWriter(file.getValue(), append.getValue()))
 				{
@@ -556,6 +579,13 @@ public abstract class CrazyPipe
 				final StringParamitrisable entryFormat = new ColoredStringParamitrisable(null);
 				params.put("entryformat", entryFormat);
 				return ChatHelperExtended.tabHelp(args, params, file);
+			}
+
+			@Override
+			@Permission("crazypipe.use.file")
+			public boolean hasAccessPermission(final CommandSender sender)
+			{
+				return sender.hasPermission("crazypipe.use.file");
 			}
 		}, "log", "file");
 		registerPipe(new CrazyPipe()
