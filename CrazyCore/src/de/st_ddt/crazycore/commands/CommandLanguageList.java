@@ -26,8 +26,7 @@ public class CommandLanguageList extends CommandExecutor
 			if (args[0].equals(">"))
 			{
 				final String[] newArgs = ChatHelperExtended.shiftArray(args, 1);
-				for (final String name : CrazyLocale.getActiveLanguagesNames(false))
-					CrazyPipe.pipe(sender, name, newArgs);
+				CrazyPipe.pipe(sender, CrazyLocale.getActiveLanguagesNames(false), false, newArgs);
 				return;
 			}
 			else

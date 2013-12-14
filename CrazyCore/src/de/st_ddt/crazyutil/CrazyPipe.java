@@ -20,9 +20,11 @@ import de.st_ddt.crazyplugin.CrazyLightPluginInterface;
 import de.st_ddt.crazyplugin.data.ParameterData;
 import de.st_ddt.crazyplugin.data.PlayerDataInterface;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandErrorException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandNoSuchException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandParameterException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandPermissionException;
 import de.st_ddt.crazyplugin.exceptions.CrazyCommandUnsupportedException;
+import de.st_ddt.crazyplugin.exceptions.CrazyCommandUsageException;
 import de.st_ddt.crazyplugin.exceptions.CrazyException;
 import de.st_ddt.crazyutil.modules.permissions.PermissionModule;
 import de.st_ddt.crazyutil.paramitrisable.BooleanParamitrisable;
@@ -35,7 +37,7 @@ import de.st_ddt.crazyutil.source.Permission;
 public abstract class CrazyPipe
 {
 
-	private final static HashMap<String, CrazyPipe> pipes = new HashMap<String, CrazyPipe>();
+	private final static Map<String, CrazyPipe> pipes = new HashMap<String, CrazyPipe>();
 	protected static boolean disabled;
 
 	public static CrazyPipe registerPipe(final CrazyPipe pipe, final String... keys)
@@ -488,6 +490,8 @@ public abstract class CrazyPipe
 				final StringParamitrisable entryFormat = new ColoredStringParamitrisable("$0$");
 				params.put("entryformat", entryFormat);
 				ChatHelperExtended.readParameters(pipeArgs, params, file);
+				if (file.getValue() == null)
+					throw new CrazyCommandNoSuchException("File", "(null)");
 				int i = 0;
 				try (final Writer writer = new FileWriter(file.getValue(), append.getValue()))
 				{
@@ -519,6 +523,8 @@ public abstract class CrazyPipe
 				final StringParamitrisable entryFormat = new ColoredStringParamitrisable("$0$");
 				params.put("entryformat", entryFormat);
 				ChatHelperExtended.readParameters(pipeArgs, params, file);
+				if (file.getValue() == null)
+					throw new CrazyCommandUsageException("File", "(null)");
 				int i = 0;
 				try (final Writer writer = new FileWriter(file.getValue(), append.getValue()))
 				{

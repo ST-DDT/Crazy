@@ -43,8 +43,7 @@ public class CommandPipe extends CommandExecutor
 					pipeArgs = ChatHelperExtended.shiftArray(args, 2);
 				else
 					throw new CrazyCommandUsageException("<$PresetList> [> PipeCommand]");
-			for (final String data : datas)
-				CrazyPipe.pipe(sender, data, pipeArgs);
+			CrazyPipe.pipe(sender, datas, false, pipeArgs);
 			return;
 		}
 		for (int i = 0; i < args.length; i++)
@@ -55,8 +54,10 @@ public class CommandPipe extends CommandExecutor
 				break;
 			}
 		final String arg = ChatHelper.listingString(" ", args);
-		for (final String data : arg.split(","))
-			CrazyPipe.pipe(sender, data.trim(), pipeArgs);
+		final List<String> list = new ArrayList<>();
+		for (final String entry : arg.split(","))
+			list.add(entry);
+		CrazyPipe.pipe(sender, list, false, pipeArgs);
 	}
 
 	@Override

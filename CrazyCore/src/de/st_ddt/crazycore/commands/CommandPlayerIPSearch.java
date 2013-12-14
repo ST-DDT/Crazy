@@ -61,8 +61,7 @@ public class CommandPlayerIPSearch extends CommandExecutor
 		final IPListModer moder = new IPListModer();
 		final String[] pipeArgs = ChatHelperExtended.processListCommand(sender, args, plugin.getChatHeader(), listFormat, null, null, null, moder, new ArrayList<String>(), moder);
 		if (pipeArgs != null)
-			for (final String data : moder.getList())
-				CrazyPipe.pipe(sender, data, pipeArgs);
+			CrazyPipe.pipe(sender, moder.getList(), false, pipeArgs);
 	}
 
 	@Override
