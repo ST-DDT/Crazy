@@ -1,0 +1,20 @@
+name: ${project.name}
+main: de.st_ddt.crazygeo.CrazyGeo
+author: ST-DDT
+version: ${project.version}
+website: ${project.url}
+# requires CrazyCore v${crazycore.version} or later
+depend: [CrazyCore]
+softdepend: [WorldEdit]
+description: ${project.description}
+commands:
+  crazygeo:
+    description: Region selection
+    usage: /<command> [Subcommands...]
+    aliases: [geo]
+permissions:
+  crazygeo.*:
+    description: Access to all commands (Subsection geo)
+    default: op
+    children:
+      crazygeo.weimport: true

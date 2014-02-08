@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
+
+	<groupId>de.st_ddt.crazy</groupId>
+	<artifactId>CrazyGeo</artifactId>
+	<version>0.3.4</version>
+	<packaging>jar</packaging>
+
+	<name>CrazyGeo</name>
+	<url>http://dev.bukkit.org/bukkit-plugins/crazygeo/</url>
+	<description>CrazyGeo Plugin provides region containers for CrazyPlugins.</description>
+	<inceptionYear>2010</inceptionYear>
+
+	<organization>
+		<name>Crazy</name>
+		<url>http://dev.bukkit.org/bukkit-plugins/crazycore/</url>
+	</organization>
+
+	<properties>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<crazycore.version>10.7.7</crazycore.version>
+	</properties>
+
+	<dependencies>
+		<!-- Bukkit -->
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.6.4-R1.0</version>
+		</dependency>
+		<!-- Crazy -->
+		<dependency>
+			<groupId>de.st_ddt.crazy</groupId>
+			<artifactId>CrazyCore</artifactId>
+			<version>${crazycore.version}</version>
+		</dependency>
+		<!-- Other Plugins -->
+		<dependency>
+			<groupId>com.sk89q</groupId>
+			<artifactId>worldedit</artifactId>
+			<version>5.5.8</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<!-- Bukkit -->
+		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public</url>
+		</repository>
+		<!-- Other Plugins -->
+		<repository>
+			<id>maven.sk89q.com</id>
+			<url>http://maven.sk89q.com/repo/</url>
+		</repository>
+	</repositories>
+
+	<scm>
+		<url>https://github.com/st-ddt/CrazyGeo</url>
+		<connection>scm:git:git://github.com/st-ddt/CrazyGeo.git</connection>
+		<developerConnection>scm:git:git://github.com/st-ddt/CrazyGeo.git</developerConnection>
+	</scm>
+	<issueManagement>
+		<system>BukkitDev</system>
+		<url>http://dev.bukkit.org/bukkit-plugins/crazygeo/create-ticket/</url>
+	</issueManagement>
+
+	<build>
+		<resources>
+			<resource>
+				<targetPath>.</targetPath>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>plugin.yml</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>plugin.yml</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
