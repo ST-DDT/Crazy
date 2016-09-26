@@ -56,7 +56,7 @@ public class ScheduledTrigger extends Trigger
 	{
 		if (taskID == -1)
 			if (new Date().before(date))
-				taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, this, (date.getTime() - new Date().getTime()) / 50);
+				taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, this, (date.getTime() - System.currentTimeMillis()) / 50);
 	}
 
 	@Override
