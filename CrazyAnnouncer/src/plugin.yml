@@ -1,7 +1,7 @@
 name: CrazyAnnouncer
 main: de.st_ddt.crazyannouncer.CrazyAnnouncer
 author: ST-DDT
-version: 1.9.0
+version: 1.10.0
 website: http://dev.bukkit.org/server-mods/crazyannouncer/
 # requires CrazyCore v10.7.8 or later
 depend: [CrazyCore]
@@ -12,6 +12,10 @@ commands:
     description: Create/show delete an announcement
     usage: /<command> <Player>
     aliases: [announcer,announce,crazyannounce]
+  triggeraction:
+    description: Trigger a named action
+    usage: /<command> <Action>
+    aliases: [announcerdo,announcerrun]
 permissions:
   crazyannouncer.*:
     description: Access to all commands
@@ -25,6 +29,9 @@ permissions:
     default: op
   crazyannouncer.list:
     description: Allow listing all announcements
+    default: op
+  crazyannouncer.triggeraction:
+    description: Allow triggering of actions
     default: op
   crazyannouncer.delete:
     description: Allow deleting announcements

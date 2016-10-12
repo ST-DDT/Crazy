@@ -9,6 +9,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 
+import de.st_ddt.crazyannouncer.command.CrazyAnnouncerCommandTriggerAction;
 import de.st_ddt.crazyplugin.CrazyPlugin;
 import de.st_ddt.crazyutil.NamedRunnable;
 import de.st_ddt.crazyutil.action.Action;
@@ -18,37 +19,37 @@ import de.st_ddt.crazyutil.trigger.EventTrigger;
 import de.st_ddt.crazyutil.trigger.ScheduledRepeatedTrigger;
 import de.st_ddt.crazyutil.trigger.Trigger;
 
-public class CrazyAnnouncer extends CrazyPlugin
-{
+public class CrazyAnnouncer extends CrazyPlugin {
 
 	protected static CrazyAnnouncer plugin;
 	protected final Set<Trigger> triggers = new HashSet<Trigger>();
 	protected final Set<NamedRunnable> actions = new HashSet<NamedRunnable>();
 	private CrazyAnnouncerEventListener eventListener;
 
-	public static CrazyAnnouncer getPlugin()
-	{
+	public static CrazyAnnouncer getPlugin() {
 		return plugin;
 	}
 
 	@Override
-	public void onEnable()
-	{
+	public void onEnable() {
 		plugin = this;
 		registerHooks();
+		registerCommands();
 		super.onEnable();
 	}
 
-	public void registerHooks()
-	{
+	public void registerHooks() {
 		this.eventListener = new CrazyAnnouncerEventListener(this);
 		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(eventListener, this);
 	}
 
+	public void registerCommands() {
+		getCommand("triggeraction").setExecutor(new CrazyAnnouncerCommandTriggerAction(this));
+	}
+
 	@Override
-	public void loadConfiguration()
-	{
+	public void loadConfiguration() {
 		// Cleanup
 		// EDIT eventListener.clearEventRegistrations();
 		actions.clear();
@@ -56,11 +57,12 @@ public class CrazyAnnouncer extends CrazyPlugin
 		// Load
 		EventTrigger.setTriggerEventListener(eventListener);
 		ConfigurationSection config = getConfig().getConfigurationSection("actions");
-		if (config != null)
-			for (final String name : config.getKeys(false))
+		if (config != null) {
+			for (final String name : config.getKeys(false)) {
 				actions.add(Action.load(config.getConfigurationSection(name)));
-		else
-		{
+			}
+		}
+		else {
 			actions.add(new Action_MESSAGE("example", "This is a default message", "Welcome to the minecraft server of &E" + getServer().getServerName()));
 			final ActionList_ORDERED action = new ActionList_ORDERED("example123");
 			actions.add(action);
@@ -69,16 +71,16 @@ public class CrazyAnnouncer extends CrazyPlugin
 			action.addAction(new Action_MESSAGE("a3", "Message3"));
 		}
 		config = getConfig().getConfigurationSection("triggers");
-		if (config != null)
-		{
-			for (final String name : config.getKeys(false))
+		if (config != null) {
+			for (final String name : config.getKeys(false)) {
 				triggers.add(Trigger.load(config.getConfigurationSection(name), actions, this));
+			}
 			triggers.remove(null);
-			for (final Trigger trigger : triggers)
+			for (final Trigger trigger : triggers) {
 				trigger.register();
+			}
 		}
-		else
-		{
+		else {
 			final Set<Class<? extends Event>> events = new HashSet<Class<? extends Event>>();
 			events.add(PlayerJoinEvent.class);
 			triggers.add(new EventTrigger("exampleEvent", actions, plugin, events));
@@ -87,33 +89,33 @@ public class CrazyAnnouncer extends CrazyPlugin
 	}
 
 	@Override
-	public void saveConfiguration()
-	{
+	public void saveConfiguration() {
 		final ConfigurationSection config = getConfig();
 		config.set("triggers", null);
-		for (final Trigger trigger : triggers)
+		for (final Trigger trigger : triggers) {
 			trigger.save(config, "triggers." + trigger.getName() + ".");
+		}
 		config.set("actions", null);
-		for (final NamedRunnable action : actions)
+		for (final NamedRunnable action : actions) {
 			action.save(config, "actions." + action.getName() + ".");
+		}
 		super.saveConfiguration();
 	}
 
-	public Set<Trigger> getTriggers()
-	{
+	public Set<Trigger> getTriggers() {
 		return triggers;
 	}
 
-	public Set<NamedRunnable> getActions()
-	{
+	public Set<NamedRunnable> getActions() {
 		return actions;
 	}
 
-	public NamedRunnable getAction(final String actionname)
-	{
-		for (final NamedRunnable action : actions)
-			if (action.getName().equals(actionname))
+	public NamedRunnable getAction(final String actionname) {
+		for (final NamedRunnable action : actions) {
+			if (action.getName().equals(actionname)) {
 				return action;
+			}
+		}
 		return null;
 	}
 }
